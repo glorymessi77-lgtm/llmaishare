@@ -1,24 +1,12 @@
-# 社区案例接入 Google Sheets 配置指南
+# 社区案例接入 Google Sheets 配置指南（V2 修复版）
 
-## 3 步完成配置
+## 重要：需要更新 Apps Script 代码
 
-### 第 1 步：创建 Google Sheet
+之前的版本有 CORS 兼容问题，导致提交的数据无法被其他人看到。请用以下新代码替换。
 
-1. 打开 https://sheets.google.com，新建一个表格
-2. 将工作表名称改为 `cases`
-3. 第一行填写表头（务必一致）：
+### Apps Script 代码（替换旧代码）
 
-| A | B | C | D | E | F | G | H | I |
-|---|---|---|---|---|---|---|---|---|
-| name | title | tags | link | body | date | views | likes | hot |
-
-4. 把现有案例数据填进去（可选，也可以空着从网页提交）
-5. 记下浏览器地址栏中的 **Sheet ID**（`https://docs.google.com/spreadsheets/d/这一串就是ID/edit`）
-
-### 第 2 步：创建 Apps Script API
-
-1. 在 Google Sheet 中，点击菜单 **扩展程序 → Apps Script**
-2. 删除默认代码，粘贴以下代码：
+在 Google Sheet 中点击 **扩展程序 → Apps Script**，删除旧代码，粘贴以下代码：
 
 ```javascript
 // ====== 把这里换成你的 Sheet ID ======
@@ -30,14 +18,16 @@ function doGet(e) {
     const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('cases');
     const data = sheet.getDataRange().getValues();
     if (data.length <= 1) {
-      return jsonResponse([]);
+      return respond([], e);
     }
     const headers = data[0];
     const rows = data.slice(1).map(row => {
       const obj = {};
       headers.forEach((h, i) => {
         if (h === 'tags') {
-          obj[h] = row[i] ? String(row[i]).split(',').map(t => t.trim()).filter(Boolean) : [];
+          try { obj[h] = JSON.parse(row[i]); } catch(ex) {
+            obj[h] = row[i] ? String(row[i]).split(',').map(t => t.trim()).filter(Boolean) : [];
+          }
         } else if (h === 'views' || h === 'likes') {
           obj[h] = Number(row[i]) || 0;
         } else if (h === 'hot') {
@@ -48,20 +38,38 @@ function doGet(e) {
       });
       return obj;
     });
-    return jsonResponse(rows);
+    return respond(rows, e);
   } catch (err) {
-    return jsonResponse({ error: err.message });
+    return respond({ error: err.message }, e);
   }
 }
 
 function doPost(e) {
   try {
     const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('cases');
-    const data = JSON.parse(e.postData.contents);
+    var data;
+
+    // 支持 JSON body 和 form 表单两种提交方式
+    if (e.postData && e.postData.contents) {
+      data = JSON.parse(e.postData.contents);
+    } else if (e.parameter) {
+      data = e.parameter;
+      // form 提交的 tags 可能是 JSON 字符串
+      if (data.tags && typeof data.tags === 'string') {
+        try { data.tags = JSON.parse(data.tags); } catch(ex) {
+          data.tags = data.tags.split(',').map(function(t){return t.trim()}).filter(Boolean);
+        }
+      }
+    }
+
+    if (!data || !data.name || !data.title) {
+      return respond({ error: 'missing name or title' }, e);
+    }
+
     sheet.appendRow([
       data.name || '',
       data.title || '',
-      (data.tags || []).join(', '),
+      Array.isArray(data.tags) ? data.tags.join(', ') : (data.tags || ''),
       data.link || '',
       data.body || '',
       data.date || new Date().toISOString().slice(0, 10),
@@ -69,28 +77,35 @@ function doPost(e) {
       0,
       false
     ]);
-    return jsonResponse({ status: 'ok' });
+    return respond({ status: 'ok' }, e);
   } catch (err) {
-    return jsonResponse({ error: err.message });
+    return respond({ error: err.message }, e);
   }
 }
 
-function jsonResponse(data) {
+// 支持 JSONP 回调和普通 JSON 两种响应
+function respond(data, e) {
+  var jsonStr = JSON.stringify(data);
+  var callback = e && e.parameter && e.parameter.callback;
+  if (callback) {
+    // JSONP 响应
+    return ContentService
+      .createTextOutput(callback + '(' + jsonStr + ')')
+      .setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+  // 普通 JSON 响应
   return ContentService
-    .createTextOutput(JSON.stringify(data))
+    .createTextOutput(jsonStr)
     .setMimeType(ContentService.MimeType.JSON);
 }
 ```
 
-3. 把 `你的Google_Sheet_ID` 替换为第 1 步记下的 ID
-4. 点击 **部署 → 新建部署**
-5. 类型选择 **网页应用**
-6. 执行身份：**我自己**
-7. 谁可以访问：**任何人**
-8. 点击 **部署**，授权后复制 **网页应用网址**（格式如 `https://script.google.com/macros/s/xxx/exec`）
+### 部署步骤
 
-### 第 3 步：配置到网页
+1. 粘贴代码后，把 `你的Google_Sheet_ID` 替换为实际 ID
+2. 点击 **部署 → 管理部署 → 编辑（铅笔图标）→ 版本选"新版本"→ 部署**
+3. 这样会更新现有部署，URL 不变
 
-把复制的网址填入 team.html 的 `SHEET_API` 变量中（我已经预留好了位置）。
+### 验证
 
-完成！现在任何人通过网页表单提交的案例会直接写入 Google Sheet，所有人都能看到。
+浏览器直接访问你的 API URL，应该能看到 JSON 数据（如果 Sheet 里有数据的话）。

@@ -1126,63 +1126,105 @@ const SHEET_API = 'https://script.google.com/macros/s/AKfycbxxfQoKQPIdnUV5zYoQHO
 // ====================================
 
 function loadCr(){
-  // 始终以源文件 defaultCr 为基础
   return JSON.parse(JSON.stringify(defaultCr));
 }
 
-// 从 Google Sheets 加载远程数据并合并
-async function loadRemoteCases(){
+// 从 Google Sheets 加载远程数据（JSONP 方式，绕过 CORS）
+function loadRemoteCases(){
   if(!SHEET_API) return;
-  try{
-    const resp = await fetch(SHEET_API);
-    const rows = await resp.json();
-    if(!Array.isArray(rows) || rows.length === 0) return;
-
-    const data = loadCr();
-    rows.forEach(row => {
-      const person = data.find(c => c.name === row.name);
-      const cs = {
-        title: row.title,
-        tags: row.tags || [],
-        link: row.link || '',
-        body: row.body || '',
-        date: row.date || '',
-        views: row.views || 0,
-        likes: row.likes || 0,
-        hot: row.hot || false,
-      };
-      if(person){
-        if(!person.cases.some(e => e.title === cs.title)){
-          person.cases.push(cs);
+  const callbackName = '_sheetCallback_' + Date.now();
+  window[callbackName] = function(rows){
+    try{
+      if(!Array.isArray(rows) || rows.length === 0) return;
+      const data = loadCr();
+      rows.forEach(row => {
+        const person = data.find(c => c.name === row.name);
+        const cs = {
+          title: row.title || '',
+          tags: row.tags || [],
+          link: row.link || '',
+          body: row.body || '',
+          date: row.date || '',
+          views: row.views || 0,
+          likes: row.likes || 0,
+          hot: row.hot || false,
+        };
+        if(!cs.title) return;
+        if(person){
+          if(!person.cases.some(e => e.title === cs.title)) person.cases.push(cs);
+        } else {
+          data.push({name: row.name, cases: [cs]});
         }
-      } else {
-        data.push({name: row.name, cases: [cs]});
-      }
-    });
-
-    // 用合并后的数据重新渲染
-    window._communityData = data;
-    renderCommunity();
-  }catch(e){
-    console.log('远程数据加载失败，使用本地数据', e);
-  }
+      });
+      window._communityData = data;
+      renderCommunity();
+    }catch(e){ console.log('远程数据解析失败', e); }
+    delete window[callbackName];
+  };
+  // 用 script 标签加载（JSONP 方式）
+  const script = document.createElement('script');
+  script.src = SHEET_API + '?callback=' + callbackName;
+  script.onerror = function(){
+    console.log('JSONP 加载失败，尝试 fetch');
+    delete window[callbackName];
+    // fallback: 直接 fetch（某些环境下可用）
+    fetch(SHEET_API).then(r=>r.json()).then(rows=>{
+      if(!Array.isArray(rows)) return;
+      const data = loadCr();
+      rows.forEach(row => {
+        if(!row.title) return;
+        const person = data.find(c => c.name === row.name);
+        const cs = {title:row.title,tags:row.tags||[],link:row.link||'',body:row.body||'',date:row.date||'',views:row.views||0,likes:row.likes||0,hot:row.hot||false};
+        if(person){if(!person.cases.some(e=>e.title===cs.title))person.cases.push(cs)}
+        else{data.push({name:row.name,cases:[cs]})}
+      });
+      window._communityData = data;
+      renderCommunity();
+    }).catch(e=>console.log('fetch也失败', e));
+  };
+  document.head.appendChild(script);
 }
 
-// 提交到 Google Sheets
-async function submitToSheet(caseData){
-  if(!SHEET_API) return false;
-  try{
-    await fetch(SHEET_API, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(caseData),
-    });
-    return true;
-  }catch(e){
-    console.log('提交到 Google Sheets 失败', e);
-    return false;
-  }
+// 提交到 Google Sheets（用隐藏 form 提交，绕过 CORS）
+function submitToSheet(caseData){
+  if(!SHEET_API) return Promise.resolve(false);
+  return new Promise(resolve => {
+    try{
+      // 用隐藏 iframe + form 提交
+      const iframeName = 'submit_frame_' + Date.now();
+      const iframe = document.createElement('iframe');
+      iframe.name = iframeName;
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = SHEET_API;
+      form.target = iframeName;
+
+      // 把数据作为 hidden input
+      Object.keys(caseData).forEach(key => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = typeof caseData[key] === 'object' ? JSON.stringify(caseData[key]) : String(caseData[key]);
+        form.appendChild(input);
+      });
+
+      document.body.appendChild(form);
+      form.submit();
+
+      // 清理
+      setTimeout(() => {
+        form.remove();
+        iframe.remove();
+      }, 5000);
+      resolve(true);
+    }catch(e){
+      console.log('提交失败', e);
+      resolve(false);
+    }
+  });
 }
 let selCr=null;
 
