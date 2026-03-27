@@ -1185,41 +1185,26 @@ function loadRemoteCases(){
   document.head.appendChild(script);
 }
 
-// 提交到 Google Sheets（用隐藏 form 提交，绕过 CORS）
+// 提交到 Google Sheets（GET 方式传参，最兼容）
 function submitToSheet(caseData){
   if(!SHEET_API) return Promise.resolve(false);
   return new Promise(resolve => {
     try{
-      // 用隐藏 iframe + form 提交
-      const iframeName = 'submit_frame_' + Date.now();
-      const iframe = document.createElement('iframe');
-      iframe.name = iframeName;
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
+      const params = new URLSearchParams();
+      params.set('action', 'add');
+      params.set('name', caseData.name || '');
+      params.set('title', caseData.title || '');
+      params.set('tags', Array.isArray(caseData.tags) ? caseData.tags.join(',') : (caseData.tags || ''));
+      params.set('link', caseData.link || '');
+      params.set('body', (caseData.body || '').substring(0, 500));
+      params.set('date', caseData.date || new Date().toISOString().slice(0,10));
 
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = SHEET_API;
-      form.target = iframeName;
-
-      // 把数据作为 hidden input
-      Object.keys(caseData).forEach(key => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = key;
-        input.value = typeof caseData[key] === 'object' ? JSON.stringify(caseData[key]) : String(caseData[key]);
-        form.appendChild(input);
-      });
-
-      document.body.appendChild(form);
-      form.submit();
-
-      // 清理
-      setTimeout(() => {
-        form.remove();
-        iframe.remove();
-      }, 5000);
-      resolve(true);
+      // 用 script 标签发 GET 请求（天然绕过 CORS）
+      const script = document.createElement('script');
+      script.src = SHEET_API + '?' + params.toString();
+      script.onload = function(){ this.remove(); resolve(true); };
+      script.onerror = function(){ this.remove(); resolve(false); };
+      document.head.appendChild(script);
     }catch(e){
       console.log('提交失败', e);
       resolve(false);

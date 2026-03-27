@@ -1,12 +1,6 @@
-# 社区案例接入 Google Sheets 配置指南（V2 修复版）
+# 社区案例接入 Google Sheets · V3 最终版
 
-## 重要：需要更新 Apps Script 代码
-
-之前的版本有 CORS 兼容问题，导致提交的数据无法被其他人看到。请用以下新代码替换。
-
-### Apps Script 代码（替换旧代码）
-
-在 Google Sheet 中点击 **扩展程序 → Apps Script**，删除旧代码，粘贴以下代码：
+## Apps Script 代码（复制粘贴替换旧代码）
 
 ```javascript
 // ====== 把这里换成你的 Sheet ID ======
@@ -14,98 +8,86 @@ const SHEET_ID = '你的Google_Sheet_ID';
 // =====================================
 
 function doGet(e) {
-  try {
-    const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('cases');
-    const data = sheet.getDataRange().getValues();
-    if (data.length <= 1) {
-      return respond([], e);
+  var p = e.parameter || {};
+
+  // 写入模式：action=add
+  if (p.action === 'add' && p.name && p.title) {
+    try {
+      var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('cases');
+      sheet.appendRow([
+        p.name,
+        p.title,
+        p.tags || '',
+        p.link || '',
+        p.body || '',
+        p.date || new Date().toISOString().slice(0, 10),
+        0,
+        0,
+        'false'
+      ]);
+      var result = JSON.stringify({status: 'ok'});
+    } catch (err) {
+      var result = JSON.stringify({error: err.message});
     }
-    const headers = data[0];
-    const rows = data.slice(1).map(row => {
-      const obj = {};
-      headers.forEach((h, i) => {
-        if (h === 'tags') {
-          try { obj[h] = JSON.parse(row[i]); } catch(ex) {
-            obj[h] = row[i] ? String(row[i]).split(',').map(t => t.trim()).filter(Boolean) : [];
-          }
-        } else if (h === 'views' || h === 'likes') {
-          obj[h] = Number(row[i]) || 0;
-        } else if (h === 'hot') {
-          obj[h] = row[i] === true || row[i] === 'true' || row[i] === 'TRUE';
-        } else {
-          obj[h] = row[i] || '';
-        }
-      });
-      return obj;
-    });
-    return respond(rows, e);
-  } catch (err) {
-    return respond({ error: err.message }, e);
+    if (p.callback) {
+      return ContentService.createTextOutput(p.callback + '(' + result + ')').setMimeType(ContentService.MimeType.JAVASCRIPT);
+    }
+    return ContentService.createTextOutput(result).setMimeType(ContentService.MimeType.JSON);
   }
+
+  // 读取模式
+  try {
+    var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('cases');
+    var data = sheet.getDataRange().getValues();
+    if (data.length <= 1) {
+      var rows = [];
+    } else {
+      var headers = data[0];
+      var rows = [];
+      for (var i = 1; i < data.length; i++) {
+        var obj = {};
+        for (var j = 0; j < headers.length; j++) {
+          var h = headers[j];
+          var v = data[i][j];
+          if (h === 'tags') {
+            obj[h] = v ? String(v).split(',').map(function(t){return t.trim()}).filter(Boolean) : [];
+          } else if (h === 'views' || h === 'likes') {
+            obj[h] = Number(v) || 0;
+          } else if (h === 'hot') {
+            obj[h] = v === true || v === 'true' || v === 'TRUE';
+          } else {
+            obj[h] = v || '';
+          }
+        }
+        rows.push(obj);
+      }
+    }
+    var result = JSON.stringify(rows);
+  } catch (err) {
+    var result = JSON.stringify({error: err.message});
+  }
+
+  if (p.callback) {
+    return ContentService.createTextOutput(p.callback + '(' + result + ')').setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+  return ContentService.createTextOutput(result).setMimeType(ContentService.MimeType.JSON);
 }
 
 function doPost(e) {
-  try {
-    const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('cases');
-    var data;
-
-    // 支持 JSON body 和 form 表单两种提交方式
-    if (e.postData && e.postData.contents) {
-      data = JSON.parse(e.postData.contents);
-    } else if (e.parameter) {
-      data = e.parameter;
-      // form 提交的 tags 可能是 JSON 字符串
-      if (data.tags && typeof data.tags === 'string') {
-        try { data.tags = JSON.parse(data.tags); } catch(ex) {
-          data.tags = data.tags.split(',').map(function(t){return t.trim()}).filter(Boolean);
-        }
-      }
-    }
-
-    if (!data || !data.name || !data.title) {
-      return respond({ error: 'missing name or title' }, e);
-    }
-
-    sheet.appendRow([
-      data.name || '',
-      data.title || '',
-      Array.isArray(data.tags) ? data.tags.join(', ') : (data.tags || ''),
-      data.link || '',
-      data.body || '',
-      data.date || new Date().toISOString().slice(0, 10),
-      0,
-      0,
-      false
-    ]);
-    return respond({ status: 'ok' }, e);
-  } catch (err) {
-    return respond({ error: err.message }, e);
-  }
-}
-
-// 支持 JSONP 回调和普通 JSON 两种响应
-function respond(data, e) {
-  var jsonStr = JSON.stringify(data);
-  var callback = e && e.parameter && e.parameter.callback;
-  if (callback) {
-    // JSONP 响应
-    return ContentService
-      .createTextOutput(callback + '(' + jsonStr + ')')
-      .setMimeType(ContentService.MimeType.JAVASCRIPT);
-  }
-  // 普通 JSON 响应
-  return ContentService
-    .createTextOutput(jsonStr)
-    .setMimeType(ContentService.MimeType.JSON);
+  return doGet({parameter: e.parameter || JSON.parse(e.postData.contents)});
 }
 ```
 
-### 部署步骤
+## 部署步骤
 
-1. 粘贴代码后，把 `你的Google_Sheet_ID` 替换为实际 ID
-2. 点击 **部署 → 管理部署 → 编辑（铅笔图标）→ 版本选"新版本"→ 部署**
-3. 这样会更新现有部署，URL 不变
+1. 打开 Google Sheet → **扩展程序 → Apps Script**
+2. **全选删除**旧代码，粘贴上面的新代码
+3. 把 `你的Google_Sheet_ID` 替换为你的 Sheet ID
+4. **部署 → 管理部署 → 编辑（铅笔图标）→ 版本选"新版本" → 部署**
 
-### 验证
+## 验证方法
 
-浏览器直接访问你的 API URL，应该能看到 JSON 数据（如果 Sheet 里有数据的话）。
+浏览器直接访问：
+- 读取：`你的API地址`  → 应该返回 `[]` 或 JSON 数组
+- 写入测试：`你的API地址?action=add&name=测试&title=API测试`  → 应该返回 `{"status":"ok"}`
+- 写入后再读取，确认数据出现
