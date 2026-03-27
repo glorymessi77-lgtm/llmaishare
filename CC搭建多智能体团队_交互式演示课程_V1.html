@@ -1,0 +1,2556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 多智能体协作 — 交互式演示课程</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;0,800;1,400&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #0B0F1A; --deep: #111827; --surface: #1A2035;
+  --card: #1a2235; --border: #2A3250; --border-light: #3A4560;
+  --paper: #F7F4EE; --paper-warm: #EDE8DD;
+  --ink: #1A1A18; --ink-light: #4A4A45; --ink-muted: #8A8A82; --rule: #D5CEC3;
+  --fire: #E85D3A; --fire-glow: #FF7A54; --fire-dim: #C44B2B;
+  --gold: #D4A72C; --gold-light: #F0C94C;
+  --sage: #3DA06E; --sage-light: #5CC48A;
+  --ocean: #3A7CA5; --ocean-light: #5AA0CC;
+  --violet: #7C5CBF; --violet-light: #9E80E0;
+  --rose: #C4628A; --cyan: #4AADAD; --teal: #14b8a6;
+  --term-text: #C5CDD8; --term-dim: #6B7A8D;
+  --f-display: 'Crimson Pro', Georgia, serif;
+  --f-body: 'Instrument Sans', system-ui, sans-serif;
+  --f-mono: 'DM Mono', 'SF Mono', monospace;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: var(--f-body); background: var(--void); color: #E8E6E0; overflow-x: hidden; line-height: 1.6; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ===== NAV ===== */
+.nav {
+  position: fixed; left: 0; top: 0; bottom: 0; width: 240px;
+  background: var(--deep); border-right: 1px solid var(--border);
+  z-index: 100; display: flex; flex-direction: column;
+  transition: transform .3s;
+}
+.nav-brand { padding: 1.2rem 1.2rem .8rem; border-bottom: 1px solid var(--border); }
+.nav-brand-tag { font-family: var(--f-mono); font-size: .58rem; letter-spacing: .2em; text-transform: uppercase; color: var(--fire); margin-bottom: .2rem; }
+.nav-brand-title { font-family: var(--f-display); font-size: 1.05rem; font-weight: 700; color: #E8E6E0; line-height: 1.3; }
+.nav-links { flex: 1; padding: .8rem 0; overflow-y: auto; list-style: none; }
+.nav-links a { display: flex; align-items: center; gap: .6rem; padding: .5rem 1.2rem; font-size: .78rem; font-weight: 500; color: var(--term-dim); text-decoration: none; border-left: 2px solid transparent; transition: all .2s; }
+.nav-links a:hover { color: #E8E6E0; background: rgba(255,255,255,.03); }
+.nav-links a.active { color: var(--fire-glow); border-left-color: var(--fire); background: rgba(232,93,58,.06); }
+.nav-num { font-family: var(--f-mono); font-size: .6rem; color: var(--border-light); min-width: 1.2rem; }
+.nav-links a.active .nav-num { color: var(--fire); }
+.nav-divider { height: 1px; background: var(--border); margin: .4rem 1.2rem; }
+.nav-footer { padding: .8rem 1.2rem; border-top: 1px solid var(--border); font-family: var(--f-mono); font-size: .55rem; color: var(--term-dim); }
+
+/* ===== MAIN ===== */
+.main { margin-left: 240px; }
+.section { min-height: 100vh; padding: 4rem 3rem; position: relative; }
+.section.dark { background: var(--void); }
+.section.paper { background: var(--paper); color: var(--ink); }
+.section.deep { background: var(--deep); }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+.section-tag { font-family: var(--f-mono); font-size: .6rem; letter-spacing: .2em; text-transform: uppercase; color: var(--fire); margin-bottom: .6rem; }
+.section-title { font-family: var(--f-display); font-size: 2.4rem; font-weight: 800; line-height: 1.15; letter-spacing: -.02em; margin-bottom: .8rem; }
+.section.paper .section-title { color: var(--ink); }
+.section-lead { font-size: .95rem; line-height: 1.8; max-width: 640px; opacity: .7; }
+
+/* ===== HERO ===== */
+#hero { min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; }
+#hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 70% 40%, rgba(232,93,58,.08) 0%, transparent 70%), radial-gradient(ellipse 40% 60% at 20% 70%, rgba(58,124,165,.06) 0%, transparent 70%); }
+.hero-content { position: relative; z-index: 1; max-width: 700px; }
+.hero-overline { font-family: var(--f-mono); font-size: .65rem; letter-spacing: .25em; text-transform: uppercase; color: var(--fire); margin-bottom: 1.2rem; }
+.hero-title { font-family: var(--f-display); font-size: 3.2rem; font-weight: 800; color: #F0EDE6; line-height: 1.1; letter-spacing: -.03em; margin-bottom: 1.2rem; }
+.hero-title em { font-style: normal; background: linear-gradient(135deg, var(--fire-glow), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero-desc { font-size: 1rem; line-height: 1.85; color: var(--term-dim); max-width: 540px; margin-bottom: 2rem; }
+.hero-modules { display: flex; gap: .8rem; flex-wrap: wrap; }
+.hero-module { display: flex; align-items: center; gap: .4rem; padding: .4rem .8rem; background: rgba(255,255,255,.04); border: 1px solid var(--border); border-radius: 4px; font-size: .72rem; color: var(--term-text); font-weight: 500; }
+.hm-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+/* ===== PAIN POINTS ===== */
+.pain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-top: 2rem; }
+.pain-card { background: rgba(255,255,255,.03); border: 1px solid var(--border); border-top: 3px solid; border-radius: 6px; padding: 1.5rem 1.2rem; }
+.pain-num { font-family: var(--f-display); font-size: 2.5rem; font-weight: 800; opacity: .06; line-height: 1; margin-bottom: .4rem; }
+.pain-title { font-weight: 700; font-size: .88rem; margin-bottom: .4rem; }
+.pain-desc { font-size: .78rem; line-height: 1.7; color: var(--term-dim); }
+
+/* ===== MODES TABS ===== */
+.modes-tabs { display: flex; gap: 0; margin-top: 1.5rem; border-bottom: 2px solid var(--border); }
+.mode-tab { padding: .7rem 1.5rem; font-family: var(--f-body); font-size: .82rem; font-weight: 600; color: var(--term-dim); background: none; border: none; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s; }
+.mode-tab:hover { color: #E8E6E0; }
+.mode-tab.active { color: var(--fire-glow); border-bottom-color: var(--fire); }
+.mode-panel { display: none; padding: 2rem 0; animation: fadeUp .4s ease; }
+.mode-panel.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:none } }
+
+/* 两屏铺满布局 */
+.mode-screen {
+  min-height: 70vh; display: flex; flex-direction: column; justify-content: center;
+  padding: 2rem 0;
+}
+.mode-screen:first-child { padding-top: 1rem; }
+.mode-screen + .mode-screen { border-top: 1px solid var(--border); }
+.mode-diagram-full {
+  background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+  padding: 2.5rem; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: .8rem; margin-bottom: 1.5rem;
+}
+.mode-info-full { max-width: 800px; }
+
+/* Legacy layout (kept for backward compat) */
+.mode-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+.mode-diagram { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; min-height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .8rem; }
+.mode-info h3 { font-family: var(--f-display); font-size: 1.4rem; font-weight: 700; color: #E8E6E0; margin-bottom: .4rem; }
+.mode-subtitle { font-size: .82rem; color: var(--term-dim); margin-bottom: 1.2rem; line-height: 1.7; }
+
+@media (max-width: 900px) {
+  .mode-screen { min-height: auto; padding: 1.5rem 0; }
+}
+.mode-pros h4, .mode-cons h4 { font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .4rem; }
+.mode-pros h4 { color: var(--sage-light); }
+.mode-cons h4 { color: var(--fire-glow); }
+.mode-pros li, .mode-cons li { font-size: .78rem; line-height: 1.7; color: var(--term-dim); list-style: none; padding-left: .8rem; position: relative; margin-bottom: .15rem; }
+.mode-pros li::before { content: '✓'; position: absolute; left: 0; color: var(--sage-light); font-weight: 700; }
+.mode-cons li::before { content: '✕'; position: absolute; left: 0; color: var(--fire-glow); font-weight: 700; }
+.mode-pros, .mode-cons { margin-bottom: 1rem; }
+.mode-usecase { margin-top: .8rem; padding: .8rem 1rem; background: rgba(232,93,58,.06); border-left: 3px solid var(--fire); border-radius: 0 4px 4px 0; font-size: .78rem; line-height: 1.7; color: var(--term-dim); }
+.mode-usecase strong { color: #E8E6E0; }
+
+/* Diagram nodes */
+.d-node { display: inline-flex; align-items: center; gap: .3rem; padding: .35rem .7rem; border-radius: 4px; font-size: .7rem; font-weight: 600; border: 1px solid; }
+.d-user { background: rgba(58,124,165,.1); border-color: rgba(58,124,165,.3); color: var(--ocean); }
+.d-agent { background: rgba(232,93,58,.1); border-color: rgba(232,93,58,.3); color: var(--fire-dim); }
+.d-sub { background: rgba(124,92,191,.1); border-color: rgba(124,92,191,.3); color: var(--violet); }
+.d-team { background: rgba(61,160,110,.1); border-color: rgba(61,160,110,.3); color: var(--sage); }
+.d-arrow { font-size: .65rem; color: var(--term-dim); }
+.d-row { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; justify-content: center; }
+.d-col { display: flex; flex-direction: column; align-items: center; gap: .4rem; }
+.d-group { border: 1px dashed var(--rule); border-radius: 6px; padding: .8rem; display: flex; gap: .4rem; flex-wrap: wrap; justify-content: center; }
+.d-label { font-family: var(--f-mono); font-size: .55rem; color: var(--term-dim); letter-spacing: .1em; text-transform: uppercase; }
+
+/* ===== PROS/CONS CARDS ===== */
+.pc-section { margin-top: 1.5rem; }
+.pc-header { font-size: .72rem; font-weight: 700; letter-spacing: .08em; margin-bottom: .6rem; }
+.pc-header-pro { color: var(--sage-light); }
+.pc-header-con { color: var(--fire-glow); }
+.pc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.pc-col { display: flex; flex-direction: column; gap: .5rem; }
+.pc-card {
+  background: rgba(255,255,255,.03); border-radius: 6px; padding: .7rem 1rem;
+  border-left: 3px solid; font-size: .8rem; line-height: 1.6; color: var(--term-dim);
+}
+.pc-card-pro { border-left-color: var(--sage); }
+.pc-card-con { border-left-color: var(--fire); }
+.pc-card strong { color: #E8E6E0; }
+
+/* Usage Advice */
+.advice-section { margin-top: 1.5rem; }
+.advice-title {
+  font-family: var(--f-display); font-size: 1.2rem; font-weight: 800;
+  color: #E8E6E0; margin-bottom: .3rem; line-height: 1.3;
+}
+.advice-subtitle { font-size: .72rem; color: var(--term-dim); letter-spacing: .08em; margin-bottom: 1rem; }
+.advice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1rem; }
+.advice-box {
+  background: rgba(255,255,255,.03); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1rem 1.2rem;
+}
+.advice-box-header { font-size: .72rem; font-weight: 700; letter-spacing: .08em; margin-bottom: .6rem; }
+.advice-box-pro .advice-box-header { color: var(--sage-light); }
+.advice-box-con .advice-box-header { color: var(--fire-glow); }
+.advice-box li {
+  font-size: .8rem; color: var(--term-dim); line-height: 1.7;
+  list-style: none; padding-left: .6rem; position: relative; margin-bottom: .3rem;
+}
+.advice-box li::before { content: '·'; position: absolute; left: 0; font-weight: 700; }
+.advice-box li strong { color: #E8E6E0; }
+.advice-quote {
+  border-left: 3px solid var(--fire); padding: .8rem 1.2rem;
+  font-size: .85rem; color: var(--term-dim); line-height: 1.7;
+  font-style: italic;
+}
+.advice-quote strong { color: var(--fire-glow); font-style: normal; }
+
+@media (max-width: 900px) {
+  .pc-grid, .advice-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== ROADMAP TABLE ===== */
+.roadmap-table-wrap { overflow-x: auto; }
+.roadmap-table {
+  width: 100%; border-collapse: collapse; background: var(--card);
+  border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+}
+.roadmap-table th {
+  font-size: .68rem; font-weight: 600; color: var(--term-dim);
+  text-align: left; padding: .6rem .8rem; background: rgba(255,255,255,.03);
+  border-bottom: 1px solid var(--border); letter-spacing: .05em; white-space: nowrap;
+}
+.roadmap-table td {
+  font-size: .78rem; color: var(--term-text); padding: .6rem .8rem;
+  border-bottom: 1px solid rgba(255,255,255,.04); line-height: 1.5; vertical-align: top;
+}
+.roadmap-table tr:last-child td { border-bottom: none; }
+.roadmap-table tr:hover td { background: rgba(255,255,255,.02); }
+.roadmap-table td:first-child { white-space: nowrap; color: #E8E6E0; }
+.rt-status {
+  display: inline-block; font-size: .62rem; font-weight: 600;
+  padding: .15rem .5rem; border-radius: 3px; white-space: nowrap;
+}
+.rt-live { background: rgba(61,160,110,.15); color: var(--sage-light); }
+.rt-planned { background: rgba(58,124,165,.15); color: var(--ocean-light); }
+
+/* ===== PHASE TIMELINE ===== */
+.phase-timeline { position: relative; padding-left: 2rem; }
+.phase-timeline::before {
+  content: ''; position: absolute; left: 8px; top: 8px; bottom: 8px;
+  width: 2px; background: var(--border);
+}
+.phase-item { position: relative; padding-bottom: 2rem; }
+.phase-item:last-child { padding-bottom: 0; }
+.phase-dot {
+  position: absolute; left: -2rem; top: 4px;
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid; background: var(--deep);
+}
+.phase-done .phase-dot { border-color: var(--sage-light); background: var(--sage); }
+.phase-active .phase-dot { border-color: var(--cyan); background: var(--cyan); box-shadow: 0 0 0 4px rgba(74,173,173,.2); }
+.phase-planned .phase-dot { border-color: var(--ocean); background: transparent; }
+.phase-future .phase-dot { border-color: var(--border-light); background: transparent; }
+
+.phase-content { padding-left: .5rem; }
+.phase-label {
+  font-family: var(--f-mono); font-size: .62rem; letter-spacing: .1em;
+  text-transform: uppercase; margin-bottom: .3rem;
+}
+.phase-done .phase-label { color: var(--sage-light); }
+.phase-active .phase-label { color: var(--cyan); }
+.phase-planned .phase-label { color: var(--ocean-light); }
+.phase-future .phase-label { color: var(--term-dim); }
+
+.phase-title {
+  font-family: var(--f-display); font-size: 1.15rem; font-weight: 700;
+  color: #E8E6E0; margin-bottom: .4rem;
+}
+.phase-desc {
+  font-size: .82rem; color: var(--term-dim); line-height: 1.7; max-width: 720px;
+}
+
+@media (max-width: 900px) {
+  .roadmap-table { font-size: .7rem; }
+  .roadmap-table th, .roadmap-table td { padding: .4rem .5rem; }
+  .phase-title { font-size: 1rem; }
+}
+
+/* ===== LEADER FLOW DIAGRAM ===== */
+.leader-flow {
+  display: flex; align-items: center; justify-content: center; gap: 0;
+  padding: 1.5rem 1rem; overflow-x: auto; flex-wrap: nowrap;
+}
+.lf-node {
+  display: flex; flex-direction: column; align-items: center; gap: .4rem;
+  padding: .8rem 1.2rem; border-radius: 8px; border: 1px solid;
+  min-width: 140px; text-align: center; transition: transform .2s;
+}
+.lf-node:hover { transform: translateY(-2px); }
+.lf-icon { font-size: 1.2rem; }
+.lf-text { font-size: .75rem; font-weight: 600; line-height: 1.5; }
+.lf-user { background: rgba(58,124,165,.08); border-color: rgba(58,124,165,.3); color: var(--ocean-light); }
+.lf-leader { background: rgba(124,92,191,.08); border-color: rgba(124,92,191,.3); color: var(--violet-light); }
+.lf-dispatch { background: rgba(61,160,110,.08); border-color: rgba(61,160,110,.3); color: var(--sage-light); }
+.lf-collect { background: rgba(58,124,165,.08); border-color: rgba(58,124,165,.3); color: var(--ocean-light); }
+.lf-decide { background: rgba(212,167,44,.08); border-color: rgba(212,167,44,.3); color: var(--gold-light); }
+.lf-arrow { font-size: 1.2rem; color: var(--term-dim); padding: 0 .3rem; flex-shrink: 0; }
+
+/* Schedule table */
+.schedule-table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+.schedule-table th { font-size: .72rem; font-weight: 600; color: var(--term-dim); text-align: left; padding: .7rem 1.2rem; background: rgba(255,255,255,.03); border-bottom: 1px solid var(--border); letter-spacing: .05em; }
+.schedule-table td { font-size: .82rem; color: var(--term-text); padding: .8rem 1.2rem; border-bottom: 1px solid rgba(255,255,255,.04); line-height: 1.6; }
+.schedule-table tr:last-child td { border-bottom: none; }
+.st-tag { display: inline-block; font-size: .72rem; font-weight: 700; padding: .2rem .6rem; border-radius: 4px; }
+.st-parallel { background: rgba(58,124,165,.15); color: var(--ocean-light); }
+.st-chain { background: rgba(212,167,44,.15); color: var(--gold-light); }
+.st-hybrid { background: rgba(124,92,191,.15); color: var(--violet-light); }
+
+/* ===== KNOWLEDGE BASE ===== */
+.kb-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;
+}
+.kb-card {
+  background: var(--card); border: 1px solid var(--border); border-top: 3px solid;
+  border-radius: 8px; padding: 1.2rem;
+}
+.kb-card-header { display: flex; align-items: center; gap: .5rem; margin-bottom: .6rem; }
+.kb-card-icon { font-size: 1rem; }
+.kb-card-title { font-size: .88rem; font-weight: 700; color: #E8E6E0; }
+.kb-card-body { font-size: .78rem; color: var(--term-dim); line-height: 1.7; }
+
+.kb-maintain {
+  background: rgba(232,93,58,.06); border: 1px solid rgba(232,93,58,.15);
+  border-radius: 8px; padding: 1.2rem 1.5rem;
+}
+.kb-maintain-title { font-size: .82rem; font-weight: 700; color: var(--fire-glow); margin-bottom: .8rem; }
+.kb-maintain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.kb-maintain-item { }
+.kb-maintain-label { font-size: .7rem; font-weight: 600; color: var(--term-dim); margin-bottom: .3rem; letter-spacing: .05em; }
+.kb-maintain-value { font-size: .78rem; color: var(--term-text); line-height: 1.6; }
+.kb-maintain-value code { font-family: var(--f-mono); font-size: .72rem; background: rgba(255,255,255,.06); padding: .1rem .3rem; border-radius: 3px; color: var(--fire-glow); }
+
+@media (max-width: 900px) {
+  .leader-flow { flex-wrap: wrap; gap: .3rem; }
+  .lf-node { min-width: 100px; padding: .5rem .6rem; }
+  .lf-text { font-size: .65rem; }
+  .kb-grid { grid-template-columns: repeat(2, 1fr); }
+  .kb-maintain-grid { grid-template-columns: 1fr; }
+  .schedule-table { font-size: .75rem; }
+}
+
+/* ===== DEMO: CARD-BASED (OctoClaw style) ===== */
+.demo-section { padding: 4rem 3rem; }
+.demo-section .section-inner { max-width: 1400px; }
+
+.demo-topbar {
+  background: rgba(10,14,26,.9); backdrop-filter: blur(20px);
+  border: 1px solid var(--border); border-radius: 12px 12px 0 0;
+  padding: 0 1.5rem; height: 48px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.demo-topbar-left { display: flex; align-items: center; gap: 1rem; }
+.demo-topbar-logo { font-family: var(--f-mono); font-weight: 700; font-size: .75rem; background: linear-gradient(135deg, var(--ocean), var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: .05em; }
+.demo-topbar-mode { font-size: .72rem; color: var(--term-dim); }
+.demo-topbar-right { display: flex; align-items: center; gap: .5rem; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--term-dim); transition: background .3s; }
+.status-dot.live { background: var(--sage-light); animation: blink 2s infinite; }
+.status-dot.done { background: var(--sage-light); }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+.demo-topbar-status { font-family: var(--f-mono); font-size: .7rem; color: var(--term-dim); }
+
+.demo-wrap {
+  background: var(--void);
+  border: 1px solid var(--border); border-top: none;
+  border-radius: 0 0 12px 12px;
+  padding: 1.5rem;
+}
+
+/* Task input */
+.demo-task-area {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 1.2rem 1.5rem; margin-bottom: 1.2rem;
+}
+.demo-task-label { font-size: .85rem; font-weight: 700; margin-bottom: .6rem; }
+.demo-task-row { display: flex; gap: .8rem; }
+.demo-task-input {
+  flex: 1; padding: .6rem 1rem; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--void);
+  color: var(--term-text); font-size: .85rem; font-family: var(--f-mono);
+  outline: none; transition: border-color .2s;
+}
+.demo-task-input:focus { border-color: var(--violet); }
+.demo-run-btn {
+  padding: .6rem 1.5rem; border-radius: 8px; border: none;
+  background: linear-gradient(135deg, var(--ocean), var(--violet));
+  color: #fff; font-size: .85rem; font-weight: 700;
+  cursor: pointer; transition: transform .15s; white-space: nowrap;
+}
+.demo-run-btn:hover { transform: scale(1.03); }
+.demo-run-btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+/* Progress */
+.demo-progress { height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 1.2rem; overflow: hidden; }
+.demo-progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--ocean), var(--violet), var(--cyan)); width: 0; transition: width .5s ease; }
+
+/* Agent cards grid */
+.agents-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; margin-bottom: 1.2rem; }
+.agent-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: .8rem 1rem; position: relative; overflow: hidden; transition: all .3s;
+  --agent-color: var(--term-dim);
+}
+.agent-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--agent-color); opacity: .3; transition: opacity .3s; }
+.agent-card.working { border-color: var(--agent-color); }
+.agent-card.working::before { opacity: 1; }
+.agent-card.done { border-color: var(--sage); }
+.agent-card.done::before { background: var(--sage); opacity: 1; }
+.agent-header { display: flex; align-items: center; gap: .5rem; margin-bottom: .3rem; }
+.agent-icon { font-size: 1.1rem; }
+.agent-name { font-size: .8rem; font-weight: 700; }
+.agent-role-tag { font-size: .65rem; color: var(--term-dim); margin-bottom: .3rem; }
+.agent-status-badge {
+  font-size: .6rem; padding: .12rem .4rem; border-radius: 1rem; margin-left: auto;
+  background: rgba(100,116,139,.15); color: var(--term-dim);
+}
+.agent-status-badge.working { background: rgba(59,130,246,.15); color: var(--ocean-light); animation: pulse-badge 1.5s infinite; }
+.agent-status-badge.done { background: rgba(16,185,129,.15); color: var(--sage-light); }
+@keyframes pulse-badge { 0%,100%{opacity:1} 50%{opacity:.5} }
+.agent-output {
+  font-size: .7rem; color: var(--term-dim); margin-top: .3rem;
+  max-height: 180px; overflow-y: auto; line-height: 1.5;
+  white-space: pre-wrap; font-family: var(--f-mono);
+}
+.agent-output .highlight { color: var(--term-text); }
+
+/* Cross-talk messages (Agent Teams only) */
+.cross-talk {
+  margin-top: .4rem; padding-top: .4rem;
+  border-top: 1px dashed rgba(255,255,255,.08);
+}
+.cross-msg {
+  font-size: .65rem; line-height: 1.5;
+  padding: .2rem .4rem; margin-bottom: .2rem;
+  border-radius: 4px;
+  background: rgba(124,92,191,.08);
+  border-left: 2px solid var(--violet-light);
+  color: var(--term-text);
+}
+.cross-msg .from { font-weight: 600; color: var(--violet-light); }
+.cross-msg .to { font-weight: 600; color: var(--cyan); }
+.cross-msg.challenge { border-left-color: var(--gold); background: rgba(212,167,44,.08); }
+.cross-msg.challenge .from { color: var(--gold-light); }
+.cross-msg.agree { border-left-color: var(--sage); background: rgba(61,160,110,.08); }
+.cross-msg.agree .from { color: var(--sage-light); }
+
+/* Isolation indicator (SubAgent) */
+.isolation-badge {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .58rem; color: var(--term-dim);
+  padding: .15rem .4rem; border-radius: 3px;
+  background: rgba(255,255,255,.04);
+  margin-top: .3rem;
+}
+.isolation-badge::before { content: '🔒'; font-size: .55rem; }
+
+/* Communication indicator (Agent Teams) */
+.comm-badge {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .58rem; color: var(--violet-light);
+  padding: .15rem .4rem; border-radius: 3px;
+  background: rgba(124,92,191,.08);
+  margin-top: .3rem;
+}
+.comm-badge::before { content: '🔗'; font-size: .55rem; }
+
+/* Task List (Agent Teams) */
+.task-list-panel {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 1.2rem 1.5rem; margin-bottom: 1.2rem;
+  display: none; animation: fadeUp .4s ease;
+}
+.task-list-panel.show { display: block; }
+.task-list-panel h3 { font-size: .82rem; font-weight: 700; margin-bottom: .8rem; display: flex; align-items: center; gap: .5rem; }
+.task-list-panel h3 .tl-icon { font-size: 1rem; }
+.task-list-table { width: 100%; border-collapse: collapse; }
+.task-list-table th { padding: .4rem .6rem; text-align: left; font-size: .6rem; color: var(--term-dim); border-bottom: 2px solid var(--border); text-transform: uppercase; letter-spacing: .08em; }
+.task-list-table td { padding: .5rem .6rem; font-size: .75rem; color: var(--term-dim); border-bottom: 1px solid rgba(255,255,255,.05); vertical-align: middle; }
+.task-list-table .task-id { font-family: var(--f-mono); font-size: .65rem; color: var(--border-light); }
+.task-list-table .task-assignee { font-weight: 600; }
+.task-list-table .task-status-cell { font-size: .6rem; padding: .12rem .4rem; border-radius: 1rem; display: inline-block; }
+.ts-pending { background: rgba(100,116,139,.15); color: var(--term-dim); }
+.ts-claimed { background: rgba(212,167,44,.15); color: var(--gold-light); }
+.ts-working { background: rgba(59,130,246,.15); color: var(--ocean-light); }
+.ts-done { background: rgba(16,185,129,.15); color: var(--sage-light); }
+
+/* GM Report */
+.gm-report {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 2rem; display: none; animation: fadeUp .5s ease;
+}
+.gm-report.show { display: block; }
+.gm-report h2 { display: flex; align-items: center; gap: .6rem; margin-bottom: 1.2rem; font-size: 1.1rem; }
+.gm-report .badge { padding: .2rem .6rem; border-radius: .3rem; font-size: .72rem; font-weight: 600; }
+.badge-sub { background: rgba(124,92,191,.15); color: var(--violet-light); }
+.badge-team { background: rgba(61,160,110,.15); color: var(--sage-light); }
+.report-section { margin-bottom: 1.2rem; }
+.report-section h3 { font-size: .75rem; color: var(--cyan); text-transform: uppercase; letter-spacing: .1em; padding-bottom: .4rem; border-bottom: 1px solid var(--border); margin-bottom: .6rem; }
+.report-section p, .report-section li { font-size: .85rem; color: var(--term-dim); line-height: 1.7; }
+.report-section ul { padding-left: 1.2rem; }
+.report-section li { margin-bottom: .2rem; }
+.verdict-box { padding: 1.2rem; border-radius: 10px; margin: .8rem 0; font-size: 1rem; font-weight: 700; text-align: center; }
+.verdict-go { background: rgba(16,185,129,.1); border: 2px solid var(--sage); color: var(--sage-light); }
+.trust-table { width: 100%; border-collapse: collapse; margin: .8rem 0; }
+.trust-table th { padding: .4rem .6rem; text-align: left; font-size: .65rem; color: var(--term-dim); border-bottom: 2px solid var(--border); text-transform: uppercase; letter-spacing: .08em; }
+.trust-table td { padding: .4rem .6rem; font-size: .78rem; color: var(--term-dim); border-bottom: 1px solid rgba(255,255,255,.05); }
+.trust-stars { color: var(--gold); }
+
+/* Mode difference callout */
+.mode-diff-callout {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 1.2rem 1.5rem; margin-bottom: 1.2rem;
+  display: flex; align-items: center; gap: 1rem;
+}
+.mode-diff-icon { font-size: 1.8rem; flex-shrink: 0; }
+.mode-diff-text { font-size: .82rem; color: var(--term-text); line-height: 1.7; }
+.mode-diff-text strong { color: var(--fire-glow); }
+.mode-diff-text em { color: var(--violet-light); font-style: normal; font-weight: 600; }
+
+/* ===== BEST PRACTICES ===== */
+.practice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+.practice-card { padding: 1.5rem; border-radius: 6px; }
+.practice-card.do { background: rgba(61,160,110,.06); border: 1px solid rgba(61,160,110,.2); }
+.practice-card.dont { background: rgba(232,93,58,.04); border: 1px solid rgba(232,93,58,.15); }
+.practice-card h4 { font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .8rem; }
+.practice-card.do h4 { color: var(--sage); }
+.practice-card.dont h4 { color: var(--fire-dim); }
+.practice-card li { font-size: .8rem; line-height: 1.8; color: var(--term-dim); list-style: none; padding-left: .8rem; position: relative; margin-bottom: .2rem; }
+.practice-card.do li::before { content: '→'; position: absolute; left: 0; color: var(--sage); }
+.practice-card.dont li::before { content: '×'; position: absolute; left: 0; color: var(--fire-dim); }
+
+.cta-box { margin-top: 2.5rem; padding: 2rem; background: rgba(232,93,58,.06); border: 1px solid rgba(232,93,58,.2); border-radius: 8px; text-align: center; }
+.cta-box h3 { font-family: var(--f-display); font-size: 1.4rem; font-weight: 700; margin-bottom: .6rem; }
+.cta-box p { font-size: .85rem; color: var(--term-dim); line-height: 1.8; max-width: 500px; margin: 0 auto; }
+
+/* Mobile */
+.nav-toggle { display: none; position: fixed; top: .6rem; left: .6rem; z-index: 200; width: 32px; height: 32px; background: var(--deep); border: 1px solid var(--border); border-radius: 4px; color: var(--term-text); font-size: 1rem; cursor: pointer; align-items: center; justify-content: center; }
+@media (max-width: 1200px) { .agents-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 900px) {
+  .nav-toggle { display: flex; }
+  .nav { transform: translateX(-100%); }
+  .nav.open { transform: none; }
+  .main { margin-left: 0; }
+  .section, .demo-section { padding: 2.5rem 1.2rem; }
+  .hero-title { font-size: 2rem; }
+  .pain-grid, .practice-grid { grid-template-columns: 1fr; }
+  .mode-layout { grid-template-columns: 1fr; }
+  .agents-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) { .agents-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<button class="nav-toggle" onclick="document.querySelector('.nav').classList.toggle('open')">☰</button>
+
+<nav class="nav" id="nav">
+  <div class="nav-brand">
+    <div class="nav-brand-tag">Interactive Course</div>
+    <div class="nav-brand-title">多智能体协作<br>实战指南</div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#hero" class="active"><span class="nav-num">00</span> 课程导览</a></li>
+    <li><a href="#pain"><span class="nav-num">01</span> 为什么需要多智能体</a></li>
+    <li><div class="nav-divider"></div></li>
+    <li><a href="#modes"><span class="nav-num">02</span> 三种模式对比</a></li>
+    <li><div class="nav-divider"></div></li>
+    <li><a href="#quiz"><span class="nav-num">03</span> 场景测试</a></li>
+    <li><div class="nav-divider"></div></li>
+    <li><a href="#demo-sub"><span class="nav-num">04</span> SubAgent 演示</a></li>
+    <li><a href="#demo-team"><span class="nav-num">05</span> Agent Teams 演示</a></li>
+    <li><div class="nav-divider"></div></li>
+    <li><a href="#leader-flow"><span class="nav-num">06</span> Leader 调度流程</a></li>
+    <li><a href="#knowledge-base"><span class="nav-num">07</span> 共享知识库底座</a></li>
+    <li><a href="#practice"><span class="nav-num">08</span> 实操步骤</a></li>
+    <li><div class="nav-divider"></div></li>
+    <li><a href="#role-roadmap"><span class="nav-num">09</span> 角色优化路线</a></li>
+    <li><a href="#team-roadmap"><span class="nav-num">10</span> 团队优化路线</a></li>
+    <li><a href="#action"><span class="nav-num">11</span> 核心洞察</a></li>
+    <li><div class="nav-divider"></div></li>
+    <li><a href="#mirror"><span class="nav-num">12</span> 回归产品</a></li>
+    <li><a href="#share"><span class="nav-num">13</span> 知识沉淀</a></li>
+  </ul>
+  <div class="nav-footer">AI教学产品部 · 2026.03</div>
+</nav>
+
+<div class="main">
+
+<!-- HERO -->
+<section class="section dark" id="hero">
+  <div class="section-inner hero-content" style="max-width:700px">
+    <div class="hero-overline">Claude Code · 交互式演示课程</div>
+    <h1 class="hero-title">用 AI 团队协作<br>重新定义<em>产品决策</em></h1>
+    <p class="hero-desc">当一个产品经理可以同时调度市场分析、竞品调研、技术评估、售前方案——决策效率会发生什么变化？<br>从痛点出发，对比三种协作模式，用可交互的实战演示，带你从"知道"到"会用"。</p>
+    <div class="hero-modules">
+      <div class="hero-module"><span class="hm-dot" style="background:var(--fire)"></span> 痛点 & 模式对比</div>
+      <div class="hero-module"><span class="hm-dot" style="background:var(--violet)"></span> 交互式演示</div>
+      <div class="hero-module"><span class="hm-dot" style="background:var(--ocean)"></span> 搭建实操 & 知识底座</div>
+      <div class="hero-module"><span class="hm-dot" style="background:var(--sage)"></span> 优化路线 & 核心洞察</div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN POINTS -->
+<section class="section deep" id="pain">
+  <div class="section-inner">
+    <div class="section-tag">01 · 为什么需要多智能体</div>
+    <h2 class="section-title">为什么需要多智能体</h2>
+    <p class="section-lead">当你让 AI 先做市场分析，再做竞品调研，最后出产品方案——到第三步时，第一步的结论已经开始模糊了。这不是 Prompt 写得不好，而是<strong style="color:#E8E6E0">单一对话模式的结构性天花板</strong>。</p>
+    <p class="section-lead" style="margin-top:.8rem">以下三个瓶颈，是任何"把所有事情塞进一个对话窗口"的方式都无法回避的根本问题。它们不是靠优化 Prompt 能解决的，而是需要<strong style="color:#E8E6E0">架构层面的突破</strong>。</p>
+    <div class="pain-grid">
+      <div class="pain-card" style="border-top-color:var(--fire)">
+        <div class="pain-num">01</div>
+        <div class="pain-title">上下文越聊越长，前面全忘了</div>
+        <div class="pain-desc">对话越长，AI 越容易丢失早期的关键结论。你精心引导的市场分析结果，到了出方案的时候已经被"挤出"了上下文窗口。<strong style="color:#E8E6E0">上下文窗口是有限资源。</strong></div>
+        <div style="margin-top:.8rem;border-radius:6px;overflow:hidden;border:1px solid var(--border)">
+          <div style="padding:.3rem .6rem;background:rgba(232,93,58,.15);font-size:.58rem;font-weight:600;color:var(--fire);letter-spacing:.05em">真实案例：跑了两天的会话，上下文接近上限</div>
+          <img src="截图示例/上下文对话超长.png" style="width:100%;display:block" alt="上下文对话超长截图">
+        </div>
+      </div>
+      <div class="pain-card" style="border-top-color:var(--ocean)">
+        <div class="pain-num">02</div>
+        <div class="pain-title">明明能并行，却只能串行</div>
+        <div class="pain-desc">市场分析和竞品调研完全可以同时做，但单一对话只能一个接一个来。<strong style="color:#E8E6E0">本来 30 分钟能做完的评估，2 小时也没搞定。</strong></div>
+        <div style="margin-top:.8rem;border-radius:6px;overflow:hidden;border:1px solid var(--border)">
+          <div style="padding:.3rem .6rem;background:rgba(58,124,165,.15);font-size:.58rem;font-weight:600;color:var(--ocean-light);letter-spacing:.05em">真实案例：多窗口并行完成任务</div>
+          <img src="截图示例/明明能并行却只能串行.png" style="width:100%;display:block" alt="多窗口并行工作截图">
+        </div>
+      </div>
+      <div class="pain-card" style="border-top-color:var(--sage)">
+        <div class="pain-num">03</div>
+        <div class="pain-title">一个视角，顾此失彼</div>
+        <div class="pain-desc">让 AI 关注市场机会就容易忽略技术风险，关注技术方案就忽略商业价值。<strong style="color:#E8E6E0">没法多维度同时评估。</strong></div>
+        <div style="margin-top:.8rem;border-radius:6px;overflow:hidden;border:1px solid var(--border);padding:.8rem 1rem;background:rgba(61,160,110,.05)">
+          <div style="font-size:.58rem;font-weight:600;color:var(--sage);letter-spacing:.05em;margin-bottom:.4rem">真实场景</div>
+          <div style="font-size:.78rem;color:var(--term-dim);line-height:1.7">你让 AI 分析"AI能力训练平台"的市场空间，它输出了乐观的 30 亿预估。但同一个 AI 无法同时站在算法总工的角度质疑：<em style="color:var(--fire-glow)">"这个规模需要的算力成本你算过吗？"</em>——因为它只有一个视角。</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:1.5rem;padding:1.2rem 1.5rem;background:rgba(232,93,58,.06);border:1px solid rgba(232,93,58,.2);border-radius:8px;display:flex;align-items:flex-start;gap:.8rem">
+      <div style="font-size:.68rem;font-weight:700;color:var(--fire);letter-spacing:.08em;white-space:nowrap;padding-top:.15rem">⚡ 关键结论</div>
+      <div style="font-size:.85rem;color:var(--term-text);line-height:1.8">这三个问题的共同根源是：单一对话窗口既是"<strong style="color:#E8E6E0">执行者</strong>"又是"<strong style="color:#E8E6E0">记录者</strong>"又是"<strong style="color:#E8E6E0">协调者</strong>"。多智能体协作的本质就是把这三个角色拆开。</div>
+    </div>
+  </div>
+</section>
+
+<!-- MODES COMPARISON -->
+<section class="section dark" id="modes">
+  <div class="section-inner">
+    <div class="section-tag">02 · 三种模式对比</div>
+    <h2 class="section-title">从单一对话到团队协作</h2>
+    <p class="section-lead" style="color:var(--ink-light)">点击 Tab 切换查看每种模式的工作方式、优缺点和适用场景。</p>
+    <div class="modes-tabs">
+      <button class="mode-tab active" onclick="switchMode(0)">单一对话</button>
+      <button class="mode-tab" onclick="switchMode(1)">SubAgent 模式</button>
+      <button class="mode-tab" onclick="switchMode(2)">Agent Teams 模式</button>
+    </div>
+
+    <div class="mode-panel active" id="mode-0">
+      <!-- 第一屏：流程图 + 简介 -->
+      <div class="mode-screen">
+        <div class="mode-diagram-full">
+          <div class="d-label">工作流程</div>
+          <div class="d-col" style="gap:.8rem">
+            <div class="d-node d-user">👤 你（用户）</div>
+            <div class="d-arrow">↕ 反复对话</div>
+            <div class="d-node d-agent">🤖 单个 AI 助手</div>
+          </div>
+          <div style="margin-top:.8rem;font-size:.72rem;color:var(--term-dim);text-align:center;line-height:1.6">一个对话窗口，所有任务串行完成</div>
+        </div>
+        <div class="mode-info-full">
+          <h3 style="font-family:var(--f-display);font-size:1.6rem;font-weight:700;color:#E8E6E0;margin-bottom:.5rem">单一对话模式</h3>
+          <div class="mode-subtitle">最基础的 AI 协作方式——你和一个 AI 助手在同一个对话窗口中完成所有任务。绝大多数人的起步模式。</div>
+        </div>
+      </div>
+      <!-- 第二屏：优缺点 + 使用建议 -->
+      <div class="mode-screen">
+        <div class="pc-section">
+          <div class="pc-grid">
+            <div class="pc-col">
+              <div class="pc-header pc-header-pro">✓ 核心优点</div>
+              <div class="pc-card pc-card-pro"><strong>上手零门槛</strong> — 打开对话框就能用，无需任何配置</div>
+              <div class="pc-card pc-card-pro"><strong>上下文连贯</strong> — 同一个窗口，前后关联自然衔接</div>
+              <div class="pc-card pc-card-pro"><strong>简单任务效率最高</strong> — 写一段PRD摘要、查一个技术概念，秒出结果</div>
+              <div class="pc-card pc-card-pro"><strong>成本最低</strong> — 单一对话，Token消耗最少</div>
+            </div>
+            <div class="pc-col">
+              <div class="pc-header pc-header-con">✕ 主要缺点</div>
+              <div class="pc-card pc-card-con"><strong>长对话"失忆"</strong> — 上下文越长，早期结论越模糊</div>
+              <div class="pc-card pc-card-con"><strong>所有任务串行</strong> — 一个做完才能做下一个，无法并行</div>
+              <div class="pc-card pc-card-con"><strong>单一视角盲区</strong> — 只有一个AI角色，缺乏多维度碰撞</div>
+              <div class="pc-card pc-card-con"><strong>上下文污染</strong> — 市场分析的大段内容会干扰后续技术评估</div>
+            </div>
+          </div>
+        </div>
+        <div class="advice-section">
+          <div class="advice-subtitle">核心使用建议</div>
+          <div class="advice-title">大多数任务的起点<br>但不应是终点</div>
+          <div class="advice-grid" style="margin-top:1rem">
+            <div class="advice-box advice-box-pro">
+              <div class="advice-box-header">✓ 适合的场景</div>
+              <ul>
+                <li><strong>单个功能点PRD：</strong>写一个"知识库文档上传"的需求描述</li>
+                <li><strong>竞品快查：</strong>"腾讯IMA的HiChunk切分方案是什么？"</li>
+                <li><strong>技术概念理解：</strong>"RAG和GraphRAG的区别是什么？"</li>
+                <li><strong>会议纪要整理：</strong>把一段评审录音转成结构化纪要</li>
+              </ul>
+            </div>
+            <div class="advice-box advice-box-con">
+              <div class="advice-box-header">✕ 避免的场景</div>
+              <ul>
+                <li><strong>新产品立项评估：</strong>需要市场+竞品+技术多维度交叉分析</li>
+                <li><strong>完整PRD撰写：</strong>功能定义+技术方案+测试标准一条龙</li>
+                <li><strong>售前方案设计：</strong>需要产品+算法+销售多角色碰撞</li>
+              </ul>
+            </div>
+          </div>
+          <div class="advice-quote">当你发现自己在一个对话里反复"提醒AI别忘了之前说的"——<br><strong>是时候升级到多智能体模式了。</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mode-panel" id="mode-1">
+      <!-- 第一屏：流程图 + 简介 -->
+      <div class="mode-screen">
+        <div class="mode-diagram-full">
+          <div class="d-label">工作流程</div>
+          <div class="d-col" style="gap:.6rem">
+            <div class="d-node d-user">👤 你</div>
+            <div class="d-arrow">↓ 下达任务</div>
+            <div class="d-node d-agent">🤖 主 Agent（Leader）</div>
+            <div class="d-arrow">↓ 分配<strong>独立</strong>子任务</div>
+            <div class="d-group">
+              <div class="d-col"><div class="d-node d-sub">子A</div><div class="d-arrow" style="font-size:.5rem">↑ 汇报</div></div>
+              <div class="d-col"><div class="d-node d-sub">子B</div><div class="d-arrow" style="font-size:.5rem">↑ 汇报</div></div>
+              <div class="d-col"><div class="d-node d-sub">子C</div><div class="d-arrow" style="font-size:.5rem">↑ 汇报</div></div>
+            </div>
+            <div style="font-size:.65rem;color:var(--fire-dim);margin-top:.3rem;font-weight:600">⚠ 子Agent之间完全隔离，互不沟通</div>
+          </div>
+        </div>
+        <div class="mode-info-full">
+          <h3 style="font-family:var(--f-display);font-size:1.6rem;font-weight:700;color:#E8E6E0;margin-bottom:.5rem">SubAgent 模式</h3>
+          <div class="mode-subtitle">Leader 分配<strong>独立任务</strong>给子 Agent，各自执行完毕后<strong>独立向 Leader 汇报</strong>。子 Agent 之间无任何沟通。</div>
+        </div>
+      </div>
+      <!-- 第二屏：优缺点 + 使用建议 -->
+      <div class="mode-screen">
+        <div class="pc-section">
+          <div class="pc-grid">
+            <div class="pc-col">
+              <div class="pc-header pc-header-pro">✓ 核心优点</div>
+              <div class="pc-card pc-card-pro"><strong>上下文独立</strong> — 每个子Agent只看自己的任务，不受干扰</div>
+              <div class="pc-card pc-card-pro"><strong>启动成本低</strong> — 无需定义角色Skill，Leader自动拆分派发</div>
+              <div class="pc-card pc-card-pro"><strong>并行提速</strong> — 多个子任务同时执行，总耗时≈最长子任务</div>
+              <div class="pc-card pc-card-pro"><strong>Token消耗可控</strong> — 子Agent用完即销毁，不持续占用上下文</div>
+            </div>
+            <div class="pc-col">
+              <div class="pc-header pc-header-con">✕ 主要缺点</div>
+              <div class="pc-card pc-card-con"><strong>完全隔离</strong> — 子Agent之间无法沟通，互不知道对方在做什么</div>
+              <div class="pc-card pc-card-con"><strong>无法质疑补充</strong> — 竞品发现的信号，技术评估无法针对性响应</div>
+              <div class="pc-card pc-card-con"><strong>Leader信息瓶颈</strong> — 所有信息必须经Leader汇总，容易丢失细节</div>
+              <div class="pc-card pc-card-con"><strong>深度不足</strong> — 简单汇总≠深度碰撞，产出缺乏多维度交叉验证</div>
+            </div>
+          </div>
+        </div>
+        <div class="advice-section">
+          <div class="advice-subtitle">核心使用建议</div>
+          <div class="advice-title">适合"各干各的"<br>不需要商量的任务</div>
+          <div class="advice-grid" style="margin-top:1rem">
+            <div class="advice-box advice-box-pro">
+              <div class="advice-box-header">✓ 适合的场景</div>
+              <ul>
+                <li><strong>新品立项调研：</strong>竞品拆解、市场规模、技术可行性三线并行</li>
+                <li><strong>高校客户画像：</strong>同时分析双一流/普本/学科特色校三类客户群</li>
+                <li><strong>政策影响评估：</strong>教育数字化新政对产品线/销售/交付的独立影响</li>
+                <li><strong>季度经营分析：</strong>收入、续约率、客单价多指标独立拆解后汇总</li>
+              </ul>
+            </div>
+            <div class="advice-box advice-box-con">
+              <div class="advice-box-header">✕ 避免的场景</div>
+              <ul>
+                <li><strong>售前方案协作：</strong>销售和产品需要互相对齐客户需求才有深度</li>
+                <li><strong>产品开发全链路：</strong>PRD→算法方案→前后端→测试有严格依赖</li>
+                <li><strong>需要交叉验证：</strong>竞品发现的差异化点需要算法评估技术可行性</li>
+              </ul>
+            </div>
+          </div>
+          <div class="advice-quote">关键原则：SubAgent 是"分头干活"，不是"团队协作"。<br><strong>任务之间越独立，SubAgent 效果越好。</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mode-panel" id="mode-2">
+      <!-- 第一屏：流程图 + 简介 -->
+      <div class="mode-screen">
+        <div class="mode-diagram-full">
+          <div class="d-label">工作流程</div>
+          <div class="d-col" style="gap:.5rem">
+            <div class="d-node d-user">👤 你</div>
+            <div class="d-arrow">↓ 一句话触发</div>
+            <div class="d-node d-agent" style="background:rgba(232,93,58,.15)">👔 Leader</div>
+            <div class="d-arrow">↓↑ 双向沟通</div>
+            <div class="d-group" style="gap:.3rem;position:relative">
+              <div class="d-node d-team" style="font-size:.6rem">市场分析</div>
+              <div class="d-node d-team" style="font-size:.6rem">竞品调研</div>
+              <div class="d-node d-team" style="font-size:.6rem">产品经理</div>
+              <div class="d-node d-team" style="font-size:.6rem">算法总工</div>
+              <div class="d-node d-team" style="font-size:.6rem">前端研发</div>
+              <div class="d-node d-team" style="font-size:.6rem">后端研发</div>
+              <div class="d-node d-team" style="font-size:.6rem">测试工程师</div>
+              <div class="d-node d-team" style="font-size:.6rem">咨询</div>
+              <div class="d-node d-team" style="font-size:.6rem">销售</div>
+              <div class="d-node d-team" style="font-size:.6rem">交付</div>
+            </div>
+            <div style="font-size:.65rem;color:var(--sage);margin-top:.3rem;font-weight:600">✓ 成员之间可直接商量、质疑、协作</div>
+          </div>
+        </div>
+        <div class="mode-info-full">
+          <h3 style="font-family:var(--f-display);font-size:1.6rem;font-weight:700;color:#E8E6E0;margin-bottom:.5rem">Agent Teams 模式</h3>
+          <div class="mode-subtitle">同一任务交给 11 个角色（Leader + 10 位成员），成员之间<strong>可以互相商量、互相质疑、互相协作</strong>，最终由 Leader 批判性审视后综合决策。</div>
+        </div>
+      </div>
+      <!-- 第二屏：优缺点 + 使用建议 -->
+      <div class="mode-screen">
+        <div class="pc-section">
+          <div class="pc-grid">
+            <div class="pc-col">
+              <div class="pc-header pc-header-pro">✓ 核心优点</div>
+              <div class="pc-card pc-card-pro"><strong>解决上下文瓶颈</strong> — 每个成员上下文独立且聚焦</div>
+              <div class="pc-card pc-card-pro"><strong>任务并行执行</strong> — 多角色同步推进，效率翻倍</div>
+              <div class="pc-card pc-card-pro"><strong>多维度协作</strong> — 成员互相质疑，避免幻觉</div>
+              <div class="pc-card pc-card-pro"><strong>贴合真实开发</strong> — 完全复刻人类团队分工流程</div>
+              <div class="pc-card pc-card-pro"><strong>灵活配置</strong> — 自定义团队规模、角色，甚至不同成员指定不同模型</div>
+            </div>
+            <div class="pc-col">
+              <div class="pc-header pc-header-con">✕ 主要缺点</div>
+              <div class="pc-card pc-card-con"><strong>Token消耗巨大</strong> — 每个成员独立实例，消耗是单Agent数倍</div>
+              <div class="pc-card pc-card-con"><strong>上下文冗余</strong> — 每个成员重复加载项目基础上下文</div>
+              <div class="pc-card pc-card-con"><strong>文件冲突风险</strong> — 任务拆分不清晰时，多成员修改同一文件</div>
+              <div class="pc-card pc-card-con"><strong>依赖分配要求高</strong> — 设置不合理会变成"伪并行"</div>
+              <div class="pc-card pc-card-con"><strong>实验性功能</strong> — 仍处于实验阶段，后续可能有重大变更</div>
+            </div>
+          </div>
+        </div>
+        <div class="advice-section">
+          <div class="advice-subtitle">核心使用建议</div>
+          <div class="advice-title">不要为了换灯泡<br>召开董事会</div>
+          <div class="advice-grid" style="margin-top:1rem">
+            <div class="advice-box advice-box-pro">
+              <div class="advice-box-header">✓ 适合的场景</div>
+              <ul>
+                <li><strong>高教知识库立项评估：</strong>市场空间+竞品拆解+RAG技术方案+商业模式多维碰撞</li>
+                <li><strong>售前方案协作：</strong>销售带回客户需求→咨询拆解→产品出方案→算法评估可行性</li>
+                <li><strong>Coral MVP 开发：</strong>产品经理出PRD→算法设计RAG→前后端评估工时→测试定标准</li>
+                <li><strong>学期经营复盘：</strong>市场分析师拆数据+竞品跟踪变化+Leader批判性审视出决策</li>
+              </ul>
+            </div>
+            <div class="advice-box advice-box-con">
+              <div class="advice-box-header">✕ 避免的场景</div>
+              <ul>
+                <li><strong>简单小任务：</strong>创建团队的开销大于收益</li>
+                <li><strong>串行强依赖：</strong>前后任务必须严格衔接</li>
+                <li><strong>同一文件多端修改：</strong>易造成代码冲突</li>
+              </ul>
+            </div>
+          </div>
+          <div class="advice-quote">关键原则：任务拆分一定要清晰，明确每个成员的职责和操作范围。<br><strong>优先用于高价值、复杂的大型项目，让Token消耗的性价比最大化。</strong></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 场景测试题 -->
+<!-- ============================================================ -->
+<section class="section deep" id="quiz">
+  <div class="section-inner">
+    <div class="section-tag">03 · 学以致用</div>
+    <h2 class="section-title">场景判断：你会选哪种模式？</h2>
+    <p class="section-lead" style="margin-bottom:2rem">以下 5 个真实工作场景，点击你认为最合适的模式，看看判断是否正确。</p>
+
+    <div class="quiz-container" id="quizContainer"></div>
+
+    <div class="quiz-score" id="quizScore"></div>
+  </div>
+</section>
+
+<style>
+.quiz-container { display: flex; flex-direction: column; gap: 1.2rem; }
+.quiz-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 1.5rem; transition: all .3s;
+}
+.quiz-card.answered { opacity: .95; }
+.quiz-question {
+  font-size: .95rem; font-weight: 700; color: #E8E6E0; margin-bottom: .4rem; line-height: 1.5;
+}
+.quiz-context {
+  font-size: .78rem; color: var(--term-dim); margin-bottom: 1rem; line-height: 1.6;
+}
+.quiz-options { display: flex; gap: .6rem; flex-wrap: wrap; }
+.quiz-opt {
+  padding: .5rem 1.2rem; border-radius: 6px; border: 1px solid var(--border);
+  background: rgba(255,255,255,.03); color: var(--term-text); font-size: .8rem;
+  font-weight: 600; cursor: pointer; transition: all .2s;
+}
+.quiz-opt:hover { border-color: var(--ocean); background: rgba(58,124,165,.08); }
+.quiz-opt.correct { border-color: var(--sage); background: rgba(61,160,110,.15); color: var(--sage-light); cursor: default; }
+.quiz-opt.wrong { border-color: var(--fire); background: rgba(232,93,58,.1); color: var(--fire-glow); cursor: default; }
+.quiz-opt.reveal { border-color: var(--sage); background: rgba(61,160,110,.08); }
+.quiz-opt.disabled { pointer-events: none; opacity: .5; }
+.quiz-explain {
+  margin-top: .8rem; padding: .8rem 1rem; border-radius: 6px;
+  background: rgba(255,255,255,.03); border-left: 3px solid var(--sage);
+  font-size: .78rem; color: var(--term-dim); line-height: 1.7;
+  display: none; animation: fadeUp .3s ease;
+}
+.quiz-explain.show { display: block; }
+.quiz-explain strong { color: #E8E6E0; }
+.quiz-score {
+  margin-top: 1.5rem; text-align: center; font-family: var(--f-display);
+  font-size: 1.3rem; font-weight: 700; color: #E8E6E0; display: none;
+}
+.quiz-score.show { display: block; }
+</style>
+
+<script>
+const quizData = [
+  {
+    q: '老板让你查一下"RAG和GraphRAG在教学场景下各自的优劣势"',
+    ctx: '一个明确的技术概念对比，不涉及多角色协作，10分钟内能完成。',
+    answer: 0,
+    explain: '这是一个单一维度的知识检索任务，<strong>单一对话</strong>最高效。打开对话直接问就行，不需要调度多个角色。'
+  },
+  {
+    q: '需要同时评估 3 所目标高校的信息化现状、决策链和采购预算',
+    ctx: '三所高校的分析完全独立，互不影响，但你希望尽快拿到结果。',
+    answer: 1,
+    explain: '三所高校的分析彼此独立、互不依赖，正好适合 <strong>SubAgent 模式</strong>：Leader 拆成 3 个独立子任务并行执行，各自汇报后汇总。'
+  },
+  {
+    q: '为"AI能力训练平台"做完整立项评估：市场空间、竞品格局、技术方案、商业模式',
+    ctx: '市场结论会影响产品定位，竞品分析要和技术方案交叉验证，需要多角色碰撞。',
+    answer: 2,
+    explain: '这是典型的 <strong>Agent Teams 场景</strong>——多维度之间有强关联：竞品调研员发现的技术差异需要算法总工评估可行性，市场分析师的客户画像要和产品经理的功能定义对齐。各角色必须互相看到产出、互相质疑。'
+  },
+  {
+    q: '帮我把昨天评审会上产品经理提的 6 条修改意见整理成任务清单',
+    ctx: '已有明确的输入（6条意见），只需要格式化整理，不需要多角度分析。',
+    answer: 0,
+    explain: '<strong>单一对话</strong>就够了。输入明确、产出简单，用 SubAgent 或 Agent Teams 反而是大炮打蚊子。'
+  },
+  {
+    q: '双一流高校客户要一份售前方案，需要包含产品方案、技术架构、报价和实施计划',
+    ctx: '产品方案要和技术架构对齐，报价要基于技术方案的工时评估，实施计划要和交付对接。',
+    answer: 2,
+    explain: '<strong>Agent Teams 模式</strong>最合适：产品经理出方案 → 算法总工和后端评估技术 → 销售基于工时出报价 → 交付评估实施计划。角色之间有依赖、需要互相对齐，而且需要 Leader 最终批判性审视整合成完整方案。'
+  }
+];
+
+let quizAnswered = 0;
+let quizCorrect = 0;
+const modeLabels = ['单一对话', 'SubAgent', 'Agent Teams'];
+
+function initQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = quizData.map((item, idx) => `
+    <div class="quiz-card" id="quiz-${idx}">
+      <div class="quiz-question">${idx + 1}. ${item.q}</div>
+      <div class="quiz-context">${item.ctx}</div>
+      <div class="quiz-options" id="quiz-opts-${idx}">
+        ${modeLabels.map((label, oi) => `<button class="quiz-opt" onclick="answerQuiz(${idx},${oi})">${label}</button>`).join('')}
+      </div>
+      <div class="quiz-explain" id="quiz-explain-${idx}">${item.explain}</div>
+    </div>
+  `).join('');
+}
+
+function answerQuiz(qIdx, optIdx) {
+  const card = document.getElementById(`quiz-${qIdx}`);
+  if (card.classList.contains('answered')) return;
+  card.classList.add('answered');
+  quizAnswered++;
+
+  const opts = document.querySelectorAll(`#quiz-opts-${qIdx} .quiz-opt`);
+  const correct = quizData[qIdx].answer;
+
+  opts.forEach((opt, i) => {
+    if (i === optIdx && i === correct) { opt.classList.add('correct'); opt.textContent += ' ✓'; }
+    else if (i === optIdx && i !== correct) { opt.classList.add('wrong'); opt.textContent += ' ✕'; }
+    else if (i === correct) { opt.classList.add('reveal'); }
+    else { opt.classList.add('disabled'); }
+  });
+
+  if (optIdx === correct) quizCorrect++;
+
+  const explain = document.getElementById(`quiz-explain-${qIdx}`);
+  explain.classList.add('show');
+
+  if (quizAnswered === quizData.length) {
+    const score = document.getElementById('quizScore');
+    const pct = Math.round(quizCorrect / quizData.length * 100);
+    let msg = '';
+    if (pct === 100) msg = '全对！你已经完全掌握了三种模式的适用场景。';
+    else if (pct >= 60) msg = `不错！答对了大部分。继续往下看演示，体感会更强。`;
+    else msg = `没关系，这正是这门课程要帮你建立的判断力。继续学习吧！`;
+    score.innerHTML = `${quizCorrect} / ${quizData.length} · ${msg}`;
+    score.classList.add('show');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', initQuiz);
+</script>
+
+<!-- ============================================================ -->
+<!-- DEMO: SubAgent -->
+<!-- ============================================================ -->
+<section class="demo-section section dark" id="demo-sub">
+  <div class="section-inner">
+    <div class="section-tag">04 · SubAgent 交互演示</div>
+    <h2 class="section-title">SubAgent：各自为战，独立汇报</h2>
+    <p class="section-lead" style="margin-bottom:1.5rem">Leader 把"高教版知识库评估"拆成 3 个<strong style="color:var(--fire-glow)">独立子任务</strong>：竞品分析、市场调研、技术评估。<br>每个子Agent<strong style="color:var(--fire-glow)">独立工作、独立汇报</strong>，彼此之间<strong style="color:var(--fire-glow)">完全不知道对方在做什么</strong>。</p>
+
+    <div class="demo-topbar">
+      <div class="demo-topbar-left">
+        <div class="demo-topbar-logo">SUBAGENT MODE</div>
+        <div class="demo-topbar-mode">Leader → 独立子任务 → 独立汇报</div>
+      </div>
+      <div class="demo-topbar-right">
+        <div class="status-dot" id="subDot"></div>
+        <div class="demo-topbar-status" id="subStatus">就绪</div>
+      </div>
+    </div>
+    <div class="demo-wrap">
+      <div class="demo-task-area">
+        <div class="demo-task-label">📌 下达任务</div>
+        <div class="demo-task-row">
+          <input class="demo-task-input" id="subInput" value="/Leader 评估高教版知识库产品的竞品格局、市场空间和技术可行性">
+          <button class="demo-run-btn" id="subRunBtn" onclick="runSubDemo()">▶ 开始调度</button>
+        </div>
+      </div>
+      <div class="mode-diff-callout">
+        <div class="mode-diff-icon">🔒</div>
+        <div class="mode-diff-text"><strong>SubAgent 特征：</strong>Leader 将大任务拆成多个<em>独立子任务</em>，每个子Agent只看到自己的任务，<em>互不沟通</em>，执行完后各自向 Leader 汇报。Leader 汇总后输出结论。</div>
+      </div>
+      <div class="demo-progress"><div class="demo-progress-fill" id="subProgress"></div></div>
+      <div class="agents-grid" id="subGrid"></div>
+      <div class="gm-report" id="subReport"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- DEMO: Agent Teams -->
+<!-- ============================================================ -->
+<section class="demo-section section deep" id="demo-team">
+  <div class="section-inner">
+    <div class="section-tag">05 · Agent Teams 交互演示</div>
+    <h2 class="section-title">Agent Teams：协作开发 Coral MVP</h2>
+    <p class="section-lead" style="margin-bottom:1.5rem"><strong style="color:var(--sage-light)">高教版知识库 Coral 的 MVP 开发</strong>交给整个团队。Leader 拆出任务清单并指定负责人，<br>成员认领任务后<strong style="color:var(--sage-light)">互相商量、互相质疑、互相协作</strong>，最终 Leader 综合决策。</p>
+
+    <div class="demo-topbar">
+      <div class="demo-topbar-left">
+        <div class="demo-topbar-logo" style="background:linear-gradient(135deg, var(--sage), var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">AGENT TEAMS MODE</div>
+        <div class="demo-topbar-mode">任务清单 → 认领任务 → 多角色协作 → 综合决策</div>
+      </div>
+      <div class="demo-topbar-right">
+        <div class="status-dot" id="teamDot"></div>
+        <div class="demo-topbar-status" id="teamStatus">就绪</div>
+      </div>
+    </div>
+    <div class="demo-wrap">
+      <div class="demo-task-area">
+        <div class="demo-task-label">📌 下达任务</div>
+        <div class="demo-task-row">
+          <input class="demo-task-input" id="teamInput" value="/Leader 启动高教版知识库Coral的MVP版本开发，输出任务分工、技术方案和开发计划">
+          <button class="demo-run-btn" id="teamRunBtn" onclick="runTeamDemo()">▶ 开始调度</button>
+        </div>
+      </div>
+      <div class="mode-diff-callout" style="border-color:rgba(61,160,110,.3)">
+        <div class="mode-diff-icon">🔗</div>
+        <div class="mode-diff-text"><strong>Agent Teams 特征：</strong>Leader 先拆出<em>任务清单并指定负责人</em>，成员认领后开始工作。过程中可以<em>互相看到对方产出</em>，直接发消息商量、质疑、补充——像一个真实团队协作开发。</div>
+      </div>
+      <div class="task-list-panel" id="teamTaskList"></div>
+      <div class="demo-progress"><div class="demo-progress-fill" id="teamProgress"></div></div>
+      <div class="agents-grid" id="teamGrid"></div>
+      <div class="gm-report" id="teamReport"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Leader 调度流程 -->
+<!-- ============================================================ -->
+<section class="section dark" id="leader-flow">
+  <div class="section-inner">
+    <div class="section-tag">06 · Leader 调度机制</div>
+    <h2 class="section-title">Leader调度流程</h2>
+    <p class="section-lead" style="margin-bottom:2rem">无论 SubAgent 还是 Agent Teams，Leader的调度逻辑一致：解析任务 → 判断角色 → 并行派发 → 收集产出 → 批判性决策。</p>
+
+    <!-- 流程图 -->
+    <div class="leader-flow">
+      <div class="lf-node lf-user">
+        <div class="lf-icon">👤</div>
+        <div class="lf-text">用户下达任务</div>
+      </div>
+      <div class="lf-arrow">→</div>
+      <div class="lf-node lf-leader">
+        <div class="lf-icon">👔</div>
+        <div class="lf-text">Leader解析<br>判断需要哪些角色</div>
+      </div>
+      <div class="lf-arrow">→</div>
+      <div class="lf-node lf-dispatch">
+        <div class="lf-icon">🚀</div>
+        <div class="lf-text">并行派发<br>多个 Agent 子智能体</div>
+      </div>
+      <div class="lf-arrow">→</div>
+      <div class="lf-node lf-collect">
+        <div class="lf-icon">📥</div>
+        <div class="lf-text">收集各角色产出<br>Read 工具读取文件</div>
+      </div>
+      <div class="lf-arrow">→</div>
+      <div class="lf-node lf-decide">
+        <div class="lf-icon">🎯</div>
+        <div class="lf-text">批判性审视<br>带观点决策汇报</div>
+      </div>
+    </div>
+
+    <!-- 三种编排模式 -->
+    <div style="margin-top:2.5rem">
+      <h3 style="font-family:var(--f-display);font-size:1.3rem;font-weight:700;color:#E8E6E0;margin-bottom:1rem">三种编排模式</h3>
+      <table class="schedule-table">
+        <thead>
+          <tr><th>模式</th><th>适用场景</th><th>示例</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="st-tag st-parallel">全并行</span></td>
+            <td>各角色任务无依赖</td>
+            <td>市场分析师 + 竞品调研员 + 算法总工 同时分析</td>
+          </tr>
+          <tr>
+            <td><span class="st-tag st-chain">依赖链</span></td>
+            <td>有先后关系</td>
+            <td>市场分析 → 产品经理基于市场结论做规划</td>
+          </tr>
+          <tr>
+            <td><span class="st-tag st-hybrid">混合</span></td>
+            <td>部分并行、部分依赖</td>
+            <td>（市场 + 竞品）并行 → 产品经理整合 → 前后端评估</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 共享知识库底座 -->
+<!-- ============================================================ -->
+<section class="section deep" id="knowledge-base">
+  <div class="section-inner">
+    <div class="section-tag">07 · 共享知识库底座</div>
+    <h2 class="section-title">共享知识库底座</h2>
+    <p class="section-lead" style="margin-bottom:2rem">所有角色共享的行业认知框架，确保 11 个角色"说同一种语言"</p>
+
+    <div class="kb-grid">
+      <div class="kb-card" style="border-top-color:var(--fire)">
+        <div class="kb-card-header">
+          <span class="kb-card-icon">👥</span>
+          <span class="kb-card-title">客户群</span>
+        </div>
+        <div class="kb-card-body">本科院校 · "双一流"建设高校 · 学科特色校</div>
+      </div>
+      <div class="kb-card" style="border-top-color:var(--ocean)">
+        <div class="kb-card-header">
+          <span class="kb-card-icon">🔗</span>
+          <span class="kb-card-title">决策链</span>
+        </div>
+        <div class="kb-card-body">信息中心 → 教务处 → 二级学院院长 → 分管校领导</div>
+      </div>
+      <div class="kb-card" style="border-top-color:var(--sage)">
+        <div class="kb-card-header">
+          <span class="kb-card-icon">📚</span>
+          <span class="kb-card-title">业务场景</span>
+        </div>
+        <div class="kb-card-body">智慧教学 · 能力培养 · 科研创新</div>
+      </div>
+      <div class="kb-card" style="border-top-color:var(--violet)">
+        <div class="kb-card-header">
+          <span class="kb-card-icon">⚔️</span>
+          <span class="kb-card-title">竞争格局</span>
+        </div>
+        <div class="kb-card-body">超星 · 学堂在线 · 雨课堂 · 智慧树</div>
+      </div>
+      <div class="kb-card" style="border-top-color:var(--gold)">
+        <div class="kb-card-header">
+          <span class="kb-card-icon">📜</span>
+          <span class="kb-card-title">政策环境</span>
+        </div>
+        <div class="kb-card-body">教育数字化转型 · AI+高教 · 新一轮本科教育教学审核评估</div>
+      </div>
+      <div class="kb-card" style="border-top-color:var(--cyan)">
+        <div class="kb-card-header">
+          <span class="kb-card-icon">📊</span>
+          <span class="kb-card-title">经营指标</span>
+        </div>
+        <div class="kb-card-body">收入 · 毛利 · 回款率 · 续约率 · 客单价 · 人效</div>
+      </div>
+    </div>
+
+    <!-- 维护策略 -->
+    <div class="kb-maintain">
+      <div class="kb-maintain-title">实操要点：知识库底座的维护策略</div>
+      <div class="kb-maintain-grid">
+        <div class="kb-maintain-item">
+          <div class="kb-maintain-label">更新频率</div>
+          <div class="kb-maintain-value">每日根据最新对话中的关键信息自动补充，保持实时鲜活</div>
+        </div>
+        <div class="kb-maintain-item">
+          <div class="kb-maintain-label">更新方式</div>
+          <div class="kb-maintain-value">修改 <code>iflytek-highedu-context.md</code> 一个文件，所有角色自动生效</div>
+        </div>
+        <div class="kb-maintain-item">
+          <div class="kb-maintain-label">扩展方向</div>
+          <div class="kb-maintain-value">可按角色添加专属知识文件，通过 Read 工具引用</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BEST PRACTICES: Agent Teams 实操步骤 (交互式) -->
+<section class="section deep" id="practice">
+  <div class="section-inner">
+    <div class="section-tag">08 · Agent Teams 实操步骤</div>
+    <h2 class="section-title">从 0 到 1 搭建你的 AI 团队</h2>
+    <p class="section-lead" style="margin-bottom:2rem">点击左侧步骤按钮，逐步查看使用 Agent Teams 的完整实操流程。</p>
+
+    <div style="display:grid;grid-template-columns:280px 1fr;gap:1.5rem;min-height:500px">
+      <div id="stepList" style="display:flex;flex-direction:column;gap:.4rem">
+        <button class="step-btn active" onclick="showStep(0)"><span class="step-num" style="background:var(--ocean)">1</span><span class="step-label">创建 Leader-team Skill</span></button>
+        <button class="step-btn" onclick="showStep(1)"><span class="step-num" style="background:var(--ocean)">2</span><span class="step-label">确认创建 Skill 文件</span></button>
+        <button class="step-btn" onclick="showStep(2)"><span class="step-num" style="background:var(--ocean)">3</span><span class="step-label">两种模式共存</span></button>
+        <button class="step-btn" onclick="showStep(3)"><span class="step-num" style="background:var(--fire)">4</span><span class="step-label">调用 /Leader-team 下达任务</span></button>
+        <button class="step-btn" onclick="showStep(4)"><span class="step-num" style="background:var(--fire)">5</span><span class="step-label">Leader 拆解任务分配工作</span></button>
+        <button class="step-btn" onclick="showStep(5)"><span class="step-num" style="background:var(--sage)">6</span><span class="step-label">切换角色查看进度</span></button>
+        <button class="step-btn" onclick="showStep(6)"><span class="step-num" style="background:var(--sage)">7</span><span class="step-label">依赖解锁，下游启动</span></button>
+        <button class="step-btn" onclick="showStep(7)"><span class="step-num" style="background:var(--violet)">8</span><span class="step-label">成员互相沟通协作</span></button>
+        <button class="step-btn" onclick="showStep(8)"><span class="step-num" style="background:var(--gold)">9</span><span class="step-label">Leader 输出决策报告</span></button>
+      </div>
+      <div id="stepContent" style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.5rem;overflow-y:auto"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+.step-btn {
+  display: flex; align-items: center; gap: .6rem;
+  padding: .6rem .8rem; border-radius: 8px;
+  border: 1px solid transparent; background: rgba(255,255,255,.03);
+  cursor: pointer; transition: all .2s; text-align: left;
+}
+.step-btn:hover { background: rgba(255,255,255,.06); border-color: var(--border); }
+.step-btn.active { background: rgba(232,93,58,.08); border-color: var(--fire); }
+.step-btn.active .step-label { color: #E8E6E0; }
+.step-num {
+  flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--f-mono); font-size: .7rem; font-weight: 700; color: #fff;
+}
+.step-label { font-size: .78rem; color: var(--term-dim); font-weight: 500; }
+.step-btn.visited .step-num { opacity: .6; }
+.step-btn.visited .step-label { color: var(--term-dim); }
+.step-btn.active .step-num { box-shadow: 0 0 0 3px rgba(232,93,58,.3); }
+@media (max-width: 900px) {
+  #practice .section-inner > div { grid-template-columns: 1fr !important; }
+  #stepList { flex-direction: row; overflow-x: auto; gap: .3rem; }
+  .step-label { display: none; }
+  .step-btn { padding: .4rem; justify-content: center; }
+}
+</style>
+
+<!-- ============================================================ -->
+<!-- 角色优化路线图 -->
+<!-- ============================================================ -->
+<section class="section dark" id="role-roadmap">
+  <div class="section-inner">
+    <div class="section-tag">09 · 角色优化路线</div>
+    <h2 class="section-title">各角色优化路线图</h2>
+    <p class="section-lead" style="margin-bottom:2rem">每个角色的当前状态、已知短板、和具体的优化计划</p>
+
+    <div class="roadmap-table-wrap">
+      <table class="roadmap-table">
+        <thead>
+          <tr><th>角色</th><th>当前状态</th><th>已知短板</th><th>优先优化项</th><th>预期效果</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Leader</strong></td>
+            <td><span class="rt-status rt-live">v1.0 已上线</span></td>
+            <td>复杂任务调度偶发子Agent权限中断</td>
+            <td>增加降级策略：子Agent失败时自动回退主会话继续执行</td>
+            <td>调度成功率 → 99%</td>
+          </tr>
+          <tr>
+            <td><strong>市场分析师</strong></td>
+            <td><span class="rt-status rt-live">v1.0 已上线</span></td>
+            <td>无实时数据源，依赖模型训练截止日的知识</td>
+            <td>接入 WebSearch MCP，支持实时政策文件和招标信息检索</td>
+            <td>数据时效性 → 实时</td>
+          </tr>
+          <tr>
+            <td><strong>竞品调研员</strong></td>
+            <td><span class="rt-status rt-live">v1.0 已上线</span></td>
+            <td>无法直接访问竞品产品界面和功能截图</td>
+            <td>支持 URL/截图输入，增加视觉分析对比能力</td>
+            <td>竞品拆解从文字描述 → 功能级对标</td>
+          </tr>
+          <tr>
+            <td><strong>产品经理</strong></td>
+            <td><span class="rt-status rt-live">v1.0 已上线</span></td>
+            <td>PRD 模板偏通用，缺少高教场景的用户故事库</td>
+            <td>内置高教教学场景 PRD 模板 + 历史 PRD 库作为参考</td>
+            <td>PRD 可直接进入评审，不需要二次改写</td>
+          </tr>
+          <tr>
+            <td><strong>算法总工</strong></td>
+            <td><span class="rt-status rt-live">v1.0 已上线</span></td>
+            <td>技术评估缺少量化成本模型和算力估算</td>
+            <td>增加 Token 成本计算器 + 推理算力需求估算框架</td>
+            <td>方案评估带具体数字，而非"成本可控"</td>
+          </tr>
+          <tr>
+            <td><strong>前端研发</strong></td>
+            <td><span class="rt-status rt-live">v1.0 已上线</span></td>
+            <td>不了解讯飞高教产品的 UI 设计规范</td>
+            <td>注入设计系统文档（色彩/组件/间距/交互规范）</td>
+            <td>产出代码直接符合品牌视觉标准</td>
+          </tr>
+          <tr>
+            <td><strong>后端研发</strong></td>
+            <td><span class="rt-status rt-live">v1.0 已上线</span></td>
+            <td>不了解现有系统架构和技术栈选型</td>
+            <td>注入现有微服务架构文档 + API 规范 + 数据库 Schema</td>
+            <td>技术方案可直接对接现有系统</td>
+          </tr>
+          <tr>
+            <td><strong>测试工程师</strong></td>
+            <td><span class="rt-status rt-live">v1.0 已上线</span></td>
+            <td>只能写测试方案，无法执行真实测试</td>
+            <td>对接 CI/CD 工具链 MCP，支持触发自动化测试流水线</td>
+            <td>从"写测试方案" → "跑测试拿报告"</td>
+          </tr>
+          <tr>
+            <td><strong>咨询</strong></td>
+            <td><span class="rt-status rt-live">v1.0 已上线</span></td>
+            <td>缺少客户需求库和历史项目交付经验</td>
+            <td>注入典型客户需求清单 + 高教信息化项目交付案例库</td>
+            <td>咨询方案贴合客户实际场景</td>
+          </tr>
+          <tr>
+            <td><strong>销售</strong></td>
+            <td><span class="rt-status rt-live">v1.0 已上线</span></td>
+            <td>报价策略和商务谈判经验不足</td>
+            <td>注入产品定价体系 + 历史中标案例 + 客户画像标签</td>
+            <td>售前方案带可落地的报价方案</td>
+          </tr>
+          <tr>
+            <td><strong>交付</strong></td>
+            <td><span class="rt-status rt-live">v1.0 已上线</span></td>
+            <td>缺少部署环境差异和常见交付问题清单</td>
+            <td>注入典型部署方案 + 私有化交付 CheckList + 验收标准模板</td>
+            <td>交付方案可直接作为实施手册</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 团队级优化路线 -->
+<!-- ============================================================ -->
+<section class="section deep" id="team-roadmap">
+  <div class="section-inner">
+    <div class="section-tag">10 · 团队优化路线</div>
+    <h2 class="section-title">团队级优化路线</h2>
+
+    <div class="phase-timeline">
+      <div class="phase-item phase-done">
+        <div class="phase-dot"></div>
+        <div class="phase-content">
+          <div class="phase-label">PHASE 1 · 已完成</div>
+          <div class="phase-title">角色定义 + Skill 编写 + 知识底座</div>
+          <div class="phase-desc">11 个角色 Skill.md 全部完成，共享知识底座上线，自动归档和 Memory 机制就绪。每个角色可独立调用，也可通过 Leader 统一调度。</div>
+        </div>
+      </div>
+
+      <div class="phase-item phase-active">
+        <div class="phase-dot"></div>
+        <div class="phase-content">
+          <div class="phase-label">PHASE 2 · 进行中</div>
+          <div class="phase-title">实战验证 + 产出质量调优</div>
+          <div class="phase-desc">用真实业务任务（立项评估、售前方案、Coral MVP）测试每个角色，根据产出质量迭代 Skill.md 的规则和模板。重点打磨 Leader 调度的稳定性和汇报质量——确保"带观点的决策"而非"搬运式汇总"。</div>
+        </div>
+      </div>
+
+      <div class="phase-item phase-planned">
+        <div class="phase-dot"></div>
+        <div class="phase-content">
+          <div class="phase-label">PHASE 3 · 计划中</div>
+          <div class="phase-title">MCP 工具链集成</div>
+          <div class="phase-desc">市场分析师接入 WebSearch 获取实时政策和招标信息；测试工程师对接 CI/CD 触发自动化测试；竞品调研员接入截图分析——从"纯文本推理"升级为"工具增强的实战分析"。</div>
+        </div>
+      </div>
+
+      <div class="phase-item phase-planned">
+        <div class="phase-dot"></div>
+        <div class="phase-content">
+          <div class="phase-label">PHASE 4 · 计划中</div>
+          <div class="phase-title">专属知识注入</div>
+          <div class="phase-desc">为每个角色添加专属知识文件：前端注入 UI 设计规范，后端注入系统架构文档，产品经理注入历史 PRD 库，算法总工注入成本计算模型，销售注入定价体系和中标案例。从"通用能力"进化为"讯飞高教专属能力"。</div>
+        </div>
+      </div>
+
+      <div class="phase-item phase-future">
+        <div class="phase-dot"></div>
+        <div class="phase-content">
+          <div class="phase-label">PHASE 5 · 远期</div>
+          <div class="phase-title">多场景协作流程固化</div>
+          <div class="phase-desc">将高频协作场景（立项评审会、售前方案协作、季度经营分析、产品复盘会）固化为可一键触发的标准流程。每个场景预设参与角色、任务拆分规则和产出模板——从"每次手动指挥"进化为"一句话启动标准流程"。</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:2rem;font-family:var(--f-mono);font-size:.65rem;color:var(--term-dim)">AI教学产品部 · Built with Claude Code + Skill</div>
+  </div>
+</section>
+
+<!-- 核心洞察（滑页导航） -->
+<section class="section deep" id="action" style="min-height:100vh">
+  <div class="section-inner">
+    <div class="section-tag">11 · 多智能体实践的核心洞察</div>
+    <h2 class="section-title">搭建只是开始，进化才是关键</h2>
+    <p class="section-lead" style="margin-bottom:1.5rem">点击下方导航，逐页浏览 5 个核心洞察。</p>
+
+    <!-- 洞察导航条 -->
+    <div id="insightNav" style="display:flex;gap:.4rem;margin-bottom:1.2rem;flex-wrap:wrap">
+      <button class="insight-btn active" onclick="showInsight(0)"><span class="insight-idx" style="background:var(--fire)">01</span> 三层架构</button>
+      <button class="insight-btn" onclick="showInsight(1)"><span class="insight-idx" style="background:var(--sage)">02</span> 自动归档</button>
+      <button class="insight-btn" onclick="showInsight(2)"><span class="insight-idx" style="background:var(--ocean)">03</span> 三种文件</button>
+      <button class="insight-btn" onclick="showInsight(3)"><span class="insight-idx" style="background:var(--gold)">04</span> 进化飞轮</button>
+      <button class="insight-btn" onclick="showInsight(4)"><span class="insight-idx" style="background:var(--violet)">05</span> 多智能体的本质</button>
+    </div>
+
+    <!-- 洞察面板容器 -->
+    <div id="insightContainer" style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:2rem;min-height:460px;position:relative;transition:opacity .3s,transform .3s"></div>
+
+    <div style="text-align:center;margin-top:2rem;font-family:var(--f-mono);font-size:.6rem;color:var(--term-dim)">AI教学产品部 · 2026.03</div>
+  </div>
+</section>
+
+<style>
+.insight-btn {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .5rem .8rem; border-radius: 6px;
+  border: 1px solid transparent; background: rgba(255,255,255,.03);
+  cursor: pointer; transition: all .2s; font-size: .75rem;
+  font-weight: 500; color: var(--term-dim);
+}
+.insight-btn:hover { background: rgba(255,255,255,.06); border-color: var(--border); }
+.insight-btn.active { background: rgba(232,93,58,.08); border-color: var(--fire); color: #E8E6E0; }
+.insight-idx {
+  flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 4px;
+  font-family: var(--f-mono); font-size: .6rem; font-weight: 700; color: #fff;
+}
+.insight-btn.active .insight-idx { box-shadow: 0 0 0 2px rgba(232,93,58,.3); }
+@media (max-width: 900px) { .insight-btn span:not(.insight-idx) { display: none; } }
+</style>
+
+<!-- ============================================================ -->
+<!-- 反转：回归产品 -->
+<!-- ============================================================ -->
+<section class="section dark" id="mirror" style="min-height:100vh">
+  <div class="section-inner">
+    <div class="section-tag" style="color:var(--gold)">12 · 回归产品</div>
+
+    <!-- 第一屏：悬念揭示 -->
+    <div class="mirror-reveal">
+      <div class="mirror-hook">回想一下</div>
+      <h2 class="mirror-question">过去 30 分钟，你是怎么"学会"多智能体的？</h2>
+      <div class="mirror-pause">
+        <div class="mirror-pause-line"></div>
+        <span>认真想 10 秒</span>
+        <div class="mirror-pause-line"></div>
+      </div>
+      <div class="mirror-answer">
+        <div class="mirror-answer-text">你没有读过一页文档。<br>你没有看过一段录播。<br>你没有做过一道填空题。</div>
+        <div class="mirror-answer-highlight">你<em>体验</em>了一个被精心设计过的学习路径。<br>而这条路径背后的设计原则——<br><strong>恰好就是我们要做的产品。</strong></div>
+      </div>
+    </div>
+
+    <!-- 第二屏：6组映射 -->
+    <div class="mirror-mapping">
+      <h3 class="mirror-mapping-title">这门课对你做的事 = 我们的产品应该对学生做的事</h3>
+
+      <div class="mirror-grid">
+        <div class="mirror-card">
+          <div class="mirror-card-from">
+            <div class="mirror-card-label">这门课是怎么做的</div>
+            <div class="mirror-card-text">所有案例都是你真实在做的产品——Coral、售前方案、高校客户</div>
+          </div>
+          <div class="mirror-card-arrow">→</div>
+          <div class="mirror-card-to">
+            <div class="mirror-card-label">学生自学产品应该怎么做</div>
+            <div class="mirror-card-text">训练素材必须锚定学生<strong>这学期这门课</strong>的大纲，不用通用题库</div>
+          </div>
+          <div class="mirror-card-principle">真实场景 > 通用描述</div>
+        </div>
+
+        <div class="mirror-card">
+          <div class="mirror-card-from">
+            <div class="mirror-card-label">这门课是怎么做的</div>
+            <div class="mirror-card-text">11个角色名、编号、团队归属——全局每一处都严格统一</div>
+          </div>
+          <div class="mirror-card-arrow">→</div>
+          <div class="mirror-card-to">
+            <div class="mirror-card-label">学生自学产品应该怎么做</div>
+            <div class="mirror-card-text">术语、难度标尺、反馈语气——跨章节全局一致，跟老师课堂讲的一样</div>
+          </div>
+          <div class="mirror-card-principle">一致性 = 信任</div>
+        </div>
+
+        <div class="mirror-card">
+          <div class="mirror-card-from">
+            <div class="mirror-card-label">这门课是怎么做的</div>
+            <div class="mirror-card-text">讲完三种模式 → 立刻做测试题 → 确认理解了才往下看演示</div>
+          </div>
+          <div class="mirror-card-arrow">→</div>
+          <div class="mirror-card-to">
+            <div class="mirror-card-label">学生自学产品应该怎么做</div>
+            <div class="mirror-card-text">每个知识点"讲解→练习→反馈"闭环，5分钟一个循环，不堆到章末</div>
+          </div>
+          <div class="mirror-card-principle">学完立刻验证，而非攒到最后</div>
+        </div>
+
+        <div class="mirror-card">
+          <div class="mirror-card-from">
+            <div class="mirror-card-label">这门课是怎么做的</div>
+            <div class="mirror-card-text">Leader 调度流程做成独立 section 直接可见，而非藏在 tab 里</div>
+          </div>
+          <div class="mirror-card-arrow">→</div>
+          <div class="mirror-card-to">
+            <div class="mirror-card-label">学生自学产品应该怎么做</div>
+            <div class="mirror-card-text">错误解析自动展开在答案旁边，薄弱点主动浮出，学习进度始终可见</div>
+          </div>
+          <div class="mirror-card-principle">关键信息不需要学生主动寻找</div>
+        </div>
+
+        <div class="mirror-card">
+          <div class="mirror-card-from">
+            <div class="mirror-card-label">这门课是怎么做的</div>
+            <div class="mirror-card-text">Agent Teams 做了卡片式优缺点，SubAgent 和单一对话同步升级</div>
+          </div>
+          <div class="mirror-card-arrow">→</div>
+          <div class="mirror-card-to">
+            <div class="mirror-card-label">学生自学产品应该怎么做</div>
+            <div class="mirror-card-text">同一知识点设计 3 种场景变体：辨析型、应用型、开放建构型</div>
+          </div>
+          <div class="mirror-card-principle">举一反三，不是重复同一种题型</div>
+        </div>
+
+        <div class="mirror-card">
+          <div class="mirror-card-from">
+            <div class="mirror-card-label">这门课是怎么做的</div>
+            <div class="mirror-card-text">"30分钟→2小时"比"1小时→半天"更真实，痛点卡片深度要对齐</div>
+          </div>
+          <div class="mirror-card-arrow">→</div>
+          <div class="mirror-card-to">
+            <div class="mirror-card-label">学生自学产品应该怎么做</div>
+            <div class="mirror-card-text">难度标注必须准确、答案解析不能有错——学生自学时没有老师兜底</div>
+          </div>
+          <div class="mirror-card-principle">每一个细节都是信任的筹码</div>
+        </div>
+      </div>
+
+      <!-- 点睛 -->
+      <div class="mirror-closing">
+        <div class="mirror-closing-line"></div>
+        <div class="mirror-closing-text">
+          <div class="mirror-closing-main">课堂上老师说错了，下节课可以纠正。<br>自学产品说错了，学生就学错了——<strong>而且他不知道自己学错了。</strong></div>
+          <div class="mirror-closing-sub">所以我们做产品的标准，必须比课堂更高。<br>今天这门课的每一次调优，都是在帮我们找到那个标准。</div>
+        </div>
+        <div class="mirror-closing-line"></div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:3rem;font-family:var(--f-mono);font-size:.6rem;color:var(--term-dim)">AI教学产品部 · 2026.03</div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 知识沉淀 · 收尾行动号召 -->
+<!-- ============================================================ -->
+<section class="section deep" id="share" style="min-height:80vh;display:flex;align-items:center">
+  <div class="section-inner" style="text-align:center;max-width:720px;margin:0 auto">
+    <div class="section-tag" style="color:var(--sage-light)">13 · 最后一件事</div>
+    <h2 class="section-title" style="font-size:2rem;margin-bottom:1rem">不需要完美<br>真实的经验最有价值</h2>
+    <p style="font-size:.95rem;color:var(--term-dim);line-height:2;margin-bottom:2rem">
+      今天你学到的每一个技巧、踩过的每一个坑、验证的每一种方法——<br>
+      写下来，就不只是你一个人的收获。<br><br>
+      一个小提示、一段配置代码、一次失败的复盘——<br>
+      <strong style="color:#E8E6E0">都值得被记录，都值得被分享。</strong>
+    </p>
+
+    <!-- 社区入口卡片 -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:2rem;margin-bottom:2rem;text-align:left">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem">
+        <div style="width:48px;height:48px;border-radius:10px;background:rgba(61,160,110,.12);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0">📝</div>
+        <div>
+          <div style="font-family:var(--f-display);font-size:1.15rem;font-weight:700;color:#E8E6E0">AI 实践创作社区</div>
+          <div style="font-size:.78rem;color:var(--term-dim)">AI教学产品部 · 11 位创作者 · 持续更新中</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-bottom:1.2rem">
+        <div style="background:rgba(255,255,255,.03);border-radius:6px;padding:.8rem;text-align:center">
+          <div style="font-family:var(--f-display);font-size:1.4rem;font-weight:700;color:var(--sage-light)">11</div>
+          <div style="font-size:.65rem;color:var(--term-dim)">位创作者</div>
+        </div>
+        <div style="background:rgba(255,255,255,.03);border-radius:6px;padding:.8rem;text-align:center">
+          <div style="font-family:var(--f-display);font-size:1.4rem;font-weight:700;color:var(--ocean-light)">12+</div>
+          <div style="font-size:.65rem;color:var(--term-dim)">篇实践案例</div>
+        </div>
+        <div style="background:rgba(255,255,255,.03);border-radius:6px;padding:.8rem;text-align:center">
+          <div style="font-family:var(--f-display);font-size:1.4rem;font-weight:700;color:var(--fire-glow)">置顶推荐</div>
+          <div style="font-size:.65rem;color:var(--term-dim)">精选内容</div>
+        </div>
+      </div>
+      <div style="font-size:.82rem;color:var(--term-dim);line-height:1.7;margin-bottom:1.2rem">
+        彤彤、绍栋、雅鑫、Ethan…… 已经在分享他们的实践。<br>
+        你的名字，什么时候出现在这里？
+      </div>
+      <a href="智能体团队_展示网站_V2.html#community" target="_blank" style="display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.5rem;border-radius:6px;background:var(--sage);color:#fff;font-size:.85rem;font-weight:700;text-decoration:none;transition:opacity .2s">
+        进入创作社区 →
+      </a>
+    </div>
+
+    <!-- 三条行动建议 -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;text-align:left">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.2rem">
+        <div style="font-size:1.2rem;margin-bottom:.5rem">💡</div>
+        <div style="font-size:.82rem;font-weight:700;color:#E8E6E0;margin-bottom:.3rem">今天就能做</div>
+        <div style="font-size:.75rem;color:var(--term-dim);line-height:1.6">把你刚才学到的一个技巧，用 3 句话写下来发到社区</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.2rem">
+        <div style="font-size:1.2rem;margin-bottom:.5rem">🔧</div>
+        <div style="font-size:.82rem;font-weight:700;color:#E8E6E0;margin-bottom:.3rem">本周试一试</div>
+        <div style="font-size:.75rem;color:var(--term-dim);line-height:1.6">用一个真实工作任务测试多智能体协作，记录过程和结果</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.2rem">
+        <div style="font-size:1.2rem;margin-bottom:.5rem">📢</div>
+        <div style="font-size:.82rem;font-weight:700;color:#E8E6E0;margin-bottom:.3rem">持续沉淀</div>
+        <div style="font-size:.75rem;color:var(--term-dim);line-height:1.6">每次有新发现就发一篇，不用长，3 行字也是贡献</div>
+      </div>
+    </div>
+
+    <div style="margin-top:2.5rem;font-size:.88rem;color:var(--term-dim);line-height:1.8">
+      <em style="color:var(--sage-light);font-style:normal;font-weight:600">"写下来的经验，比说过的经验活得久。"</em>
+    </div>
+    <div style="margin-top:2rem;font-family:var(--f-mono);font-size:.6rem;color:var(--term-dim)">AI教学产品部 · 2026.03</div>
+  </div>
+</section>
+
+<style>
+/* ===== MIRROR / PLOT TWIST ===== */
+.mirror-reveal {
+  min-height: 70vh; display: flex; flex-direction: column;
+  justify-content: center; align-items: center; text-align: center;
+  padding: 2rem 0;
+}
+.mirror-hook {
+  font-family: var(--f-mono); font-size: .7rem; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 1rem;
+}
+.mirror-question {
+  font-family: var(--f-display); font-size: 2.2rem; font-weight: 800;
+  color: #E8E6E0; line-height: 1.2; letter-spacing: -.02em; max-width: 600px;
+}
+.mirror-pause {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 2rem 0; font-family: var(--f-mono); font-size: .65rem;
+  color: var(--term-dim); letter-spacing: .1em;
+}
+.mirror-pause-line { width: 60px; height: 1px; background: var(--border); }
+.mirror-answer { margin-top: 1rem; max-width: 550px; }
+.mirror-answer-text {
+  font-size: 1rem; color: var(--term-dim); line-height: 2.2;
+  margin-bottom: 1.5rem;
+}
+.mirror-answer-highlight {
+  font-family: var(--f-display); font-size: 1.25rem; font-weight: 700;
+  color: #E8E6E0; line-height: 1.8;
+}
+.mirror-answer-highlight em {
+  font-style: normal; color: var(--gold-light);
+  border-bottom: 2px solid var(--gold);
+}
+.mirror-answer-highlight strong {
+  background: linear-gradient(135deg, var(--fire-glow), var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+/* Mapping section */
+.mirror-mapping { padding: 3rem 0; }
+.mirror-mapping-title {
+  font-family: var(--f-display); font-size: 1.4rem; font-weight: 800;
+  color: #E8E6E0; text-align: center; margin-bottom: 2rem; line-height: 1.4;
+}
+.mirror-grid { display: flex; flex-direction: column; gap: 1rem; }
+.mirror-card {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  gap: .8rem; align-items: center;
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 1.2rem 1.5rem; position: relative;
+}
+.mirror-card-from, .mirror-card-to { }
+.mirror-card-label {
+  font-family: var(--f-mono); font-size: .58rem; letter-spacing: .08em;
+  text-transform: uppercase; margin-bottom: .4rem;
+}
+.mirror-card-from .mirror-card-label { color: var(--ocean-light); }
+.mirror-card-to .mirror-card-label { color: var(--sage-light); }
+.mirror-card-text { font-size: .82rem; color: var(--term-dim); line-height: 1.6; }
+.mirror-card-text strong { color: #E8E6E0; }
+.mirror-card-arrow {
+  font-size: 1.2rem; color: var(--gold); font-weight: 700; flex-shrink: 0;
+}
+.mirror-card-principle {
+  position: absolute; top: -.5rem; right: 1rem;
+  font-family: var(--f-mono); font-size: .6rem; font-weight: 600;
+  color: var(--gold); background: var(--void); padding: .1rem .6rem;
+  border: 1px solid rgba(212,167,44,.3); border-radius: 3px;
+}
+
+/* Closing */
+.mirror-closing {
+  margin-top: 2.5rem; display: flex; flex-direction: column;
+  align-items: center; gap: 1.5rem;
+}
+.mirror-closing-line { width: 40px; height: 2px; background: var(--gold); }
+.mirror-closing-text { text-align: center; max-width: 580px; }
+.mirror-closing-main {
+  font-family: var(--f-display); font-size: 1.1rem; font-weight: 700;
+  color: #E8E6E0; line-height: 1.8; margin-bottom: 1rem;
+}
+.mirror-closing-main strong { color: var(--fire-glow); }
+.mirror-closing-sub {
+  font-size: .88rem; color: var(--term-dim); line-height: 1.8;
+}
+
+@media (max-width: 900px) {
+  .mirror-question { font-size: 1.5rem; }
+  .mirror-card { grid-template-columns: 1fr; gap: .4rem; }
+  .mirror-card-arrow { text-align: center; transform: rotate(90deg); }
+  .mirror-card-principle { position: static; margin-top: .4rem; display: inline-block; }
+}
+</style>
+
+</div>
+
+<script>
+// ===== INSIGHTS DATA =====
+const insightsData = [
+  // 01 三层架构
+  `<div style="font-family:var(--f-mono);font-size:.6rem;color:var(--fire);letter-spacing:.15em;margin-bottom:.6rem">洞察 01 / 05 · 核心架构</div>
+  <div style="font-family:var(--f-display);font-weight:800;font-size:1.8rem;margin-bottom:.6rem">智能体团队 = 三层架构</div>
+  <div style="font-size:.9rem;color:var(--term-dim);line-height:1.8;margin-bottom:1.5rem">搭建顺序是<strong style="color:#E8E6E0">自下而上</strong>——先有地基，再盖房子，最后装修。</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+    <div style="background:var(--void);border:1px solid var(--border);border-top:3px solid var(--sage);border-radius:8px;padding:1.5rem">
+      <div style="font-family:var(--f-mono);font-size:.6rem;color:var(--sage-light);letter-spacing:.08em;margin-bottom:.5rem">第一层 · 地基</div>
+      <div style="font-weight:700;font-size:1.05rem;margin-bottom:.5rem">行业知识底座</div>
+      <div style="font-size:.8rem;color:var(--term-dim);line-height:1.7">一份 40 行的文件，固化团队的行业认知：客户是谁、决策链怎么走、竞品格局、政策环境。</div>
+      <div style="margin-top:.8rem;font-size:.78rem;color:var(--term-dim)">所有角色共享这一份。改一处，全员更新。</div>
+      <div style="margin-top:.6rem;display:inline-block;font-size:.65rem;padding:.25rem .6rem;border-radius:3px;background:rgba(61,160,110,.12);color:var(--sage-light);font-weight:600">10 分钟搞定</div>
+    </div>
+    <div style="background:var(--void);border:1px solid var(--border);border-top:3px solid var(--ocean);border-radius:8px;padding:1.5rem">
+      <div style="font-family:var(--f-mono);font-size:.6rem;color:var(--ocean-light);letter-spacing:.08em;margin-bottom:.5rem">第二层 · 房子</div>
+      <div style="font-weight:700;font-size:1.05rem;margin-bottom:.5rem">角色 Skill 文件</div>
+      <div style="font-size:.8rem;color:var(--term-dim);line-height:1.7">每个角色一份 200-500 行的"岗位说明书"：核心能力、工作流程、输出模板、分析框架、归档规则。</div>
+      <div style="margin-top:.8rem;font-size:.78rem;color:var(--term-dim)"><strong style="color:#E8E6E0">不是写 Prompt，是定义一个岗位。</strong></div>
+      <div style="margin-top:.6rem;display:inline-block;font-size:.65rem;padding:.25rem .6rem;border-radius:3px;background:rgba(58,124,165,.12);color:var(--ocean-light);font-weight:600">每个 15 分钟</div>
+    </div>
+    <div style="background:var(--void);border:1px solid var(--border);border-top:3px solid var(--fire);border-radius:8px;padding:1.5rem">
+      <div style="font-family:var(--f-mono);font-size:.6rem;color:var(--fire-glow);letter-spacing:.08em;margin-bottom:.5rem">第三层 · 装修</div>
+      <div style="font-weight:700;font-size:1.05rem;margin-bottom:.5rem">Leader 调度层</div>
+      <div style="font-size:.8rem;color:var(--term-dim);line-height:1.7">唯一需要写"管理逻辑"的角色：判断调谁、并行派发、收集产出、批判性审视、综合决策。</div>
+      <div style="margin-top:.8rem;font-size:.78rem;color:var(--term-dim)"><strong style="color:#E8E6E0">核心价值是有观点，不是当搬运工。</strong></div>
+      <div style="margin-top:.6rem;display:inline-block;font-size:.65rem;padding:.25rem .6rem;border-radius:3px;background:rgba(232,93,58,.12);color:var(--fire-glow);font-weight:600">30 分钟搞定</div>
+    </div>
+  </div>`,
+
+  // 02 自动归档
+  `<div style="font-family:var(--f-mono);font-size:.6rem;color:var(--sage);letter-spacing:.15em;margin-bottom:.6rem">洞察 02 / 05 · 自动化前提</div>
+  <div style="font-family:var(--f-display);font-weight:800;font-size:1.8rem;line-height:1.2;margin-bottom:1rem">自动归档<br>不是"可选项"，是"必选项"</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem">
+    <div>
+      <div style="border-left:3px solid var(--fire);padding-left:1.2rem;margin-bottom:1.5rem">
+        <div style="font-size:.88rem;font-weight:700;color:var(--fire-glow);margin-bottom:.6rem">不归档会怎样？</div>
+        <div style="font-size:.85rem;color:var(--term-dim);line-height:2">
+          · 关掉对话 → 产出丢了<br>
+          · 两天后想找 → 找不到了<br>
+          · Leader 调度 → 读不到其他角色的产出<br>
+          · 定时执行 → 结果没地方存
+        </div>
+        <div style="margin-top:1rem;font-size:.9rem"><strong style="color:#E8E6E0">没有归档，自动化就是空中楼阁。</strong></div>
+      </div>
+    </div>
+    <div>
+      <div style="background:var(--void);border-radius:8px;padding:1.2rem;font-family:var(--f-mono);font-size:.72rem;color:var(--term-dim);line-height:2;margin-bottom:1rem">
+        <span style="color:var(--fire)">路径规则：</span><span style="color:var(--term-text)">~/ClaudeCode/智能体团队产出/</span><br>
+        <span style="color:var(--term-text)">├── 市场分析师/</span><br>
+        <span style="color:var(--term-text)">├── 竞品调研员/</span><br>
+        <span style="color:var(--term-text)">├── 产品经理/</span><br>
+        <span style="color:var(--term-text)">├── 算法总工/ 前端/ 后端/ 测试/</span><br>
+        <span style="color:var(--term-text)">├── 咨询/ 销售/ 交付/</span><br>
+        <span style="color:var(--term-text)">└── Leader/</span><br><br>
+        <span style="color:var(--gold)">命名规则：</span><span style="color:var(--term-text)">YYYY-MM-DD-{任务主题}.md</span><br>
+        <span style="color:var(--sage)">写入方式：</span><span style="color:var(--term-text)">Write 工具自动写入，无需手动操作</span>
+      </div>
+      <div style="border-left:3px solid var(--gold);padding-left:1rem;font-size:.85rem;color:var(--term-dim);line-height:1.8">每个角色的 Skill 里都要<strong style="color:#E8E6E0">写死归档路径</strong>。<br>不是建议，是硬要求。</div>
+    </div>
+  </div>`,
+
+  // 03 三种文件
+  `<div style="font-family:var(--f-mono);font-size:.6rem;color:var(--ocean);letter-spacing:.15em;margin-bottom:.6rem">洞察 03 / 05 · 进化机制</div>
+  <div style="font-family:var(--f-display);font-weight:800;font-size:1.8rem;margin-bottom:1.5rem">三种让团队变强的文件</div>
+  <div style="display:flex;flex-direction:column;gap:1rem">
+    <div style="background:var(--void);border:1px solid var(--border);border-left:3px solid var(--fire);border-radius:0 8px 8px 0;padding:1.2rem 1.5rem;display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:center">
+      <div>
+        <div style="font-weight:700;font-size:1rem;color:var(--fire-glow);margin-bottom:.4rem">Skill 文件 — 角色的"岗位手册"</div>
+        <div style="font-size:.82rem;color:var(--term-dim);line-height:1.7">补充遗漏的能力维度 · 细化分析框架 · 增加新的工作场景 · 优化输出模板</div>
+      </div>
+      <div style="font-size:.72rem;color:var(--term-dim);text-align:right;white-space:nowrap">改进频率<br><strong style="color:#E8E6E0;font-size:.82rem">每周 review</strong></div>
+    </div>
+    <div style="background:var(--void);border:1px solid var(--border);border-left:3px solid var(--ocean);border-radius:0 8px 8px 0;padding:1.2rem 1.5rem;display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:center">
+      <div>
+        <div style="font-weight:700;font-size:1rem;color:var(--ocean-light);margin-bottom:.4rem">行业知识底座 — 团队的"行业认知"</div>
+        <div style="font-size:.82rem;color:var(--term-dim);line-height:1.7">竞品格局变化时更新 · 新政策出台时更新 · 客户决策链有变时更新 · 角色产出的好结论反哺</div>
+      </div>
+      <div style="font-size:.72rem;color:var(--term-dim);text-align:right;white-space:nowrap">改进频率<br><strong style="color:#E8E6E0;font-size:.82rem">每日自动补充</strong></div>
+    </div>
+    <div style="background:var(--void);border:1px solid var(--border);border-left:3px solid var(--sage);border-radius:0 8px 8px 0;padding:1.2rem 1.5rem;display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:center">
+      <div>
+        <div style="font-weight:700;font-size:1rem;color:var(--sage-light);margin-bottom:.4rem">Memory 规则 — 团队的"工作纪律"</div>
+        <div style="font-size:.82rem;color:var(--term-dim);line-height:1.7">你纠正过的问题 → 写入永久规则 · 偏好的工作方式 → 固化 · 文件组织规范 → 固化 · 输出风格偏好 → 固化</div>
+      </div>
+      <div style="font-size:.72rem;color:var(--term-dim);text-align:right;white-space:nowrap">改进频率<br><strong style="color:#E8E6E0;font-size:.82rem">立刻写</strong></div>
+    </div>
+  </div>
+  <div style="margin-top:1.5rem;border-left:3px solid var(--gold);padding-left:1.2rem;font-size:.9rem;color:var(--term-dim);line-height:1.8">智能体团队的进化速度，取决于你把反馈转化成文件的速度。<br><strong style="color:#E8E6E0">每一次纠正都是永久性训练——前提是你把它写下来了。</strong></div>`,
+
+  // 04 进化飞轮
+  `<div style="font-family:var(--f-mono);font-size:.6rem;color:var(--gold);letter-spacing:.15em;margin-bottom:.6rem">洞察 04 / 05 · 持续进化</div>
+  <div style="font-family:var(--f-display);font-weight:800;font-size:1.8rem;margin-bottom:1.5rem">用 → 评 → 改 → 沉淀<br>四步进化飞轮</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem">
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <div style="display:flex;align-items:flex-start;gap:.8rem">
+        <div style="flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--fire);display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:.75rem;font-weight:700;color:#fff">1</div>
+        <div><div style="font-weight:700;font-size:.95rem;margin-bottom:.2rem">用真实任务测试</div><div style="font-size:.8rem;color:var(--term-dim);line-height:1.7">不用假任务，拿手上正在做的真实工作喂给角色。</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:.8rem">
+        <div style="flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--ocean);display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:.75rem;font-weight:700;color:#fff">2</div>
+        <div><div style="font-weight:700;font-size:.95rem;margin-bottom:.2rem">评估产出质量</div><div style="font-size:.8rem;color:var(--term-dim);line-height:1.7">三问法：有没有遗漏？深度够不够？格式对不对？</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:.8rem">
+        <div style="flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:.75rem;font-weight:700;color:#fff">3</div>
+        <div><div style="font-weight:700;font-size:.95rem;margin-bottom:.2rem">改 Skill 文件</div><div style="font-size:.8rem;color:var(--term-dim);line-height:1.7">遗漏→补能力范围、太浅→加分析框架、格式乱→改输出模板。</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:.8rem">
+        <div style="flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:.75rem;font-weight:700;color:#fff">4</div>
+        <div><div style="font-weight:700;font-size:.95rem;margin-bottom:.2rem">沉淀到知识库</div><div style="font-size:.8rem;color:var(--term-dim);line-height:1.7">好的分析结论反哺行业知识底座，团队认知越来越深。</div></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <div style="background:var(--void);border:1px solid var(--border);border-radius:8px;padding:1.2rem">
+        <div style="font-weight:700;font-size:.9rem;color:var(--fire-glow);margin-bottom:.5rem">关键洞察</div>
+        <div style="font-size:.82rem;color:var(--term-dim);line-height:1.8">改 Skill 文件，<strong style="color:#E8E6E0">不是换 AI 模型</strong>。<br><br>角色表现不达预期，第一反应不应该是"换个更强的模型"，而是看 Skill 文件有没有问题。<br><br><strong style="color:#E8E6E0">改手册比换人便宜一万倍。</strong></div>
+      </div>
+      <div style="background:var(--void);border:1px solid var(--border);border-radius:8px;padding:1.2rem">
+        <div style="font-weight:700;font-size:.9rem;color:var(--sage-light);margin-bottom:.5rem">进化加速器：Memory 机制</div>
+        <div style="font-size:.82rem;color:var(--term-dim);line-height:1.8">
+          · 你纠正过的错误 → 写入永久规则<br>
+          · 好的输出模式 → 固化到 Skill<br>
+          · 新的行业认知 → 更新知识底座
+        </div>
+        <div style="margin-top:.6rem;font-size:.8rem;color:var(--term-dim)"><strong style="color:#E8E6E0">关键是把反馈固化成文件</strong>，而不是留在一次对话里消失。</div>
+      </div>
+    </div>
+  </div>`,
+
+  // 05 多智能体的本质
+  `<div style="font-family:var(--f-mono);font-size:.6rem;color:var(--violet);letter-spacing:.15em;margin-bottom:.6rem">洞察 05 / 05 · 本质思考</div>
+  <div style="font-family:var(--f-display);font-weight:800;font-size:1.8rem;line-height:1.2;margin-bottom:1.5rem">多智能体的本质<br>不是让 AI 更多，是让你更少</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem">
+    <div style="font-size:.92rem;color:var(--term-dim);line-height:2.1">
+      <div style="margin-bottom:1rem">大多数人搭智能体团队的第一个念头是——<br><strong style="color:var(--fire-glow);font-size:.95rem">"我终于可以同时做 10 件事了"。</strong><br>这是错的。</div>
+      <div style="margin-bottom:1rem">正确的念头应该是——<br><strong style="color:#E8E6E0">"我终于可以只做 1 件事了。"</strong></div>
+      <div style="margin-bottom:1rem">当 10 个角色替你完成了执行层的 70% 工作，<br>你突然发现自己<strong style="color:#E8E6E0">没有在"省时间"，而是在"换身份"</strong>——<br>从"最强执行者"变成了"决策架构师"。</div>
+      <div style="padding:1rem 1.2rem;background:rgba(232,93,58,.08);border-radius:6px;font-size:.92rem">这个身份转变才是真正的挑战。<br>很多人搭好了团队，却还在做执行者的事——<br>因为<strong style="color:#E8E6E0">放手比动手难一百倍</strong>。</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <div style="background:var(--void);border:1px solid var(--border);border-radius:8px;padding:1.2rem">
+        <div style="font-weight:700;font-size:.88rem;color:var(--fire-glow);margin-bottom:.6rem">一个反常识</div>
+        <div style="font-size:.82rem;color:var(--term-dim);line-height:1.8">多智能体团队做得越好，<strong style="color:#E8E6E0">你的判断力就越值钱</strong>。<br><br>因为当执行成本趋近于零，决策质量就成了唯一变量。同样一句指令，一个有行业洞察的人下达和一个没有的人下达，产出天差地别。<br><br><strong style="color:#E8E6E0">AI 放大的不是你的体力，是你的认知。</strong>认知强的人被放大 10 倍，认知弱的人被放大的是 10 倍的平庸。</div>
+      </div>
+      <div style="background:var(--void);border:1px solid var(--border);border-radius:8px;padding:1.2rem">
+        <div style="font-weight:700;font-size:.88rem;color:var(--sage-light);margin-bottom:.6rem">多智能体真正在训练的人</div>
+        <div style="font-size:.82rem;color:var(--term-dim);line-height:1.8">表面上你在训练 AI 团队——<br>写 Skill、调框架、改输出模板。<br><br>但实际上，<strong style="color:#E8E6E0">你在训练自己</strong>：<br>· 把模糊的经验变成可执行的规则<br>· 把"感觉对"变成"为什么对"<br>· 把脑子里的隐性知识变成团队资产<br><br>这个过程本身，比任何 AI 产出都有价值。</div>
+      </div>
+    </div>
+  </div>`,
+];
+
+let currentInsight = 0;
+function showInsight(idx) {
+  currentInsight = idx;
+  const container = document.getElementById('insightContainer');
+  container.style.opacity = '0';
+  container.style.transform = 'translateY(8px)';
+  setTimeout(() => {
+    container.innerHTML = insightsData[idx] + `
+      <div style="display:flex;justify-content:space-between;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)">
+        <button onclick="showInsight(${Math.max(0,idx-1)})" style="padding:.4rem 1rem;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--term-dim);font-size:.78rem;cursor:pointer;${idx===0?'opacity:.3;pointer-events:none':''}">← 上一个</button>
+        <span style="font-family:var(--f-mono);font-size:.7rem;color:var(--term-dim)">${idx+1} / ${insightsData.length}</span>
+        <button onclick="showInsight(${Math.min(insightsData.length-1,idx+1)})" style="padding:.4rem 1rem;border-radius:6px;border:none;background:var(--fire);color:#fff;font-size:.78rem;font-weight:600;cursor:pointer;${idx===insightsData.length-1?'opacity:.3;pointer-events:none':''}">下一个 →</button>
+      </div>`;
+    container.style.opacity = '1';
+    container.style.transform = 'none';
+  }, 150);
+  document.querySelectorAll('.insight-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  showInsight(0);
+});
+
+// ===== STEPS DATA =====
+const stepsData = [
+  {
+    title: '创建 Leader-team Skill',
+    desc: '告诉 Claude 创建一个 Agent Teams 模式的 Leader Skill。Claude 自动在 <code>~/.claude/skills/leader-team/</code> 下生成 SKILL.md 文件，定义 Leader 的调度规则、角色清单和输出规范。',
+    img: '截图示例/Agentteam实操流程/新建Agentteams.png',
+  },
+  {
+    title: '确认创建 Skill 文件',
+    desc: '系统提示是否创建 SKILL.md，选择 <strong>Yes</strong> 确认。这一步只需要点一下，Skill 就创建好了。',
+    img: '截图示例/Agentteam实操流程/创建Skill.png',
+  },
+  {
+    title: 'Skill 创建成功，两种模式共存',
+    desc: '<code>/Leader</code>（SubAgent 模式）和 <code>/Leader-team</code>（Agent Teams 模式）可以同时使用。SubAgent 适合独立调研，Agent Teams 适合需要角色间碰撞的复杂协作。按需选择。',
+    img: '截图示例/Agentteam实操流程/角色Skill创建成功.png',
+  },
+  {
+    title: '调用 /Leader-team 下达任务',
+    desc: '输入 <code>/Leader-team</code> 触发 Skill，然后描述你的具体任务。Leader 自动解析任务性质，判断需要调度哪些角色——不会盲目调度所有人。',
+    img: '截图示例/Agentteam实操流程/调用Skill.png',
+  },
+  {
+    title: 'Leader 拆解任务，创建任务清单',
+    desc: 'Leader 自动创建<strong>任务清单</strong>，明确每个任务的负责人和依赖关系。然后按波次并行生成队友：无依赖的任务先行，有依赖的等上游完成后自动启动。',
+    img: '截图示例/Agentteam实操流程/Leader拆解任务分配工作.png',
+  },
+  {
+    title: 'Shift+Down 切换角色，查看进度',
+    desc: '按 <kbd>Shift+↓</kbd> 在不同队友之间切换，实时查看每个角色的工作状态和产出。按 <kbd>Ctrl+T</kbd> 可以查看共享任务列表的整体进度。',
+    img: '截图示例/Agentteam实操流程/切换角色查看任务完成情况.png',
+  },
+  {
+    title: '依赖解锁，下游角色自动启动',
+    desc: '产品经理 PRD 完成后，前端、后端、测试等依赖 PRD 的角色<strong>自动解除阻塞</strong>。Leader 立刻启动下一波队友，无需人工干预。',
+    img: '截图示例/Agentteam实操流程/产品经理PRD完成后研发启动方案设计.png',
+  },
+  {
+    title: '团队成员互相沟通、质疑、协作',
+    desc: '这是 Agent Teams 的<strong style="color:var(--fire-glow)">核心价值</strong>——队友之间自发产生讨论：算法总工和测试对齐评测指标、竞品调研和产品经理讨论差异化策略、前后端对齐接口设计。<br><br><strong>这在 SubAgent 模式下完全不可能发生。</strong>',
+    img: '截图示例/Agentteam实操流程/各团队成员热切交流.png',
+  },
+  {
+    title: 'Leader 输出决策报告',
+    desc: '全部任务完成后，Leader 批判性审视所有产出 + 跨角色讨论记录，输出 PPT 级决策报告。<br><br>本次实操：<strong>6 个角色、6 项任务、15+ 次跨角色讨论，约 8 分钟全部完成。</strong>',
+    img: '截图示例/Agentteam实操流程/Leader输出决策报告.png',
+  },
+];
+
+let currentStep = 0;
+
+function showStep(idx) {
+  currentStep = idx;
+  const s = stepsData[idx];
+  const container = document.getElementById('stepContent');
+  container.innerHTML = `
+    <div style="font-family:var(--f-mono);font-size:.6rem;color:var(--fire);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.5rem">STEP ${idx + 1} / ${stepsData.length}</div>
+    <div style="font-weight:700;font-size:1.15rem;margin-bottom:.6rem;color:#E8E6E0">${s.title}</div>
+    <div style="font-size:.85rem;color:var(--term-dim);line-height:1.8;margin-bottom:1.2rem">${s.desc}</div>
+    <div style="border-radius:8px;overflow:hidden;border:1px solid var(--border)">
+      <img src="${s.img}" style="width:100%;display:block" alt="${s.title}">
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:1.2rem">
+      <button onclick="showStep(${Math.max(0, idx - 1)})" style="padding:.4rem 1rem;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--term-dim);font-size:.78rem;cursor:pointer;${idx === 0 ? 'opacity:.3;pointer-events:none' : ''}">← 上一步</button>
+      <button onclick="showStep(${Math.min(stepsData.length - 1, idx + 1)})" style="padding:.4rem 1rem;border-radius:6px;border:none;background:var(--fire);color:#fff;font-size:.78rem;font-weight:600;cursor:pointer;${idx === stepsData.length - 1 ? 'opacity:.3;pointer-events:none' : ''}">下一步 →</button>
+    </div>
+  `;
+  // Update buttons
+  document.querySelectorAll('.step-btn').forEach((btn, i) => {
+    btn.classList.remove('active');
+    if (i < idx) btn.classList.add('visited');
+    if (i === idx) btn.classList.add('active');
+  });
+}
+
+// Init first step
+document.addEventListener('DOMContentLoaded', () => showStep(0));
+
+// ===== NAV =====
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { threshold: 0.25 });
+sections.forEach(s => observer.observe(s));
+navLinks.forEach(l => l.addEventListener('click', () => document.querySelector('.nav').classList.remove('open')));
+
+// ===== MODES TABS =====
+function switchMode(i) {
+  document.querySelectorAll('.mode-tab').forEach((t,j) => t.classList.toggle('active', j===i));
+  document.querySelectorAll('.mode-panel').forEach((p,j) => p.classList.toggle('active', j===i));
+}
+
+// ===== UTILS =====
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function typeLines(el, lines, speed=20) {
+  return new Promise(resolve => {
+    let li = 0, ci = 0;
+    function go() {
+      if (li >= lines.length) { resolve(); return; }
+      if (ci < lines[li].length) {
+        el.textContent += lines[li][ci]; ci++;
+        setTimeout(go, speed + Math.random() * 10);
+      } else {
+        el.textContent += '\n'; li++; ci = 0;
+        el.scrollTop = el.scrollHeight;
+        setTimeout(go, 50);
+      }
+    }
+    go();
+  });
+}
+
+function setCard(id, status) {
+  const card = document.getElementById(`card-${id}`);
+  const badge = document.getElementById(`badge-${id}`);
+  if (!card || !badge) return;
+  card.className = 'agent-card';
+  badge.className = 'agent-status-badge';
+  if (status === 'working') { card.classList.add('working'); badge.classList.add('working'); badge.textContent = '工作中...'; }
+  else if (status === 'done') { card.classList.add('done'); badge.classList.add('done'); badge.textContent = '✓ 完成'; }
+  else { badge.textContent = '待命'; }
+}
+
+function setProgress(id, pct) { document.getElementById(id).style.width = pct + '%'; }
+
+function renderGrid(containerId, agentList, mode) {
+  const grid = document.getElementById(containerId);
+  grid.innerHTML = '';
+  agentList.forEach(a => {
+    const card = document.createElement('div');
+    card.className = 'agent-card';
+    card.id = `card-${a.id}`;
+    card.style.setProperty('--agent-color', a.color);
+    const indicator = mode === 'sub'
+      ? `<div class="isolation-badge">独立执行 · 不与其他Agent沟通</div>`
+      : `<div class="comm-badge">可与其他成员互相沟通</div>`;
+    card.innerHTML = `
+      <div class="agent-header">
+        <span class="agent-icon">${a.icon}</span>
+        <span class="agent-name">${a.name}</span>
+        <span class="agent-status-badge" id="badge-${a.id}">待命</span>
+      </div>
+      <div class="agent-role-tag">${a.role}</div>
+      ${a.id !== 'gm-sub' && a.id !== 'gm-team' ? indicator : ''}
+      <div class="agent-output" id="output-${a.id}"></div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+// ===== SUB AGENT DATA =====
+const subAgents = [
+  { id:'gm-sub', name:'主 Agent (Leader)', icon:'🤖', color:'#8b5cf6', role:'任务拆分 · 汇总' },
+  { id:'sub-compete', name:'子Agent: 竞品分析', icon:'🔍', color:'#06b6d4', role:'独立子任务 → 高教知识库竞品拆解' },
+  { id:'sub-market', name:'子Agent: 市场调研', icon:'📊', color:'#3b82f6', role:'独立子任务 → 知识库市场空间评估' },
+  { id:'sub-algo', name:'子Agent: 技术评估', icon:'🧠', color:'#f59e0b', role:'独立子任务 → RAG技术方案可行性' },
+];
+
+const subOutputs = {
+  'gm-sub': {
+    phase1: '解析任务: 评估高教版知识库产品的竞品格局、市场空间和技术可行性\n\n将任务拆分为 3 个独立子任务:\n  子任务A → 竞品分析: 高教知识库竞品拆解 (独立完成)\n  子任务B → 市场调研: 知识库市场空间评估 (独立完成)\n  子任务C → 技术评估: RAG方案可行性分析 (独立完成)\n\n⚠ 子Agent之间不共享信息，各自独立执行\n\n派发中...',
+  },
+  'sub-compete': [
+    '▸ [独立任务] 拆解高教知识库竞品',
+    '',
+    '【竞品扫描】',
+    '▸ 腾讯IMA: 微信生态+多模态解析 [领先]',
+    '  HiChunk多级语义切分, 500万公众号文章',
+    '▸ 百度文库AI: 大量文档+AI摘要 [成熟]',
+    '▸ 超星知识库: 高校覆盖广, AI能力弱 [传统]',
+    '▸ CNKI知网: 学术检索强, 无AI问答 [封闭]',
+    '',
+    '【差异化机会】',
+    '▸ 高教专属文档解析 (教学五大件)',
+    '▸ 教研协作知识库 (竞品均为个人)',
+    '▸ 私有化部署 (高校数据安全刚需)',
+    '',
+    '→ 汇报给 Leader: 差异化窗口存在 ✓',
+  ],
+  'sub-market': [
+    '▸ [独立任务] 评估高教知识库市场空间',
+    '',
+    '【市场分析】',
+    '▸ 高校信息化年投入约 800 亿',
+    '▸ 知识库/AI问答类产品渗透率<8%',
+    '▸ 潜在市场空间 30-50 亿',
+    '▸ 客单价: 双一流 50-150万, 普本 15-50万',
+    '',
+    '【驱动力】',
+    '▸ 数字化转型政策 + AI课程建设要求',
+    '▸ 教师/学生对知识检索效率的强需求',
+    '',
+    '【风险】',
+    '▸ 知网等老牌玩家品牌认知强',
+    '▸ 高校采购决策链长 (6-12月)',
+    '',
+    '→ 汇报给 Leader: 市场可行 ✓',
+  ],
+  'sub-algo': [
+    '▸ [独立任务] 评估知识库RAG技术方案',
+    '',
+    '【技术评估】',
+    '▸ 文档解析: PDF/Word/PPT → ⭐⭐⭐⭐',
+    '▸ 语义切分: HiChunk多级切分 → ⭐⭐⭐',
+    '▸ 向量检索: 向量+图双通道 → ⭐⭐⭐⭐',
+    '▸ RAG问答: 大模型+Reranker → ⭐⭐⭐⭐',
+    '▸ 多模态: OCR+图表理解 → ⭐⭐ (难点)',
+    '',
+    '【关键风险】',
+    '▸ 教学文档格式多样, 解析准确率需≥90%',
+    '▸ 大模型幻觉需要严格控制',
+    '',
+    '→ 汇报给 Leader: 技术可行, 风险中低 ✓',
+  ],
+};
+
+renderGrid('subGrid', subAgents, 'sub');
+
+async function runSubDemo() {
+  const btn = document.getElementById('subRunBtn');
+  btn.disabled = true; btn.textContent = '⏳ 调度中...';
+  document.getElementById('subDot').className = 'status-dot live';
+  subAgents.forEach(a => { setCard(a.id, ''); document.getElementById(`output-${a.id}`).textContent = ''; });
+  document.getElementById('subReport').classList.remove('show');
+  document.getElementById('subReport').innerHTML = '';
+  setProgress('subProgress', 0);
+
+  document.getElementById('subStatus').textContent = 'Leader 拆分任务...';
+  setCard('gm-sub', 'working');
+  await typeLines(document.getElementById('output-gm-sub'), subOutputs['gm-sub'].phase1.split('\n'), 18);
+  setProgress('subProgress', 12);
+  await sleep(500);
+
+  document.getElementById('subStatus').textContent = '3个子Agent并行执行（互不沟通）';
+  const subs = ['sub-compete', 'sub-market', 'sub-algo'];
+  subs.forEach(id => setCard(id, 'working'));
+  setProgress('subProgress', 20);
+  await Promise.all(subs.map(id => typeLines(document.getElementById(`output-${id}`), subOutputs[id], 14)));
+  subs.forEach(id => setCard(id, 'done'));
+  setProgress('subProgress', 75);
+  await sleep(400);
+
+  document.getElementById('subStatus').textContent = 'Leader 收集汇报, 汇总结论';
+  const gmEl = document.getElementById('output-gm-sub');
+  gmEl.textContent += '\n\n收集 3 个子Agent独立汇报...\n子A(竞品): 差异化窗口存在 ✓\n子B(市场): 市场空间30-50亿 ✓\n子C(技术): 技术可行, 风险中低 ✓\n\n汇总结论中...';
+  gmEl.scrollTop = gmEl.scrollHeight;
+  setProgress('subProgress', 90);
+  await sleep(1200);
+
+  setCard('gm-sub', 'done');
+  setProgress('subProgress', 100);
+  document.getElementById('subDot').className = 'status-dot done';
+  document.getElementById('subStatus').textContent = '完成';
+
+  const rpt = document.getElementById('subReport');
+  rpt.innerHTML = `
+    <h2>🤖 Leader 汇总报告 <span class="badge badge-sub">SubAgent 模式</span></h2>
+    <div class="report-section">
+      <h3>汇总结论</h3>
+      <div class="verdict-box verdict-go">建议推进 — 竞品、市场、技术三个维度均显示正面信号</div>
+    </div>
+    <div class="report-section">
+      <h3>各子Agent独立汇报汇总</h3>
+      <table class="trust-table">
+        <tr><th>子Agent</th><th>独立结论</th><th>备注</th></tr>
+        <tr><td><strong>竞品分析</strong></td><td>差异化窗口存在, 高教专属+私有化部署 ✓</td><td>腾讯IMA是最强竞品</td></tr>
+        <tr><td><strong>市场调研</strong></td><td>市场空间30-50亿, 渗透率<8% ✓</td><td>采购周期长是风险</td></tr>
+        <tr><td><strong>技术评估</strong></td><td>RAG方案可行, 风险中低 ✓</td><td>文档解析准确率是关键</td></tr>
+      </table>
+    </div>
+    <div class="report-section">
+      <h3>⚠ SubAgent 模式的局限性</h3>
+      <p style="color:var(--gold-light)">注意：以上三个子Agent是<strong>完全独立</strong>工作的。竞品分析发现"腾讯IMA的HiChunk切分很强"，但技术评估不知道这个信号，无法针对性设计差异化方案。市场调研发现"私有化部署是刚需"，但竞品分析没有从这个角度深入拆解。</p>
+      <p style="margin-top:.5rem">Leader 只能<strong>简单汇总</strong>各方结论，无法促成角色之间的碰撞和质疑。想要更深度的协作？请看 <strong style="color:var(--sage-light)">Agent Teams 模式 ↓</strong></p>
+    </div>
+  `;
+  rpt.classList.add('show');
+  rpt.scrollIntoView({ behavior: 'smooth' });
+  btn.disabled = false; btn.textContent = '▶ 重新调度';
+}
+
+// ===== AGENT TEAMS DATA =====
+const teamAgents = [
+  { id:'gm-team', name:'Leader', icon:'👔', color:'#8b5cf6', role:'任务拆解 · 分工 · 批判性决策' },
+  { id:'team-pm', name:'产品经理', icon:'📋', color:'#10b981', role:'PRD · 功能定义 · 优先级' },
+  { id:'team-algo', name:'算法总工', icon:'🧠', color:'#f59e0b', role:'RAG方案 · 模型选型 · AI架构' },
+  { id:'team-fe', name:'前端研发', icon:'🎨', color:'#ec4899', role:'知识库UI · 对话交互 · 上传组件' },
+  { id:'team-be', name:'后端研发', icon:'⚙️', color:'#6366f1', role:'API设计 · 存储架构 · 检索服务' },
+  { id:'team-qa', name:'测试工程师', icon:'🧪', color:'#14b8a6', role:'测试方案 · 质量标准 · 自动化' },
+  { id:'team-compete', name:'竞品调研员', icon:'🔍', color:'#06b6d4', role:'竞品对标 · 功能差异化' },
+  { id:'team-market', name:'市场分析师', icon:'📊', color:'#3b82f6', role:'客户需求 · 定价策略' },
+];
+
+// Task list that GM creates
+const taskList = [
+  { id:'T-001', task:'输出 Coral MVP 的 PRD 和功能优先级', assignee:'产品经理', agentId:'team-pm', deps:'-' },
+  { id:'T-002', task:'设计 RAG 技术方案和模型选型', assignee:'算法总工', agentId:'team-algo', deps:'-' },
+  { id:'T-003', task:'竞品知识库功能对标分析', assignee:'竞品调研员', agentId:'team-compete', deps:'-' },
+  { id:'T-004', task:'目标客户需求验证和定价建议', assignee:'市场分析师', agentId:'team-market', deps:'-' },
+  { id:'T-005', task:'前端技术方案和工时评估', assignee:'前端研发', agentId:'team-fe', deps:'T-001' },
+  { id:'T-006', task:'后端架构设计和API规划', assignee:'后端研发', agentId:'team-be', deps:'T-001, T-002' },
+  { id:'T-007', task:'测试方案和质量标准制定', assignee:'测试工程师', agentId:'team-qa', deps:'T-001' },
+];
+
+const teamOutputs = {
+  'gm-team': {
+    phase1: '解析任务: 启动高教版知识库 Coral 的 MVP 版本开发\n\n这是一个需要多角色协作的产品开发任务\n\n创建任务清单并指定负责人:\n  T-001 PRD和功能优先级    → 产品经理\n  T-002 RAG技术方案        → 算法总工\n  T-003 竞品功能对标        → 竞品调研员\n  T-004 客户需求和定价      → 市场分析师\n  T-005 前端方案和工时      → 前端研发 (依赖T-001)\n  T-006 后端架构和API       → 后端研发 (依赖T-001,T-002)\n  T-007 测试方案和质量标准  → 测试工程师 (依赖T-001)\n\n✓ 任务清单已发布，等待成员认领\n✓ 开启成员间互相沟通通道',
+  },
+  'team-pm': [
+    '▸ [认领T-001] 输出 Coral MVP PRD',
+    '',
+    '【Coral MVP 核心功能】',
+    '▸ P0: 文档上传+自动解析 (PDF/Word/PPT)',
+    '▸ P0: 知识库AI问答 (RAG检索+大模型)',
+    '▸ P0: 教学五大件智能解析',
+    '▸ P1: 知识库协作共享 (教研组级)',
+    '▸ P1: 引用溯源 (标注出处段落)',
+    '▸ P2: 多模态理解 (图表/公式)',
+    '',
+    '核心指标: 问答准确率≥85%, 首次检索≤3s',
+  ],
+  'team-algo': [
+    '▸ [认领T-002] 设计RAG技术方案',
+    '',
+    '【技术架构】',
+    '▸ 文档解析: Unstructured + 自研教学解析器',
+    '▸ 切分策略: 语义切分(512token) + 递归摘要',
+    '▸ 向量模型: bge-large-zh-v1.5 (多阶段微调)',
+    '▸ 检索: 向量检索 + BM25混合 + Reranker',
+    '▸ 生成: Spark 4.0 + 引用溯源Prompt',
+    '',
+    '关键风险: 教学文档格式多样, 解析准确率',
+  ],
+  'team-compete': [
+    '▸ [认领T-003] 竞品知识库功能对标',
+    '',
+    '【功能对标矩阵】',
+    '▸ 腾讯IMA: 多模态解析强, 微信生态',
+    '  → 我们的优势: 高教专属+私有化',
+    '▸ 百度文库: 文档量大, AI摘要成熟',
+    '  → 我们的优势: 教研场景深度',
+    '▸ 超星: 高校覆盖广, AI能力弱',
+    '  → 直接竞争对手, 体验碾压即可',
+    '',
+    'MVP差异化: 教学五大件解析+教研协作',
+  ],
+  'team-market': [
+    '▸ [认领T-004] 客户需求和定价',
+    '',
+    '【客户需求排序】',
+    '▸ #1 教学资料快速检索 (100%高校提及)',
+    '▸ #2 校本资源库建设 (85%)',
+    '▸ #3 教研成果沉淀 (72%)',
+    '▸ #4 学生自主学习辅助 (65%)',
+    '',
+    '定价建议: MVP阶段 15-30万/校/年',
+    '首批目标: 5所试点校免费+10所付费',
+  ],
+  'team-fe': [
+    '▸ [认领T-005] 前端方案 (依赖T-001)',
+    '',
+    '【前端工时评估】',
+    '▸ 文档上传+解析状态  8人天',
+    '▸ 知识库管理界面     6人天',
+    '▸ AI对话交互组件     10人天',
+    '▸ 引用溯源高亮展示   5人天',
+    '▸ 教研协作UI        8人天',
+    '▸ 联调+适配         5人天',
+    '',
+    '合计 42人天 ≈ 2人月 | 1高+1中',
+  ],
+  'team-be': [
+    '▸ [认领T-006] 后端架构 (依赖T-001,T-002)',
+    '',
+    '【后端工时评估】',
+    '▸ 文档解析服务        10人天',
+    '▸ 向量存储+检索服务   12人天',
+    '▸ RAG问答API         8人天',
+    '▸ 知识库CRUD+权限    8人天',
+    '▸ 引用溯源+来源标注   6人天',
+    '▸ 部署+监控+安全      10人天',
+    '',
+    '合计 54人天 ≈ 2.5人月 | 2高',
+  ],
+  'team-qa': [
+    '▸ [认领T-007] 测试方案 (依赖T-001)',
+    '',
+    '【测试计划】',
+    '▸ 文档解析准确率测试集 (200份)',
+    '▸ 问答质量评测 (准确率≥85%)',
+    '▸ 检索延迟测试 (P99≤3s)',
+    '▸ 并发测试 (50人同时)',
+    '▸ 安全测试 (文档权限隔离)',
+    '',
+    '合计 20人天 ≈ 1人月 | 1高级',
+  ],
+};
+
+// Cross-talk messages for Agent Teams
+const crossTalks = [
+  // Wave 1: PM + Algo + Compete + Market discuss
+  { target: 'team-algo', type: 'challenge', html: '<span class="from">→ 竞品调研员:</span> 腾讯IMA用HiChunk多级语义切分效果很好，你的切分策略能比得上吗？' },
+  { target: 'team-algo', type: 'agree', html: '<span class="from">回应竞品调研:</span> 好问题。我加一层教学结构感知切分——按章节/知识点/例题自动分块，这是IMA没有的' },
+  { target: 'team-pm', type: 'challenge', html: '<span class="from">→ 市场分析师:</span> P1的"知识库协作共享"客户排第3位需求，建议提到P0，这是差异化关键' },
+  { target: 'team-pm', type: 'agree', html: '<span class="from">回应市场分析师:</span> 认同，教研协作调整为P0。MVP必须包含教研组级共享' },
+  { target: 'team-compete', type: 'agree', html: '<span class="from">→ 算法总工:</span> 你说超星AI能力弱，确认——他们的知识库还是关键词检索，我们用向量+语义直接降维打击' },
+  // Wave 2: FE + BE + QA discuss
+  { target: 'team-fe', type: 'challenge', html: '<span class="from">→ 后端研发:</span> AI对话交互组件你估10人天，需要支持流式输出(SSE)，和普通API对接不一样，建议12人天' },
+  { target: 'team-fe', type: 'agree', html: '<span class="from">回应后端:</span> 对，SSE流式+打字机效果+引用卡片，调整为12人天，前端总计46人天' },
+  { target: 'team-be', type: 'challenge', html: '<span class="from">→ 算法总工:</span> 向量存储你选什么？建议Milvus而非Pinecone，高校私有化部署不能依赖外部服务' },
+  { target: 'team-be', type: 'agree', html: '<span class="from">回应算法总工:</span> 完全同意，用Milvus+PostgreSQL双写，私有化部署零外部依赖' },
+  { target: 'team-qa', type: 'agree', html: '<span class="from">→ 产品经理:</span> 问答准确率≥85%的指标和我PRD一致，测试集200份建议覆盖文、理、工三大类' },
+  { target: 'team-qa', type: 'agree', html: '<span class="from">→ 算法总工:</span> 我来提供评测标注规范，保证测试集质量。另外建议加"幻觉率≤5%"的指标' },
+  { target: 'team-market', type: 'agree', html: '<span class="from">→ 产品经理:</span> 定价15-30万合理，MVP阶段试点免费+1，用数据验证留存后再收费' },
+];
+
+renderGrid('teamGrid', teamAgents, 'team');
+
+// Task list rendering
+function renderTaskList(tasks, statusMap) {
+  const panel = document.getElementById('teamTaskList');
+  let rows = tasks.map(t => {
+    const st = statusMap[t.id] || 'pending';
+    const stLabel = st === 'pending' ? '待认领' : st === 'claimed' ? '已认领' : st === 'working' ? '执行中' : '✓ 完成';
+    return `<tr>
+      <td class="task-id">${t.id}</td>
+      <td>${t.task}</td>
+      <td class="task-assignee" style="color:${teamAgents.find(a=>a.id===t.agentId)?.color||'#fff'}">${t.assignee}</td>
+      <td>${t.deps}</td>
+      <td><span class="task-status-cell ts-${st}">${stLabel}</span></td>
+    </tr>`;
+  }).join('');
+  panel.innerHTML = `
+    <h3><span class="tl-icon">📋</span> Leader 任务清单</h3>
+    <table class="task-list-table">
+      <tr><th>ID</th><th>任务</th><th>负责人</th><th>依赖</th><th>状态</th></tr>
+      ${rows}
+    </table>
+  `;
+  panel.classList.add('show');
+}
+
+function updateTaskStatus(taskId, status) {
+  const panel = document.getElementById('teamTaskList');
+  const rows = panel.querySelectorAll('tr');
+  rows.forEach(row => {
+    const idCell = row.querySelector('.task-id');
+    if (idCell && idCell.textContent === taskId) {
+      const stCell = row.querySelector('.task-status-cell');
+      const stLabel = status === 'claimed' ? '已认领' : status === 'working' ? '执行中' : status === 'done' ? '✓ 完成' : '待认领';
+      stCell.className = `task-status-cell ts-${status}`;
+      stCell.textContent = stLabel;
+    }
+  });
+}
+
+async function runTeamDemo() {
+  const btn = document.getElementById('teamRunBtn');
+  btn.disabled = true; btn.textContent = '⏳ 调度中...';
+  document.getElementById('teamDot').className = 'status-dot live';
+  teamAgents.forEach(a => { setCard(a.id, ''); document.getElementById(`output-${a.id}`).textContent = ''; });
+  document.querySelectorAll('.cross-talk').forEach(e => e.remove());
+  document.getElementById('teamReport').classList.remove('show');
+  document.getElementById('teamReport').innerHTML = '';
+  document.getElementById('teamTaskList').classList.remove('show');
+  document.getElementById('teamTaskList').innerHTML = '';
+  setProgress('teamProgress', 0);
+
+  // Phase 1: GM parses task and creates task list
+  document.getElementById('teamStatus').textContent = 'Leader 解析任务, 创建任务清单...';
+  setCard('gm-team', 'working');
+  await typeLines(document.getElementById('output-gm-team'), teamOutputs['gm-team'].phase1.split('\n'), 16);
+  setProgress('teamProgress', 5);
+  await sleep(400);
+
+  // Show task list with all pending
+  const statusMap = {};
+  taskList.forEach(t => statusMap[t.id] = 'pending');
+  renderTaskList(taskList, statusMap);
+  setProgress('teamProgress', 8);
+  await sleep(800);
+
+  // Phase 2: Agents claim tasks (animate one by one)
+  document.getElementById('teamStatus').textContent = '成员认领任务...';
+  const claimOrder = ['T-001','T-002','T-003','T-004'];
+  for (const tid of claimOrder) {
+    statusMap[tid] = 'claimed';
+    updateTaskStatus(tid, 'claimed');
+    await sleep(350);
+  }
+  setCard('gm-team', 'done');
+  setProgress('teamProgress', 12);
+  await sleep(400);
+
+  // Wave 1: PM + Algo + Compete + Market (parallel, no deps)
+  document.getElementById('teamStatus').textContent = 'Wave 1: 产品+算法+竞品+市场 (并行执行)';
+  const w1 = ['team-pm', 'team-algo', 'team-compete', 'team-market'];
+  const w1tasks = ['T-001','T-002','T-003','T-004'];
+  w1.forEach(id => setCard(id, 'working'));
+  w1tasks.forEach(tid => updateTaskStatus(tid, 'working'));
+  setProgress('teamProgress', 18);
+  await Promise.all(w1.map(id => typeLines(document.getElementById(`output-${id}`), teamOutputs[id], 13)));
+  setProgress('teamProgress', 38);
+
+  // Wave 1 cross-talks
+  document.getElementById('teamStatus').textContent = '✦ 成员之间互相讨论、质疑...';
+  await sleep(300);
+  for (let i = 0; i < 5; i++) {
+    addCrossTalk(crossTalks[i].target, crossTalks[i].type, crossTalks[i].html);
+    await sleep(500);
+  }
+  w1.forEach(id => setCard(id, 'done'));
+  w1tasks.forEach(tid => updateTaskStatus(tid, 'done'));
+  setProgress('teamProgress', 45);
+  await sleep(300);
+
+  // Dependent tasks now claimable
+  document.getElementById('teamStatus').textContent = '依赖任务解锁, 成员认领...';
+  const w2tasks = ['T-005','T-006','T-007'];
+  for (const tid of w2tasks) {
+    statusMap[tid] = 'claimed';
+    updateTaskStatus(tid, 'claimed');
+    await sleep(300);
+  }
+  await sleep(200);
+
+  // Wave 2: FE + BE + QA (depend on Wave 1)
+  document.getElementById('teamStatus').textContent = 'Wave 2: 前端+后端+测试 (依赖已解锁)';
+  const w2 = ['team-fe', 'team-be', 'team-qa'];
+  w2.forEach(id => setCard(id, 'working'));
+  w2tasks.forEach(tid => updateTaskStatus(tid, 'working'));
+  setProgress('teamProgress', 52);
+  await Promise.all(w2.map(id => typeLines(document.getElementById(`output-${id}`), teamOutputs[id], 13)));
+  setProgress('teamProgress', 70);
+
+  // Wave 2 cross-talks
+  document.getElementById('teamStatus').textContent = '✦ 研发团队互相校准方案...';
+  await sleep(300);
+  for (let i = 5; i < crossTalks.length; i++) {
+    addCrossTalk(crossTalks[i].target, crossTalks[i].type, crossTalks[i].html);
+    await sleep(500);
+  }
+  w2.forEach(id => setCard(id, 'done'));
+  w2tasks.forEach(tid => updateTaskStatus(tid, 'done'));
+  setProgress('teamProgress', 82);
+  await sleep(300);
+
+  // GM review
+  document.getElementById('teamStatus').textContent = 'Leader 批判性审视所有产出...';
+  setCard('gm-team', 'working');
+  const gmEl = document.getElementById('output-gm-team');
+  gmEl.textContent += '\n\n全部任务完成，开始审视...\n7 项任务全部交付 + 12 条跨角色讨论\n评估可信度...\n识别盲区: 数据迁移方案、运维成本\n修正工时: +15% buffer\n\n综合决策: 立即启动 MVP 开发';
+  gmEl.scrollTop = gmEl.scrollHeight;
+  setProgress('teamProgress', 95);
+  await sleep(1200);
+  setCard('gm-team', 'done');
+  setProgress('teamProgress', 100);
+  document.getElementById('teamDot').className = 'status-dot done';
+  document.getElementById('teamStatus').textContent = '完成';
+
+  // Show report
+  const rpt = document.getElementById('teamReport');
+  rpt.innerHTML = `
+    <h2>👔 Leader 决策汇报 <span class="badge badge-team">Agent Teams · Coral MVP</span></h2>
+    <div class="report-section">
+      <h3>综合决策</h3>
+      <div class="verdict-box verdict-go">立即启动 Coral MVP 开发 — 技术方案成熟, 差异化明确, 工时可控</div>
+    </div>
+    <div class="report-section">
+      <h3>团队协作产出的价值</h3>
+      <p style="color:var(--sage-light)">本次开发规划中, 成员之间发生了 <strong>12 次跨角色讨论</strong>, 关键碰撞:</p>
+      <ul>
+        <li><strong style="color:var(--gold-light)">竞品调研员质疑算法总工</strong>的切分策略 → 推动了教学结构感知切分方案</li>
+        <li><strong style="color:var(--gold-light)">市场分析师质疑产品经理</strong>的优先级 → 教研协作从P1提升到P0</li>
+        <li><strong style="color:var(--gold-light)">算法总工质疑后端</strong>的存储选型 → 确定Milvus私有化方案</li>
+        <li><strong style="color:var(--gold-light)">后端质疑前端</strong>的工时 → SSE流式输出复杂度被提前发现</li>
+        <li><strong style="color:var(--gold-light)">算法总工补充测试</strong>质量指标 → 新增"幻觉率≤5%"标准</li>
+      </ul>
+      <p style="margin-top:.6rem;color:var(--term-text)">这些碰撞在 SubAgent 模式下<strong>不可能发生</strong>。</p>
+    </div>
+    <div class="report-section">
+      <h3>MVP 开发计划（含 buffer）</h3>
+      <table class="trust-table">
+        <tr><th>角色</th><th>工时</th><th>核心交付</th></tr>
+        <tr><td><strong>产品经理</strong></td><td>全程跟进</td><td>PRD + 验收标准</td></tr>
+        <tr><td><strong>算法总工</strong></td><td>1.5人月</td><td>RAG方案 + 教学切分 + 评测规范</td></tr>
+        <tr><td><strong>后端研发</strong></td><td>3人月</td><td>解析/检索/问答/权限 (Milvus+PG)</td></tr>
+        <tr><td><strong>前端研发</strong></td><td>2.5人月</td><td>上传/管理/对话/协作 (SSE流式)</td></tr>
+        <tr><td><strong>测试</strong></td><td>1.2人月</td><td>200份测试集 + 准确率≥85% + 幻觉≤5%</td></tr>
+        <tr style="background:rgba(139,92,246,.05)"><td><strong>合计</strong></td><td colspan="2"><strong style="color:var(--violet-light)">约 8.2 人月, 峰值 5 人, 预计 10 周完成</strong></td></tr>
+      </table>
+    </div>
+    <div class="report-section">
+      <h3>决策建议</h3>
+      <div style="background:rgba(61,160,110,.08);border:1px solid rgba(61,160,110,.3);border-radius:10px;padding:1.2rem;">
+        <ul>
+          <li><strong style="color:var(--sage-light)">本周启动</strong>: 后端先行搭建解析+向量服务, 前端同步启动UI框架</li>
+          <li><strong style="color:var(--cyan)">第4周检查点</strong>: 文档解析准确率≥90%, 不达标则暂停调整</li>
+          <li><strong style="color:var(--gold-light)">第8周内测</strong>: 5所试点校教师内测, 收集真实反馈</li>
+          <li><strong style="color:var(--fire-glow)">差异化护城河</strong>: 教学五大件解析 + 教研协作 是核心壁垒, 必须做深</li>
+        </ul>
+      </div>
+    </div>
+  `;
+  rpt.classList.add('show');
+  rpt.scrollIntoView({ behavior: 'smooth' });
+  btn.disabled = false; btn.textContent = '▶ 重新调度';
+}
+
+function addCrossTalk(targetId, type, html) {
+  const card = document.getElementById(`card-${targetId}`);
+  if (!card) return;
+  let ct = card.querySelector('.cross-talk');
+  if (!ct) {
+    ct = document.createElement('div');
+    ct.className = 'cross-talk';
+    card.appendChild(ct);
+  }
+  const msg = document.createElement('div');
+  msg.className = `cross-msg ${type}`;
+  msg.innerHTML = html;
+  ct.appendChild(msg);
+  const output = card.querySelector('.agent-output');
+  if (output) output.scrollTop = output.scrollHeight;
+  msg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+</script>
+</body>
+</html>

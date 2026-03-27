@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>科大讯飞 · AI教学产品部</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #f6f4f0;
+  --bg-warm: #eee9e2;
+  --bg-white: #ffffff;
+  --bg-dark: #1a1a1a;
+  --text-dark: #1a1a1a;
+  --text-body: #3d3d3d;
+  --text-secondary: #6b6b6b;
+  --text-tertiary: #999;
+  --accent: #c44b2b;
+  --accent-soft: #d4694e;
+  --accent-bg: rgba(196,75,43,0.06);
+  --blue: #2c5aa0;
+  --blue-bg: rgba(44,90,160,0.06);
+  --green: #2a7d5f;
+  --green-bg: rgba(42,125,95,0.06);
+  --border: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.15);
+  --serif: 'Noto Serif SC', 'DM Serif Display', serif;
+  --sans: 'Noto Sans SC', -apple-system, sans-serif;
+  --radius: 6px;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text-body);
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+/* ===== NAV ===== */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(246,244,240,0.85);
+  backdrop-filter: blur(16px) saturate(1.2);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 2rem;
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand {
+  font-family: var(--serif);
+  font-size: 1rem; font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: -0.02em;
+}
+.nav-brand span { color: var(--accent); }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  font-size: 0.82rem; font-weight: 500;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+  letter-spacing: 0.01em;
+}
+.nav-links a:hover { color: var(--text-dark); }
+
+/* ===== HERO ===== */
+.hero {
+  padding: 10rem 2rem 6rem;
+  max-width: 1200px; margin: 0 auto;
+}
+.hero-eyebrow {
+  font-size: 0.78rem; font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 900;
+  color: var(--text-dark);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  max-width: 800px;
+  margin-bottom: 1.75rem;
+}
+.hero-desc {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 560px;
+  line-height: 1.85;
+  margin-bottom: 3rem;
+}
+.hero-metrics {
+  display: flex; gap: 4rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border-strong);
+}
+.metric { }
+.metric-value {
+  font-family: var(--serif);
+  font-size: 2.4rem; font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.metric-label {
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  margin-top: 0.4rem;
+  font-weight: 500;
+}
+
+/* ===== SECTIONS ===== */
+.section {
+  max-width: 1200px; margin: 0 auto;
+  padding: 5rem 2rem;
+}
+.section-label {
+  font-size: 0.72rem; font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin-bottom: 0.6rem;
+}
+.section-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  max-width: 480px;
+  line-height: 1.75;
+}
+.section-header {
+  margin-bottom: 3.5rem;
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+  max-width: 1200px; margin: 0 auto; padding: 0 2rem;
+  border: none; border-top: 1px solid var(--border);
+}
+
+/* ===== AGENT TEAM ===== */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.team-card {
+  background: var(--bg-white);
+  padding: 2rem 1.75rem;
+  position: relative;
+  transition: background 0.3s;
+}
+.team-card:hover { background: #faf9f7; }
+
+.card-index {
+  font-family: var(--serif);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: rgba(0,0,0,0.04);
+  position: absolute;
+  top: 1rem; right: 1.25rem;
+  line-height: 1;
+}
+
+.card-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1.25rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--bg-white);
+}
+
+.card-icon.gm { background: var(--accent); }
+.card-icon.market { background: var(--blue); }
+.card-icon.compete { background: #7c5bbf; }
+.card-icon.pm { background: var(--green); }
+.card-icon.algo { background: #c97d2e; }
+.card-icon.fe { background: #d4456e; }
+.card-icon.be { background: #3a7ca5; }
+.card-icon.qa { background: #5a8a6f; }
+
+.card-title {
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.15rem;
+}
+.card-subtitle {
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  margin-bottom: 0.85rem;
+  font-weight: 500;
+}
+.card-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 1.1rem;
+}
+.card-tags {
+  display: flex; flex-wrap: wrap; gap: 0.35rem;
+}
+.tag {
+  font-size: 0.65rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 3px;
+  background: var(--bg);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ===== EFFICIENCY ===== */
+.eff-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+.eff-sidebar {
+  position: sticky; top: 6rem;
+}
+.eff-list {
+  display: flex; flex-direction: column; gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.eff-card {
+  background: var(--bg-white);
+  padding: 1.75rem;
+  transition: background 0.3s;
+}
+.eff-card:hover { background: #faf9f7; }
+.eff-card-header {
+  display: flex; justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.6rem;
+}
+.eff-card-title {
+  font-size: 0.9rem; font-weight: 700;
+  color: var(--text-dark);
+}
+.eff-card-value {
+  font-family: var(--serif);
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+.eff-card-sub {
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+.eff-bar {
+  height: 3px; background: var(--bg);
+  border-radius: 2px; overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+.eff-bar-fill {
+  height: 100%; border-radius: 2px;
+  background: var(--accent);
+  width: 0;
+  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+.eff-bar-fill.go { width: var(--w); }
+.eff-card-detail {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ===== DEMO ===== */
+.demo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.demo-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-white);
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.demo-item:hover {
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  transform: translateY(-2px);
+}
+.demo-item.wide { grid-column: span 2; }
+
+.demo-screen {
+  background: var(--bg-dark);
+  padding: 1.25rem;
+  position: relative;
+}
+.demo-item.wide .demo-screen { padding: 1.5rem; }
+
+.demo-chrome {
+  display: flex; gap: 5px; margin-bottom: 0.75rem;
+}
+.demo-chrome i {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+}
+.demo-chrome i:first-child { background: #ff5f57; }
+.demo-chrome i:nth-child(2) { background: #ffbd2e; }
+.demo-chrome i:nth-child(3) { background: #28ca42; }
+
+.demo-terminal {
+  font-family: 'SF Mono', 'Menlo', monospace;
+  font-size: 0.72rem;
+  line-height: 1.9;
+  color: rgba(255,255,255,0.55);
+  min-height: 180px;
+}
+.demo-item.wide .demo-terminal { min-height: 240px; }
+.t-prompt { color: rgba(255,255,255,0.3); }
+.t-cmd { color: rgba(255,255,255,0.85); }
+.t-ok { color: #5ec47a; }
+.t-warn { color: #e8b955; }
+.t-info { color: rgba(255,255,255,0.4); }
+.t-em { color: #7eb8da; }
+
+.demo-body {
+  padding: 1.5rem;
+}
+.demo-body-label {
+  font-size: 0.68rem; font-weight: 600;
+  color: var(--text-tertiary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.demo-body-title {
+  font-size: 1rem; font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.4rem;
+}
+.demo-body-desc {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Dashboard mock */
+.dash {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 8px; margin-bottom: 10px;
+}
+.dash-box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px;
+  padding: 10px;
+}
+.dash-box .v { font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.8); }
+.dash-box .l { font-size: 0.6rem; color: rgba(255,255,255,0.3); margin-top: 2px; }
+.dash-bars {
+  display: flex; align-items: flex-end; gap: 3px; height: 80px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px; padding: 10px;
+}
+.dash-bars span {
+  flex: 1; border-radius: 2px 2px 0 0;
+  background: rgba(196,75,43,0.5);
+  transition: background 0.3s;
+}
+.dash-bars span:hover { background: rgba(196,75,43,0.8); }
+
+/* ===== COMMUNITY ===== */
+.com-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:3rem}
+.com-card{background:var(--bg-white);padding:1.5rem;text-align:center;cursor:pointer;transition:background .3s;position:relative}
+.com-card:hover{background:#faf9f7}
+.com-card.selected{background:var(--accent-bg)}
+.com-avatar{width:52px;height:52px;border-radius:50%;margin:0 auto .8rem;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;color:#fff;position:relative}
+.com-avatar::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid transparent;transition:border-color .3s}
+.com-card:hover .com-avatar::after{border-color:var(--accent-soft)}
+.com-card.rank-1 .com-avatar::after{border-color:var(--accent);box-shadow:0 0 12px var(--accent-bg)}
+.com-name{font-size:.95rem;font-weight:700;color:var(--text-dark);margin-bottom:.2rem}
+.com-count{font-size:.75rem;color:var(--text-tertiary)}
+.com-count b{font-family:var(--serif);font-size:1.3rem;color:var(--text-dark);display:block;margin-bottom:.1rem}
+.com-rank{position:absolute;top:.6rem;right:.8rem;font-size:.65rem;font-weight:700;padding:.15rem .5rem;border-radius:3px}
+.com-rank-1{background:var(--accent-bg);color:var(--accent)}
+.com-rank-2{background:rgba(0,0,0,.04);color:var(--text-secondary)}
+.com-rank-3{background:rgba(180,130,70,.08);color:#a07040}
+
+.com-stats-bar{display:flex;gap:3rem;padding:1.5rem 2rem;background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:2.5rem}
+.com-stat{text-align:center}
+.com-stat b{font-family:var(--serif);font-size:1.8rem;font-weight:700;color:var(--text-dark);display:block;line-height:1}
+.com-stat span{font-size:.72rem;color:var(--text-tertiary)}
+
+/* Cases */
+.case-feed-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.case-feed-title{font-size:.95rem;font-weight:700;color:var(--text-dark)}
+.case-feed-filter{font-size:.75rem;color:var(--text-tertiary)}
+.case-feed-filter .hi{color:var(--accent);cursor:pointer;font-weight:600}
+.case-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.case-item{background:var(--bg-white);padding:1.5rem;cursor:pointer;transition:background .3s}
+.case-item:hover{background:#faf9f7}
+.case-meta{display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem}
+.case-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:700;color:#fff;flex-shrink:0}
+.case-author{font-size:.75rem;color:var(--text-secondary);font-weight:600}
+.case-date{font-size:.65rem;color:var(--text-tertiary);margin-left:auto}
+.case-badge{font-size:.6rem;font-weight:700;padding:.12rem .4rem;border-radius:3px;margin-left:.3rem}
+.badge-hot{background:var(--accent-bg);color:var(--accent)}
+.badge-new{background:var(--green-bg);color:var(--green)}
+.case-item h3{font-size:.92rem;font-weight:700;color:var(--text-dark);margin-bottom:.3rem;line-height:1.4}
+.case-preview{font-size:.78rem;color:var(--text-tertiary);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.case-tags{display:flex;gap:.3rem;margin-top:.6rem;flex-wrap:wrap}
+.case-tag{font-size:.62rem;padding:.15rem .45rem;border-radius:3px;background:var(--bg);color:var(--text-secondary);font-weight:500}
+.case-stats{display:flex;align-items:center;gap:1rem;margin-top:0.6rem;font-size:0.7rem;color:var(--text-tertiary)}
+.case-stats span{display:flex;align-items:center;gap:0.25rem}
+.case-like-btn{cursor:pointer;transition:color 0.2s}
+.case-like-btn:hover{color:var(--accent)}
+.case-like-btn.liked{color:var(--accent)}
+.case-empty{text-align:center;padding:3rem;color:var(--text-tertiary);grid-column:1/-1}
+
+/* Detail Modal */
+.det-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(4px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:4rem 2rem;overflow-y:auto}
+.det-overlay.on{display:flex}
+.det-box{background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);max-width:680px;width:100%;padding:2.5rem;position:relative;animation:detIn .3s ease;box-shadow:0 20px 60px rgba(0,0,0,.12)}
+@keyframes detIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.det-close{position:absolute;top:1rem;right:1rem;width:28px;height:28px;border-radius:4px;border:1px solid var(--border);background:var(--bg);color:var(--text-tertiary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.75rem}
+.det-close:hover{border-color:var(--border-strong);color:var(--text-dark)}
+.det-meta{display:flex;align-items:center;gap:.6rem;margin-bottom:1.2rem}
+.det-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff}
+.det-name{font-size:.88rem;font-weight:700;color:var(--text-dark)}
+.det-date{font-size:.65rem;color:var(--text-tertiary)}
+.det-title{font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--text-dark);line-height:1.3;margin-bottom:1rem}
+.det-body{font-size:.9rem;color:var(--text-body);line-height:2}
+.det-body p{margin-bottom:.8rem}
+.det-link{display:inline-flex;align-items:center;gap:.4rem;margin-top:1rem;padding:.5rem 1rem;border-radius:var(--radius);background:var(--accent-bg);color:var(--accent);font-size:.8rem;font-weight:600;text-decoration:none;border:1px solid rgba(196,75,43,.15);transition:all .2s}
+.det-link:hover{background:rgba(196,75,43,.12)}
+
+/* Import form */
+.imp-box{background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin-top:2.5rem}
+.imp-h{font-size:1rem;font-weight:700;color:var(--text-dark);margin-bottom:.2rem}
+.imp-d{font-size:.78rem;color:var(--text-tertiary);margin-bottom:1.2rem}
+.imp-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.6rem}
+.imp-f label{display:block;font-size:.65rem;color:var(--text-tertiary);margin-bottom:.2rem;font-weight:600;letter-spacing:.04em}
+.imp-f input,.imp-f textarea{width:100%;padding:.5rem .7rem;border-radius:4px;border:1px solid var(--border);background:var(--bg);color:var(--text-dark);font-size:.82rem;font-family:var(--sans);outline:none;transition:border-color .2s}
+.imp-f input:focus,.imp-f textarea:focus{border-color:var(--accent)}
+.imp-f input::placeholder,.imp-f textarea::placeholder{color:var(--text-tertiary)}
+.imp-f.span2{grid-column:span 2}
+.imp-f.full{grid-column:1/-1}
+.imp-f textarea{resize:vertical;min-height:64px}
+.imp-row{grid-column:1/-1;display:flex;justify-content:flex-end;padding-top:.4rem}
+.imp-btn{padding:.55rem 1.8rem;border-radius:4px;border:none;background:var(--accent);color:#fff;font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--sans);transition:opacity .15s}
+.imp-btn:hover{opacity:.85}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:.5rem 1.5rem;border-radius:4px;font-size:.82rem;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:300;box-shadow:0 4px 16px rgba(42,125,95,.2)}
+.toast.on{opacity:1}
+@media(max-width:1024px){.com-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.com-grid{grid-template-columns:1fr 1fr}.com-stats-bar{flex-direction:column;gap:1rem}.imp-grid{grid-template-columns:1fr 1fr}.imp-f.span2{grid-column:span 1}.case-grid{grid-template-columns:1fr}}
+
+/* ===== ROADMAP ===== */
+.roadmap-wrap {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.roadmap-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+}
+.roadmap-col {
+  background: var(--bg-white);
+  padding: 2rem;
+}
+.roadmap-col-head {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.roadmap-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.roadmap-dot.live { background: var(--green); }
+.roadmap-dot.build { background: var(--blue); }
+.roadmap-dot.plan { background: var(--text-tertiary); }
+.roadmap-col-label {
+  font-size: 0.78rem; font-weight: 700;
+  color: var(--text-dark);
+}
+
+.rm-item {
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+.rm-item:last-child { border-bottom: none; }
+.rm-item-title {
+  font-size: 0.85rem; font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 0.2rem;
+}
+.rm-item-desc {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  line-height: 1.6;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  max-width: 1200px; margin: 0 auto;
+  padding: 3rem 2rem;
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--border);
+  margin-top: 3rem;
+}
+.footer-left {
+  font-size: 0.78rem; color: var(--text-tertiary);
+}
+.footer-right {
+  font-size: 0.72rem; color: var(--text-tertiary);
+  opacity: 0.6;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .team-grid { grid-template-columns: repeat(2,1fr); }
+  .eff-layout { grid-template-columns: 1fr; }
+  .eff-sidebar { position: static; }
+}
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hero { padding: 8rem 1.5rem 4rem; }
+  .hero-metrics { flex-direction: column; gap: 1.5rem; }
+  .section { padding: 3rem 1.5rem; }
+  .team-grid { grid-template-columns: 1fr; }
+  .demo-grid { grid-template-columns: 1fr; }
+  .demo-item.wide { grid-column: span 1; }
+  .roadmap-cols { grid-template-columns: 1fr; }
+  .footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+}
+
+/* ===== AGENT TOOLTIP ===== */
+.team-card { position: relative; }
+.card-whisper {
+  position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(4px);
+  background: var(--bg-dark); color: #fff; font-size: 0.72rem; padding: 0.5rem 0.8rem;
+  border-radius: 6px; white-space: nowrap; opacity: 0; pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s; z-index: 10;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  line-height: 1.4;
+}
+.card-whisper::after {
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 5px solid transparent; border-top-color: var(--bg-dark);
+}
+.team-card:hover .card-whisper { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+
+/* Confetti */
+.confetti-wrap { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
+.confetti {
+  position: absolute; width: 8px; height: 8px; border-radius: 1px;
+  animation: confettiFall 2.5s ease-out forwards;
+}
+@keyframes confettiFall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+/* Relative time style */
+.time-ago { font-size: 0.65rem; color: var(--text-tertiary); }
+
+/* ===== ANIMATIONS ===== */
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s, transform 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+.reveal.vis { opacity: 1; transform: none; }
+.reveal-d1 { transition-delay: 0.08s; }
+.reveal-d2 { transition-delay: 0.16s; }
+.reveal-d3 { transition-delay: 0.24s; }
+.reveal-d4 { transition-delay: 0.32s; }
+.reveal-d5 { transition-delay: 0.4s; }
+.reveal-d6 { transition-delay: 0.48s; }
+.reveal-d7 { transition-delay: 0.56s; }
+.reveal-d8 { transition-delay: 0.64s; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand">AI教学产品部<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#team">智能体团队</a></li>
+      <li><a href="#demos">实战演示</a></li>
+      <li><a href="#community">团队实战社区</a></li>
+      <li><a href="#roadmap">未来蓝图</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-eyebrow">科大讯飞 · AI教学产品部</div>
+  <div id="heroGreeting" style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:0.6rem"></div>
+  <h1>一支不下班的<br>产品研发团队</h1>
+  <p class="hero-desc">11 位专业 AI 智能体，覆盖从市场洞察、产品设计、技术研发到售前交付的完整链路。它们不是替代团队，而是让每个人聚焦在最有价值的决策上。</p>
+  <div class="hero-metrics">
+    <div class="metric">
+      <div class="metric-value">11</div>
+      <div class="metric-label">个智能体角色</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">89</div>
+      <div class="metric-label">个 Skill 能力</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">10×</div>
+      <div class="metric-label">效率提升</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">11</div>
+      <div class="metric-label">位真人创作者</div>
+    </div>
+  </div>
+</header>
+
+<hr class="divider">
+
+<!-- TEAM -->
+<section class="section" id="team">
+  <div class="section-header reveal">
+    <div class="section-label">团队成员</div>
+    <h2 class="section-title">11 个角色，完整的岗位能力</h2>
+    <p class="section-subtitle">不是问答机器人，而是具备高教行业深度认知的专业智能体。<br>试试把鼠标放上去，每个角色都有话想跟你说。</p>
+  </div>
+
+  <div class="team-grid">
+    <div class="team-card reveal reveal-d1">
+      <div class="card-index">01</div>
+      <div class="card-whisper">我不搬运结论，我带观点做决策 💼</div>
+      <div class="card-icon gm">L</div>
+      <div class="card-title">Leader</div>
+      <div class="card-subtitle">多角色调度 · 批判性决策</div>
+      <div class="card-desc">经营导向的决策者。负责整体营收，时刻关注收入、毛利、商机转化、产研成本。能调度所有角色并行工作，输出带批判性审视的决策建议。</div>
+      <div class="card-tags">
+        <span class="tag">经营分析</span><span class="tag">多角色调度</span><span class="tag">PPT级汇报</span><span class="tag">成本管控</span>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-d2">
+      <div class="card-index">02</div>
+      <div class="card-whisper">政策一出，我比你先看完 📊</div>
+      <div class="card-icon market">市</div>
+      <div class="card-title">市场分析师</div>
+      <div class="card-subtitle">行业趋势 · 市场规模 · 用户画像</div>
+      <div class="card-desc">专注高教信息化赛道，从政策趋势到市场规模、从用户画像到商业模式，每条洞察都指向"对讯飞意味着什么"。</div>
+      <div class="card-tags">
+        <span class="tag">PEST</span><span class="tag">TAM/SAM/SOM</span><span class="tag">用户画像</span>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-d3">
+      <div class="card-index">03</div>
+      <div class="card-whisper">对手在想什么，我替你盯着 🔍</div>
+      <div class="card-icon compete">竞</div>
+      <div class="card-title">竞品调研员</div>
+      <div class="card-subtitle">功能拆解 · 差异化识别 · 技术推演</div>
+      <div class="card-desc">不止于功能对比表。深入竞品的战略意图和商业逻辑，逆向推演技术方案，识别差异化机会。</div>
+      <div class="card-tags">
+        <span class="tag">战略画布</span><span class="tag">SWOT</span><span class="tag">技术逆向推演</span>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-d4">
+      <div class="card-index">04</div>
+      <div class="card-whisper">PRD 我来写，你来拍板 📋</div>
+      <div class="card-icon pm">产</div>
+      <div class="card-title">产品经理</div>
+      <div class="card-subtitle">PRD · 路线图 · 版本规划</div>
+      <div class="card-desc">产品全生命周期负责人。产品规划、可行性评估、PRD撰写、需求评审、优先级排序、数据指标体系，全链路覆盖。</div>
+      <div class="card-tags">
+        <span class="tag">PRD</span><span class="tag">路线图</span><span class="tag">RICE</span><span class="tag">可行性评估</span>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-d5">
+      <div class="card-index">05</div>
+      <div class="card-whisper">做不到的事我会直说，不画饼 🧠</div>
+      <div class="card-icon algo">算</div>
+      <div class="card-title">算法总工</div>
+      <div class="card-subtitle">模型选型 · 能力边界 · 成本估算</div>
+      <div class="card-desc">AI技术决策者，不是写代码的工程师。评估模型训练可行性、设计技术路径、判定AI能力边界，诚实说出"做不到"。</div>
+      <div class="card-tags">
+        <span class="tag">模型选型</span><span class="tag">能力边界</span><span class="tag">成本估算</span><span class="tag">TRL</span>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-d6">
+      <div class="card-index">06</div>
+      <div class="card-whisper">好看又好用，我全都要 🎨</div>
+      <div class="card-icon fe">前</div>
+      <div class="card-title">前端研发</div>
+      <div class="card-subtitle">UI组件 · 交互设计 · 响应式适配</div>
+      <div class="card-desc">教育产品前端专家。兼顾教师的低门槛操作和学生的高频互动，输出可运行的组件代码和架构方案。</div>
+      <div class="card-tags">
+        <span class="tag">React/Vue</span><span class="tag">TypeScript</span><span class="tag">性能优化</span>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-d7">
+      <div class="card-index">07</div>
+      <div class="card-whisper">架构稳不稳，跑一跑就知道 ⚙️</div>
+      <div class="card-icon be">后</div>
+      <div class="card-title">后端研发</div>
+      <div class="card-subtitle">架构设计 · API · AI集成</div>
+      <div class="card-desc">懂教育行业、懂AI边界、懂工程取舍的架构师。API设计、数据库建模、AI集成、高并发方案，全栈后端能力。</div>
+      <div class="card-tags">
+        <span class="tag">Spring Boot</span><span class="tag">FastAPI</span><span class="tag">AI集成</span><span class="tag">高并发</span>
+      </div>
+    </div>
+    <div class="team-card reveal reveal-d8">
+      <div class="card-index">08</div>
+      <div class="card-whisper">Bug 在我这里无处可藏 🧪</div>
+      <div class="card-icon qa">质</div>
+      <div class="card-title">测试工程师</div>
+      <div class="card-subtitle">测试方案 · 质量评审 · 自动化</div>
+      <div class="card-desc">全流程质量把关者。测试方案、自动化代码、代码Review、性能压测、安全扫描、上线验收——质量不是测出来的，是设计出来的。</div>
+      <div class="card-tags">
+        <span class="tag">代码Review</span><span class="tag">性能压测</span><span class="tag">OWASP</span><span class="tag">自动化</span>
+      </div>
+    </div>
+    <div class="team-card reveal">
+      <div class="card-index">09</div>
+      <div class="card-whisper">客户没说清的，我帮他理清 💬</div>
+      <div class="card-icon" style="background:#7c5bbf">咨</div>
+      <div class="card-title">咨询</div>
+      <div class="card-subtitle">需求拆解 · 解决方案 · 交付规划</div>
+      <div class="card-desc">客户需求的翻译官。把模糊的客户诉求拆解为可执行的产品需求和交付方案，确保"客户说的"和"我们做的"对得上。</div>
+      <div class="card-tags">
+        <span class="tag">需求分析</span><span class="tag">解决方案</span><span class="tag">项目规划</span>
+      </div>
+    </div>
+    <div class="team-card reveal">
+      <div class="card-index">10</div>
+      <div class="card-whisper">方案我来做，单子你来签 🤝</div>
+      <div class="card-icon" style="background:#d4456e">销</div>
+      <div class="card-title">销售</div>
+      <div class="card-subtitle">商机分析 · 报价策略 · 客户跟进</div>
+      <div class="card-desc">懂产品的销售，懂客户的产品。商机评估、报价方案、竞标文件、客户关系维护——用商业思维驱动产品落地。</div>
+      <div class="card-tags">
+        <span class="tag">商机评估</span><span class="tag">定价策略</span><span class="tag">竞标方案</span>
+      </div>
+    </div>
+    <div class="team-card reveal">
+      <div class="card-index">11</div>
+      <div class="card-whisper">最后一公里，我来守 🚀</div>
+      <div class="card-icon" style="background:#c97d2e">交</div>
+      <div class="card-title">交付</div>
+      <div class="card-subtitle">部署方案 · 实施计划 · 验收标准</div>
+      <div class="card-desc">最后一公里的守门员。私有化部署方案、项目实施排期、验收标准制定、用户培训方案——确保产品从"能用"到"好用"。</div>
+      <div class="card-tags">
+        <span class="tag">私有化部署</span><span class="tag">实施排期</span><span class="tag">培训方案</span><span class="tag">验收标准</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- DEMOS -->
+<section class="section" id="demos">
+  <div class="section-header reveal">
+    <div class="section-label">产品演示</div>
+    <h2 class="section-title">看看它们怎么工作的</h2>
+    <p class="section-subtitle">真实的工作场景，不是概念验证</p>
+  </div>
+
+  <div class="demo-grid">
+    <!-- Demo 1: 知识库产品立项评估 -->
+    <div class="demo-item wide reveal">
+      <div class="demo-screen">
+        <div class="demo-chrome"><i></i><i></i><i></i></div>
+        <div class="demo-terminal">
+<span class="t-prompt">$</span> <span class="t-cmd">/Leader 综合评估高教知识库产品的竞品格局、市场空间和技术可行性</span>
+
+<span class="t-info">解析任务… 需要调度 4 个角色</span>
+<span class="t-info">├── 市场分析师 → 高教知识库市场空间与客户需求</span>
+<span class="t-info">├── 竞品调研员 → 腾讯IMA/百度文库/超星知识库对标</span>
+<span class="t-info">├── 产品经理   → 知识库MVP功能定义与优先级</span>
+<span class="t-info">└── 算法总工   → RAG检索增强方案可行性</span>
+
+<span class="t-ok">✓ 市场分析师</span>  高校信息化年投入¥800亿 · 知识库渗透率<8% · 潜在空间¥30-50亿
+<span class="t-ok">✓ 竞品调研员</span>  腾讯IMA HiChunk切分领先 · 超星覆盖广但AI弱 · 差异化窗口存在
+<span class="t-ok">✓ 产品经理</span>    P0:文档解析+AI问答+教研协作 · 客单价双一流¥50-150万
+<span class="t-ok">✓ 算法总工</span>    向量+图双通道检索 · 文档解析准确率需≥90% · 月成本¥1.8万
+
+<span class="t-warn">Leader 汇报 ──────────────────────────────────────────</span>
+<span class="t-em">结论：Go — 差异化切入高教专属文档解析（教学五大件）+ 私有化部署</span>
+<span class="t-em">批判：市场分析增长率估计偏乐观（⭐⭐⭐），采购周期6-12月是风险</span>
+<span class="t-em">盲区：竞品调研未深入腾讯IMA的多模态解析能力，需补充技术对标</span>
+        </div>
+      </div>
+      <div class="demo-body">
+        <div class="demo-body-label">知识库立项评估</div>
+        <div class="demo-body-title">一条指令，四路并行 — 知识库产品的 Go/No-Go 决策</div>
+        <div class="demo-body-desc">Leader 不是搬运各角色结论，而是批判性审视可信度：市场分析增长率偏乐观扣一星，竞品调研遗漏多模态能力指出盲区。</div>
+      </div>
+    </div>
+
+    <!-- Demo 2: 龙虾技术调研 -->
+    <div class="demo-item reveal reveal-d1">
+      <div class="demo-screen">
+        <div class="demo-chrome"><i></i><i></i><i></i></div>
+        <div class="demo-terminal">
+<span class="t-prompt">$</span> <span class="t-cmd">/竞品调研 深度拆解龙虾（Lobster）的技术架构和产品策略</span>
+
+<span class="t-ok">✓ 基础信息</span>
+<span class="t-info">  龙虾 · 新一代AI知识管理平台</span>
+<span class="t-info">  核心：多模态文档解析 + 语义检索 + AI问答</span>
+
+<span class="t-ok">✓ 技术拆解</span>
+<span class="t-info">  文档解析引擎 → 自研OCR+版面分析</span>
+<span class="t-info">  切片策略     → 语义级动态切片</span>
+<span class="t-info">  检索架构     → 混合检索(向量+关键词+图谱)</span>
+
+<span class="t-warn">差异化机会 ────────────────────</span>
+<span class="t-em">→ 龙虾偏通用场景，未做高教垂直</span>
+<span class="t-em">→ 教学五大件解析是我们的护城河</span>
+        </div>
+      </div>
+      <div class="demo-body">
+        <div class="demo-body-label">竞品技术调研</div>
+        <div class="demo-body-title">龙虾（Lobster）技术架构深度拆解</div>
+        <div class="demo-body-desc">从产品功能到技术方案逆向推演，识别差异化切入点：龙虾做通用，我们做高教垂直。</div>
+      </div>
+    </div>
+
+    <!-- Demo 3: 知识库技术方案对话 -->
+    <div class="demo-item reveal reveal-d2">
+      <div class="demo-screen">
+        <div class="demo-chrome"><i></i><i></i><i></i></div>
+        <div class="demo-terminal" style="font-family:var(--sans);font-size:0.72rem;">
+<div style="background:rgba(44,90,160,0.2);padding:6px 10px;border-radius:4px 4px 4px 0;margin-bottom:6px;max-width:85%;color:rgba(255,255,255,0.7)">
+<div style="font-size:0.6rem;color:rgba(255,255,255,0.35);margin-bottom:2px">产品经理</div>
+龙虾的混合检索方案我们能不能做？成本多少？</div>
+
+<div style="background:rgba(255,255,255,0.05);padding:6px 10px;border-radius:4px 4px 4px 0;margin-bottom:6px;max-width:85%;color:rgba(255,255,255,0.6)">
+<div style="font-size:0.6rem;color:#5ec47a;margin-bottom:2px">算法总工</div>
+<strong style="color:rgba(255,255,255,0.8)">可行</strong> · 向量检索用Milvus · 关键词用ES · 图谱用Neo4j · 月成本约¥2.5万</div>
+
+<div style="background:rgba(44,90,160,0.2);padding:6px 10px;border-radius:4px 4px 4px 0;margin-bottom:6px;max-width:75%;margin-left:auto;color:rgba(255,255,255,0.7);text-align:right">
+<div style="font-size:0.6rem;color:rgba(255,255,255,0.35);margin-bottom:2px">产品经理</div>
+跟龙虾比我们的技术差距在哪？</div>
+
+<div style="background:rgba(255,255,255,0.05);padding:6px 10px;border-radius:4px 4px 4px 0;max-width:85%;color:rgba(255,255,255,0.6)">
+<div style="font-size:0.6rem;color:#e8b955;margin-bottom:2px">Leader</div>
+⭐⭐⭐ — 检索架构可平替，但龙虾的<strong style="color:rgba(255,255,255,0.8)">文档版面分析</strong>领先我们至少半年，建议优先补这块</div>
+        </div>
+      </div>
+      <div class="demo-body">
+        <div class="demo-body-label">技术差距评估</div>
+        <div class="demo-body-title">对标龙虾 — 哪里能追，哪里该绕</div>
+        <div class="demo-body-desc">算法总工给技术方案，Leader 批判性审视后指出真正的差距不在检索，而在文档版面分析——避免团队在错误方向投入。</div>
+      </div>
+    </div>
+
+    <!-- Demo 4: Agent Teams 知识库MVP开发 -->
+    <div class="demo-item wide reveal reveal-d3">
+      <div class="demo-screen">
+        <div class="demo-chrome"><i></i><i></i><i></i></div>
+        <div class="demo-terminal" style="font-family:var(--sans);font-size:0.72rem;">
+<span class="t-prompt">$</span> <span class="t-cmd">/Leader-team 基于龙虾调研结论，启动高教知识库 Coral 的 MVP 方案设计</span>
+
+<span class="t-info">Agent Teams 模式启动 · Leader 解析任务中…</span>
+<span class="t-info">创建任务清单 ──────────────────────────────────────</span>
+<span class="t-info">T-001  知识库MVP PRD          → 产品经理（参考龙虾调研结论）</span>
+<span class="t-info">T-002  RAG+检索技术方案        → 算法总工（对标龙虾混合检索）</span>
+<span class="t-info">T-003  龙虾功能差异化分析      → 竞品调研员</span>
+<span class="t-info">T-004  高校客户知识库需求验证  → 市场分析师</span>
+<span class="t-info">T-005  知识库前端交互方案      → 前端研发（依赖T-001）</span>
+<span class="t-info">T-006  后端存储+检索架构       → 后端研发（依赖T-001,002）</span>
+<span class="t-info">T-007  知识库质量验收标准      → 测试工程师（依赖T-001）</span>
+
+<span class="t-ok">✓ 第一波启动</span>  产品经理 · 算法总工 · 竞品调研员 · 市场分析师 并行工作
+
+<span style="color:rgba(167,139,250,0.9)">💬 竞品调研员 → 算法总工：</span><span style="color:rgba(255,255,255,0.6)">龙虾的版面分析用了自研模型，我们短期追不上，建议用开源方案先跑通</span>
+<span style="color:rgba(232,185,85,0.9)">💬 算法总工 → 竞品调研员：</span><span style="color:rgba(255,255,255,0.6)">同意，先用DocLayout-YOLO做版面分析，精度够用，成本低10倍</span>
+<span style="color:rgba(92,200,140,0.9)">💬 市场分析师 → 产品经理：</span><span style="color:rgba(255,255,255,0.6)">教研协作共享是客户第3需求，龙虾没做，这是我们的差异化</span>
+
+<span class="t-ok">✓ 产品经理 PRD 完成</span>  → 前端 · 后端 · 测试 自动解除阻塞
+<span class="t-ok">✓ 全部 7 项任务完成</span>  · 12 次跨角色讨论 · 耗时约 8 分钟
+
+<span class="t-warn">Leader 决策报告 ─────────────────────────────────────</span>
+<span class="t-em">结论：Coral MVP 聚焦三件事——教学五大件解析 + AI问答 + 教研协作</span>
+<span class="t-em">对标策略：检索架构平替龙虾，版面分析用开源方案先跑，教研协作做差异化</span>
+<span class="t-em">风险项：文档解析准确率需≥90%，建议2周内完成 PoC 验证再启动全面开发</span>
+        </div>
+      </div>
+      <div class="demo-body">
+        <div class="demo-body-label">Agent Teams · 知识库MVP</div>
+        <div class="demo-body-title">对标龙虾，设计 Coral — 7 个角色协作，8 分钟交付方案</div>
+        <div class="demo-body-desc">竞品调研员发现龙虾版面分析领先→算法总工立刻调整为开源替代方案→市场分析师指出教研协作是龙虾没做的差异化——这种跨角色碰撞是 Agent Teams 的核心价值。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- COMMUNITY -->
+<section class="section" id="community">
+  <div class="section-header reveal">
+    <div class="section-label">创作者社区</div>
+    <h2 class="section-title">不需要完美，真实的经验最有价值</h2>
+    <p class="section-subtitle">你踩过的坑、发现的技巧、验证的方法——写下来，就是团队的财富</p>
+  </div>
+
+  <div class="com-stats-bar reveal" id="comStats"></div>
+  <div class="com-grid reveal" id="comGrid"></div>
+
+  <div class="case-feed-head">
+    <div class="case-feed-title" id="feedTitle">全部案例</div>
+    <div class="case-feed-filter" id="feedFilter"></div>
+  </div>
+  <div class="case-grid" id="caseGrid"></div>
+
+  <div class="imp-box reveal">
+    <div class="imp-h">写下你的实践，让更多人受益</div>
+    <div class="imp-d">不需要完美，真实的经验最有价值。一个小技巧、一个踩过的坑、一次成功的尝试——都值得被记录。</div>
+    <form class="imp-grid" id="impForm" onsubmit="return submitCase(event)">
+      <div class="imp-f"><label>你是谁</label><input id="iName" placeholder="你的名字" required></div>
+      <div class="imp-f"><label>分享了什么</label><input id="iTitle" placeholder="一句话说清楚" required></div>
+      <div class="imp-f"><label>打个标签</label><input id="iTags" placeholder="Skill设计, Agent Teams"></div>
+      <div class="imp-f"><label>有链接就贴上</label><input id="iLink" placeholder="https://..."></div>
+      <div class="imp-f full"><label>展开聊聊</label><textarea id="iBody" placeholder="你做了什么、为什么有效、别人可以怎么复用..."></textarea></div>
+      <div class="imp-row"><button type="submit" class="imp-btn">发布</button></div>
+    </form>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- Detail Modal -->
+<div class="det-overlay" id="detMod" onclick="if(event.target===this)this.classList.remove('on')">
+  <div class="det-box" id="detC"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<hr class="divider">
+
+<!-- ROADMAP -->
+<section class="section" id="roadmap">
+  <div class="section-header reveal">
+    <div class="section-label">未来规划</div>
+    <h2 class="section-title">一个AI创新团队的网站<br>还可以做什么</h2>
+  </div>
+
+  <div class="roadmap-wrap reveal">
+    <div class="roadmap-cols">
+      <div class="roadmap-col">
+        <div class="roadmap-col-head">
+          <div class="roadmap-dot live"></div>
+          <div class="roadmap-col-label">已上线</div>
+        </div>
+        <div class="rm-item"><div class="rm-item-title">智能体团队展示</div><div class="rm-item-desc">11个角色的完整能力画像</div></div>
+        <div class="rm-item"><div class="rm-item-title">提效成果数据</div><div class="rm-item-desc">真人+AI协作的效率提升量化</div></div>
+        <div class="rm-item"><div class="rm-item-title">产品演示Demo</div><div class="rm-item-desc">核心工作流的可交互展示</div></div>
+      </div>
+      <div class="roadmap-col">
+        <div class="roadmap-col-head">
+          <div class="roadmap-dot build"></div>
+          <div class="roadmap-col-label">建设中</div>
+        </div>
+        <div class="rm-item"><div class="rm-item-title">实时对话体验区</div><div class="rm-item-desc">访客直接与智能体对话，体验AI能力</div></div>
+        <div class="rm-item"><div class="rm-item-title">Prompt模板市场</div><div class="rm-item-desc">高质量提示词模板的共享和评分</div></div>
+        <div class="rm-item"><div class="rm-item-title">AI能力评测排行榜</div><div class="rm-item-desc">不同模型在教育场景的对比评测</div></div>
+        <div class="rm-item"><div class="rm-item-title">团队知识库</div><div class="rm-item-desc">AI辅助构建的技术文档与最佳实践</div></div>
+      </div>
+      <div class="roadmap-col">
+        <div class="roadmap-col-head">
+          <div class="roadmap-dot plan"></div>
+          <div class="roadmap-col-label">规划中</div>
+        </div>
+        <div class="rm-item"><div class="rm-item-title">AI工作流编排器</div><div class="rm-item-desc">可视化拖拽编排多智能体协作流程</div></div>
+        <div class="rm-item"><div class="rm-item-title">成本ROI仪表盘</div><div class="rm-item-desc">AI调用成本追踪与提效投资回报率</div></div>
+        <div class="rm-item"><div class="rm-item-title">AI创新实验室</div><div class="rm-item-desc">团队提交实验方案，智能体辅助评审迭代</div></div>
+        <div class="rm-item"><div class="rm-item-title">客户成功案例库</div><div class="rm-item-desc">AI辅助整理，自动生成行业解决方案</div></div>
+        <div class="rm-item"><div class="rm-item-title">团队成长档案</div><div class="rm-item-desc">记录每位成员使用AI的技能图谱演进</div></div>
+        <div class="rm-item"><div class="rm-item-title">项目进度看板</div><div class="rm-item-desc">AI自动生成进度报告和风险预警</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-left">
+    <div id="footerQuote" style="font-style:italic;color:var(--text-secondary);margin-bottom:0.4rem;font-size:0.82rem"></div>
+    © 2026 科大讯飞 · AI教学产品部
+  </div>
+  <div class="footer-right">基于 Claude Code 构建</div>
+</footer>
+
+<script>
+// ===== WARMTH: Time greeting =====
+(function(){
+  const h=new Date().getHours();
+  const greetings=[
+    [6,'早上好，新的一天从一个好决策开始 ☀️'],
+    [11,'上午好，团队已就位，随时待命 💪'],
+    [14,'下午好，来杯咖啡，让 AI 替你跑腿 ☕'],
+    [18,'傍晚了，今天的产出都归档好了吗？ 📁'],
+    [22,'夜深了，我们还在，你先休息 🌙'],
+    [24,'凌晨了……真正的产品人都在这个点 🦉']
+  ];
+  const msg=(greetings.find(g=>h<g[0])||greetings[greetings.length-1])[1];
+  const el=document.getElementById('heroGreeting');
+  if(el)el.textContent=msg;
+})();
+
+// ===== WARMTH: Footer quotes =====
+(function(){
+  const quotes=[
+    'AI 放大的不是体力，是认知。',
+    '改手册比换人便宜一万倍。',
+    '每一次纠正都是永久性训练——前提是你把它写下来了。',
+    '搭建只是开始，进化才是关键。',
+    '多智能体的本质不是让 AI 更多，是让你更少。',
+    '一个人的产研团队，不是未来，是现在。',
+    '你训练 AI 的过程，其实是在训练自己。',
+  ];
+  const el=document.getElementById('footerQuote');
+  if(el)el.textContent='"'+quotes[Math.floor(Math.random()*quotes.length)]+'"';
+})();
+
+// ===== WARMTH: Relative time =====
+function timeAgo(dateStr){
+  if(!dateStr)return'';
+  const d=new Date(dateStr),now=new Date();
+  const diff=Math.floor((now-d)/(1000*60*60*24));
+  if(diff===0)return'今天';
+  if(diff===1)return'昨天';
+  if(diff<7)return diff+'天前';
+  if(diff<30)return Math.floor(diff/7)+'周前';
+  return dateStr;
+}
+
+// ===== WARMTH: Confetti =====
+function fireConfetti(){
+  const wrap=document.createElement('div');
+  wrap.className='confetti-wrap';
+  document.body.appendChild(wrap);
+  const colors=['#c44b2b','#2c5aa0','#2a7d5f','#c97d2e','#7c5bbf','#d4456e'];
+  for(let i=0;i<40;i++){
+    const c=document.createElement('div');c.className='confetti';
+    c.style.left=Math.random()*100+'%';
+    c.style.background=colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDelay=Math.random()*0.8+'s';
+    c.style.animationDuration=(2+Math.random()*1.5)+'s';
+    c.style.transform='rotate('+Math.random()*360+'deg)';
+    wrap.appendChild(c);
+  }
+  setTimeout(()=>wrap.remove(),4000);
+}
+
+// Scroll reveal
+const obs = new IntersectionObserver(es => {
+  es.forEach(e => { if(e.isIntersecting) {
+    e.target.classList.add('vis');
+    e.target.querySelectorAll('.eff-bar-fill').forEach(b => b.classList.add('go'));
+  }});
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ===== COMMUNITY =====
+const crColors=['#c44b2b','#2c5aa0','#2a7d5f','#7c5bbf','#d4456e','#c97d2e','#3a7ca5','#5a8a6f','#8b6914','#4a8c7d','#9b5f8a'];
+const defaultCr=[
+  {name:'彤彤',cases:[
+    {title:'Agent Teams 搭建集成 Discord',tags:['Agent Teams','Discord'],date:'2026-03-26',views:92,likes:18,body:'将 Agent Teams 的多智能体协作能力与 Discord 集成，让团队成员可以在 Discord 中直接触发智能体协作、查看任务进度和产出结果。\n\n打通了 AI 工作流和团队日常沟通工具之间的壁垒——不用切换到终端，在 Discord 里就能调度整个智能体团队。',link:'https://claude.ai/public/artifacts/dae12d49-15d0-4567-b524-dce376350055',hot:true},
+    {title:'再也不错过 Claude 的回复',tags:['Hooks','效率技巧'],date:'2026-03-26',views:186,likes:34,body:'使用 Claude Code 时，Claude 完成一段较长任务后会等待你的输入。如果你已切换到其他窗口，很容易错过这个时机。\n\n配置 hooks 可以让 Claude Code 在每次回复结束时自动提醒你。\n\n这个小技巧解决了一个高频痛点——你不再需要反复切回终端看"它做完了没有"，系统会主动通知你。',link:'https://claude.ai/public/artifacts/30dfa00a-1960-46a9-b26e-576d0eb59e7c',hot:true},
+  ]},
+  {name:'婷婷',cases:[
+    {title:'用 AI 团队协作重新定义产品决策',tags:['多智能体','交互式课程'],date:'2026-03-26',views:178,likes:35,body:'一门 30 分钟的交互式演示课程，从痛点出发，对比单一对话、SubAgent、Agent Teams 三种模式的核心差异。\n\n包含可交互的实战演示——点击按钮就能看到 Leader 调度多角色并行工作、跨角色质疑碰撞、最终输出决策报告的全过程。\n\n还有 5 道场景测试题，学完立刻验证理解。最后有一个认知反转：你刚才体验的学习路径设计原则，恰好就是我们要做的产品。',link:'CC多智能体_交互式演示课程_V1.html',hot:true},
+  ]},
+  {name:'绍栋',cases:[
+    {title:'从零开始搭建自己的AI工作站',tags:['AI工作站','认知升级','实践指南'],date:'2026-03-27',views:326,likes:67,body:'一份从认知到落地的完整指南，三个篇章层层递进：\n\n认知篇：从"使用AI"到"用AI工作"的认知升级。三支柱架构、四级演进路径、两个关键心智模型——帮你建立对AI工作方式的系统性理解。\n\n实践篇：读完就能动手。工具安装、规则配置、Skills封装、Memory建设的完整操作指南，每一步都有实操细节。\n\n组织篇：从个人工作站到组织能力跃迁。数字员工、多Agent协同、组织能力升级——看清方向和路径。',link:'https://ai-workstation-site.vercel.app/',hot:true},
+  ]},
+  {name:'孙校',cases:[]},
+  {name:'雅鑫',cases:[]},
+  {name:'少华',cases:[]},
+  {name:'小鸥',cases:[]},
+  {name:'Ethan',cases:[]},
+  {name:'慧娟',cases:[]},
+  {name:'何老师',cases:[]},
+  {name:'雪松',cases:[]},
+  {name:'+',placeholder:true,cases:[]},
+];
+
+// 数据版本号：每次更新源文件内容时+1，强制刷新浏览器缓存
+const DATA_VERSION = 5;
+const STORE_KEY = 'cr_v' + DATA_VERSION;
+
+function loadCr(){
+  // 清除旧版本缓存
+  for(let i=0;i<DATA_VERSION;i++){try{localStorage.removeItem('cr_v'+i)}catch(e){}}
+
+  const base = JSON.parse(JSON.stringify(defaultCr));
+  const userAdded = localStorage.getItem(STORE_KEY + '_user');
+  if(!userAdded) return base;
+
+  // 合并：源文件数据 + 用户自己提交的数据
+  try{
+    const added = JSON.parse(userAdded);
+    added.forEach(item => {
+      const existing = base.find(c => c.name === item.name);
+      if(existing){
+        item.cases.forEach(cs => {
+          if(!existing.cases.some(e => e.title === cs.title)){
+            existing.cases.push(cs);
+          }
+        });
+      } else {
+        base.push(item);
+      }
+    });
+  }catch(e){}
+  return base;
+}
+
+function saveCr(d){
+  // 只存用户新增的数据（与默认数据的差异部分）
+  const diff = [];
+  d.forEach(person => {
+    if(person.placeholder) return;
+    const defaultPerson = defaultCr.find(c => c.name === person.name);
+    if(!defaultPerson){
+      // 全新的人
+      diff.push(person);
+    } else {
+      // 已有的人，只存新增的案例
+      const newCases = person.cases.filter(cs => !defaultPerson.cases.some(dc => dc.title === cs.title));
+      if(newCases.length > 0){
+        diff.push({name: person.name, cases: newCases});
+      }
+    }
+  });
+  localStorage.setItem(STORE_KEY + '_user', JSON.stringify(diff));
+}
+let selCr=null;
+
+function renderCommunity(){
+  const data=loadCr();
+  // 不做全局排序，保持原始穿插顺序；只在卡片上标排名
+  const realData=data.filter(c=>!c.placeholder);
+  const total=realData.reduce((s,c)=>s+c.cases.length,0);
+  const active=realData.filter(c=>c.cases.length>0).length;
+  // 计算排名（按分享数）
+  const ranked=[...realData].filter(c=>c.cases.length>0).sort((a,b)=>b.cases.length-a.cases.length);
+  const rankMap={};ranked.forEach((c,i)=>rankMap[c.name]=i);
+
+  document.getElementById('comStats').innerHTML=`
+    <div class="com-stat"><b>${realData.length}</b><span>位创作者</span></div>
+    <div class="com-stat"><b>${total}</b><span>篇分享</span></div>
+    <div class="com-stat"><b>${active}</b><span>人已发布</span></div>
+    <div class="com-stat"><b>${realData.length-active}</b><span>人蓄势待发</span></div>
+  `;
+
+  const g=document.getElementById('comGrid');g.innerHTML='';
+  data.forEach((c,i)=>{
+    const ci=defaultCr.findIndex(d=>d.name===c.name);
+    const color=crColors[ci>=0?ci:i%crColors.length];
+    const d=document.createElement('div');
+    const ri=rankMap[c.name];
+    d.className='com-card'+(selCr===c.name?' selected':'')+(ri===0?' rank-1':'');
+    let rankHtml='';
+    if(ri===0)rankHtml='<div class="com-rank com-rank-1">#1</div>';
+    else if(ri===1)rankHtml='<div class="com-rank com-rank-2">#2</div>';
+    else if(ri===2)rankHtml='<div class="com-rank com-rank-3">#3</div>';
+    if(c.placeholder){
+      d.style.borderStyle='dashed';d.style.cursor='default';
+      d.innerHTML=`<div class="com-avatar" style="background:rgba(0,0,0,.06);color:var(--text-tertiary);font-size:1.4rem;border:2px dashed var(--border)">+</div><div class="com-name" style="color:var(--text-tertiary)">等你加入</div><div class="com-count" style="color:var(--accent-soft);font-size:0.72rem">成为下一位创作者</div>`;
+      d.onclick=()=>{document.getElementById('impForm').scrollIntoView({behavior:'smooth'});document.getElementById('iName').focus()};
+      g.appendChild(d);return;
+    }
+    const countHtml = c.cases.length > 0
+      ? `<div class="com-count"><b>${c.cases.length}</b>篇分享</div>`
+      : `<div class="com-count" style="color:var(--accent-soft);font-size:0.72rem">期待你的第一篇 ✨</div>`;
+    d.innerHTML=`${rankHtml}<div class="com-avatar" style="background:${color}">${c.name.charAt(0)}</div><div class="com-name">${c.name}</div>${countHtml}`;
+    d.onclick=()=>{selCr=selCr===c.name?null:c.name;renderCommunity()};
+    g.appendChild(d);
+  });
+
+  let all=[];
+  data.forEach(c=>{const ci=defaultCr.findIndex(d=>d.name===c.name);c.cases.forEach(cs=>{all.push({...cs,author:c.name,color:crColors[ci>=0?ci:0]})})});
+  // 置顶 hot 的，其余按日期排序
+  all.sort((a,b)=>{
+    if(a.hot&&!b.hot)return -1;if(!a.hot&&b.hot)return 1;
+    return(b.date||'').localeCompare(a.date||'');
+  });
+  if(selCr)all=all.filter(c=>c.author===selCr);
+
+  const fl=document.getElementById('feedTitle');
+  const ff=document.getElementById('feedFilter');
+  if(selCr){fl.textContent=selCr+' 的分享';ff.innerHTML=`<span class="hi" onclick="selCr=null;renderCommunity()">清除筛选 ✕</span>`}
+  else{fl.textContent='全部案例';ff.textContent='共 '+total+' 篇 · 点击头像筛选'}
+
+  const cg=document.getElementById('caseGrid');cg.innerHTML='';
+  if(!all.length){cg.innerHTML='<div class="case-empty">暂无案例 — 成为第一个发布者</div>';return}
+  all.forEach((c,i)=>{
+    const d=document.createElement('div');d.className='case-item';
+    let badge='';
+    if(c.hot)badge='<span class="case-badge badge-hot">置顶推荐</span>';
+    else if(i===0||(i===1&&all[0].hot))badge='<span class="case-badge badge-new">最新</span>';
+    const views=c.views||Math.floor(Math.random()*50+10);
+    const likes=c.likes||Math.floor(Math.random()*10+1);
+    const caseId=c.author+'_'+c.title;
+    const isLiked=getLikes().includes(caseId);
+    d.innerHTML=`<div class="case-meta"><div class="case-dot" style="background:${c.color}">${c.author.charAt(0)}</div><div class="case-author">${c.author}</div>${badge}<div class="case-date">${timeAgo(c.date)}</div></div><h3>${c.title}</h3><div class="case-preview">${(c.body||'').replace(/\n/g,' ').slice(0,90)}...</div><div class="case-tags">${(c.tags||[]).map(t=>`<span class="case-tag">${t}</span>`).join('')}</div><div class="case-stats"><span>👁 ${views}</span><span class="case-like-btn${isLiked?' liked':''}" data-id="${caseId}" onclick="event.stopPropagation();toggleLike(this,'${caseId}')">♥ <em>${likes}</em></span></div>`;
+    d.onclick=()=>showCase(c);
+    cg.appendChild(d);
+  });
+}
+
+function showCase(c){
+  const m=document.getElementById('detC');
+  const body=(c.body||'').split('\n').map(p=>p.trim()?`<p>${p}</p>`:'').join('');
+  const link=c.link?`<a href="${c.link}" target="_blank" class="det-link">查看原文 →</a>`:'';
+  const encourages=['这篇分享会帮到更多人 👏','经验沉淀下来，就是团队的资产','写下来的经验，比说过的经验活得久'];
+  const enc=encourages[Math.floor(Math.random()*encourages.length)];
+  const dViews=c.views||Math.floor(Math.random()*50+10);
+  const dLikes=c.likes||Math.floor(Math.random()*10+1);
+  m.innerHTML=`<button class="det-close" onclick="document.getElementById('detMod').classList.remove('on')">✕</button><div class="det-meta"><div class="det-avatar" style="background:${c.color}">${c.author.charAt(0)}</div><div><div class="det-name">${c.author}</div><div class="det-date">${timeAgo(c.date)} · 👁 ${dViews} 次查看 · ♥ ${dLikes} 次点赞</div></div></div><div class="det-title">${c.title}</div><div class="det-body">${body}</div>${link}<div class="case-tags" style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--border)">${(c.tags||[]).map(t=>`<span class="case-tag">${t}</span>`).join('')}</div><div style="margin-top:1.5rem;padding:0.8rem 1rem;background:var(--accent-bg);border-radius:4px;font-size:0.78rem;color:var(--accent-soft);text-align:center;font-style:italic">${enc}</div>`;
+  document.getElementById('detMod').classList.add('on');
+}
+
+function submitCase(e){
+  e.preventDefault();
+  const name=document.getElementById('iName').value.trim();
+  const title=document.getElementById('iTitle').value.trim();
+  const tags=(document.getElementById('iTags').value||'').split(/[,，]/).map(t=>t.trim()).filter(Boolean);
+  const link=document.getElementById('iLink').value.trim();
+  const body=document.getElementById('iBody').value.trim();
+  if(!name||!title)return false;
+  const data=loadCr();
+  const ex=data.find(c=>c.name===name);
+  const nc={title,tags,link,body,date:new Date().toISOString().slice(0,10)};
+  if(ex)ex.cases.push(nc);else data.push({name,cases:[nc]});
+  saveCr(data);renderCommunity();
+  document.getElementById('impForm').reset();
+  fireConfetti();
+  const cheers=['🎉 太棒了！','✨ 感谢分享！','🚀 又一篇好文！','💪 社区因你更强！'];
+  const cheer=cheers[Math.floor(Math.random()*cheers.length)];
+  const t=document.getElementById('toast');t.textContent=cheer+' '+title;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),3000);
+  return false;
+}
+
+// ===== LIKES =====
+function getLikes(){try{return JSON.parse(localStorage.getItem('liked_cases')||'[]')}catch(e){return[]}}
+function toggleLike(el,id){
+  let liked=getLikes();
+  const em=el.querySelector('em');
+  let n=parseInt(em.textContent);
+  if(liked.includes(id)){
+    liked=liked.filter(x=>x!==id);n--;el.classList.remove('liked');
+  }else{
+    liked.push(id);n++;el.classList.add('liked');
+  }
+  em.textContent=n;
+  localStorage.setItem('liked_cases',JSON.stringify(liked));
+}
+
+renderCommunity();
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('detMod').classList.remove('on')});
+
+// Chart bars
+const c1 = document.getElementById('chart1');
+if(c1) [30,42,38,50,55,62,58,72,68,82,78,90].forEach(h => {
+  const s = document.createElement('span');
+  s.style.height = h+'%';
+  c1.appendChild(s);
+});
+</script>
+</body>
+</html>
