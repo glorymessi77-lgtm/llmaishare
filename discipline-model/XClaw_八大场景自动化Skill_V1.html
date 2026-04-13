@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XClaw · 八大场景自动化 Skill 生态</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #F0F4F8;
+  color: #1E293B;
+  line-height: 1.5;
+  padding: 0 0 48px;
+}
+/* ==== 统一返回目录导航条 ==== */
+.nav-bar {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #E2E8F0;
+  padding: 12px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  margin-bottom: 24px;
+}
+.nav-bar a { color: #6366F1; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px; transition: opacity 0.15s; }
+.nav-bar a:hover { opacity: 0.7; }
+.nav-bar .sep { color: #CBD5E1; }
+.nav-bar .current { color: #64748B; }
+.nav-bar .level { font-size: 9px; font-weight: 700; color: #fff; background: #EC4899; padding: 2px 7px; border-radius: 4px; letter-spacing: 1px; }
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+
+/* ==== HEADER ==== */
+.header {
+  background: linear-gradient(135deg, #1E3A8A 0%, #6D28D9 45%, #BE185D 100%);
+  color: #fff;
+  border-radius: 16px;
+  padding: 32px 36px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -5%;
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.header-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; position: relative; }
+.header-tag { font-size: 11px; letter-spacing: 2px; background: rgba(255,255,255,0.18); padding: 4px 12px; border-radius: 20px; font-weight: 600; }
+.header h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; position: relative; }
+.header h1 em { font-style: normal; background: linear-gradient(90deg, #FDE68A, #FCA5A5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.header .sub { font-size: 14px; opacity: 0.88; font-weight: 400; position: relative; line-height: 1.7; max-width: 900px; }
+.header-stats { display: flex; gap: 20px; margin-top: 22px; position: relative; flex-wrap: wrap; }
+.header-stat { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 10px 18px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); }
+.header-stat .n { font-size: 20px; font-weight: 700; line-height: 1; }
+.header-stat .l { font-size: 10px; opacity: 0.75; margin-top: 4px; letter-spacing: 0.5px; }
+
+/* ==== SECTION ==== */
+.section {
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.sec-head {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 18px; padding-bottom: 12px;
+  border-bottom: 2px solid #F1F5F9;
+}
+.sec-num {
+  font-size: 11px; font-weight: 700; color: #fff;
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  padding: 4px 10px; border-radius: 6px; letter-spacing: 1px;
+}
+.sec-head h2 { font-size: 18px; font-weight: 700; color: #0F172A; }
+.sec-head .meta { font-size: 12px; color: #64748B; margin-left: auto; }
+
+/* ==== 核心洞察 ==== */
+.insight-box {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FED7AA 100%);
+  border: 1px solid #FCD34D;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.insight-box .label { font-size: 11px; color: #92400E; font-weight: 700; letter-spacing: 2px; margin-bottom: 6px; }
+.insight-box h3 { font-size: 19px; font-weight: 800; color: #78350F; margin-bottom: 10px; }
+.insight-box p { font-size: 13px; color: #7C2D12; line-height: 1.9; }
+.insight-box p strong { color: #C2410C; }
+
+.insight-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 14px; }
+.insight-item { background: rgba(255,255,255,0.8); padding: 14px; border-radius: 8px; border-left: 3px solid #F59E0B; }
+.insight-item .t { font-size: 12px; font-weight: 700; color: #78350F; margin-bottom: 5px; }
+.insight-item .d { font-size: 11px; color: #7C2D12; line-height: 1.6; }
+
+/* ==== 八大场景总览 ==== */
+.scene-overview {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.scene-cell {
+  border-radius: 10px;
+  padding: 14px 8px;
+  text-align: center;
+  position: relative;
+  cursor: default;
+  transition: all 0.2s;
+}
+.scene-cell:hover { transform: translateY(-2px); }
+.scene-cell .num { font-size: 10px; opacity: 0.7; font-weight: 700; }
+.scene-cell .char { font-size: 22px; font-weight: 900; margin: 4px 0 2px; }
+.scene-cell .name { font-size: 11px; font-weight: 700; }
+.s1 { background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE; }
+.s2 { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
+.s3 { background: #F5F3FF; color: #6D28D9; border: 1px solid #DDD6FE; }
+.s4 { background: #FCE7F3; color: #BE185D; border: 1px solid #FBCFE8; }
+.s5 { background: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
+.s6 { background: #FFE4E6; color: #BE123C; border: 1px solid #FECDD3; }
+.s7 { background: #ECFEFF; color: #0E7490; border: 1px solid #A5F3FC; }
+.s8 { background: #F1F5F9; color: #334155; border: 1px solid #CBD5E1; }
+
+/* ==== 场景详细卡片 ==== */
+.scene-detail {
+  border-radius: 14px;
+  padding: 22px 26px;
+  margin-bottom: 16px;
+  position: relative;
+  border-top: 4px solid;
+}
+.scene-detail.d1 { background: linear-gradient(135deg, #EFF6FF, #fff); border-top-color: #2563EB; }
+.scene-detail.d2 { background: linear-gradient(135deg, #F0FDF4, #fff); border-top-color: #059669; }
+.scene-detail.d3 { background: linear-gradient(135deg, #F5F3FF, #fff); border-top-color: #7C3AED; }
+.scene-detail.d4 { background: linear-gradient(135deg, #FCE7F3, #fff); border-top-color: #DB2777; }
+.scene-detail.d5 { background: linear-gradient(135deg, #FEF3C7, #fff); border-top-color: #D97706; }
+.scene-detail.d6 { background: linear-gradient(135deg, #FFE4E6, #fff); border-top-color: #E11D48; }
+.scene-detail.d7 { background: linear-gradient(135deg, #ECFEFF, #fff); border-top-color: #0891B2; }
+.scene-detail.d8 { background: linear-gradient(135deg, #F1F5F9, #fff); border-top-color: #475569; }
+
+.scene-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed rgba(0,0,0,0.1);
+}
+.scene-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.scene-badge .c { font-size: 22px; line-height: 1; }
+.scene-badge .n { font-size: 9px; opacity: 0.85; margin-top: 2px; }
+.d1 .scene-badge { background: linear-gradient(135deg, #3B82F6, #1E40AF); }
+.d2 .scene-badge { background: linear-gradient(135deg, #10B981, #047857); }
+.d3 .scene-badge { background: linear-gradient(135deg, #8B5CF6, #6D28D9); }
+.d4 .scene-badge { background: linear-gradient(135deg, #EC4899, #BE185D); }
+.d5 .scene-badge { background: linear-gradient(135deg, #F59E0B, #B45309); }
+.d6 .scene-badge { background: linear-gradient(135deg, #EF4444, #B91C1C); }
+.d7 .scene-badge { background: linear-gradient(135deg, #06B6D4, #0E7490); }
+.d8 .scene-badge { background: linear-gradient(135deg, #64748B, #334155); }
+
+.scene-title { font-size: 17px; font-weight: 800; color: #1E293B; margin-bottom: 3px; }
+.scene-subtitle { font-size: 12px; color: #64748B; line-height: 1.5; }
+.scene-tag {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(0,0,0,0.05);
+  padding: 4px 10px;
+  border-radius: 20px;
+  color: #475569;
+  letter-spacing: 0.5px;
+}
+
+/* 数据 + Skill 两栏 */
+.scene-body { display: grid; grid-template-columns: 280px 1fr; gap: 18px; }
+.scene-data {
+  background: rgba(255,255,255,0.7);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.scene-data .data-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748B;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #E2E8F0;
+}
+.scene-data .data-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.scene-data .data-item {
+  font-size: 10px;
+  background: #fff;
+  border: 1px solid #CBD5E1;
+  padding: 4px 9px;
+  border-radius: 4px;
+  color: #475569;
+}
+.scene-data .data-item.hl {
+  background: #FEF3C7;
+  border-color: #FCD34D;
+  color: #92400E;
+  font-weight: 600;
+}
+
+.scene-skills { display: flex; flex-direction: column; gap: 10px; }
+.skill-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  border-left: 3px solid #94A3B8;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+}
+.d1 .skill-card { border-left-color: #3B82F6; }
+.d2 .skill-card { border-left-color: #10B981; }
+.d3 .skill-card { border-left-color: #8B5CF6; }
+.d4 .skill-card { border-left-color: #EC4899; }
+.d5 .skill-card { border-left-color: #F59E0B; }
+.d6 .skill-card { border-left-color: #EF4444; }
+.d7 .skill-card { border-left-color: #06B6D4; }
+.d8 .skill-card { border-left-color: #64748B; }
+
+.skill-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.skill-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1E293B;
+}
+.skill-trigger {
+  font-size: 10px;
+  color: #6366F1;
+  background: #EEF2FF;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-weight: 600;
+}
+.skill-target {
+  font-size: 9px;
+  color: #94A3B8;
+  margin-left: auto;
+  background: #F1F5F9;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+.skill-target.teacher { background: #DBEAFE; color: #1E40AF; }
+.skill-target.student { background: #D1FAE5; color: #065F46; }
+.skill-target.admin { background: #FEF3C7; color: #92400E; }
+
+.skill-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 8px 0;
+}
+.flow-node {
+  flex: 1;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  padding: 7px 8px;
+  font-size: 9px;
+  text-align: center;
+  color: #475569;
+  position: relative;
+  line-height: 1.4;
+}
+.flow-node:not(:last-child)::after {
+  content: '›';
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fff;
+  color: #94A3B8;
+  width: 10px;
+  height: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 11px;
+  z-index: 2;
+}
+.flow-node:first-child { border-radius: 6px 0 0 6px; }
+.flow-node:last-child {
+  border-radius: 0 6px 6px 0;
+  background: #ECFDF5;
+  border-color: #A7F3D0;
+  color: #065F46;
+  font-weight: 600;
+}
+.flow-node strong { display: block; font-weight: 700; color: #1E293B; font-size: 9px; }
+
+.skill-value {
+  font-size: 11px;
+  color: #64748B;
+  line-height: 1.6;
+  padding-top: 8px;
+  border-top: 1px dashed #E2E8F0;
+  margin-top: 8px;
+}
+.skill-value strong { color: #6366F1; }
+
+/* ==== 自动化运转机制 ==== */
+.mechanism {
+  background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+  color: #E2E8F0;
+  border-radius: 14px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+}
+.mechanism .sec-head { border-bottom-color: rgba(255,255,255,0.1); }
+.mechanism .sec-head h2 { color: #F1F5F9; }
+.mechanism .sec-head .meta { color: #94A3B8; }
+.mechanism .sec-num { background: linear-gradient(135deg, #60A5FA, #A78BFA); }
+
+.pipeline {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin: 18px 0 14px;
+}
+.pipe-step {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 14px 10px;
+  text-align: center;
+  position: relative;
+}
+.pipe-step::after {
+  content: '›';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #60A5FA;
+  font-size: 18px;
+  font-weight: 900;
+  background: #0F172A;
+  padding: 0 3px;
+  z-index: 2;
+}
+.pipe-step:last-child::after { display: none; }
+.pipe-step .num { font-size: 9px; color: #60A5FA; font-weight: 700; letter-spacing: 1px; }
+.pipe-step .icon { font-size: 18px; margin: 4px 0; }
+.pipe-step .name { font-size: 11px; font-weight: 700; color: #F1F5F9; margin-bottom: 3px; }
+.pipe-step .desc { font-size: 9px; color: #94A3B8; line-height: 1.5; }
+
+.mech-example {
+  background: rgba(96, 165, 250, 0.08);
+  border: 1px solid rgba(96, 165, 250, 0.25);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-top: 12px;
+}
+.mech-example h4 {
+  font-size: 12px;
+  color: #93C5FD;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.mech-example p { font-size: 12px; color: #CBD5E1; line-height: 1.9; }
+.mech-example em { font-style: normal; color: #FBBF24; font-weight: 600; }
+.mech-example strong { color: #F1F5F9; }
+
+/* ==== 根本区别 ==== */
+.diff-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.diff-table th {
+  background: #F8FAFC;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 700;
+  color: #475569;
+  border-bottom: 2px solid #E2E8F0;
+  font-size: 11px;
+}
+.diff-table th.xclaw {
+  background: linear-gradient(135deg, #EEF2FF, #F5F3FF);
+  color: #6366F1;
+}
+.diff-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #F1F5F9;
+  color: #475569;
+  line-height: 1.6;
+  font-size: 11px;
+  vertical-align: top;
+}
+.diff-table td.dim { color: #94A3B8; }
+.diff-table td.xclaw {
+  background: #FAFBFF;
+  color: #4338CA;
+  font-weight: 500;
+}
+.diff-table tr:last-child td { border-bottom: none; }
+.diff-table strong { color: #1E293B; }
+.diff-table .xclaw strong { color: #6366F1; }
+
+/* ==== FOOTER ==== */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #94A3B8;
+  font-size: 11px;
+}
+.footer strong { color: #64748B; }
+</style>
+</head>
+<body>
+
+<!-- 统一返回目录导航条 -->
+<div class="nav-bar">
+  <a href="index.html">← 返回文档中心</a>
+  <span class="sep">/</span>
+  <a href="XClaw_产品架构与规划_V1.html">产品架构与规划</a>
+  <span class="sep">/</span>
+  <span class="level">L2</span>
+  <span class="current">八大场景自动化 Skill V1</span>
+</div>
+
+<div class="wrap">
+
+<!-- ====== HEADER ====== -->
+<div class="header">
+  <div class="header-top">
+    <span class="header-tag">XCLAW × 小雅平台 · 深度融合的 SKILL 生态</span>
+  </div>
+  <h1>八大场景 × 自动化 <em>Skill 生态</em></h1>
+  <div class="sub">XClaw 的核心壁垒不是"调度引擎"本身，而是<strong style="color:#FDE68A">与小雅平台深度融合的 Skill</strong>——它能直接读取平台里的真实教学数据、联动教务流程、无感嵌入师生日常。这是友商 fork OpenClaw 后永远做不到的事。</div>
+  <div class="header-stats">
+    <div class="header-stat"><div class="n">8</div><div class="l">TEACHING SCENARIOS</div></div>
+    <div class="header-stat"><div class="n">24+</div><div class="l">DEEP-INTEGRATED SKILLS</div></div>
+    <div class="header-stat"><div class="n">7步</div><div class="l">SKILL AUTOMATION PIPELINE</div></div>
+    <div class="header-stat"><div class="n">0切换</div><div class="l">师生无感体验</div></div>
+  </div>
+</div>
+
+<!-- ====== 01 核心洞察 ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num">01</span>
+    <h2>CORE INSIGHT · 为什么 Skill 才是 XClaw 的真正壁垒</h2>
+    <span class="meta">从"技术底座"到"业务纵深"</span>
+  </div>
+
+  <div class="insight-box">
+    <div class="label">KEY INSIGHT</div>
+    <h3>OpenClaw 开源后，"调度能力"不再是壁垒，但"读懂真实教学数据的 Skill"是</h3>
+    <p>友商可以 fork OpenClaw 做一个"高教版龙虾"——但他们的 Skill 只能处理"通用文档 / 用户上传的资料 / 孤立的问答"。<strong>只有 XClaw 的 Skill 能直接读取小雅平台里 100+ 门课程、20000+ 学生的真实教学大纲、学情数据、课堂互动、题库和学术资产</strong>——这种"血管级融合"是 fork 代码无论如何都带不走的。</p>
+    <div class="insight-grid">
+      <div class="insight-item">
+        <div class="t">📥 数据流来源</div>
+        <div class="d">小雅平台已有的八大场景数据（知识图谱/教案/学情/题库/OBE矩阵等）全部可被 Skill 直接调用，零额外成本</div>
+      </div>
+      <div class="insight-item">
+        <div class="t">🔗 工作流融合</div>
+        <div class="d">Skill 产出自动回流到平台对应位置（试卷入题库、教案入备课、评价入OBE表），闭环无断点</div>
+      </div>
+      <div class="insight-item">
+        <div class="t">👆 入口无感</div>
+        <div class="d">师生在原有的小雅平台场景内触发 Skill，不需要切换到新 App，降低使用门槛到零</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 02 八大场景总览 ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num">02</span>
+    <h2>SCENARIOS OVERVIEW · 小雅平台八大教学场景</h2>
+    <span class="meta">每个场景都有 XClaw Skill 深度嵌入</span>
+  </div>
+  <div class="scene-overview">
+    <div class="scene-cell s1"><div class="num">01</div><div class="char">建</div><div class="name">课程建设</div></div>
+    <div class="scene-cell s2"><div class="num">02</div><div class="char">备</div><div class="name">备课设计</div></div>
+    <div class="scene-cell s3"><div class="num">03</div><div class="char">教</div><div class="name">课堂教学</div></div>
+    <div class="scene-cell s4"><div class="num">04</div><div class="char">学</div><div class="name">自主学习</div></div>
+    <div class="scene-cell s5"><div class="num">05</div><div class="char">测</div><div class="name">考试测评</div></div>
+    <div class="scene-cell s6"><div class="num">06</div><div class="char">评</div><div class="name">教学评价</div></div>
+    <div class="scene-cell s7"><div class="num">07</div><div class="char">督</div><div class="name">教学督导</div></div>
+    <div class="scene-cell s8"><div class="num">08</div><div class="char">管</div><div class="name">教务管理</div></div>
+  </div>
+  <div style="font-size:11px;color:#64748B;text-align:center;margin-top:12px;font-style:italic">👇 下方按八大场景展开，每个场景包含：平台已有数据 → XClaw 核心 Skill → 自动化流程 → 对师生的价值</div>
+</div>
+
+<!-- ====== 场景1：建 ====== -->
+<div class="section" style="padding: 0; background: transparent; box-shadow: none;">
+
+<!-- 场景1：建 -->
+<div class="scene-detail d1">
+  <div class="scene-head">
+    <div class="scene-badge"><div class="c">建</div><div class="n">01</div></div>
+    <div>
+      <div class="scene-title">课程建设 · 从零构建一门课</div>
+      <div class="scene-subtitle">新课程上线、学科知识体系搭建、教学资源初始化</div>
+    </div>
+    <div class="scene-tag">受益人：学科负责人 · 新任教师</div>
+  </div>
+  <div class="scene-body">
+    <div class="scene-data">
+      <div class="data-label">平台已有数据</div>
+      <div class="data-list">
+        <span class="data-item hl">知识图谱</span>
+        <span class="data-item hl">课程教材</span>
+        <span class="data-item hl">教学大纲</span>
+        <span class="data-item">课程数据</span>
+        <span class="data-item hl">学术论文</span>
+      </div>
+    </div>
+    <div class="scene-skills">
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">📘 课程知识图谱自动构建 Skill</span>
+          <span class="skill-trigger">/建课图谱</span>
+          <span class="skill-target teacher">教师</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 读取教学大纲</div>
+          <div class="flow-node"><strong>2</strong> 抽取知识点+关系</div>
+          <div class="flow-node"><strong>3</strong> 关联教材章节</div>
+          <div class="flow-node"><strong>4</strong> 生成图谱可视化</div>
+          <div class="flow-node"><strong>5</strong> 回写小雅建课模块</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>教师一句话触发，XClaw 读取小雅已有的教学大纲和教材，调用 Coral 学科知识库做实体抽取，2 分钟生成完整课程知识图谱——而不是让教师手动拖拽节点几小时。</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">📚 开课资源包一键生成 Skill</span>
+          <span class="skill-trigger">/建课资源</span>
+          <span class="skill-target teacher">教师</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 输入课程名+目标</div>
+          <div class="flow-node"><strong>2</strong> 检索学术论文+教材</div>
+          <div class="flow-node"><strong>3</strong> 生成大纲草案</div>
+          <div class="flow-node"><strong>4</strong> 绑定参考文献</div>
+          <div class="flow-node"><strong>5</strong> 导入小雅课程</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>新任教师接手陌生课程时，基于 Coral 里同学科老教师的教学资产，3 分钟生成可用的大纲+教材清单+讲义框架，<strong>直接在小雅里开课</strong>。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 场景2：备 -->
+<div class="scene-detail d2">
+  <div class="scene-head">
+    <div class="scene-badge"><div class="c">备</div><div class="n">02</div></div>
+    <div>
+      <div class="scene-title">备课设计 · 一句话把课备完</div>
+      <div class="scene-subtitle">日常备课、教案撰写、PPT 课件、教学活动设计</div>
+    </div>
+    <div class="scene-tag">受益人：一线教师（最高频）</div>
+  </div>
+  <div class="scene-body">
+    <div class="scene-data">
+      <div class="data-label">平台已有数据</div>
+      <div class="data-list">
+        <span class="data-item hl">教案</span>
+        <span class="data-item hl">PPT课件</span>
+        <span class="data-item hl">教学设计模板</span>
+        <span class="data-item hl">教学案例库</span>
+        <span class="data-item hl">微课</span>
+      </div>
+    </div>
+    <div class="scene-skills">
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">✍️ 智能备课 Skill</span>
+          <span class="skill-trigger">/备课</span>
+          <span class="skill-target teacher">教师</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 识别目标章节</div>
+          <div class="flow-node"><strong>2</strong> 调取历史教案+案例</div>
+          <div class="flow-node"><strong>3</strong> 生成教案+PPT</div>
+          <div class="flow-node"><strong>4</strong> 匹配教学设计模板</div>
+          <div class="flow-node"><strong>5</strong> 发布到小雅备课区</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>教师说"帮我备下周三的第五章课"，XClaw 自动读取小雅里该课程的教材、历史教案、教学设计模板，3 分钟产出完整备课包——<strong>不需要教师上传任何文件</strong>，因为这些数据小雅本来就有。</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">🎬 微课脚本自动生成 Skill</span>
+          <span class="skill-trigger">/生成微课</span>
+          <span class="skill-target teacher">教师</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 选定知识点</div>
+          <div class="flow-node"><strong>2</strong> 读取现有PPT素材</div>
+          <div class="flow-node"><strong>3</strong> 生成5分钟讲解稿</div>
+          <div class="flow-node"><strong>4</strong> 配语音合成音频</div>
+          <div class="flow-node"><strong>5</strong> 入小雅微课库</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>基于已有 PPT 和教案，调用讯飞语音合成能力一键产出微课视频——教师不需要再对着摄像头讲一遍，也不需要找人剪辑。</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">🎲 教学活动设计 Skill</span>
+          <span class="skill-trigger">/设计活动</span>
+          <span class="skill-target teacher">教师</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 读取学情+目标</div>
+          <div class="flow-node"><strong>2</strong> 从案例库检索</div>
+          <div class="flow-node"><strong>3</strong> 设计互动活动</div>
+          <div class="flow-node"><strong>4</strong> 生成指导卡</div>
+          <div class="flow-node"><strong>5</strong> 嵌入课堂流程</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>结合小雅里该班级的学情数据（谁掌握了、谁没跟上），设计针对性的分组讨论/小组竞赛/案例分析活动，不再让教师抄 20 年不变的互动模板。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 场景3：教 -->
+<div class="scene-detail d3">
+  <div class="scene-head">
+    <div class="scene-badge"><div class="c">教</div><div class="n">03</div></div>
+    <div>
+      <div class="scene-title">课堂教学 · 让课堂活起来</div>
+      <div class="scene-subtitle">课堂互动、随堂测验、小组协作、现场学情反馈</div>
+    </div>
+    <div class="scene-tag">受益人：教师 × 学生（双向）</div>
+  </div>
+  <div class="scene-body">
+    <div class="scene-data">
+      <div class="data-label">平台已有数据</div>
+      <div class="data-list">
+        <span class="data-item hl">学习任务</span>
+        <span class="data-item">课堂互动</span>
+        <span class="data-item">小组协作</span>
+      </div>
+    </div>
+    <div class="scene-skills">
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">⚡ 随堂练习即时生成 Skill</span>
+          <span class="skill-trigger">/即时练习</span>
+          <span class="skill-target teacher">教师</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 输入当前知识点</div>
+          <div class="flow-node"><strong>2</strong> 读课堂目标</div>
+          <div class="flow-node"><strong>3</strong> 从题库抽题+变体</div>
+          <div class="flow-node"><strong>4</strong> 即时推送给全班</div>
+          <div class="flow-node"><strong>5</strong> 实时看作答</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>教师讲完一个难点后，说一句"来个 3 道题测一下"，XClaw 30 秒内从平台题库抽题、变体重写、推送到每个学生端、实时展示作答情况——<strong>让课堂从"单向讲授"变成"即时反馈"</strong>。</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">👥 智能分组与小组协作 Skill</span>
+          <span class="skill-trigger">/智能分组</span>
+          <span class="skill-target teacher">教师</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 读取学生学情</div>
+          <div class="flow-node"><strong>2</strong> 异质/同质分组</div>
+          <div class="flow-node"><strong>3</strong> 分配协作任务</div>
+          <div class="flow-node"><strong>4</strong> 监控协作过程</div>
+          <div class="flow-node"><strong>5</strong> 生成组内贡献</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>基于小雅学情数据按能力均衡分组（或针对性同质分组），每组分配不同难度的协作任务，课后自动评估每个学生的贡献度——<strong>真正的个性化教学落地</strong>。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 场景4：学 -->
+<div class="scene-detail d4">
+  <div class="scene-head">
+    <div class="scene-badge"><div class="c">学</div><div class="n">04</div></div>
+    <div>
+      <div class="scene-title">自主学习 · 每个学生的 AI 私教</div>
+      <div class="scene-subtitle">学生课前预习、课后复习、AI 答疑、错题订正、个性化学习</div>
+    </div>
+    <div class="scene-tag">受益人：学生（核心突破场景）</div>
+  </div>
+  <div class="scene-body">
+    <div class="scene-data">
+      <div class="data-label">平台已有数据</div>
+      <div class="data-list">
+        <span class="data-item">错题集</span>
+        <span class="data-item">作业提交记录</span>
+        <span class="data-item hl">学情数据</span>
+        <span class="data-item">讨论</span>
+        <span class="data-item">小组协作</span>
+      </div>
+    </div>
+    <div class="scene-skills">
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">🎓 AI 学伴答疑 Skill（核心突破）</span>
+          <span class="skill-trigger">/问学伴</span>
+          <span class="skill-target student">学生</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 理解学生问题</div>
+          <div class="flow-node"><strong>2</strong> 读学情定位</div>
+          <div class="flow-node"><strong>3</strong> 检索Coral学科库</div>
+          <div class="flow-node"><strong>4</strong> 引导式提问</div>
+          <div class="flow-node"><strong>5</strong> 溯源到教材章节</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>学生问"这道题为什么选 B"，XClaw 不直接给答案，而是结合学生的学情数据（他哪些知识点没掌握）+ Coral 学科知识库，<strong>用苏格拉底式提问引导他自己想明白</strong>，并标注每一步推理的教材出处。这是领导识别的 XClaw 最核心突破点。</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">🎯 个性化学习路径 Skill</span>
+          <span class="skill-trigger">/我的学习路径</span>
+          <span class="skill-target student">学生</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 读个人学情</div>
+          <div class="flow-node"><strong>2</strong> 对标课程目标</div>
+          <div class="flow-node"><strong>3</strong> 识别薄弱点</div>
+          <div class="flow-node"><strong>4</strong> 生成学习路径</div>
+          <div class="flow-node"><strong>5</strong> 推荐资源+任务</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>每个学生打开小雅就能看到专属的学习地图——哪些已掌握、哪些要补、今天学什么、推荐哪些资源。千人千面的个性化，<strong>不是口号，是每次登录都能看到的真实界面</strong>。</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">📝 错题追根溯源 Skill</span>
+          <span class="skill-trigger">/错题本</span>
+          <span class="skill-target student">学生</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 读取错题集</div>
+          <div class="flow-node"><strong>2</strong> 分析错因模式</div>
+          <div class="flow-node"><strong>3</strong> 定位知识盲区</div>
+          <div class="flow-node"><strong>4</strong> 生成补学任务</div>
+          <div class="flow-node"><strong>5</strong> 变式再练</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>不是简单整理错题，而是找出<strong>错题背后的共同根因</strong>（比如"你 8 道题错在同一个公式理解"），针对性补学并用变式题验证是否真正掌握。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 场景5：测 -->
+<div class="scene-detail d5">
+  <div class="scene-head">
+    <div class="scene-badge"><div class="c">测</div><div class="n">05</div></div>
+    <div>
+      <div class="scene-title">考试测评 · 一句话出一套卷</div>
+      <div class="scene-subtitle">作业布置、随堂测验、阶段测试、期末试卷、自动批改</div>
+    </div>
+    <div class="scene-tag">受益人：教师（减负最显著）</div>
+  </div>
+  <div class="scene-body">
+    <div class="scene-data">
+      <div class="data-label">平台已有数据</div>
+      <div class="data-list">
+        <span class="data-item hl">题库</span>
+      </div>
+    </div>
+    <div class="scene-skills">
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">📋 智能组卷 Skill</span>
+          <span class="skill-trigger">/组卷</span>
+          <span class="skill-target teacher">教师</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 识别范围+难度</div>
+          <div class="flow-node"><strong>2</strong> 读取题库+学情</div>
+          <div class="flow-node"><strong>3</strong> 按蓝图抽题</div>
+          <div class="flow-node"><strong>4</strong> 难度梯度校准</div>
+          <div class="flow-node"><strong>5</strong> 生成试卷入库</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>教师说"出一套高数期中卷 90 分钟满分 100 分中等难度"，XClaw 基于题库+班级学情自动组卷，覆盖考试大纲的所有知识点、难度分布合理，<strong>生成的试卷直接入小雅考试模块，一键下发</strong>。</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">✅ 智能批改与点评 Skill</span>
+          <span class="skill-trigger">/批改作业</span>
+          <span class="skill-target teacher">教师</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 读学生提交</div>
+          <div class="flow-node"><strong>2</strong> 按评分规则批改</div>
+          <div class="flow-node"><strong>3</strong> 生成个性化点评</div>
+          <div class="flow-node"><strong>4</strong> 识别典型错误</div>
+          <div class="flow-node"><strong>5</strong> 回写成绩+反馈</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>不只给分，还为每个学生生成"你的这个答案好在哪、差在哪、下一步要补什么"的个性化点评——<strong>一个老师 2 分钟批 50 份作业，每份都像人工精批</strong>。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 场景6：评 -->
+<div class="scene-detail d6">
+  <div class="scene-head">
+    <div class="scene-badge"><div class="c">评</div><div class="n">06</div></div>
+    <div>
+      <div class="scene-title">教学评价 · OBE 成果导向自动化</div>
+      <div class="scene-subtitle">课程目标达成度、毕业要求支撑度、评估材料生成</div>
+    </div>
+    <div class="scene-tag">受益人：专业负责人 · 教学院长</div>
+  </div>
+  <div class="scene-body">
+    <div class="scene-data">
+      <div class="data-label">平台已有数据</div>
+      <div class="data-list">
+        <span class="data-item hl">OBE矩阵表</span>
+        <span class="data-item hl">指标点</span>
+        <span class="data-item hl">课程目标</span>
+        <span class="data-item hl">试卷分析报告</span>
+      </div>
+    </div>
+    <div class="scene-skills">
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">📊 OBE 达成度自动计算 Skill</span>
+          <span class="skill-trigger">/OBE达成度</span>
+          <span class="skill-target admin">院系</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 读取指标点</div>
+          <div class="flow-node"><strong>2</strong> 调取试卷+作业</div>
+          <div class="flow-node"><strong>3</strong> 计算达成度</div>
+          <div class="flow-node"><strong>4</strong> 定位薄弱指标</div>
+          <div class="flow-node"><strong>5</strong> 生成改进建议</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>往年做一份 OBE 达成度报告需要专人统计两周，现在 XClaw 自动读取小雅里的试卷分析报告+指标点数据，<strong>一键生成可直接用于审核评估的完整材料</strong>。</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">📈 试卷质量分析 Skill</span>
+          <span class="skill-trigger">/试卷分析</span>
+          <span class="skill-target teacher">教师</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 读作答数据</div>
+          <div class="flow-node"><strong>2</strong> 计算难度+区分度</div>
+          <div class="flow-node"><strong>3</strong> 分析班级分布</div>
+          <div class="flow-node"><strong>4</strong> 识别知识盲区</div>
+          <div class="flow-node"><strong>5</strong> 生成分析报告</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>考完立刻知道每道题的难度、区分度、班级能力分布，哪些知识点没教到位——<strong>数据驱动教学改进</strong>。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 场景7：督 -->
+<div class="scene-detail d7">
+  <div class="scene-head">
+    <div class="scene-badge"><div class="c">督</div><div class="n">07</div></div>
+    <div>
+      <div class="scene-title">教学督导 · 看见课堂的每一个细节</div>
+      <div class="scene-subtitle">督导听课、课堂视频切片、督导评分、师生行为分析</div>
+    </div>
+    <div class="scene-tag">受益人：督导专家 · 教学院长</div>
+  </div>
+  <div class="scene-body">
+    <div class="scene-data">
+      <div class="data-label">平台已有数据</div>
+      <div class="data-list">
+        <span class="data-item hl">督导听课笔记</span>
+        <span class="data-item hl">课堂切片视频</span>
+        <span class="data-item hl">督导评分表</span>
+        <span class="data-item hl">师生行为数据</span>
+      </div>
+    </div>
+    <div class="scene-skills">
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">🎥 课堂视频智能分析 Skill</span>
+          <span class="skill-trigger">/课堂分析</span>
+          <span class="skill-target admin">督导</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 读取课堂视频</div>
+          <div class="flow-node"><strong>2</strong> 识别师生互动</div>
+          <div class="flow-node"><strong>3</strong> 统计参与度</div>
+          <div class="flow-node"><strong>4</strong> 识别亮点+问题</div>
+          <div class="flow-node"><strong>5</strong> 生成督导报告</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>督导不再需要亲自坐在教室 3 小时——XClaw 自动分析课堂切片视频，识别老师的提问频次、学生的参与率、课堂讨论的深度，<strong>把看不见的课堂变成看得见的数据</strong>。</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">📝 督导报告自动生成 Skill</span>
+          <span class="skill-trigger">/督导报告</span>
+          <span class="skill-target admin">督导</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 汇总听课笔记</div>
+          <div class="flow-node"><strong>2</strong> 整合评分表</div>
+          <div class="flow-node"><strong>3</strong> 对照评估标准</div>
+          <div class="flow-node"><strong>4</strong> 生成结构化报告</div>
+          <div class="flow-node"><strong>5</strong> 发送给被督导人</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>督导把手写笔记拍张照，XClaw 结合评分表和行为数据生成一份专业的督导反馈报告——<strong>让督导工作从"流水账"变成"真洞察"</strong>。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 场景8：管 -->
+<div class="scene-detail d8">
+  <div class="scene-head">
+    <div class="scene-badge"><div class="c">管</div><div class="n">08</div></div>
+    <div>
+      <div class="scene-title">教务管理 · 让数据说话</div>
+      <div class="scene-subtitle">教务日常运营、教学数据看板、异常预警、管理决策支持</div>
+    </div>
+    <div class="scene-tag">受益人：教务处 · 分管校领导</div>
+  </div>
+  <div class="scene-body">
+    <div class="scene-data">
+      <div class="data-label">平台已有数据</div>
+      <div class="data-list">
+        <span class="data-item hl">教务管理数据</span>
+      </div>
+    </div>
+    <div class="scene-skills">
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">📊 教学质量全景看板 Skill</span>
+          <span class="skill-trigger">/教学全景</span>
+          <span class="skill-target admin">管理者</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 聚合全校数据</div>
+          <div class="flow-node"><strong>2</strong> 对标质量基线</div>
+          <div class="flow-node"><strong>3</strong> 多维度可视化</div>
+          <div class="flow-node"><strong>4</strong> 异常自动标记</div>
+          <div class="flow-node"><strong>5</strong> 推送管理建议</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>校领导一句话"看下全校这学期教学情况"，XClaw 整合小雅的所有教务数据生成可视化看板——哪个学院优秀、哪门课有风险、哪个老师的评教低——<strong>数据驱动决策，不再靠汇报粉饰</strong>。</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-name">⚠️ 挂科风险预警 Skill</span>
+          <span class="skill-trigger">/风险学生</span>
+          <span class="skill-target admin">辅导员</span>
+        </div>
+        <div class="skill-flow">
+          <div class="flow-node"><strong>1</strong> 读取全学期学情</div>
+          <div class="flow-node"><strong>2</strong> 识别风险特征</div>
+          <div class="flow-node"><strong>3</strong> 预测挂科概率</div>
+          <div class="flow-node"><strong>4</strong> 生成干预建议</div>
+          <div class="flow-node"><strong>5</strong> 自动通知辅导员</div>
+        </div>
+        <div class="skill-value"><strong>XClaw 价值：</strong>期中前就能识别出哪些学生有挂科风险（出勤异常、作业缺交、学情下滑），提前介入帮助——<strong>从"事后补救"变成"事前预警"</strong>。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end scene section -->
+
+<!-- ====== 03 Skill 自动化运转机制 ====== -->
+<div class="mechanism">
+  <div class="sec-head">
+    <span class="sec-num">03</span>
+    <h2>AUTOMATION PIPELINE · Skill 如何自动化运转</h2>
+    <span class="meta">XClaw 调度引擎的 7 步统一流程</span>
+  </div>
+  <div class="pipeline">
+    <div class="pipe-step">
+      <div class="num">STEP 1</div>
+      <div class="icon">💬</div>
+      <div class="name">意图识别</div>
+      <div class="desc">教师自然语言 → 结构化任务</div>
+    </div>
+    <div class="pipe-step">
+      <div class="num">STEP 2</div>
+      <div class="icon">🔀</div>
+      <div class="name">Skill 匹配</div>
+      <div class="desc">从 Skill 库选择最优技能</div>
+    </div>
+    <div class="pipe-step">
+      <div class="num">STEP 3</div>
+      <div class="icon">📥</div>
+      <div class="name">数据拉取</div>
+      <div class="desc">从小雅平台读取真实数据</div>
+    </div>
+    <div class="pipe-step">
+      <div class="num">STEP 4</div>
+      <div class="icon">🧠</div>
+      <div class="name">Coral 注入</div>
+      <div class="desc">调用学科知识库做增强</div>
+    </div>
+    <div class="pipe-step">
+      <div class="num">STEP 5</div>
+      <div class="icon">⚙️</div>
+      <div class="name">模型路由</div>
+      <div class="desc">选择最优模型执行任务</div>
+    </div>
+    <div class="pipe-step">
+      <div class="num">STEP 6</div>
+      <div class="icon">🛡️</div>
+      <div class="name">三层防线</div>
+      <div class="desc">溯源/审核/幻觉拦截</div>
+    </div>
+    <div class="pipe-step">
+      <div class="num">STEP 7</div>
+      <div class="icon">↩️</div>
+      <div class="name">结果回流</div>
+      <div class="desc">产出自动入小雅对应模块</div>
+    </div>
+  </div>
+  <div class="mech-example">
+    <h4>💡 完整案例：智能备课 Skill 的 7 步自动化流程</h4>
+    <p>教师在小雅备课页说一句：<em>"帮我备下周三《高等数学》第五章的课，2 课时，目标覆盖极限和连续性"</em></p>
+    <p>
+      <strong>Step 1 意图识别</strong> → XClaw 理解这是一个"备课"任务，目标章节=第五章，目标课时=2，目标知识点=极限+连续性<br>
+      <strong>Step 2 Skill 匹配</strong> → 命中【智能备课 Skill】<br>
+      <strong>Step 3 数据拉取</strong> → 从小雅读取：这门课的教学大纲、历史教案、PPT课件、本班学情数据、教学设计模板<br>
+      <strong>Step 4 Coral 注入</strong> → 从 Coral 高数学科知识库调取第五章知识点图谱、经典例题、常见误区<br>
+      <strong>Step 5 模型路由</strong> → 调度 DeepSeek R1（强推理）生成教案内容，调度星火 Vision 生成配图<br>
+      <strong>Step 6 三层防线</strong> → 每道例题标注来源（某教材第几页）、过程自动溯源、输出前做幻觉检测<br>
+      <strong>Step 7 结果回流</strong> → 教案自动入小雅备课区、PPT 自动入课件库、随堂练习自动入题库——<strong>教师打开小雅就能看到"已备好"</strong>
+    </p>
+  </div>
+</div>
+
+<!-- ====== 04 与友商的根本区别 ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num">04</span>
+    <h2>THE REAL DIFFERENCE · 与友商 Fork 版的根本区别</h2>
+    <span class="meta">同样 fork OpenClaw，为什么 Skill 体验天差地别</span>
+  </div>
+  <table class="diff-table">
+    <thead>
+      <tr>
+        <th style="width:20%">能力项</th>
+        <th>友商 fork 的"高教版龙虾"</th>
+        <th class="xclaw">XClaw（深度融合小雅）</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>数据来源</strong></td>
+        <td class="dim">需要学校手动上传所有教学资料，上传一次用一次，数据孤岛</td>
+        <td class="xclaw">直接读取小雅平台已有的八大场景数据（知识图谱/教案/学情/题库/OBE表等），<strong>零额外操作</strong></td>
+      </tr>
+      <tr>
+        <td><strong>入口位置</strong></td>
+        <td class="dim">独立 App/网站，教师要学新的操作系统，切换成本高</td>
+        <td class="xclaw">原生嵌入小雅备课页/教学页/批改页，<strong>"在哪里用，在哪里触发"</strong></td>
+      </tr>
+      <tr>
+        <td><strong>产出归宿</strong></td>
+        <td class="dim">生成的内容停留在聊天窗口，教师要复制粘贴到教学系统</td>
+        <td class="xclaw">生成的教案/试卷/报告<strong>自动回流到小雅对应模块</strong>，成为正式教学资产</td>
+      </tr>
+      <tr>
+        <td><strong>学情感知</strong></td>
+        <td class="dim">不知道这个班有多少学生、谁掌握了哪些知识点，Skill 是"瞎子"</td>
+        <td class="xclaw">每次调用都能看到班级学情、个人薄弱点，<strong>Skill 是"有眼睛的"</strong></td>
+      </tr>
+      <tr>
+        <td><strong>教务流程</strong></td>
+        <td class="dim">只是个工具，和教务流程（选课/排课/成绩/评估）无关</td>
+        <td class="xclaw">Skill 产出自动触发教务流程（如试卷生成→考试安排→成绩回流→OBE 计算），<strong>闭环</strong></td>
+      </tr>
+      <tr>
+        <td><strong>OBE / 审核评估</strong></td>
+        <td class="dim">没有 OBE 矩阵和指标点概念，无法支撑审核评估</td>
+        <td class="xclaw">直接读取小雅 OBE 矩阵表和指标点，<strong>一键生成审核评估所需的全部佐证材料</strong></td>
+      </tr>
+      <tr>
+        <td><strong>越用越强</strong></td>
+        <td class="dim">每次调用都是孤立的，数据不回流，Skill 能力停滞</td>
+        <td class="xclaw">每次使用数据沉淀到小雅，下次调用更精准，<strong>Skill 在真实教学中持续进化</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-left:4px solid #6366F1;border-radius:8px;padding:16px 20px;margin-top:16px">
+    <div style="font-size:13px;font-weight:700;color:#4338CA;margin-bottom:6px">🎯 结论</div>
+    <div style="font-size:12px;color:#3730A3;line-height:1.9">
+      友商 fork OpenClaw 只能做出一个"<strong>会说话的 ChatGPT 镜像</strong>"——教师要把所有资料喂进去、要手动复制产出结果、要自己判断有没有幻觉。
+      XClaw 做出的是"<strong>长在小雅里的智能大脑</strong>"——教师在哪个场景就在哪里说话，数据自动流动、产出自动归位、流程自动闭环。
+      <br><br>
+      <strong style="color:#6366F1">这不是"更好用"的差距，是"能不能用"的差距。</strong>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <strong>XClaw · 八大场景自动化 Skill V1</strong> · AI教学产品部 · 2026-04<br>
+  基于小雅平台八大场景官方定义（建/备/教/学/测/评/督/管）设计 · 与 Coral 知识库共同构成学科智慧教育生态
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>XClaw 产品交付清单 · V1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   XClaw 产品交付清单 · V1
+   独立 L2 文档 · 浅色商务风
+   ============================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:           #FAFBFF;
+  --bg-deep:      #F1F4FB;
+  --bg-card:      #FFFFFF;
+  --ink:          #0F172A;
+  --ink-soft:     #334155;
+  --ink-mute:     #64748B;
+  --ink-light:    #94A3B8;
+  --hairline:     #E2E8F0;
+  --hairline-bold:#CBD5E1;
+  --indigo:       #6366F1;
+  --indigo-deep:  #4338CA;
+  --indigo-soft:  #EEF2FF;
+  --pink:         #EC4899;
+  --pink-soft:    #FCE7F3;
+  --amber:        #F59E0B;
+  --amber-soft:   #FEF3C7;
+  --emerald:      #10B981;
+  --emerald-soft: #D1FAE5;
+  --red:          #B91C1C;
+  --red-soft:     #FEE2E2;
+  --grad-primary: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
+  --grad-amber:   linear-gradient(135deg, #F59E0B, #EA580C);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: "Inter", "Noto Sans SC", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  padding: 0 0 60px;
+  min-width: 1280px;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+/* ============ 返回导航条 ============ */
+.nav-bar {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hairline);
+  padding: 12px 36px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  margin-bottom: 0;
+}
+.nav-bar a { color: var(--indigo); text-decoration: none; font-weight: 600; transition: opacity 0.15s; }
+.nav-bar a:hover { opacity: 0.7; }
+.nav-bar .sep { color: var(--hairline-bold); }
+.nav-bar .current { color: var(--ink-mute); }
+.nav-bar .level {
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+  background: #EC4899;
+}
+.nav-bar .right {
+  margin-left: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--ink-light);
+  letter-spacing: 1px;
+}
+
+/* ============ Wrap ============ */
+.wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 36px;
+}
+
+/* ============ Hero ============ */
+.hero {
+  padding: 60px 0 40px;
+  background: var(--bg-deep);
+  border-bottom: 1px solid var(--hairline);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before, .hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+.hero::before {
+  top: -30%;
+  left: -5%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #C7D2FE 0%, transparent 70%);
+}
+.hero::after {
+  top: -10%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, #FBCFE8 0%, transparent 70%);
+}
+.hero-inner { position: relative; z-index: 1; }
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--indigo);
+  background: var(--indigo-soft);
+  padding: 6px 14px;
+  border-radius: 30px;
+  margin-bottom: 18px;
+}
+.eyebrow .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--indigo);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+}
+.h-section {
+  font-size: 42px;
+  line-height: 1.15;
+  font-weight: 900;
+  letter-spacing: -1.2px;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.h-section .grad {
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.lede {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--ink-mute);
+  max-width: 820px;
+}
+.lede strong { color: var(--ink-soft); font-weight: 600; }
+
+.hero-quick-info {
+  display: flex;
+  gap: 32px;
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 1px solid var(--hairline);
+}
+.hero-quick-info .item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hero-quick-info .item .lbl {
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.hero-quick-info .item .val {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.hero-quick-info .item .val .grad {
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ============ Section ============ */
+.section { padding: 60px 0; }
+.section-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+.section-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--grad-primary);
+  padding: 5px 12px;
+  border-radius: 6px;
+  letter-spacing: 1.5px;
+}
+.section-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.section-meta {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+
+/* ============ 4 大类 ============ */
+.deliv-categories {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.deliv-category {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--hairline);
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.deliv-category::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+}
+.cat-software::before { background: var(--grad-primary); }
+.cat-data::before { background: linear-gradient(90deg, #EC4899, #F59E0B); }
+.cat-service::before { background: linear-gradient(90deg, #10B981, #06B6D4); }
+.cat-doc::before { background: linear-gradient(90deg, #F59E0B, #EA580C); }
+
+.deliv-cat-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--hairline);
+}
+.deliv-cat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.cat-software .deliv-cat-icon { background: var(--grad-primary); }
+.cat-data .deliv-cat-icon { background: linear-gradient(135deg, #EC4899, #F59E0B); }
+.cat-service .deliv-cat-icon { background: linear-gradient(135deg, #10B981, #06B6D4); }
+.cat-doc .deliv-cat-icon { background: linear-gradient(135deg, #F59E0B, #EA580C); }
+.deliv-cat-text h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.deliv-cat-text .ct {
+  font-size: 11px;
+  color: var(--ink-mute);
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 1px;
+}
+.deliv-cat-text .count {
+  margin-left: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--indigo);
+  background: var(--indigo-soft);
+  padding: 4px 10px;
+  border-radius: 5px;
+}
+.deliv-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.deliv-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 14px;
+  padding: 12px 14px;
+  background: var(--bg);
+  border-radius: 10px;
+  border: 1px solid var(--hairline);
+  align-items: center;
+  transition: all 0.2s;
+}
+.deliv-item:hover {
+  border-color: var(--indigo);
+  background: var(--indigo-soft);
+}
+.deliv-item .ico {
+  font-size: 18px;
+}
+.deliv-item .it-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.deliv-item .it-desc {
+  font-size: 11px;
+  color: var(--ink-mute);
+  line-height: 1.55;
+}
+.deliv-item .it-meta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  color: var(--ink-light);
+  text-align: right;
+  white-space: nowrap;
+  line-height: 1.5;
+}
+.deliv-item .it-meta .tbd {
+  color: var(--amber);
+  background: var(--amber-soft);
+  padding: 2px 6px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* ============ 三版本对比表 ============ */
+.vc-section {
+  background: var(--bg-deep);
+  padding: 80px 0;
+  margin-top: 20px;
+}
+.vc-head {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.vc-head .eyebrow {
+  margin: 0 auto 14px;
+}
+.vc-head h2 {
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.vc-head h2 .grad {
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.vc-head p {
+  font-size: 15px;
+  color: var(--ink-mute);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.vc-table-wrap {
+  background: #fff;
+  border: 1px solid var(--hairline);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.06);
+}
+.vc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.vc-th {
+  padding: 24px 20px;
+  text-align: left;
+  vertical-align: bottom;
+  border-bottom: 2px solid var(--hairline-bold);
+}
+.vc-th-dim {
+  background: var(--bg-deep);
+  width: 200px;
+}
+.vc-th-saas {
+  background: var(--bg);
+  border-left: 1px solid var(--hairline);
+}
+.vc-th-pro {
+  background: linear-gradient(180deg, #EEF2FF, #FAFBFF);
+  border-left: 1px solid var(--indigo);
+  border-right: 1px solid var(--indigo);
+  border-bottom-color: var(--indigo);
+  position: relative;
+}
+.vc-th-nation {
+  background: rgba(185,28,28,0.04);
+  border-left: 1px solid var(--hairline);
+}
+
+.vc-th-tag {
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+.vc-th-tag.t-saas { color: var(--ink-mute); }
+.vc-th-tag.t-pro { color: var(--indigo); }
+.vc-th-tag.t-nation { color: var(--red); }
+.vc-th-name {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--ink);
+  margin-top: 6px;
+  letter-spacing: -0.5px;
+}
+.vc-th-sub {
+  font-size: 11px;
+  margin-top: 6px;
+  font-weight: 500;
+}
+.vc-th-saas .vc-th-sub { color: var(--ink-light); }
+.vc-th-pro .vc-th-sub { color: var(--indigo-deep); font-weight: 600; }
+.vc-th-nation .vc-th-sub { color: var(--red); font-weight: 600; }
+.vc-recommend-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--grad-amber);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 30px;
+  letter-spacing: 1.2px;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(245,158,11,0.4);
+}
+
+.vc-group-row td {
+  padding: 14px 20px;
+  background: linear-gradient(90deg, #F1F4FB, #FAFBFF);
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--ink-mute);
+  font-weight: 700;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--hairline);
+  border-top: 1px solid var(--hairline-bold);
+}
+.vc-group-row.nation td {
+  background: linear-gradient(90deg, #FEF2F2, #FFF7ED);
+  color: var(--red);
+}
+
+.vc-row td {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--hairline);
+}
+.vc-dim {
+  background: var(--bg);
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+.vc-saas {
+  color: var(--ink-soft);
+  border-left: 1px solid var(--hairline);
+}
+.vc-pro {
+  color: var(--ink);
+  font-weight: 600;
+  background: rgba(99,102,241,0.04);
+  border-left: 1px solid var(--indigo);
+  border-right: 1px solid var(--indigo);
+}
+.vc-nation {
+  color: var(--ink-soft);
+  background: rgba(185,28,28,0.025);
+  border-left: 1px solid var(--hairline);
+}
+.vc-nation.strategy {
+  background: rgba(185,28,28,0.05);
+}
+
+.vc-icon {
+  font-size: 16px;
+  font-weight: 700;
+  margin-right: 4px;
+}
+.vc-icon.yes { color: var(--emerald); }
+.vc-icon.partial { color: var(--amber); }
+.vc-icon.no { color: var(--hairline-bold); }
+.vc-icon-text {
+  font-size: 12px;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+
+.vc-cta-row td {
+  padding: 22px 20px;
+  border-bottom: none;
+}
+.vc-cta-row .vc-dim { background: var(--bg); }
+.vc-cta-row .vc-pro {
+  border-bottom: 3px solid var(--indigo);
+  border-bottom-left-radius: 0;
+}
+.vc-cta-row .vc-saas {
+  border-bottom-left-radius: 18px;
+}
+.vc-cta-row .vc-nation {
+  border-bottom-right-radius: 18px;
+}
+
+.vc-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  transition: all 0.25s;
+  border: 1px solid;
+}
+.vc-btn-ghost {
+  border-color: var(--hairline-bold);
+  color: var(--ink-soft);
+  background: rgba(255,255,255,0.7);
+}
+.vc-btn-ghost:hover {
+  border-color: var(--indigo);
+  color: var(--indigo);
+}
+.vc-btn-primary {
+  background: var(--grad-primary);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(99,102,241,0.35);
+}
+.vc-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(99,102,241,0.45);
+}
+.vc-btn-nation {
+  border-color: var(--red);
+  color: var(--red);
+}
+.vc-btn-nation:hover {
+  background: var(--red);
+  color: #fff;
+}
+
+.vc-legend {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+  padding: 14px 22px;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid var(--hairline);
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+.vc-legend .left { display: flex; gap: 22px; }
+.vc-legend strong { color: var(--ink-soft); }
+
+/* ============ 部署形态快查 ============ */
+.deploy-section {
+  padding: 60px 0;
+  background: #fff;
+  border-top: 1px solid var(--hairline);
+}
+.deploy-tabs {
+  display: inline-flex;
+  background: var(--bg);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  padding: 5px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+}
+.deploy-tab {
+  padding: 11px 24px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-mute);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  border: none;
+}
+.deploy-tab.active {
+  background: var(--grad-primary);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(99,102,241,0.35);
+}
+.deploy-detail {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--hairline);
+  padding: 32px;
+}
+.deploy-detail h3 {
+  font-size: 20px;
+  font-weight: 900;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+}
+.deploy-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.deploy-meta {
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 18px;
+  border: 1px solid var(--hairline);
+}
+.deploy-meta .lbl {
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.deploy-meta .val {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+}
+.deploy-meta .val .tbd {
+  background: var(--amber-soft);
+  color: var(--amber);
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+/* ============ 销售话术 banner ============ */
+.sales-tip {
+  background: linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #6366F1 100%);
+  color: #fff;
+  border-radius: 18px;
+  padding: 40px 48px;
+  margin: 60px auto 0;
+  max-width: 1100px;
+  position: relative;
+  overflow: hidden;
+}
+.sales-tip::before {
+  content: "";
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(252, 211, 77, 0.18), transparent 70%);
+  border-radius: 50%;
+}
+.sales-tip-inner { position: relative; z-index: 1; }
+.sales-tip-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  background: rgba(252, 211, 77, 0.15);
+  border: 1px solid rgba(252, 211, 77, 0.3);
+  color: #FCD34D;
+  padding: 5px 12px;
+  border-radius: 30px;
+  margin-bottom: 18px;
+}
+.sales-tip h3 {
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1.3;
+  margin-bottom: 14px;
+  letter-spacing: -0.5px;
+}
+.sales-tip h3 .gold {
+  background: linear-gradient(90deg, #FCD34D, #F59E0B);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.sales-tip p {
+  font-size: 14px;
+  line-height: 1.85;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 22px;
+  max-width: 760px;
+}
+.sales-tip-quotes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 22px;
+}
+.sales-tip-quote {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 16px 18px;
+  backdrop-filter: blur(10px);
+}
+.sales-tip-quote .lbl {
+  font-size: 10px;
+  color: rgba(252, 211, 77, 0.9);
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.sales-tip-quote .text {
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.92);
+}
+
+/* ============ Footer ============ */
+.doc-footer {
+  text-align: center;
+  padding: 50px 24px 30px;
+  margin-top: 60px;
+  font-size: 11px;
+  color: var(--ink-light);
+  border-top: 1px solid var(--hairline);
+}
+.doc-footer .ft-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.doc-footer .ft-name .grad {
+  background: var(--grad-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.doc-footer .ft-meta {
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 1px;
+}
+.doc-footer code {
+  background: var(--bg-deep);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 返回导航条 ============ -->
+<div class="nav-bar">
+  <a href="index.html">← 返回文档中心</a>
+  <span class="sep">/</span>
+  <a href="XClaw_完整产品演示Demo_V1.html">XClaw 完整产品演示 Demo</a>
+  <span class="sep">/</span>
+  <span class="level">L2</span>
+  <span class="current">XClaw 产品交付清单 V1</span>
+  <span class="right">/ DELIVERABLES · V1</span>
+</div>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="wrap hero-inner">
+    <div class="eyebrow"><span class="dot"></span>05 · DELIVERABLES</div>
+    <h1 class="h-section">XClaw 产品交付清单<br><span class="grad">客户付款后具体拿到什么</span></h1>
+    <p class="lede">
+      XClaw 不卖云雾——每一项交付物都白纸黑字写清楚，每一项都<strong>可验收、可清点</strong>。
+      本文档面向<strong>销售 / 售前 / 客户</strong>三方使用：销售按它讲解、售前按它报价、客户按它验收。
+      共 <strong>4 大类 17 项</strong>交付物 + <strong>3 档版本对比</strong> + <strong>3 种部署形态快查</strong>。
+    </p>
+
+    <div class="hero-quick-info">
+      <div class="item">
+        <span class="lbl">交付类别</span>
+        <span class="val"><span class="grad">4</span> 大类</span>
+      </div>
+      <div class="item">
+        <span class="lbl">交付物明细</span>
+        <span class="val"><span class="grad">17</span> 项</span>
+      </div>
+      <div class="item">
+        <span class="lbl">版本档位</span>
+        <span class="val"><span class="grad">3</span> 档</span>
+      </div>
+      <div class="item">
+        <span class="lbl">部署形态</span>
+        <span class="val"><span class="grad">SaaS / 私有化 / 混合</span></span>
+      </div>
+      <div class="item">
+        <span class="lbl">SLA</span>
+        <span class="val"><span class="grad">99.5% ~ 99.9%</span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 4 大类交付物 ============ -->
+<div class="section">
+  <div class="wrap">
+    <div class="section-title-row">
+      <span class="section-num">PART · 01</span>
+      <h2 class="section-title">四大类交付物明细</h2>
+      <span class="section-meta">软件 · 数据 · 服务 · 文档</span>
+    </div>
+
+    <div class="deliv-categories">
+
+      <!-- 软件组件 -->
+      <div class="deliv-category cat-software">
+        <div class="deliv-cat-head">
+          <div class="deliv-cat-icon">💻</div>
+          <div class="deliv-cat-text">
+            <h3>软件组件</h3>
+            <div class="ct">SOFTWARE COMPONENTS</div>
+          </div>
+          <span class="count">5 项</span>
+        </div>
+        <div class="deliv-items">
+          <div class="deliv-item">
+            <span class="ico">⚡</span>
+            <div>
+              <div class="it-name">XClaw 调度引擎</div>
+              <div class="it-desc">意图识别 + 任务编排 + Skill 调度核心服务</div>
+            </div>
+            <div class="it-meta">v1.0+<br>核心组件</div>
+          </div>
+          <div class="deliv-item">
+            <span class="ico">🧩</span>
+            <div>
+              <div class="it-name">官方 Skill 库 (24+)</div>
+              <div class="it-desc">八大场景预置 Skill，开箱即用 + 持续迭代</div>
+            </div>
+            <div class="it-meta">含源码<br>标准组件</div>
+          </div>
+          <div class="deliv-item">
+            <span class="ico">🌐</span>
+            <div>
+              <div class="it-name">三方 Skill 工坊</div>
+              <div class="it-desc">学校 / 院系 / 教师共建 Skill 的可视化创作平台</div>
+            </div>
+            <div class="it-meta">Web UI<br>UGC 入口</div>
+          </div>
+          <div class="deliv-item">
+            <span class="ico">🤖</span>
+            <div>
+              <div class="it-name">智能体广场</div>
+              <div class="it-desc">教师订阅 / 自建 / 分享 AI 角色的统一入口</div>
+            </div>
+            <div class="it-meta">Web UI<br>用户前台</div>
+          </div>
+          <div class="deliv-item">
+            <span class="ico">🎛️</span>
+            <div>
+              <div class="it-name">XClaw 管理后台</div>
+              <div class="it-desc">Skill 配置 / 监控 / 调度日志 / 权限管理</div>
+            </div>
+            <div class="it-meta">Web UI<br>含运维台</div>
+          </div>
+          <div class="deliv-item">
+            <span class="ico">📱</span>
+            <div>
+              <div class="it-name">小雅嵌入 SDK</div>
+              <div class="it-desc">侧抽屉 / 全屏 / iframe 三种嵌入形态</div>
+            </div>
+            <div class="it-meta">JS SDK<br>原生集成</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 数据资产 -->
+      <div class="deliv-category cat-data">
+        <div class="deliv-cat-head">
+          <div class="deliv-cat-icon">🪸</div>
+          <div class="deliv-cat-text">
+            <h3>数据资产</h3>
+            <div class="ct">DATA ASSETS</div>
+          </div>
+          <span class="count">4 项</span>
+        </div>
+        <div class="deliv-items">
+          <div class="deliv-item">
+            <span class="ico">📚</span>
+            <div>
+              <div class="it-name">Coral 学科知识包</div>
+              <div class="it-desc">首批交付 5 大学科基础知识库 <span style="color:var(--amber)">[待确认具体学科]</span></div>
+            </div>
+            <div class="it-meta"><span class="tbd">待确认</span></div>
+          </div>
+          <div class="deliv-item">
+            <span class="ico">📋</span>
+            <div>
+              <div class="it-name">Skill 模板库</div>
+              <div class="it-desc">24 个预置 Skill 模板 + 教学场景配置文件</div>
+            </div>
+            <div class="it-meta">JSON<br>可二次开发</div>
+          </div>
+          <div class="deliv-item">
+            <span class="ico">🗂️</span>
+            <div>
+              <div class="it-name">教学数据接入器</div>
+              <div class="it-desc">小雅八大场景数据源接入 ETL + 字段映射</div>
+            </div>
+            <div class="it-meta">配置文件<br>开箱即用</div>
+          </div>
+          <div class="deliv-item">
+            <span class="ico">🤖</span>
+            <div>
+              <div class="it-name">多模型配额包</div>
+              <div class="it-desc">星火 / DeepSeek / Qwen / 豆包路由 + 首年 Token <span style="color:var(--amber)">[待报价]</span></div>
+            </div>
+            <div class="it-meta"><span class="tbd">待确认</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 服务 -->
+      <div class="deliv-category cat-service">
+        <div class="deliv-cat-head">
+          <div class="deliv-cat-icon">🤝</div>
+          <div class="deliv-cat-text">
+            <h3>服务</h3>
+            <div class="ct">PROFESSIONAL SERVICES</div>
+          </div>
+          <span class="count">4 项</span>
+        </div>
+        <div class="deliv-items">
+          <div class="deliv-item">
+            <span class="ico">🚀</span>
+            <div>
+              <div class="it-name">部署实施</div>
+              <div class="it-desc">环境搭建 + 数据接入 + 系统对接 + 验收测试</div>
+            </div>
+            <div class="it-meta">5-15 天<br>含 SLA</div>
+          </div>
+          <div class="deliv-item">
+            <span class="ico">🎓</span>
+            <div>
+              <div class="it-name">培训赋能</div>
+              <div class="it-desc">3 场培训：管理员 / 一线教师 / 教学督导</div>
+            </div>
+            <div class="it-meta">线上+线下<br>录播沉淀</div>
+          </div>
+          <div class="deliv-item">
+            <span class="ico">🔧</span>
+            <div>
+              <div class="it-name">运维支持</div>
+              <div class="it-desc">7×24 监控 + 故障响应 + 季度健康巡检</div>
+            </div>
+            <div class="it-meta">SLA 99.9%<br>1H 响应</div>
+          </div>
+          <div class="deliv-item">
+            <span class="ico">⚙️</span>
+            <div>
+              <div class="it-name">定制开发（可选）</div>
+              <div class="it-desc">学校专属 Skill / 学科大脑共建 / 流程定制</div>
+            </div>
+            <div class="it-meta"><span class="tbd">按需</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 文档 -->
+      <div class="deliv-category cat-doc">
+        <div class="deliv-cat-head">
+          <div class="deliv-cat-icon">📄</div>
+          <div class="deliv-cat-text">
+            <h3>文档</h3>
+            <div class="ct">DOCUMENTATION</div>
+          </div>
+          <span class="count">4 项</span>
+        </div>
+        <div class="deliv-items">
+          <div class="deliv-item">
+            <span class="ico">📖</span>
+            <div>
+              <div class="it-name">教师使用手册</div>
+              <div class="it-desc">面向一线教师，按场景分章节，含实战案例</div>
+            </div>
+            <div class="it-meta">PDF + 在线<br>持续更新</div>
+          </div>
+          <div class="deliv-item">
+            <span class="ico">🛠️</span>
+            <div>
+              <div class="it-name">管理员手册</div>
+              <div class="it-desc">部署架构 / 配置管理 / 权限模型 / 故障排查</div>
+            </div>
+            <div class="it-meta">PDF<br>含运维 SOP</div>
+          </div>
+          <div class="deliv-item">
+            <span class="ico">🔌</span>
+            <div>
+              <div class="it-name">API & SDK 文档</div>
+              <div class="it-desc">REST API + JS SDK + Skill 开发规范</div>
+            </div>
+            <div class="it-meta">在线<br>含示例代码</div>
+          </div>
+          <div class="deliv-item">
+            <span class="ico">📊</span>
+            <div>
+              <div class="it-name">验收报告模板</div>
+              <div class="it-desc">功能验收清单 + 性能测试用例 + 验收意见模板</div>
+            </div>
+            <div class="it-meta">DOCX<br>可定制</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ 三版本对比表 ============ -->
+<div class="vc-section">
+  <div class="wrap">
+    <div class="vc-head">
+      <div class="eyebrow"><span class="dot"></span>PART · 02 · VERSION COMPARISON</div>
+      <h2>三个版本，<span class="grad">一眼看清差异</span></h2>
+      <p>从院系试点到全校私有化到国家级共建——按规模、合规要求和战略野心分档</p>
+    </div>
+
+    <div class="vc-table-wrap">
+      <table class="vc-table">
+
+        <!-- 表头 -->
+        <thead>
+          <tr>
+            <th class="vc-th vc-th-dim">
+              <div style="font-size:11px;color:var(--ink-light);letter-spacing:1.5px;font-weight:600">VERSIONS →</div>
+            </th>
+            <th class="vc-th vc-th-saas">
+              <div class="vc-th-tag t-saas">入门档</div>
+              <div class="vc-th-name">SaaS 入门版</div>
+              <div class="vc-th-sub">院系试点 · 快速验证</div>
+            </th>
+            <th class="vc-th vc-th-pro">
+              <div class="vc-recommend-badge">⭐ 推 荐</div>
+              <div class="vc-th-tag t-pro">主力档</div>
+              <div class="vc-th-name">私有化标准版</div>
+              <div class="vc-th-sub">全校部署 · 信创合规</div>
+            </th>
+            <th class="vc-th vc-th-nation">
+              <div class="vc-th-tag t-nation">战略档</div>
+              <div class="vc-th-name">国标共建版</div>
+              <div class="vc-th-sub">国家级项目 · 标杆校</div>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <!-- 分组 1 -->
+          <tr class="vc-group-row"><td colspan="4">📊 &nbsp;适用与部署</td></tr>
+          <tr class="vc-row">
+            <td class="vc-dim">适合规模</td>
+            <td class="vc-saas">1-2 个院系试点</td>
+            <td class="vc-pro">全校部署</td>
+            <td class="vc-nation">国家级项目 / 标杆校</td>
+          </tr>
+          <tr class="vc-row">
+            <td class="vc-dim">部署形态</td>
+            <td class="vc-saas">SaaS · 多租户</td>
+            <td class="vc-pro">本地化 · 信创合规</td>
+            <td class="vc-nation">私有化 + 算力 SaaS</td>
+          </tr>
+          <tr class="vc-row">
+            <td class="vc-dim">交付周期</td>
+            <td class="vc-saas">5-10 天</td>
+            <td class="vc-pro">15-30 天</td>
+            <td class="vc-nation">一案一议</td>
+          </tr>
+          <tr class="vc-row">
+            <td class="vc-dim">SLA 服务等级</td>
+            <td class="vc-saas">99.5%</td>
+            <td class="vc-pro">99.9% · 1H 响应</td>
+            <td class="vc-nation">99.9% · 专属通道</td>
+          </tr>
+
+          <!-- 分组 2 -->
+          <tr class="vc-group-row"><td colspan="4">💻 &nbsp;软件与 Skill</td></tr>
+          <tr class="vc-row">
+            <td class="vc-dim">官方 Skill</td>
+            <td class="vc-saas">10 个核心</td>
+            <td class="vc-pro">24+ 全量</td>
+            <td class="vc-nation">24+ 全量 + 定制</td>
+          </tr>
+          <tr class="vc-row">
+            <td class="vc-dim">三方 Skill 工坊</td>
+            <td class="vc-saas"><span class="vc-icon no">✕</span></td>
+            <td class="vc-pro"><span class="vc-icon yes">✓</span><span class="vc-icon-text">支持共建</span></td>
+            <td class="vc-nation"><span class="vc-icon yes">✓</span><span class="vc-icon-text">深度共建</span></td>
+          </tr>
+          <tr class="vc-row">
+            <td class="vc-dim">智能体广场</td>
+            <td class="vc-saas"><span class="vc-icon partial">◐</span>仅订阅</td>
+            <td class="vc-pro"><span class="vc-icon yes">✓</span>订阅 + 自建</td>
+            <td class="vc-nation"><span class="vc-icon yes">✓</span>订阅 + 深度定制</td>
+          </tr>
+          <tr class="vc-row">
+            <td class="vc-dim">管理后台</td>
+            <td class="vc-saas">简化版</td>
+            <td class="vc-pro">完整版</td>
+            <td class="vc-nation">完整版 + 集团版</td>
+          </tr>
+
+          <!-- 分组 3 -->
+          <tr class="vc-group-row"><td colspan="4">🪸 &nbsp;数据与知识</td></tr>
+          <tr class="vc-row">
+            <td class="vc-dim">Coral 学科包</td>
+            <td class="vc-saas">3 学科基础包</td>
+            <td class="vc-pro">5+ 学科完整包</td>
+            <td class="vc-nation">学科大脑深度共建</td>
+          </tr>
+          <tr class="vc-row">
+            <td class="vc-dim">教学数据接入</td>
+            <td class="vc-saas">基础 ETL</td>
+            <td class="vc-pro">全量八大场景</td>
+            <td class="vc-nation">全量 + 自定义源</td>
+          </tr>
+          <tr class="vc-row">
+            <td class="vc-dim">多模型 Token 配额</td>
+            <td class="vc-saas">基础配额</td>
+            <td class="vc-pro">标准配额</td>
+            <td class="vc-nation">弹性配额</td>
+          </tr>
+
+          <!-- 分组 4 -->
+          <tr class="vc-group-row"><td colspan="4">🤝 &nbsp;服务与支持</td></tr>
+          <tr class="vc-row">
+            <td class="vc-dim">部署实施</td>
+            <td class="vc-saas">1 人天 · 远程</td>
+            <td class="vc-pro">5-15 天 · 驻场</td>
+            <td class="vc-nation">驻场 + 一案一议</td>
+          </tr>
+          <tr class="vc-row">
+            <td class="vc-dim">培训</td>
+            <td class="vc-saas">1 场 · 远程</td>
+            <td class="vc-pro">3 场（管理员/教师/督导）</td>
+            <td class="vc-nation">3 场 + 现场驻场</td>
+          </tr>
+          <tr class="vc-row">
+            <td class="vc-dim">运维支持</td>
+            <td class="vc-saas">邮件 · 工作日</td>
+            <td class="vc-pro">7×24 · 1H 响应</td>
+            <td class="vc-nation">7×24 · 专属客户成功</td>
+          </tr>
+          <tr class="vc-row">
+            <td class="vc-dim">定制开发</td>
+            <td class="vc-saas"><span class="vc-icon no">✕</span></td>
+            <td class="vc-pro"><span class="vc-icon partial">◐</span><span class="vc-icon-text">按需购买</span></td>
+            <td class="vc-nation"><span class="vc-icon yes">✓</span><span class="vc-icon-text">含定制工时</span></td>
+          </tr>
+
+          <!-- 分组 5 -->
+          <tr class="vc-group-row nation"><td colspan="4">🇨🇳 &nbsp;战略与资质</td></tr>
+          <tr class="vc-row">
+            <td class="vc-dim">国标参与资质</td>
+            <td class="vc-saas"><span class="vc-icon no">✕</span></td>
+            <td class="vc-pro"><span class="vc-icon no">✕</span></td>
+            <td class="vc-nation strategy"><span class="vc-icon yes" style="color:var(--red)">✓</span><span class="vc-icon-text" style="color:var(--red);font-weight:600">国标共建</span></td>
+          </tr>
+          <tr class="vc-row">
+            <td class="vc-dim">高管直通 / 季度会</td>
+            <td class="vc-saas"><span class="vc-icon no">✕</span></td>
+            <td class="vc-pro"><span class="vc-icon no">✕</span></td>
+            <td class="vc-nation strategy"><span class="vc-icon yes">✓</span><span class="vc-icon-text">季度直通</span></td>
+          </tr>
+          <tr class="vc-row">
+            <td class="vc-dim">学科大脑共建</td>
+            <td class="vc-saas"><span class="vc-icon no">✕</span></td>
+            <td class="vc-pro"><span class="vc-icon partial">◐</span><span class="vc-icon-text">可选</span></td>
+            <td class="vc-nation strategy"><span class="vc-icon yes">✓</span><span class="vc-icon-text">深度共建</span></td>
+          </tr>
+
+          <!-- 分组 6 -->
+          <tr class="vc-group-row"><td colspan="4">💰 &nbsp;价格</td></tr>
+          <tr class="vc-row">
+            <td class="vc-dim">起价（年）</td>
+            <td class="vc-saas"><span style="background:var(--amber-soft);color:var(--amber);padding:4px 10px;border-radius:5px;font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace">[待商务确认]</span></td>
+            <td class="vc-pro"><span style="background:var(--amber-soft);color:var(--amber);padding:4px 10px;border-radius:5px;font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace">[待商务确认]</span></td>
+            <td class="vc-nation" style="color:var(--red);font-weight:700">一案一议</td>
+          </tr>
+
+          <!-- CTA -->
+          <tr class="vc-cta-row">
+            <td class="vc-dim"></td>
+            <td class="vc-saas"><button class="vc-btn vc-btn-ghost">咨询入门版</button></td>
+            <td class="vc-pro"><button class="vc-btn vc-btn-primary">⭐ 选择主力档</button></td>
+            <td class="vc-nation"><button class="vc-btn vc-btn-nation">国标共建洽谈</button></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 图标说明 + 销售提示 -->
+    <div class="vc-legend">
+      <div class="left">
+        <span><span class="vc-icon yes" style="font-size:14px">✓</span> 完整支持</span>
+        <span><span class="vc-icon partial" style="font-size:14px">◐</span> 部分 / 按需</span>
+        <span><span class="vc-icon no" style="font-size:14px">✕</span> 不支持</span>
+      </div>
+      <div>💡 销售建议：<strong>90% 的客户从主力档（私有化标准版）开始</strong>，标杆校直接谈国标共建版</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ 部署形态快查 ============ -->
+<div class="deploy-section">
+  <div class="wrap">
+    <div class="section-title-row">
+      <span class="section-num">PART · 03</span>
+      <h2 class="section-title">部署形态关键指标快查</h2>
+      <span class="section-meta">点击切换三种部署形态</span>
+    </div>
+
+    <div class="deploy-tabs" id="deployTabs">
+      <button class="deploy-tab active" data-deploy="saas">SaaS 标准版</button>
+      <button class="deploy-tab" data-deploy="private">私有化部署</button>
+      <button class="deploy-tab" data-deploy="hybrid">混合部署</button>
+    </div>
+
+    <div class="deploy-detail">
+      <h3 id="deployTitle">📦 SaaS 标准版 · 关键交付指标</h3>
+      <div class="deploy-detail-grid" id="deployDetailGrid">
+        <div class="deploy-meta"><div class="lbl">部署形态</div><div class="val">SaaS · 多租户</div></div>
+        <div class="deploy-meta"><div class="lbl">交付周期</div><div class="val">5-10 天</div></div>
+        <div class="deploy-meta"><div class="lbl">SLA</div><div class="val">99.9%</div></div>
+        <div class="deploy-meta"><div class="lbl">起价</div><div class="val"><span class="tbd">待商务确认</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 销售话术 banner ============ -->
+<div class="wrap">
+  <div class="sales-tip">
+    <div class="sales-tip-inner">
+      <span class="sales-tip-tag">SALES PLAYBOOK · 销售话术</span>
+      <h3>三档版本，<span class="gold">三句话讲完</span></h3>
+      <p>客户站在面前，一张表说不清楚就用这三句——按客户类型对号入座，10 秒内推他到最合适的档位。</p>
+
+      <div class="sales-tip-quotes">
+        <div class="sales-tip-quote">
+          <div class="lbl">想先试试看的客户</div>
+          <div class="text">"先从院系试点开始——5 天上线、SaaS 多租户、10 个核心 Skill，看 30 天真实效果再决定是否全校上。"</div>
+        </div>
+        <div class="sales-tip-quote">
+          <div class="lbl">准备全校部署的客户 ⭐</div>
+          <div class="text">"主力档就是这个——私有化、信创合规、24+ Skill 全开、智能体广场支持自建、7×24 一小时响应。<strong>90% 学校从这档开始。</strong>"</div>
+        </div>
+        <div class="sales-tip-quote">
+          <div class="lbl">想跟国家智联网的客户</div>
+          <div class="text">"那您直接看战略档——含国标共建参与资质、季度高管直通会、学科大脑深度共建。这档我们一案一议，得专人对接。"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Footer ============ -->
+<div class="doc-footer">
+  <div class="ft-name">XClaw <span class="grad">八爪智枢</span> · 产品交付清单 V1</div>
+  <div class="ft-meta">AI 教学产品部 · 讯飞高等教育事业部 · 2026-04-10</div>
+  <div style="margin-top:14px">
+    <code>~/Desktop/ClaudeCode/学科大模型文档中心/XClaw_产品交付清单_V1.html</code>
+  </div>
+</div>
+
+<script>
+const deployData = {
+  saas: {
+    title: '📦 SaaS 标准版 · 关键交付指标',
+    metas: [
+      { lbl: '部署形态', val: 'SaaS · 多租户' },
+      { lbl: '交付周期', val: '5-10 天' },
+      { lbl: 'SLA', val: '99.9%' },
+      { lbl: '起价', val: '<span class="tbd">待商务确认</span>' }
+    ]
+  },
+  private: {
+    title: '🏛️ 私有化部署 · 关键交付指标',
+    metas: [
+      { lbl: '部署形态', val: '本地化 · 信创合规' },
+      { lbl: '交付周期', val: '15-30 天' },
+      { lbl: 'SLA', val: '99.9%' },
+      { lbl: '起价', val: '<span class="tbd">待商务确认</span>' }
+    ]
+  },
+  hybrid: {
+    title: '🔗 混合部署 · 关键交付指标',
+    metas: [
+      { lbl: '部署形态', val: '核心私有化 · 算力 SaaS' },
+      { lbl: '交付周期', val: '20-25 天' },
+      { lbl: 'SLA', val: '99.9%' },
+      { lbl: '起价', val: '<span class="tbd">一案一议</span>' }
+    ]
+  }
+};
+
+document.querySelectorAll('.deploy-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const k = tab.dataset.deploy;
+    document.querySelectorAll('.deploy-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const data = deployData[k];
+    document.getElementById('deployTitle').textContent = data.title;
+    const grid = document.getElementById('deployDetailGrid');
+    grid.innerHTML = data.metas.map(m => `
+      <div class="deploy-meta">
+        <div class="lbl">${m.lbl}</div>
+        <div class="val">${m.val}</div>
+      </div>
+    `).join('');
+  });
+});
+</script>
+
+</body>
+</html>

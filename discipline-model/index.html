@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学科大模型 · 产品文档中心</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #F0F4F8;
+  color: #1E293B;
+  line-height: 1.5;
+  min-height: 100vh;
+  padding: 32px 0 60px;
+}
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+
+/* ==== HEADER ==== */
+.hero {
+  background: linear-gradient(135deg, #1E3A8A 0%, #6D28D9 45%, #BE185D 100%);
+  color: #fff;
+  border-radius: 16px;
+  padding: 36px 40px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  right: -5%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero-tag {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 2px;
+  background: rgba(255,255,255,0.18);
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  position: relative;
+}
+.hero h1 {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+  position: relative;
+}
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(90deg, #FDE68A, #FCA5A5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p {
+  font-size: 14px;
+  opacity: 0.9;
+  max-width: 760px;
+  line-height: 1.8;
+  position: relative;
+}
+.hero-meta {
+  display: flex;
+  gap: 24px;
+  margin-top: 20px;
+  position: relative;
+  font-size: 11px;
+  opacity: 0.75;
+  letter-spacing: 1px;
+}
+
+/* ==== CATEGORY ==== */
+.category {
+  margin-bottom: 32px;
+}
+.cat-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 14px;
+  padding: 0 4px;
+}
+.cat-num {
+  font-family: "SF Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  padding: 4px 11px;
+  border-radius: 6px;
+  letter-spacing: 1.5px;
+}
+.cat-head h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.3px;
+}
+.cat-head .desc {
+  font-size: 12px;
+  color: #64748B;
+  margin-left: auto;
+}
+
+/* ==== CARD GRID ==== */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.doc-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px 24px;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  border: 1px solid #E2E8F0;
+  border-left: 4px solid;
+  transition: all 0.25s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.doc-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(99,102,241,0.12);
+  border-color: #C7D2FE;
+}
+.doc-card.l1 { border-left-color: #6366F1; }
+.doc-card.l2 { border-left-color: #EC4899; }
+.doc-card.l3 { border-left-color: #F59E0B; }
+
+.doc-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.doc-level {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: #fff;
+  font-family: "SF Mono", monospace;
+}
+.l1 .doc-level { background: #6366F1; }
+.l2 .doc-level { background: #EC4899; }
+.l3 .doc-level { background: #F59E0B; }
+.doc-status {
+  font-size: 10px;
+  color: #10B981;
+  background: #D1FAE5;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.doc-status.draft { color: #D97706; background: #FEF3C7; }
+.doc-status.plan { color: #64748B; background: #F1F5F9; }
+.doc-date {
+  margin-left: auto;
+  font-size: 10px;
+  color: #94A3B8;
+  font-family: "SF Mono", monospace;
+}
+
+.doc-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.35;
+}
+.doc-title .arrow {
+  display: inline-block;
+  margin-left: 6px;
+  color: #6366F1;
+  transition: transform 0.2s;
+}
+.doc-card:hover .arrow { transform: translateX(4px); }
+
+.doc-desc {
+  font-size: 12px;
+  color: #64748B;
+  line-height: 1.7;
+}
+
+.doc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+.doc-tag {
+  font-size: 10px;
+  background: #F1F5F9;
+  color: #475569;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.doc-empty {
+  background: #fff;
+  border: 2px dashed #E2E8F0;
+  border-radius: 14px;
+  padding: 36px 24px;
+  text-align: center;
+  color: #94A3B8;
+}
+.doc-empty-icon { font-size: 28px; margin-bottom: 8px; opacity: 0.4; }
+.doc-empty-text { font-size: 12px; }
+
+/* ==== CONVENTION ==== */
+.convention {
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px 26px;
+  margin-top: 8px;
+  border: 1px solid #E2E8F0;
+}
+.convention h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0F172A;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.conv-rules {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.conv-rule {
+  background: #F8FAFC;
+  border-left: 3px solid #6366F1;
+  padding: 10px 14px;
+  border-radius: 6px;
+}
+.conv-rule .t {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 3px;
+}
+.conv-rule .d {
+  font-size: 11px;
+  color: #64748B;
+  line-height: 1.6;
+}
+.conv-rule code {
+  background: #EEF2FF;
+  color: #4338CA;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: "SF Mono", monospace;
+  font-size: 10px;
+}
+
+/* ==== PANORAMA · 产品全景图 ==== */
+.panorama {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 32px 32px;
+  margin-bottom: 28px;
+  border: 1px solid #E2E8F0;
+  position: relative;
+  overflow: hidden;
+}
+.panorama::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, #FF7F50 0%, #6366F1 50%, #1E3A8A 100%);
+}
+.pan-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+.pan-head h2 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0F172A;
+  letter-spacing: -0.3px;
+}
+.pan-head .eq {
+  font-size: 12px;
+  color: #64748B;
+  font-family: "SF Mono", monospace;
+  background: #F1F5F9;
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+.pan-sub {
+  font-size: 12px;
+  color: #64748B;
+  margin-bottom: 22px;
+  line-height: 1.7;
+}
+.pan-diagram {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  align-items: stretch;
+  position: relative;
+}
+.pan-layer {
+  background: #F8FAFC;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 18px 20px 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.pan-layer::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 0; height: 3px;
+  border-radius: 12px 12px 0 0;
+}
+.pan-layer.coral { background: linear-gradient(180deg, #FFF7ED 0%, #FFFAF5 100%); border-color: #FED7AA; }
+.pan-layer.coral::before { background: linear-gradient(90deg, #FF7F50, #0F5D3A); }
+.pan-layer.xclaw { background: linear-gradient(180deg, #EEF2FF 0%, #F5F3FF 100%); border-color: #C7D2FE; }
+.pan-layer.xclaw::before { background: linear-gradient(90deg, #6366F1, #8B5CF6); }
+.pan-layer.xiaoya { background: linear-gradient(180deg, #EFF6FF 0%, #F0F9FF 100%); border-color: #BFDBFE; }
+.pan-layer.xiaoya::before { background: linear-gradient(90deg, #1E3A8A, #0EA5E9); }
+
+.pan-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-family: "SF Mono", monospace;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  width: fit-content;
+}
+.coral .pan-badge { background: #FF7F50; color: #fff; }
+.xclaw .pan-badge { background: #6366F1; color: #fff; }
+.xiaoya .pan-badge { background: #1E3A8A; color: #fff; }
+
+.pan-layer h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 4px;
+  letter-spacing: -0.2px;
+}
+.pan-layer .role {
+  font-size: 11px;
+  color: #64748B;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.pan-modules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+.pan-modules span {
+  font-size: 10px;
+  background: rgba(255,255,255,0.9);
+  color: #475569;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.06);
+  font-weight: 500;
+}
+.coral .pan-modules span { color: #9A3412; border-color: #FED7AA; }
+.xclaw .pan-modules span { color: #4338CA; border-color: #C7D2FE; }
+.xiaoya .pan-modules span { color: #1E40AF; border-color: #BFDBFE; }
+
+.pan-layer .arrow-down {
+  margin-top: auto;
+  padding-top: 10px;
+  font-size: 10px;
+  color: #94A3B8;
+  letter-spacing: 0.5px;
+  border-top: 1px dashed rgba(0,0,0,0.08);
+  padding-top: 8px;
+  margin-top: auto;
+}
+.pan-layer .arrow-down strong { color: #475569; font-weight: 700; }
+
+/* 中间箭头 */
+.pan-diagram::after {
+  content: '→ 供给';
+  position: absolute;
+  top: 45%;
+  left: 33.33%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: #94A3B8;
+  background: #fff;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+  font-weight: 600;
+  z-index: 2;
+}
+.pan-arrow-2 {
+  position: absolute;
+  top: 45%;
+  left: 66.66%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: #94A3B8;
+  background: #fff;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+  font-weight: 600;
+  z-index: 2;
+}
+
+.pan-legend {
+  margin-top: 18px;
+  padding: 12px 16px;
+  background: #F8FAFC;
+  border-radius: 8px;
+  font-size: 11px;
+  color: #64748B;
+  line-height: 1.7;
+  border-left: 3px solid #6366F1;
+}
+.pan-legend strong { color: #0F172A; }
+
+/* ==== 产品线 CATEGORY 主题色 ==== */
+.cat-num.coral { background: linear-gradient(135deg, #FF7F50, #0F5D3A); }
+.cat-num.xclaw { background: linear-gradient(135deg, #6366F1, #8B5CF6); }
+.cat-num.model { background: linear-gradient(135deg, #1E3A8A, #F59E0B); }
+.cat-num.brand { background: linear-gradient(135deg, #64748B, #94A3B8); }
+
+.cat-head.pline {
+  padding: 14px 20px;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+  margin-bottom: 16px;
+  border-left: 5px solid;
+  position: relative;
+}
+.cat-head.pline.coral { border-left-color: #FF7F50; }
+.cat-head.pline.xclaw { border-left-color: #6366F1; }
+.cat-head.pline.model { border-left-color: #1E3A8A; }
+.cat-head.pline.brand { border-left-color: #64748B; }
+.cat-head.pline h2 { font-size: 18px; }
+.cat-head.pline .count {
+  font-size: 10px;
+  color: #94A3B8;
+  font-family: "SF Mono", monospace;
+  margin-left: 8px;
+  letter-spacing: 1px;
+}
+
+/* 归档区折叠 */
+details.archive-fold {
+  background: #fff;
+  border: 1px dashed #CBD5E1;
+  border-radius: 12px;
+  padding: 14px 20px;
+  margin-bottom: 28px;
+}
+details.archive-fold summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748B;
+  letter-spacing: 0.3px;
+  outline: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+details.archive-fold summary::-webkit-details-marker { display: none; }
+details.archive-fold summary::before {
+  content: '▸';
+  color: #94A3B8;
+  font-size: 11px;
+  transition: transform 0.2s;
+}
+details.archive-fold[open] summary::before { transform: rotate(90deg); }
+details.archive-fold .arch-list {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed #E2E8F0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+details.archive-fold .arch-list a,
+details.archive-fold .arch-list span {
+  font-size: 11px;
+  color: #64748B;
+  padding: 8px 12px;
+  background: #F8FAFC;
+  border-radius: 6px;
+  text-decoration: none;
+  font-family: "SF Mono", monospace;
+  border: 1px solid #E2E8F0;
+}
+details.archive-fold .arch-list a:hover { background: #EEF2FF; color: #4338CA; }
+
+/* ==== FOOTER ==== */
+.footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 11px;
+  color: #94A3B8;
+}
+.footer strong { color: #64748B; }
+
+@media (max-width: 900px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .conv-rules { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<!-- ==== HERO ==== -->
+<div class="hero">
+  <div class="hero-tag">DISCIPLINE MODEL · PRODUCT DOCUMENTATION HUB</div>
+  <h1>学科大模型 <em>产品文档中心</em></h1>
+  <p>讯飞高教 AI 教学全景文档入口 ——<br>
+  <strong style="color:#FDE68A">🪸 Coral 小雅学科大脑</strong>（知识底座）× <strong style="color:#FDE68A">🧠 XClaw 智能体运行时</strong>（中枢调度）× <strong style="color:#FDE68A">能力中心</strong>（模型与引擎），三者合流赋能小雅平台八大教学场景。</p>
+  <div class="hero-meta">
+    AI教学产品部 · 2026-04 · 持续更新中 · 按产品线组织
+  </div>
+</div>
+
+<!-- ==== 🌐 产品全景图 · 讲清三者关系 ==== -->
+<div class="panorama">
+  <div class="pan-head">
+    <h2>🌐 产品全景</h2>
+    <span class="eq">学科大模型 = Coral 知识底座 + XClaw 智能体运行时 + 能力中心</span>
+  </div>
+  <p class="pan-sub">
+    这不是三个独立产品——而是一条<strong style="color:#0F172A">从"教材"到"课堂"</strong>的完整价值链。
+    Coral 把教材变成可用的学科资产，XClaw 把资产调度给跑在上面的智能体，智能体最终在小雅平台的八大教学场景里服务师生。
+  </p>
+
+  <div class="pan-diagram">
+    <!-- 左：Coral 学科大脑 -->
+    <div class="pan-layer coral">
+      <span class="pan-badge">LAYER 01 · 知识底座</span>
+      <h3>🪸 Coral · 小雅学科大脑</h3>
+      <div class="role">把教材、文献、课件变成<br>可检索、可溯源、可共享的学科资产</div>
+      <div class="pan-modules">
+        <span>学科语料库</span><span>知识图谱</span><span>问答标准库</span>
+        <span>混合检索</span><span>全链路溯源</span><span>私有化</span>
+      </div>
+      <div class="arrow-down">→ 向上供给 <strong>学科资产 API</strong></div>
+    </div>
+
+    <!-- 中：XClaw 智能体运行时 -->
+    <div class="pan-layer xclaw">
+      <span class="pan-badge">LAYER 02 · 中枢运行时</span>
+      <h3>🧠 XClaw · 智能体运行时</h3>
+      <div class="role">跑在 Coral 之上的 Agent 调度中枢<br>智能体广场 × Skill 库 × 流程引擎</div>
+      <div class="pan-modules">
+        <span>智能体广场</span><span>Skill 库 24+</span><span>调度引擎</span>
+        <span>MCP 接口</span><span>流程编排</span><span>对话上下文</span>
+      </div>
+      <div class="arrow-down">→ 向上注入 <strong>场景化智能体</strong></div>
+    </div>
+
+    <!-- 右：小雅平台八大场景 -->
+    <div class="pan-layer xiaoya">
+      <span class="pan-badge">LAYER 03 · 场景与用户</span>
+      <h3>🎓 小雅平台 · 八大场景</h3>
+      <div class="role">老师、学生、管理者真实使用的<br>业务平台与教学场景</div>
+      <div class="pan-modules">
+        <span>建</span><span>备</span><span>教</span><span>学</span>
+        <span>测</span><span>评</span><span>督</span><span>管</span>
+      </div>
+      <div class="arrow-down">→ 触达 <strong>师生 · 院系 · 学校</strong></div>
+    </div>
+
+    <div class="pan-arrow-2">→ 承载</div>
+  </div>
+
+  <div class="pan-legend">
+    <strong>🗂 本页组织方式：</strong>按三条产品线横向切分 ——
+    <strong style="color:#FF7F50">🪸 Coral 小雅学科大脑</strong>的文档讲"知识资产怎么建"、
+    <strong style="color:#6366F1">🧠 XClaw 智能体运行时</strong>的文档讲"智能体怎么跑"、
+    <strong style="color:#1E3A8A">📦 学科大模型（整合）</strong>的文档讲"三者合流的销售与路标"。
+    卡片右上的 <code style="background:#EEF2FF;color:#4338CA;padding:1px 5px;border-radius:3px;font-family:'SF Mono',monospace;font-size:10px">L1/L2/L3</code> 徽章表示详略程度——L1 是总览一号文档，L2 是深度展开，L3 是专题物料。
+  </div>
+</div>
+
+
+<!-- ==== 🪸 Coral · 小雅学科大脑 ==== -->
+<div class="category">
+  <div class="cat-head pline coral">
+    <span class="cat-num coral">CORAL</span>
+    <h2>🪸 Coral · 小雅学科大脑</h2>
+    <span class="count">03 docs · 知识底座</span>
+    <span class="desc">学科资产的采集、解析、图谱化、检索、溯源</span>
+  </div>
+  <div class="card-grid">
+
+    <a href="小雅学科大脑_产品功能介绍_V1.html" class="doc-card l1" style="border-left-color:#0F5D3A">
+      <div class="doc-top">
+        <span class="doc-level" style="background:linear-gradient(135deg,#0F5D3A,#FF7F50)">L1</span>
+        <span class="doc-status">已发布</span>
+        <span class="doc-date">2026-04-13</span>
+      </div>
+      <div class="doc-title">📖 小雅学科大脑 · 产品功能介绍（真实截图版）V1 <span class="arrow">→</span></div>
+      <div class="doc-desc">依据学科大模型系统架构图 V3 的七层结构 + 40+ 张真实产品截图，编辑级排版呈现"小雅学科大脑长什么样、能做什么"。六大章节：十大核心模块 / 智能交互 / 工具链（十大工具 + 八大引擎）/ 数据存储 / AI 模型 / 安全与全私有化部署。销售、售前、客户通用物料。</div>
+      <div class="doc-tags">
+        <span class="doc-tag">真实截图</span>
+        <span class="doc-tag">40+ 张界面</span>
+        <span class="doc-tag">六章编辑排版</span>
+        <span class="doc-tag">客户通用</span>
+      </div>
+    </a>
+
+    <a href="Coral_系统架构图_含状态标注_V1.html" class="doc-card l1" style="border-left-color:#FF7F50">
+      <div class="doc-top">
+        <span class="doc-level" style="background:linear-gradient(135deg,#FF7F50,#EC4899)">L1</span>
+        <span class="doc-status">已发布</span>
+        <span class="doc-date">2026-04-10</span>
+      </div>
+      <div class="doc-title">🪸 小雅学科大脑 · 系统架构图（含具备状态标注）V1 <span class="arrow">→</span></div>
+      <div class="doc-desc">1:1 复刻 Coral 原系统架构图 · 完整保留 7 大架构层 / 8 大场景 / 10 大模块 / 25 工具组件 / 6 层安全 / 数据存储 / AI 模型 / 私有化部署。每张卡叠加 ✓◐○⌂◌ 五态状态徽章 + 当前状态备注。当前 4 已 / 15 部分 / 13 未 / 3 学校 / 35+ 未评估。用于销售对外口径与立项盘点。</div>
+      <div class="doc-tags">
+        <span class="doc-tag">架构图复刻</span>
+        <span class="doc-tag">7 大架构层</span>
+        <span class="doc-tag">五态状态</span>
+        <span class="doc-tag">销售口径</span>
+      </div>
+    </a>
+
+    <a href="Coral_已上线能力完成度仪表盘_V1.html" class="doc-card l1" style="border-left-color:#FF7F50">
+      <div class="doc-top">
+        <span class="doc-level" style="background:linear-gradient(135deg,#FF7F50,#EC4899)">L1</span>
+        <span class="doc-status">已发布</span>
+        <span class="doc-date">2026-04-10</span>
+      </div>
+      <div class="doc-title">🪸 Coral 知识库 · 已上线能力完成度仪表盘 V1 <span class="arrow">→</span></div>
+      <div class="doc-desc">基于 Coral 产品规划 V3（2026-04-08）和已上线能力 / 功能模块 Excel 双源对照——逐项映射 10 大核心模块 / 25 工具组件 / 8 大教学场景的真实完成度。总体完成率 41%，核心 M1/M3/M4 已就位（≥70%），可对外签约交付。含三档颜色标记 + 进度条 + 数据来源说明。</div>
+      <div class="doc-tags">
+        <span class="doc-tag">完成度</span>
+        <span class="doc-tag">10 大模块</span>
+        <span class="doc-tag">双源对照</span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+
+<!-- ==== 🧠 XClaw · 智能体运行时 ==== -->
+<div class="category">
+  <div class="cat-head pline xclaw">
+    <span class="cat-num xclaw">XCLAW</span>
+    <h2>🧠 XClaw · 智能体运行时</h2>
+    <span class="count">05 docs · 中枢调度</span>
+    <span class="desc">智能体广场 / Skill 库 / 调度引擎 / 场景融合</span>
+  </div>
+  <div class="card-grid">
+    <a href="XClaw_完整产品演示Demo_V1.html" class="doc-card l1" style="border-left-color:#EC4899">
+      <div class="doc-top">
+        <span class="doc-level" style="background:linear-gradient(135deg,#6366F1,#EC4899)">L1</span>
+        <span class="doc-status">已发布</span>
+        <span class="doc-date">2026-04-10</span>
+      </div>
+      <div class="doc-title">🌟 XClaw 完整产品演示 Demo V1 <span class="arrow">→</span></div>
+      <div class="doc-desc">销售/售前/客户讲解专用——8 个 Page 的可交互 SPA Demo，含产品概览、四层架构、八大场景 Tab、实时对话演示（备课/组卷/挂科预警 三个预设 Demo 自动播放）、交付物清单、客户价值、定价 FAQ、联系预约。延续文档中心视觉，单 HTML 离线可用。</div>
+      <div class="doc-tags">
+        <span class="doc-tag">销售演示</span>
+        <span class="doc-tag">SPA 8 Page</span>
+        <span class="doc-tag">交付清单</span>
+        <span class="doc-tag">FAQ + 定价</span>
+      </div>
+    </a>
+
+    <a href="XClaw_产品架构与规划_V1.html" class="doc-card l1">
+      <div class="doc-top">
+        <span class="doc-level">L1</span>
+        <span class="doc-status">已发布</span>
+        <span class="doc-date">2026-04-10</span>
+      </div>
+      <div class="doc-title">XClaw 产品架构与规划 V1 <span class="arrow">→</span></div>
+      <div class="doc-desc">XClaw 的完整产品定义、四层架构、八大场景、Skill库、核心工作流、四阶段路线图、六大护城河（含国家标准壁垒）、国家战略视角、小雅×XClaw联合价值、双轮商业模式。面向产研规划与对外宣讲的一号文档。</div>
+      <div class="doc-tags">
+        <span class="doc-tag">产品定义</span>
+        <span class="doc-tag">四层架构</span>
+        <span class="doc-tag">六大护城河</span>
+        <span class="doc-tag">国家战略</span>
+      </div>
+    </a>
+
+    <a href="XClaw_产品交付清单_V1.html" class="doc-card l2" style="border-left-color:#EC4899">
+      <div class="doc-top">
+        <span class="doc-level">L2</span>
+        <span class="doc-status">已发布</span>
+        <span class="doc-date">2026-04-10</span>
+      </div>
+      <div class="doc-title">📦 XClaw 产品交付清单 V1 <span class="arrow">→</span></div>
+      <div class="doc-desc">从演示 Demo 单独抽出的销售/售前/客户讲解文档：4 大类 17 项交付物 + 三版本横向对比表（SaaS 入门 / 私有化标准⭐ / 国标共建）+ 三种部署形态快查 + 销售话术。让客户一眼看清"付款后具体拿到什么"。</div>
+      <div class="doc-tags">
+        <span class="doc-tag">交付物</span>
+        <span class="doc-tag">三版本对比</span>
+        <span class="doc-tag">销售话术</span>
+        <span class="doc-tag">客户验收</span>
+      </div>
+    </a>
+
+    <a href="XClaw_八大场景自动化Skill_V1.html" class="doc-card l2">
+      <div class="doc-top">
+        <span class="doc-level">L2</span>
+        <span class="doc-status">已发布</span>
+        <span class="doc-date">2026-04-09</span>
+      </div>
+      <div class="doc-title">八大场景自动化 Skill 生态 V1 <span class="arrow">→</span></div>
+      <div class="doc-desc">基于小雅平台八大场景（建/备/教/学/测/评/督/管）设计的 24+ 自动化 Skill 完整方案。每个 Skill 包含流程图、触发指令、平台数据对接、受益人和价值说明。以及与友商 fork 版的 7 维度对比。</div>
+      <div class="doc-tags">
+        <span class="doc-tag">八大场景</span>
+        <span class="doc-tag">24+ Skill</span>
+        <span class="doc-tag">自动化流程</span>
+        <span class="doc-tag">深度融合</span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+
+<!-- ==== 📦 学科大模型 · 销售与整合物料 ==== -->
+<div class="category">
+  <div class="cat-head pline model">
+    <span class="cat-num model">MODEL</span>
+    <h2>📦 学科大模型 · 销售与整合</h2>
+    <span class="count">02 docs · 跨产品线</span>
+    <span class="desc">三条产品线合流的商业化与路标物料</span>
+  </div>
+  <div class="card-grid">
+
+    <a href="学科大模型_销售方案_V1.html" class="doc-card l1" style="border-left-color:#1E3A8A">
+      <div class="doc-top">
+        <span class="doc-level" style="background:linear-gradient(135deg,#1E3A8A,#F59E0B)">L1</span>
+        <span class="doc-status">已发布</span>
+        <span class="doc-date">2026-04-10</span>
+      </div>
+      <div class="doc-title">📦 学科大模型 · 销售方案 V1 <span class="arrow">→</span></div>
+      <div class="doc-desc">替代"八大工程方案"的销售实战版。学科大模型 = Coral 知识底座 + XClaw 智能中枢 + 能力中心，赋能小雅平台八大场景。含一句话定义、三大组件架构、5 类决策角色话术、3 档版本、ROI 测算、6 个异议处理、8 条 FAQ、4 类竞品对比。</div>
+      <div class="doc-tags">
+        <span class="doc-tag">销售实战</span>
+        <span class="doc-tag">售前手册</span>
+        <span class="doc-tag">三大组件</span>
+        <span class="doc-tag">ROI 测算</span>
+      </div>
+    </a>
+
+    <a href="XClaw_年度产品路标_V1.html" class="doc-card l1" style="border-left-color:#1E3A8A">
+      <div class="doc-top">
+        <span class="doc-level" style="background:linear-gradient(135deg,#1E3A8A,#F59E0B)">L1</span>
+        <span class="doc-status">已发布</span>
+        <span class="doc-date">2026-04-10</span>
+      </div>
+      <div class="doc-title">🗺 学科大模型 · 年度产品路标 2026 <span class="arrow">→</span></div>
+      <div class="doc-desc">XClaw + Coral + 能力中心三条产品线的年度甘特图。Q2 已确认（9 个里程碑/研发推进表），Q3-Q4 战略推演（Harness 框架+壁垒分析）。含里程碑详情卡、5 层壁垒进度、6 条诚实边界。数据来源标注清晰。</div>
+      <div class="doc-tags">
+        <span class="doc-tag">年度路标</span>
+        <span class="doc-tag">甘特图</span>
+        <span class="doc-tag">壁垒进度</span>
+        <span class="doc-tag">诚实边界</span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+
+<!-- ==== 🎨 品牌与支撑物料 ==== -->
+<div class="category">
+  <div class="cat-head pline brand">
+    <span class="cat-num brand">BRAND</span>
+    <h2>🎨 品牌 · 支撑物料</h2>
+    <span class="count">01 doc · 辅助</span>
+    <span class="desc">品牌故事、IP 形象、Slogan 体系</span>
+  </div>
+  <div class="card-grid">
+
+    <a href="品牌故事/XClaw_品牌故事与IP形象.md" class="doc-card l3" style="border-left-color:#64748B">
+      <div class="doc-top">
+        <span class="doc-level" style="background:#64748B">L3</span>
+        <span class="doc-status">已发布</span>
+        <span class="doc-date">2026-03-27</span>
+      </div>
+      <div class="doc-title">🎨 XClaw 品牌故事与 IP 形象 <span class="arrow">→</span></div>
+      <div class="doc-desc">XClaw 的命名由来（X战警×小雅Xiaoya×未知数）、品牌故事「给小雅一个大脑」、IP 形象「小X」赛博小章鱼设计、品牌人格、Slogan 体系。</div>
+      <div class="doc-tags">
+        <span class="doc-tag">品牌故事</span>
+        <span class="doc-tag">IP 形象</span>
+        <span class="doc-tag">Slogan</span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+
+<!-- ==== 📁 归档与源文件（折叠） ==== -->
+<details class="archive-fold">
+  <summary>📁 归档与源文件 · 仅本地可用（点击展开）</summary>
+  <div class="arch-list">
+    <a href="coral-arch(1).html">coral-arch(1).html · 原素材</a>
+    <a href="XClaw_智能教学平台智能化立项PPT_V1.html">立项 PPT</a>
+    <span style="opacity:0.6">md 源文件仅在本地仓库可用</span>
+  </div>
+</details>
+
+<!-- ==== 命名约定 ==== -->
+<div class="convention">
+  <h3>📋 文档组织与命名约定</h3>
+  <div class="conv-rules">
+    <div class="conv-rule">
+      <div class="t">顶层按产品线组织</div>
+      <div class="d"><strong>🪸 Coral</strong> 小雅学科大脑 · <strong>🧠 XClaw</strong> 智能体运行时 · <strong>📦 学科大模型</strong> 三者整合 · <strong>🎨 品牌</strong> 支撑物料</div>
+    </div>
+    <div class="conv-rule">
+      <div class="t">卡片徽章表"详略等级"</div>
+      <div class="d"><strong>L1</strong> 总览一号文档 · <strong>L2</strong> 深度展开 · <strong>L3</strong> 专题物料。不再作为顶层分组维度</div>
+    </div>
+    <div class="conv-rule">
+      <div class="t">文件命名规范</div>
+      <div class="d"><code>{产品名}_{主题}_V{版本}.html</code>，例如 <code>小雅学科大脑_产品功能介绍_V1.html</code></div>
+    </div>
+    <div class="conv-rule">
+      <div class="t">状态标签</div>
+      <div class="d"><strong style="color:#10B981">已发布</strong>（正式可用）· <strong style="color:#D97706">草稿中</strong>（开发中）· <strong style="color:#64748B">规划中</strong>（待启动）</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <strong>学科大模型 · 产品文档中心</strong> · AI教学产品部 · 2026-04-13 重组 V2<br>
+  存储路径：<code style="background:#F1F5F9;padding:2px 6px;border-radius:3px;font-size:10px">~/Desktop/ClaudeCode/学科大模型文档中心/index.html</code>
+</div>
+
+</div>
+</body>
+</html>

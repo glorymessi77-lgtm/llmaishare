@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XClaw · 小雅AI教学智能中枢 — 产品架构与规划</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: #F0F4F8;
+  color: #1E293B;
+  line-height: 1.5;
+  padding: 0 0 48px;
+}
+/* ==== 统一返回目录导航条 ==== */
+.nav-bar {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #E2E8F0;
+  padding: 12px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  margin-bottom: 24px;
+}
+.nav-bar a { color: #6366F1; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px; transition: opacity 0.15s; }
+.nav-bar a:hover { opacity: 0.7; }
+.nav-bar .sep { color: #CBD5E1; }
+.nav-bar .current { color: #64748B; }
+.nav-bar .level { font-size: 9px; font-weight: 700; color: #fff; background: #6366F1; padding: 2px 7px; border-radius: 4px; letter-spacing: 1px; }
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+
+/* ==== HEADER ==== */
+.header {
+  background: linear-gradient(135deg, #1E3A8A 0%, #6D28D9 50%, #BE185D 100%);
+  color: #fff;
+  border-radius: 16px;
+  padding: 32px 36px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.header-top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; position: relative; }
+.header-tag { font-size: 11px; letter-spacing: 2px; background: rgba(255,255,255,0.18); padding: 4px 12px; border-radius: 20px; font-weight: 600; }
+.header h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; position: relative; }
+.header h1 em { font-style: normal; background: linear-gradient(90deg, #FDE68A, #FCA5A5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.header .sub { font-size: 14px; opacity: 0.85; font-weight: 400; position: relative; }
+.header-stats { display: flex; gap: 24px; margin-top: 20px; position: relative; }
+.header-stat { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 10px 18px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); }
+.header-stat .n { font-size: 20px; font-weight: 700; line-height: 1; }
+.header-stat .l { font-size: 10px; opacity: 0.75; margin-top: 4px; letter-spacing: 0.5px; }
+
+/* ==== SECTION ==== */
+.section {
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.sec-head {
+  display: flex; align-items: baseline; gap: 12px;
+  margin-bottom: 18px; padding-bottom: 12px;
+  border-bottom: 2px solid #F1F5F9;
+}
+.sec-num {
+  font-size: 11px; font-weight: 700; color: #fff;
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  padding: 4px 10px; border-radius: 6px; letter-spacing: 1px;
+}
+.sec-head h2 { font-size: 18px; font-weight: 700; color: #0F172A; }
+.sec-head .meta { font-size: 12px; color: #64748B; margin-left: auto; }
+
+/* ==== WHAT IS IT ==== */
+.whatis {
+  background: linear-gradient(135deg, #EEF2FF 0%, #FCE7F3 100%);
+  border: 1px solid #E0E7FF;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.whatis .hook { font-size: 11px; color: #6366F1; font-weight: 700; letter-spacing: 2px; margin-bottom: 6px; }
+.whatis h3 { font-size: 20px; font-weight: 800; color: #1E293B; margin-bottom: 10px; }
+.whatis p { font-size: 13px; color: #475569; line-height: 1.8; }
+.whatis p strong { color: #6D28D9; }
+.whatis-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 14px; }
+.whatis-item { background: #fff; padding: 12px 14px; border-radius: 8px; border-left: 3px solid #6366F1; }
+.whatis-item .t { font-size: 12px; font-weight: 700; color: #1E293B; margin-bottom: 4px; }
+.whatis-item .d { font-size: 11px; color: #64748B; line-height: 1.6; }
+
+/* ==== SCENE GRID ==== */
+.scene-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.scene-card {
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 14px;
+  position: relative;
+  transition: all 0.2s;
+}
+.scene-card:hover { border-color: #6366F1; box-shadow: 0 4px 12px rgba(99,102,241,0.1); transform: translateY(-2px); }
+.scene-card .icon { font-size: 18px; margin-bottom: 6px; }
+.scene-card .name { font-size: 13px; font-weight: 700; color: #1E293B; margin-bottom: 4px; }
+.scene-card .desc { font-size: 10px; color: #64748B; line-height: 1.5; }
+.scene-card .claw-tag {
+  position: absolute; top: 8px; right: 8px;
+  background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+  color: #92400E; font-size: 9px; font-weight: 700;
+  padding: 2px 6px; border-radius: 4px;
+}
+
+/* ==== ARCH LAYER ==== */
+.arch-layer {
+  background: #F8FAFC;
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 10px;
+  border-left: 4px solid;
+}
+.arch-layer.l1 { border-color: #2563EB; background: #EFF6FF; }
+.arch-layer.l2 { border-color: #7C3AED; background: #F5F3FF; }
+.arch-layer.l3 { border-color: #059669; background: #ECFDF5; }
+.arch-layer.l4 { border-color: #C2410C; background: #FFF7ED; }
+.arch-layer-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.arch-layer-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; color: #fff; }
+.l1 .arch-layer-label { background: #2563EB; }
+.l2 .arch-layer-label { background: #7C3AED; }
+.l3 .arch-layer-label { background: #059669; }
+.l4 .arch-layer-label { background: #C2410C; }
+.arch-layer h3 { font-size: 14px; font-weight: 700; color: #1E293B; }
+.arch-layer-desc { font-size: 11px; color: #64748B; margin-left: auto; }
+
+.module-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.module-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.module-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+.module { background: #fff; padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.06); }
+.module .n { font-size: 12px; font-weight: 700; color: #1E293B; margin-bottom: 3px; }
+.module .d { font-size: 10px; color: #64748B; line-height: 1.5; }
+.module.new { border: 1px solid #F59E0B; background: #FFFBEB; position: relative; }
+.module .badge-new { position: absolute; top: -5px; right: 6px; background: #F59E0B; color: #fff; font-size: 8px; font-weight: 700; padding: 1px 5px; border-radius: 3px; letter-spacing: 0.5px; }
+
+/* ==== FLOW ==== */
+.flow-horizontal { display: flex; align-items: stretch; gap: 0; margin: 12px 0; }
+.flow-step {
+  flex: 1;
+  background: linear-gradient(135deg, #F1F5F9, #E2E8F0);
+  border: 1px solid #CBD5E1;
+  padding: 12px 14px;
+  position: relative;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%, 12px 50%);
+  margin-right: -10px;
+  text-align: center;
+}
+.flow-step:first-child { clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%); }
+.flow-step:last-child { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 12px 50%); margin-right: 0; }
+.flow-step .n { font-size: 11px; font-weight: 700; color: #1E293B; }
+.flow-step .d { font-size: 9px; color: #64748B; margin-top: 2px; }
+
+/* Skill categories */
+.skill-cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.skill-cat {
+  border-radius: 10px;
+  padding: 14px;
+  border: 1px solid;
+}
+.skill-cat.teach { background: #EFF6FF; border-color: #BFDBFE; }
+.skill-cat.learn { background: #F0FDF4; border-color: #BBF7D0; }
+.skill-cat.manage { background: #FEF3C7; border-color: #FDE68A; }
+.skill-cat h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+.skill-cat.teach h4 { color: #1E40AF; }
+.skill-cat.learn h4 { color: #166534; }
+.skill-cat.manage h4 { color: #92400E; }
+.skill-cat ul { list-style: none; }
+.skill-cat li { font-size: 11px; color: #475569; padding: 3px 0 3px 14px; position: relative; }
+.skill-cat li::before { content: '›'; position: absolute; left: 4px; font-weight: 700; }
+
+/* ==== ROADMAP ==== */
+.roadmap { position: relative; padding-left: 28px; }
+.roadmap::before { content: ''; position: absolute; left: 10px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(180deg, #6366F1, #8B5CF6, #EC4899, #F59E0B); }
+.rm-item { position: relative; padding-bottom: 18px; }
+.rm-item:last-child { padding-bottom: 0; }
+.rm-dot { position: absolute; left: -24px; top: 4px; width: 14px; height: 14px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 2px #6366F1; }
+.rm-item.v2 .rm-dot { box-shadow: 0 0 0 2px #8B5CF6; }
+.rm-item.v3 .rm-dot { box-shadow: 0 0 0 2px #EC4899; }
+.rm-item.v4 .rm-dot { box-shadow: 0 0 0 2px #F59E0B; }
+.rm-dot::after { content: ''; position: absolute; inset: -1px; border-radius: 50%; background: #6366F1; }
+.rm-item.v2 .rm-dot::after { background: #8B5CF6; }
+.rm-item.v3 .rm-dot::after { background: #EC4899; }
+.rm-item.v4 .rm-dot::after { background: #F59E0B; }
+.rm-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.rm-ver { font-size: 11px; font-weight: 700; color: #fff; padding: 2px 8px; border-radius: 4px; background: #6366F1; letter-spacing: 0.5px; }
+.rm-item.v2 .rm-ver { background: #8B5CF6; }
+.rm-item.v3 .rm-ver { background: #EC4899; }
+.rm-item.v4 .rm-ver { background: #F59E0B; }
+.rm-title { font-size: 14px; font-weight: 700; color: #1E293B; }
+.rm-date { font-size: 10px; color: #94A3B8; }
+.rm-desc { font-size: 11px; color: #64748B; line-height: 1.7; margin-bottom: 8px; }
+.rm-features { display: flex; flex-wrap: wrap; gap: 6px; }
+.rm-feat { font-size: 10px; background: #F1F5F9; color: #475569; padding: 3px 8px; border-radius: 4px; }
+.rm-item.v1 .rm-feat { background: #EEF2FF; color: #4338CA; }
+.rm-item.v2 .rm-feat { background: #F5F3FF; color: #6D28D9; }
+.rm-item.v3 .rm-feat { background: #FCE7F3; color: #BE185D; }
+.rm-item.v4 .rm-feat { background: #FEF3C7; color: #92400E; }
+
+/* ==== COMPETE ==== */
+.compete-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.compete-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.compete-grid.cols-5 { grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.compete-card {
+  background: linear-gradient(135deg, #FAFAFA, #F1F5F9);
+  border: 1px solid #E2E8F0;
+  border-top: 4px solid;
+  border-radius: 10px;
+  padding: 14px;
+}
+.compete-card.c1 { border-top-color: #6366F1; }
+.compete-card.c2 { border-top-color: #8B5CF6; }
+.compete-card.c3 { border-top-color: #EC4899; }
+.compete-card.c4 { border-top-color: #F59E0B; }
+.compete-card.c5 { border-top-color: #EF4444; }
+.compete-card.c6 {
+  border-top-color: #B91C1C;
+  background: linear-gradient(135deg, #FFF7ED, #FEF2F2);
+  border-color: #FCA5A5;
+  box-shadow: 0 2px 10px rgba(185, 28, 28, 0.08);
+}
+.compete-card h4 { font-size: 12px; font-weight: 700; color: #1E293B; margin-bottom: 6px; line-height: 1.4; }
+.compete-card .tag { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 4px; display: inline-block; margin-bottom: 6px; letter-spacing: 0.5px; }
+.c1 .tag { background: #EEF2FF; color: #4338CA; }
+.c2 .tag { background: #F5F3FF; color: #6D28D9; }
+.c3 .tag { background: #FCE7F3; color: #BE185D; }
+.c4 .tag { background: #FEF3C7; color: #92400E; }
+.c5 .tag { background: #FEE2E2; color: #991B1B; }
+.c6 .tag { background: #B91C1C; color: #FFF; }
+.compete-card .desc { font-size: 10px; color: #475569; line-height: 1.6; margin-bottom: 8px; }
+.compete-card .metric { font-size: 9px; color: #64748B; padding-top: 8px; border-top: 1px dashed #CBD5E1; line-height: 1.5; }
+.compete-card .metric strong { color: #1E293B; }
+
+/* ==== DELIVERABLE ==== */
+.deliv-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.deliv {
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 14px;
+  position: relative;
+}
+.deliv-icon { font-size: 20px; margin-bottom: 6px; }
+.deliv-title { font-size: 12px; font-weight: 700; color: #1E293B; margin-bottom: 4px; }
+.deliv-desc { font-size: 10px; color: #64748B; line-height: 1.6; }
+
+/* ==== 关键原则 ==== */
+.principle-box {
+  background: linear-gradient(135deg, #FEF3C7, #FED7AA);
+  border: 1px solid #FCD34D;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-top: 12px;
+  display: flex;
+  gap: 14px;
+}
+.principle-box .ico { font-size: 24px; flex-shrink: 0; }
+.principle-box .cont { flex: 1; }
+.principle-box h4 { font-size: 13px; font-weight: 700; color: #92400E; margin-bottom: 4px; }
+.principle-box p { font-size: 11px; color: #78350F; line-height: 1.7; }
+
+/* ==== FOOTER ==== */
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #94A3B8;
+  font-size: 11px;
+}
+.footer strong { color: #64748B; }
+
+/* 两栏布局 */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+</style>
+</head>
+<body>
+
+<!-- 统一返回目录导航条 -->
+<div class="nav-bar">
+  <a href="index.html">← 返回文档中心</a>
+  <span class="sep">/</span>
+  <span class="level">L1</span>
+  <span class="current">产品架构与规划 V1</span>
+</div>
+
+<div class="wrap">
+
+<!-- ====== HEADER ====== -->
+<div class="header">
+  <div class="header-top">
+    <span class="header-tag">XCLAW · AI INTELLIGENT HUB</span>
+  </div>
+  <h1>XClaw · <em>小雅 AI 教学智能中枢</em></h1>
+  <div class="sub">让教学系统"活"起来的调度引擎 — 一句话，教学全流程自动完成</div>
+  <div class="header-stats">
+    <div class="header-stat"><div class="n">2</div><div class="l">CORE CAPABILITIES</div></div>
+    <div class="header-stat"><div class="n">8</div><div class="l">TEACHING SCENARIOS</div></div>
+    <div class="header-stat"><div class="n">20+</div><div class="l">PRE-BUILT SKILLS</div></div>
+    <div class="header-stat"><div class="n">V4.0</div><div class="l">LONG-TERM VISION</div></div>
+  </div>
+</div>
+
+<!-- ====== 01 产品定位 ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num">01</span>
+    <h2>WHAT IS IT · 产品定位</h2>
+    <span class="meta">XClaw = 学科AI的神经中枢</span>
+  </div>
+
+  <div class="whatis">
+    <div class="hook">WHAT · 一句话定义</div>
+    <h3>XClaw 是学科 AI 的神经中枢</h3>
+    <p>Coral 知识库解决了<strong>"学科知识从哪来"</strong>，大模型解决了<strong>"AI怎么理解和生成"</strong>。但光有知识库和模型，就像一个人有大脑有记忆却没有神经系统——看得见想得到却做不了事。<strong>XClaw 就是这根神经</strong>——它接收教师的自然语言指令，调度 Skill、知识库和模型，将教学任务自动完成。</p>
+    <div class="whatis-grid">
+      <div class="whatis-item"><div class="t">🎯 它调度能力</div><div class="d">决定用哪个 Skill、查哪段知识、走哪个模型，每一次调用都是最优路径</div></div>
+      <div class="whatis-item"><div class="t">🛡️ 它守护安全</div><div class="d">输入防注入、过程防越权、输出防幻觉，三层防线不可绕过</div></div>
+      <div class="whatis-item"><div class="t">🔄 它驱动进化</div><div class="d">每一次使用都在优化调度策略、沉淀学科数据、驱动知识库自增长</div></div>
+    </div>
+  </div>
+
+  <div class="principle-box">
+    <div class="ico">💡</div>
+    <div class="cont">
+      <h4>产品设计关键原则：无感体验 × 显性交付</h4>
+      <p><strong>用户交互上追求简洁无感</strong>——自然语言一句话即可完成任务；<strong>产品呈现上追求显性可视</strong>——工具链、知识库参与、Skill调度过程都"看得见"，让用户感知到价值、让咨询售卖有抓手、让产品验收有依据。参照 360 安全卫士的工具链可视化范式。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 02 教学场景 ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num">02</span>
+    <h2>SCENARIOS · 八大教学场景</h2>
+    <span class="meta">基于教学全流程的 XClaw 场景覆盖</span>
+  </div>
+  <div class="scene-grid">
+    <div class="scene-card">
+      <div class="claw-tag">XClaw 驱动</div>
+      <div class="icon">🏗️</div>
+      <div class="name">建课</div>
+      <div class="desc">一句话生成课程大纲、知识点图谱、教学活动序列</div>
+    </div>
+    <div class="scene-card">
+      <div class="claw-tag">XClaw 驱动</div>
+      <div class="icon">📝</div>
+      <div class="name">备课</div>
+      <div class="desc">智能教案生成、课件制作、教学活动设计，30秒交付</div>
+    </div>
+    <div class="scene-card">
+      <div class="claw-tag">XClaw 驱动</div>
+      <div class="icon">👨‍🏫</div>
+      <div class="name">授课</div>
+      <div class="desc">课堂智能互动、实时答疑、教学过程辅助</div>
+    </div>
+    <div class="scene-card">
+      <div class="claw-tag">XClaw 驱动</div>
+      <div class="icon">📚</div>
+      <div class="name">助学</div>
+      <div class="desc">AI 学伴 24 小时答疑、知识点诊断、个性化学习路径</div>
+    </div>
+    <div class="scene-card">
+      <div class="claw-tag">XClaw 驱动</div>
+      <div class="icon">✍️</div>
+      <div class="name">考核</div>
+      <div class="desc">智能组卷、自动批改、学情分析、薄弱点诊断</div>
+    </div>
+    <div class="scene-card">
+      <div class="claw-tag">XClaw 驱动</div>
+      <div class="icon">👁️</div>
+      <div class="name">督查</div>
+      <div class="desc">教学质量画像、教学数据全景看板、异常预警</div>
+    </div>
+    <div class="scene-card">
+      <div class="claw-tag">XClaw 驱动</div>
+      <div class="icon">⚙️</div>
+      <div class="name">管理</div>
+      <div class="desc">选课排课智能调度、教学任务自动流转、教学资源统筹</div>
+    </div>
+    <div class="scene-card">
+      <div class="claw-tag">XClaw 驱动</div>
+      <div class="icon">🔬</div>
+      <div class="name">科研</div>
+      <div class="desc">文献检索摘要、实验数据分析、论文辅导、课题协同</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 03 四层架构 ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num">03</span>
+    <h2>ARCHITECTURE · 四层产品架构</h2>
+    <span class="meta">从用户入口到底层能力的完整链路</span>
+  </div>
+
+  <!-- L1: 入口层 -->
+  <div class="arch-layer l1">
+    <div class="arch-layer-head">
+      <span class="arch-layer-label">L1 · 入口层</span>
+      <h3>教师/学生的统一交互入口</h3>
+      <span class="arch-layer-desc">自然语言 + 多模态 · 嵌入小雅平台</span>
+    </div>
+    <div class="module-grid cols-5">
+      <div class="module"><div class="n">💬 自然语言对话</div><div class="d">一句话触发教学任务</div></div>
+      <div class="module"><div class="n">🖼️ 多模态输入</div><div class="d">文本/图片/语音/文档</div></div>
+      <div class="module"><div class="n">📱 小雅平台嵌入</div><div class="d">iframe/侧抽屉/全屏</div></div>
+      <div class="module"><div class="n">🧩 智能体广场</div><div class="d">教学 Skill 超市</div></div>
+      <div class="module new"><span class="badge-new">NEW</span><div class="n">📋 任务控制台</div><div class="d">执行过程可视化</div></div>
+    </div>
+  </div>
+
+  <!-- L2: XClaw 核心调度层 -->
+  <div class="arch-layer l2">
+    <div class="arch-layer-head">
+      <span class="arch-layer-label">L2 · XClaw 核心</span>
+      <h3>意图识别 · 任务编排 · 能力调度</h3>
+      <span class="arch-layer-desc">调度引擎 + 安全守护 + 记忆系统</span>
+    </div>
+    <div class="module-grid cols-5">
+      <div class="module"><div class="n">🎯 意图识别</div><div class="d">自然语言→结构化任务</div></div>
+      <div class="module"><div class="n">🔀 任务编排</div><div class="d">多步骤 Skill 链式调用</div></div>
+      <div class="module"><div class="n">📦 Skill 管理</div><div class="d">注册/匹配/调度/沙箱</div></div>
+      <div class="module"><div class="n">🛡️ 三层安全</div><div class="d">输入/过程/输出防线</div></div>
+      <div class="module"><div class="n">🧠 记忆系统</div><div class="d">用户/课程/会话三级</div></div>
+    </div>
+  </div>
+
+  <!-- L3: 能力资源层 -->
+  <div class="arch-layer l3">
+    <div class="arch-layer-head">
+      <span class="arch-layer-label">L3 · 能力资源</span>
+      <h3>Skill 库 · 知识库 · 模型库 · 工具库</h3>
+      <span class="arch-layer-desc">XClaw 调度的底层能力池</span>
+    </div>
+    <div class="module-grid">
+      <div class="module"><div class="n">🧪 教学 Skill 库</div><div class="d">20+ 预置教学场景技能</div></div>
+      <div class="module"><div class="n">📖 Coral 知识库</div><div class="d">学科共享知识底座</div></div>
+      <div class="module"><div class="n">🤖 多模型路由</div><div class="d">星火/DeepSeek/Qwen/豆包</div></div>
+      <div class="module"><div class="n">🔧 工具集成</div><div class="d">Web搜索/代码执行/API调用</div></div>
+    </div>
+  </div>
+
+  <!-- L4: 基础设施层 -->
+  <div class="arch-layer l4">
+    <div class="arch-layer-head">
+      <span class="arch-layer-label">L4 · 基础设施</span>
+      <h3>认证授权 · 数据存储 · 部署运维</h3>
+      <span class="arch-layer-desc">基于 OpenClaw 开源生态 + 讯飞安全体系</span>
+    </div>
+    <div class="module-grid cols-5">
+      <div class="module"><div class="n">🔐 高教用户体系</div><div class="d">统一认证 + 角色权限</div></div>
+      <div class="module"><div class="n">💾 多租户隔离</div><div class="d">机构/学院/课程三级</div></div>
+      <div class="module"><div class="n">☁️ SaaS 化运营</div><div class="d">一键部署 + 自动扩容</div></div>
+      <div class="module"><div class="n">🖥️ 本地化部署</div><div class="d">信创合规 + 数据不出校</div></div>
+      <div class="module"><div class="n">📊 调用监控</div><div class="d">成本/延迟/效果看板</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 04 核心 Skill 库 ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num">04</span>
+    <h2>SKILL LIBRARY · 预置 Skill 库</h2>
+    <span class="meta">开箱即用的教学场景 Skill</span>
+  </div>
+  <div class="skill-cat-grid">
+    <div class="skill-cat teach">
+      <h4>🧑‍🏫 助教类（教师用）</h4>
+      <ul>
+        <li>智能备课 Skill · 一句话出教案</li>
+        <li>智能组卷 Skill · 按难度梯度自动出题</li>
+        <li>作业批改 Skill · 自动评分+点评</li>
+        <li>学情分析 Skill · 班级画像+薄弱点</li>
+        <li>课件生成 Skill · PPT/讲义自动生成</li>
+        <li>教学设计 Skill · 活动编排+互动设计</li>
+        <li>评价量表 Skill · Rubric 自动生成</li>
+      </ul>
+    </div>
+    <div class="skill-cat learn">
+      <h4>🎓 助学类（学生用）</h4>
+      <ul>
+        <li>自主学习 Skill · 知识点→练习→反馈</li>
+        <li>AI 答疑 Skill · 引导式提问+苏格拉底</li>
+        <li>论文辅导 Skill · 选题→大纲→初稿</li>
+        <li>实验指导 Skill · 步骤讲解+风险提示</li>
+        <li>错题诊断 Skill · 追根溯源到知识点</li>
+        <li>学习路径 Skill · 个性化推荐</li>
+        <li>文献研读 Skill · 论文摘要+关键观点</li>
+      </ul>
+    </div>
+    <div class="skill-cat manage">
+      <h4>📊 助管类（管理用）</h4>
+      <ul>
+        <li>教学质量画像 Skill · 全校教学看板</li>
+        <li>异常预警 Skill · 挂科风险学生识别</li>
+        <li>课程评估 Skill · 评教数据智能分析</li>
+        <li>资源分析 Skill · 知识库使用热力图</li>
+        <li>审核评估 Skill · 自动生成佐证材料</li>
+        <li>学期复盘 Skill · 多维度教学报告</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 05 XClaw 核心工作流 ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num">05</span>
+    <h2>WORKFLOW · 核心调度工作流</h2>
+    <span class="meta">教师说"一句话"→ XClaw 全流程自动执行</span>
+  </div>
+  <div class="flow-horizontal">
+    <div class="flow-step"><div class="n">1. 意图识别</div><div class="d">理解老师想做什么</div></div>
+    <div class="flow-step"><div class="n">2. 任务拆解</div><div class="d">分解为执行步骤</div></div>
+    <div class="flow-step"><div class="n">3. Skill 调度</div><div class="d">匹配最优技能</div></div>
+    <div class="flow-step"><div class="n">4. 知识检索</div><div class="d">从 Coral 注入学科知识</div></div>
+    <div class="flow-step"><div class="n">5. 模型执行</div><div class="d">调度最优模型</div></div>
+    <div class="flow-step"><div class="n">6. 溯源标注</div><div class="d">每句话标来源</div></div>
+    <div class="flow-step"><div class="n">7. 结果交付</div><div class="d">可溯源可审核</div></div>
+  </div>
+  <div style="background:#F1F5F9;border-radius:8px;padding:12px 14px;margin-top:12px;font-size:11px;color:#475569;line-height:1.8">
+    <strong style="color:#1E293B">💡 实例场景：</strong>教师说 <em style="color:#6366F1">"帮我出一套高数第三章的期中卷，难度中等，A4两页"</em> → XClaw 在 3 分钟内完成：识别"出卷"意图 → 调度组卷 Skill → 从 Coral 检索高数第三章知识点 → 调用 DeepSeek 生成题目 → 难度校准 → 自动排版 → 每道题标注出处 → 交付一份可溯源的试卷。
+  </div>
+</div>
+
+<!-- ====== 06 产品里程碑与版本规划 ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num">06</span>
+    <h2>ROADMAP · 版本路线图</h2>
+    <span class="meta">4 个版本从 MVP 到智能中枢</span>
+  </div>
+  <div class="roadmap">
+    <div class="rm-item v1">
+      <div class="rm-dot"></div>
+      <div class="rm-head">
+        <span class="rm-ver">V1.0 · MVP</span>
+        <span class="rm-title">基础集成 · 让教学平台"能说话"</span>
+        <span class="rm-date">2026 Q2 · 5-6 月</span>
+      </div>
+      <div class="rm-desc">基于 OpenClaw 做轻量化改造，完成与小雅教学平台的基础集成。实现自然语言→教学任务的基本链路，覆盖 3-5 个高频教学场景。目标：让咨询团队有可演示的 Demo，让学校能看到"这个产品长什么样"。</div>
+      <div class="rm-features">
+        <span class="rm-feat">OpenClaw 集成</span>
+        <span class="rm-feat">高教用户权限打通</span>
+        <span class="rm-feat">3-5 个核心 Skill</span>
+        <span class="rm-feat">小雅平台 iframe 嵌入</span>
+        <span class="rm-feat">基础 Demo 视频</span>
+        <span class="rm-feat">单租户部署</span>
+      </div>
+    </div>
+
+    <div class="rm-item v2">
+      <div class="rm-dot"></div>
+      <div class="rm-head">
+        <span class="rm-ver">V2.0 · 场景打通</span>
+        <span class="rm-title">教学自动化 · 让"备-教-学-评"闭环</span>
+        <span class="rm-date">2026 Q3 · 7-9 月</span>
+      </div>
+      <div class="rm-desc">完成 20+ 预置 Skill 库建设，覆盖助教/助学/助管三大类。实现教学全流程自动化——老师一句话完成备课，学生一句话完成自学。重点打造 AI 助学答疑为核心突破场景，与北邮试点形成标杆案例。</div>
+      <div class="rm-features">
+        <span class="rm-feat">20+ 预置 Skill</span>
+        <span class="rm-feat">AI 助学答疑突破</span>
+        <span class="rm-feat">任务控制台可视化</span>
+        <span class="rm-feat">Coral 知识库深度集成</span>
+        <span class="rm-feat">多租户隔离</span>
+        <span class="rm-feat">北邮试点落地</span>
+      </div>
+    </div>
+
+    <div class="rm-item v3">
+      <div class="rm-dot"></div>
+      <div class="rm-head">
+        <span class="rm-ver">V3.0 · 生态扩展</span>
+        <span class="rm-title">0代码创编 · 让教师"造自己的 AI"</span>
+        <span class="rm-date">2026 Q4 · 10-12 月</span>
+      </div>
+      <div class="rm-desc">智能体 0 代码创编能力上线——教师用自然语言一句话创建专属教学智能体。开放 Skill 开发平台和智能体广场，形成教师共建生态。支持 Skill 跨校共享，实现教学经验的可迁移可复用。</div>
+      <div class="rm-features">
+        <span class="rm-feat">0 代码智能体创编</span>
+        <span class="rm-feat">智能体广场（X空间）</span>
+        <span class="rm-feat">Skill 跨校共享</span>
+        <span class="rm-feat">教师协作共建</span>
+        <span class="rm-feat">多模型智能路由</span>
+        <span class="rm-feat">效果 A/B 测试</span>
+      </div>
+    </div>
+
+    <div class="rm-item v4">
+      <div class="rm-dot"></div>
+      <div class="rm-head">
+        <span class="rm-ver">V4.0 · 智能中枢</span>
+        <span class="rm-title">主动服务 · 让平台"懂每一位师生"</span>
+        <span class="rm-date">2027 H1 · 1-6 月</span>
+      </div>
+      <div class="rm-desc">从"被动响应"进化到"主动服务"——XClaw 基于全平台数据主动识别教学需求、推送教学建议、预警教学风险。打造"千人千面"的教学体验，实现从通用 AI 到个性化学科 AI 的跨越。</div>
+      <div class="rm-features">
+        <span class="rm-feat">主动推送能力</span>
+        <span class="rm-feat">千人千面个性化</span>
+        <span class="rm-feat">教学数据飞轮</span>
+        <span class="rm-feat">自进化 Skill 库</span>
+        <span class="rm-feat">跨校网络效应</span>
+        <span class="rm-feat">信创全链路</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 06+ 国家战略视角 ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num" style="background:linear-gradient(135deg,#B91C1C,#DC2626)">06+</span>
+    <h2>NATIONAL STRATEGY · 国家战略视角</h2>
+    <span class="meta">为什么"智能化升级"不只是产品升级，而是国家战略对齐</span>
+  </div>
+
+  <!-- 核心判断 -->
+  <div style="background:linear-gradient(135deg,#FEF2F2,#FFF7ED);border:1px solid #FCA5A5;border-radius:12px;padding:20px 24px;margin-bottom:16px">
+    <div style="font-size:11px;font-weight:700;color:#991B1B;letter-spacing:2px;margin-bottom:8px">CORE THESIS · 核心判断</div>
+    <div style="font-size:15px;font-weight:700;color:#1E293B;line-height:1.6">
+      我们不是在做一个产品，而是在对齐 <span style="color:#B91C1C">国家标准</span>。<br>
+      <span style="font-size:13px;font-weight:500;color:#475569">XClaw × 小雅 × Coral 的智能化升级，本质是讯飞高教押注"新一代教学平台国家标准"的战略级动作。</span>
+    </div>
+  </div>
+
+  <!-- 四象限布局 -->
+  <div style="display:grid;grid-template-columns:0.9fr 1.1fr;gap:14px">
+
+    <!-- 左：战略锚点人物 -->
+    <div style="background:#fff;border:1px solid #E2E8F0;border-left:4px solid #B91C1C;border-radius:10px;padding:18px 20px">
+      <div style="font-size:10px;font-weight:700;color:#B91C1C;letter-spacing:2px;margin-bottom:6px">KEY FIGURE · 战略锚点人物</div>
+      <div style="font-size:22px;font-weight:900;color:#1E293B;margin-bottom:10px;letter-spacing:-0.3px">徐坤 校长</div>
+      <div style="font-size:11px;color:#475569;line-height:1.9;padding-top:10px;border-top:1px dashed #CBD5E1">
+        <div>▸ <strong style="color:#1E293B">北京邮电大学 校长</strong></div>
+        <div>▸ <strong style="color:#1E293B">全国政协委员</strong>（2024 两会汇报"千人千面"）</div>
+        <div>▸ <strong style="color:#1E293B">教育部高等学校教育指导委员会 主任委员</strong></div>
+        <div>▸ <strong style="color:#1E293B">新一代教学平台国家标准</strong> 主持起草人</div>
+        <div>▸ <strong style="color:#1E293B">国家教育智联网</strong> 7 亿专项 主导方</div>
+      </div>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid #FEE2E2;font-size:10px;color:#7F1D1D;line-height:1.6">
+        这不是一位普通校长——这是<strong>国家级教学基础设施</strong>的定义者，且是和讯飞高教走得最近的国家级决策方之一。
+      </div>
+    </div>
+
+    <!-- 右：三条战略动作 -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="background:#fff;border:1px solid #E2E8F0;border-left:3px solid #B91C1C;border-radius:8px;padding:12px 16px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:4px">
+          <span style="font-size:20px;font-weight:900;color:#B91C1C;font-family:'SF Mono',monospace">01</span>
+          <span style="font-size:13px;font-weight:700;color:#1E293B">两会汇报 · "千人千面" 获总书记认同</span>
+        </div>
+        <div style="font-size:11px;color:#64748B;line-height:1.7;padding-left:30px">
+          2024 全国政协会议现场，徐校长系统汇报"AI 赋能教学、千人千面"理念。<strong style="color:#1E293B">这不是学术概念，是国家方向</strong>——写进我们产品路线图的每一个"学科大脑""千人千面 AI 学伴"都与此对齐。
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid #E2E8F0;border-left:3px solid #B91C1C;border-radius:8px;padding:12px 16px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:4px">
+          <span style="font-size:20px;font-weight:900;color:#B91C1C;font-family:'SF Mono',monospace">02</span>
+          <span style="font-size:13px;font-weight:700;color:#1E293B">国家教育智联网 · 7 亿专项已启动</span>
+        </div>
+        <div style="font-size:11px;color:#64748B;line-height:1.7;padding-left:30px">
+          徐校长主导的国家级教育基础设施工程。讯飞是否入场，决定我们是"<span style="text-decoration:line-through;color:#94A3B8">又一个 SaaS 供应商</span>"还是"<strong style="color:#B91C1C">国家级教学基础设施参与方</strong>"——量级完全不同。
+        </div>
+      </div>
+
+      <div style="background:#fff;border:1px solid #E2E8F0;border-left:3px solid #B91C1C;border-radius:8px;padding:12px 16px">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:4px">
+          <span style="font-size:20px;font-weight:900;color:#B91C1C;font-family:'SF Mono',monospace">03</span>
+          <span style="font-size:13px;font-weight:700;color:#1E293B">北邮顾处 · "一个字都不用改"</span>
+        </div>
+        <div style="font-size:11px;color:#64748B;line-height:1.7;padding-left:30px">
+          北邮顾处看完 XClaw × 小雅学科大脑方案后原话：<strong style="color:#B91C1C">"一个字都不用改。"</strong> 这不是产品层面的契合，是理念层面的契合——<strong>说明我们提前对齐了国标路径</strong>。2300 万项目已提交审批。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 质变陈述 -->
+  <div style="margin-top:14px;background:linear-gradient(135deg,#1E1B4B,#312E81);color:#fff;border-radius:12px;padding:20px 24px;position:relative;overflow:hidden">
+    <div style="position:absolute;top:-30%;right:-5%;width:280px;height:280px;background:radial-gradient(circle,rgba(220,38,38,0.25) 0%,transparent 70%);border-radius:50%"></div>
+    <div style="position:relative">
+      <div style="font-size:10px;font-weight:700;color:#FCA5A5;letter-spacing:3px;margin-bottom:10px">QUALITY CHANGE · 质变陈述</div>
+      <div style="font-size:15px;font-weight:600;line-height:1.75">
+        加入 XClaw 之后，小雅 + Coral 发生的质变不是"多一个智能体功能"——而是讯飞高教从 <span style="color:#FCA5A5;text-decoration:line-through;opacity:0.7">"高教教学 SaaS 厂商"</span> 一步跃迁到 <strong style="color:#FDE68A">"新一代教学平台国家标准的定义者之一"</strong>。
+      </div>
+      <div style="font-size:11px;color:#C7D2FE;line-height:1.8;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.15)">
+        ▸ 从"卖产品"到"参与国标"——商业模式跃迁 &nbsp;·&nbsp; ▸ 从"响应客户"到"对齐国家方向"——战略位置跃迁 &nbsp;·&nbsp; ▸ 从"服务高校"到"服务国家教育基础设施"——价值尺度跃迁
+      </div>
+    </div>
+  </div>
+
+  <!-- 三个战略信号 -->
+  <div style="margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+    <div style="background:#fff;border:1px solid #E2E8F0;border-radius:8px;padding:12px 14px;text-align:center">
+      <div style="font-size:24px;font-weight:900;color:#B91C1C;line-height:1">7<span style="font-size:14px;color:#1E293B;margin-left:2px">亿</span></div>
+      <div style="font-size:10px;color:#64748B;margin-top:4px;letter-spacing:1px">国家教育智联网中央专项</div>
+    </div>
+    <div style="background:#fff;border:1px solid #E2E8F0;border-radius:8px;padding:12px 14px;text-align:center">
+      <div style="font-size:24px;font-weight:900;color:#B91C1C;line-height:1">2300<span style="font-size:14px;color:#1E293B;margin-left:2px">万</span></div>
+      <div style="font-size:10px;color:#64748B;margin-top:4px;letter-spacing:1px">北邮特战队项目（已提交）</div>
+    </div>
+    <div style="background:#fff;border:1px solid #E2E8F0;border-radius:8px;padding:12px 14px;text-align:center">
+      <div style="font-size:24px;font-weight:900;color:#B91C1C;line-height:1">6<span style="font-size:14px;color:#1E293B;margin-left:2px">个月</span></div>
+      <div style="font-size:10px;color:#64748B;margin-top:4px;letter-spacing:1px">国标参与窗口期</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 07 核心竞争力 ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num">07</span>
+    <h2>COMPETITIVE EDGE · XClaw 六大护城河</h2>
+    <span class="meta">对标友商 fork OpenClaw 的"高教版龙虾"的真正壁垒 · 含国家标准维度</span>
+  </div>
+
+  <div style="background:#FEF2F2;border:1px solid #FCA5A5;border-radius:10px;padding:14px 18px;margin-bottom:14px">
+    <div style="font-size:11px;font-weight:700;color:#991B1B;margin-bottom:4px">⚠️ 竞争格局的变化</div>
+    <div style="font-size:11px;color:#7F1D1D;line-height:1.7">
+      过去我们假设的竞争对手是 Coze/Dify（通用智能体平台）。但现在 <strong>OpenClaw 开源</strong>后，真正的威胁变成了：友商（超星、智慧树、龙虾/有道、甚至新玩家）同样可以 fork OpenClaw，快速封装一个"高教版龙虾"。<strong>如果技术底座被商品化，XClaw 的护城河到底在哪里？</strong>
+    </div>
+  </div>
+
+  <div class="compete-grid">
+    <div class="compete-card c1">
+      <span class="tag">护城河 1</span>
+      <h4>🧬 产品组合壁垒</h4>
+      <div class="desc">XClaw = OpenClaw + 小雅平台 + Coral 知识库 + 星火模型。友商能 fork 框架，<strong>复制不了这套组合</strong>。</div>
+      <div class="metric"><strong>对手的困境：</strong>他们得到"空壳神经中枢"，没小雅的身体、没Coral的大脑、没星火的血液</div>
+    </div>
+    <div class="compete-card c2">
+      <span class="tag">护城河 2</span>
+      <h4>🔄 数据飞轮壁垒</h4>
+      <div class="desc">XClaw 作为调度层，每一次调用都在沉淀<strong>意图语料/Skill 路径/检索命中/模型效果</strong>四类数据，调度精度随使用时长指数上升。</div>
+      <div class="metric"><strong>对手的困境：</strong>他们从零积累数据，永远追不上我们 6-12 个月的先发优势</div>
+    </div>
+    <div class="compete-card c3">
+      <span class="tag">护城河 3</span>
+      <h4>🎯 渠道壁垒</h4>
+      <div class="desc">讯飞高教存量客户的零信任成本——XClaw 是小雅的升级，不是新产品。友商需要从零说服学校<strong>买一个陌生的 AI 工具</strong>。</div>
+      <div class="metric"><strong>对手的困境：</strong>决策周期 6-12 个月 vs 我们 2-3 个月，获客成本差一个量级</div>
+    </div>
+    <div class="compete-card c4">
+      <span class="tag">护城河 4</span>
+      <h4>🌐 Skill 生态壁垒</h4>
+      <div class="desc">智能体广场（X空间）让教师成为共建者。使用的老师越多 → 沉淀的 Skill 越丰富 → 产品越好用 → 更多老师来用，<strong>网络效应自我强化</strong>。</div>
+      <div class="metric"><strong>对手的困境：</strong>fork 代码容易，fork 数十万教师共建的生态<strong>不可能</strong></div>
+    </div>
+    <div class="compete-card c5">
+      <span class="tag">护城河 5</span>
+      <h4>🩸 血管级融合壁垒</h4>
+      <div class="desc">XClaw 原生嵌入小雅：认证/数据/场景/工作流/权限全部打通，<strong>不是外挂，是器官</strong>。老师在小雅里说句话即可，不用切换 App。</div>
+      <div class="metric"><strong>对手的困境：</strong>他们做的永远是学校教务系统之外的孤岛应用</div>
+    </div>
+    <div class="compete-card c6">
+      <span class="tag">护城河 6 · 新增</span>
+      <h4>🇨🇳 国家标准壁垒</h4>
+      <div class="desc">徐坤校长（<strong>教育部高等学校教育指导委员会主任委员</strong>）主持起草新一代教学平台国标，"千人千面"理念已在两会向总书记汇报。XClaw × 小雅学科大脑提前对齐国标路径，<strong>我们不是跟标准，我们参与定义标准</strong>。</div>
+      <div class="metric"><strong>对手的困境：</strong>国家教育智联网 7 亿专项 + 北邮 2300 万项目已在途，国标资质 = 未来 5 年高教 AI 准入门票</div>
+    </div>
+  </div>
+
+  <!-- 对比矩阵 -->
+  <div style="margin-top:18px">
+    <div style="font-size:12px;font-weight:700;color:#1E293B;margin-bottom:10px">📊 vs 友商 fork 版 "高教版龙虾" 的 7 维度对比（含国家标准维度）</div>
+    <div style="background:#F8FAFC;border-radius:10px;padding:14px 16px;border:1px solid #E2E8F0">
+      <table style="width:100%;font-size:11px;border-collapse:collapse">
+        <thead>
+          <tr style="border-bottom:2px solid #E2E8F0">
+            <th style="text-align:left;padding:8px 6px;color:#64748B;font-weight:600;font-size:10px">维度</th>
+            <th style="text-align:center;padding:8px 6px;color:#94A3B8;font-weight:600;font-size:10px">通用 AI</th>
+            <th style="text-align:center;padding:8px 6px;color:#94A3B8;font-weight:600;font-size:10px">Coze/Dify</th>
+            <th style="text-align:center;padding:8px 6px;color:#94A3B8;font-weight:600;font-size:10px">友商 fork 高教版龙虾</th>
+            <th style="text-align:center;padding:8px 6px;color:#6366F1;font-weight:700;font-size:10px">XClaw</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid #F1F5F9"><td style="padding:7px 6px;color:#475569">理解教学任务</td><td style="text-align:center">❌</td><td style="text-align:center">⚠️ 需配</td><td style="text-align:center">✅ 基础</td><td style="text-align:center;color:#6366F1;font-weight:700">✅ 原生</td></tr>
+          <tr style="border-bottom:1px solid #F1F5F9"><td style="padding:7px 6px;color:#475569">与教学平台深度融合</td><td style="text-align:center">❌</td><td style="text-align:center">❌</td><td style="text-align:center">❌</td><td style="text-align:center;color:#6366F1;font-weight:700">✅ 血管级</td></tr>
+          <tr style="border-bottom:1px solid #F1F5F9"><td style="padding:7px 6px;color:#475569">自带学科知识库</td><td style="text-align:center">❌</td><td style="text-align:center">❌</td><td style="text-align:center">⚠️ 需自建</td><td style="text-align:center;color:#6366F1;font-weight:700">✅ Coral</td></tr>
+          <tr style="border-bottom:1px solid #F1F5F9"><td style="padding:7px 6px;color:#475569">高教客户存量渠道</td><td style="text-align:center">❌</td><td style="text-align:center">❌</td><td style="text-align:center">⚠️ 陌生市场</td><td style="text-align:center;color:#6366F1;font-weight:700">✅ 20年积累</td></tr>
+          <tr style="border-bottom:1px solid #F1F5F9"><td style="padding:7px 6px;color:#475569">数据飞轮沉淀</td><td style="text-align:center">❌</td><td style="text-align:center">❌</td><td style="text-align:center">❌ 刚起步</td><td style="text-align:center;color:#6366F1;font-weight:700">✅ 先发</td></tr>
+          <tr style="border-bottom:1px solid #F1F5F9"><td style="padding:7px 6px;color:#475569">Skill 生态网络效应</td><td style="text-align:center">❌</td><td style="text-align:center">⚠️ 通用</td><td style="text-align:center">❌</td><td style="text-align:center;color:#6366F1;font-weight:700">✅ 教师共建</td></tr>
+          <tr style="background:#FEF2F2"><td style="padding:8px 6px;color:#7F1D1D;font-weight:700">🇨🇳 国家标准资质</td><td style="text-align:center">❌</td><td style="text-align:center">❌</td><td style="text-align:center">❌</td><td style="text-align:center;color:#B91C1C;font-weight:700">✅ 参与起草</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="principle-box" style="background:linear-gradient(135deg,#EEF2FF,#F5F3FF);border-color:#C7D2FE;margin-top:16px">
+    <div class="ico">🎯</div>
+    <div class="cont">
+      <h4 style="color:#4338CA">战略结论 · 从产品到国家标准</h4>
+      <p style="color:#3730A3">技术可以 fork，<strong>数据不能 fork，生态不能 fork，渠道不能 fork，国家标准不能 fork</strong>。XClaw 的真正护城河不是代码本身，而是 <strong>"OpenClaw + 小雅 + Coral + 星火 + 存量客户 + 先发数据 + 国标资质"</strong> 这整套组合在时间维度上的复利。<br><br>2024 年徐坤校长在两会向总书记汇报"AI 赋能教学、千人千面"获高层认同；教育部指委会正在主持起草新一代教学平台国家标准；国家教育智联网 7 亿专项已经启动；北邮顾处看完 XClaw × 小雅学科大脑方案原话 <strong style="color:#B91C1C">"一个字都不用改"</strong>——这一连串信号同时指向同一个结论：<strong>未来 6-12 个月是国运级窗口期</strong>。谁先在 3-5 所双一流跑出 10 万+ 真实调用量、并进入国标参与名单，谁就不仅仅是领先者，而是<strong>新一代教学平台的定义者</strong>。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 07-B 小雅 × XClaw 联合价值 ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num">07+</span>
+    <h2>JOINT VALUE · 小雅 × XClaw 联合价值</h2>
+    <span class="meta">XClaw 打包小雅平台后的市场卖点</span>
+  </div>
+  <div class="compete-grid cols-3">
+    <div class="compete-card c1" style="border-top-color:#EF4444">
+      <span class="tag" style="background:#FEE2E2;color:#991B1B">联合卖点 1</span>
+      <h4 style="font-size:13px">🔒 私有化部署 × 信创合规</h4>
+      <div class="desc" style="font-size:11px">全链路国产化 + 本地部署，学科数据不出校。超星/智慧树基于订阅制卖内容，商业模式决定他们无法做本地化——这是小雅 × XClaw 的联合护城河。</div>
+      <div class="metric">对标：超星不支持 · 智慧树不支持 · 清华部分支持</div>
+    </div>
+    <div class="compete-card c2" style="border-top-color:#F59E0B">
+      <span class="tag" style="background:#FEF3C7;color:#92400E">联合卖点 2</span>
+      <h4 style="font-size:13px">🔗 慕课 × SPOC × AI 底座融合</h4>
+      <div class="desc" style="font-size:11px">全国第一个用 AI 底座支撑的慕课+SPOC 融合平台。超星/智慧树靠慕课内容赚钱，自我革命很难；小雅 × XClaw 可以打通慕课资源与本地教学，实现跨场景问答溯源、课程目标自动计算、教学画像一体化。</div>
+      <div class="metric">对标：超星 SPOC 弱 · 智慧树 SPOC 封锁 · 讯飞独家融合</div>
+    </div>
+    <div class="compete-card c3" style="border-top-color:#10B981">
+      <span class="tag" style="background:#D1FAE5;color:#065F46">联合卖点 3</span>
+      <h4 style="font-size:13px">💬 AI 助学答疑 × 学科大脑</h4>
+      <div class="desc" style="font-size:11px">本地化教学场景最高频的需求就是 AI 助学答疑。基于 Coral 学科大脑降低幻觉 + XClaw 创编学科智能体，老师可以真正把平台用起来。这是领导识别出的最核心突破点。</div>
+      <div class="metric">对标：清华严谨度不足 · 超星无学科大脑 · 智慧树无创编能力</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 08 产品交付物 ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num">08</span>
+    <h2>DELIVERABLES · 产品交付物清单</h2>
+    <span class="meta">可演示 · 可验收 · 可售卖</span>
+  </div>
+  <div class="deliv-grid">
+    <div class="deliv">
+      <div class="deliv-icon">📋</div>
+      <div class="deliv-title">XClaw 任务控制台</div>
+      <div class="deliv-desc">实时可视化 Skill 执行过程、知识库参与、模型调度，让 AI 工作"看得见"</div>
+    </div>
+    <div class="deliv">
+      <div class="deliv-icon">🧩</div>
+      <div class="deliv-title">教学 Skill 库管理</div>
+      <div class="deliv-desc">预置 20+ 教学 Skill，支持自定义 Skill 创建、编辑、分享、订阅</div>
+    </div>
+    <div class="deliv">
+      <div class="deliv-icon">🛍️</div>
+      <div class="deliv-title">智能体广场（X空间）</div>
+      <div class="deliv-desc">教师创建的 Agent 开放社区，支持跨校共享、评分、订阅、复用</div>
+    </div>
+    <div class="deliv">
+      <div class="deliv-icon">📊</div>
+      <div class="deliv-title">XClaw 调用看板</div>
+      <div class="deliv-desc">实时监控调用量、成本、延迟、效果，支撑运营决策与模型优化</div>
+    </div>
+    <div class="deliv">
+      <div class="deliv-icon">🛡️</div>
+      <div class="deliv-title">安全审计中心</div>
+      <div class="deliv-desc">三层安全防线可视化，幻觉拦截率、溯源覆盖率、操作审计日志</div>
+    </div>
+    <div class="deliv">
+      <div class="deliv-icon">🧠</div>
+      <div class="deliv-title">学科大脑集成面板</div>
+      <div class="deliv-desc">Coral 知识库与 XClaw 融合入口，一键调用学科知识驱动教学任务</div>
+    </div>
+    <div class="deliv">
+      <div class="deliv-icon">🎯</div>
+      <div class="deliv-title">教学场景模板库</div>
+      <div class="deliv-desc">八大教学场景的标准化解决方案，开箱即用，支持校本定制</div>
+    </div>
+    <div class="deliv">
+      <div class="deliv-icon">📱</div>
+      <div class="deliv-title">小雅平台集成 SDK</div>
+      <div class="deliv-desc">iframe 嵌入 · 侧抽屉 · 全屏三种模式，课程上下文自动感知</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 09 产品售卖与商业模式 ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num">09</span>
+    <h2>BUSINESS MODEL · 产品售卖策略</h2>
+    <span class="meta">双轮驱动 · 一主一辅</span>
+  </div>
+  <div class="two-col">
+    <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;padding:18px 20px">
+      <div style="font-size:10px;font-weight:700;color:#1E40AF;letter-spacing:1.5px;margin-bottom:6px">第一商业曲线 · 保命底线</div>
+      <h3 style="font-size:15px;font-weight:700;color:#0F172A;margin-bottom:8px">XClaw × 教学场景一体化</h3>
+      <p style="font-size:11px;color:#475569;line-height:1.8;margin-bottom:10px">基于教学自动化场景，XClaw 作为小雅/智课/学科大模型的"智能层"打包售卖。重点是让用户"眼前一亮"，用可演示的自动化流程打动学校。</p>
+      <div style="font-size:10px;color:#64748B;line-height:1.7">
+        <strong style="color:#1E40AF">目标客户：</strong> 双一流高校 + 省属本科<br>
+        <strong style="color:#1E40AF">售卖形态：</strong> Demo 视频 + 里程碑规划 + 产研计划<br>
+        <strong style="color:#1E40AF">客单价：</strong> 100-500 万（随教学平台打包）
+      </div>
+    </div>
+    <div style="background:#FCE7F3;border:1px solid #FBCFE8;border-radius:10px;padding:18px 20px">
+      <div style="font-size:10px;font-weight:700;color:#BE185D;letter-spacing:1.5px;margin-bottom:6px">第二商业曲线 · 增长空间</div>
+      <h3 style="font-size:15px;font-weight:700;color:#0F172A;margin-bottom:8px">Skill 定制 × 智能体广场</h3>
+      <p style="font-size:11px;color:#475569;line-height:1.8;margin-bottom:10px">第一曲线落地后，学校持续产生定制化 Skill 需求。XClaw 团队提供按需定制服务，同时开放智能体广场形成生态收入。</p>
+      <div style="font-size:10px;color:#64748B;line-height:1.7">
+        <strong style="color:#BE185D">目标客户：</strong> 已购 XClaw 的存量客户<br>
+        <strong style="color:#BE185D">售卖形态：</strong> 按 Skill 定制项目收费 + 广场分成<br>
+        <strong style="color:#BE185D">客单价：</strong> 20-100 万/年（增购）
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 10 产品形态定义（领导强调） ====== -->
+<div class="section">
+  <div class="sec-head">
+    <span class="sec-num">10</span>
+    <h2>PRODUCT FORM · 产品形态定义</h2>
+    <span class="meta">用户感知路径 · 显性 × 无感的平衡</span>
+  </div>
+
+  <div class="principle-box" style="background:linear-gradient(135deg,#FEE2E2,#FECACA);border-color:#FCA5A5">
+    <div class="ico">⚠️</div>
+    <div class="cont">
+      <h4 style="color:#991B1B">关键原则：交付物要显性，但不增加用户操作负担</h4>
+      <p style="color:#7F1D1D">"看得见 ≠ 让他操作"——用户只需看一眼就能感知到价值，真正的交互保持简洁无感。参照 360 安全卫士：一键优化（无感执行）+ 工具链琳琅满目（显性交付）。</p>
+    </div>
+  </div>
+
+  <div style="margin-top:16px">
+    <h4 style="font-size:13px;font-weight:700;color:#1E293B;margin-bottom:10px">📍 三类显性化呈现方式</h4>
+    <div class="module-grid cols-3">
+      <div class="module" style="border-left:3px solid #6366F1">
+        <div class="n" style="color:#6366F1">① 工具链执行可视化</div>
+        <div class="d">Skill 调度过程、知识库参与、模型选择、推理步骤，实时展示（类似 CC 的命令行输出）</div>
+      </div>
+      <div class="module" style="border-left:3px solid #8B5CF6">
+        <div class="n" style="color:#8B5CF6">② 多维看板呈现</div>
+        <div class="d">全校使用热力图、学科知识库贡献榜、Skill 调用 Top10、师生满意度等</div>
+      </div>
+      <div class="module" style="border-left:3px solid #EC4899">
+        <div class="n" style="color:#EC4899">③ 场景入口深度嵌入</div>
+        <div class="d">八大教学场景都有 XClaw 专属入口按钮，让用户感知到 AI 的参与</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 11 本周交付物 ====== -->
+<div class="section" style="background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FCD34D">
+  <div class="sec-head" style="border-color:#FCD34D">
+    <span class="sec-num" style="background:linear-gradient(135deg,#F59E0B,#EA580C)">THIS WEEK</span>
+    <h2>🔥 本周必须完成（4.9-4.16 培训前）</h2>
+    <span class="meta">下周二/三给全部咨询培训拉通</span>
+  </div>
+  <div class="deliv-grid">
+    <div class="deliv" style="border-left:4px solid #F59E0B">
+      <div class="deliv-icon">🗺️</div>
+      <div class="deliv-title">① 产品全景图</div>
+      <div class="deliv-desc">XClaw 完整产品结构"一图看懂"（本文档即可作为基础）</div>
+    </div>
+    <div class="deliv" style="border-left:4px solid #F59E0B">
+      <div class="deliv-icon">📍</div>
+      <div class="deliv-title">② 版本里程碑</div>
+      <div class="deliv-desc">V1→V2→V3→V4 每个版本的竞争力与产品特性（不纠结具体日期）</div>
+    </div>
+    <div class="deliv" style="border-left:4px solid #F59E0B">
+      <div class="deliv-icon">🎬</div>
+      <div class="deliv-title">③ Demo 视频（最重要）</div>
+      <div class="deliv-desc">XClaw 调用 Skill 完成教学任务的自动化演示，要让人"眼前一亮"</div>
+    </div>
+    <div class="deliv" style="border-left:4px solid #F59E0B">
+      <div class="deliv-icon">📅</div>
+      <div class="deliv-title">④ 产研计划</div>
+      <div class="deliv-desc">现有资源下的阶段性规划，支撑"左手 Demo 右手产研计划"的售卖</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <strong>XClaw · 产品架构与规划 V1</strong> · AI教学产品部 · 2026-04<br>
+  基于 4.9 领导会议要求生成 · 配合 Coral 知识库共同构成学科智慧教育生态
+</div>
+
+</div>
+</body>
+</html>

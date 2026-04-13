@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学科大模型 · 商务报价单</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --brand: #1e3a8a;
+  --brand-2: #3b82f6;
+  --brand-light: #dbeafe;
+  --accent: #d97706;
+  --accent-light: #fef3c7;
+  --emerald: #059669;
+  --rose: #dc2626;
+  --text: #1e293b;
+  --text-2: #475569;
+  --text-3: #94a3b8;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --bg: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-row: #f1f5f9;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans SC', -apple-system, "PingFang SC", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  padding: 0;
+  font-size: 14px;
+}
+
+/* ─── NAV BAR (XClaw 文档中心规范) ─── */
+.nav-bar {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+.nav-bar a { color: #6366F1; text-decoration: none; font-weight: 600; transition: opacity 0.15s; }
+.nav-bar a:hover { opacity: 0.7; }
+.nav-bar .sep { color: #CBD5E1; }
+.nav-bar .current { color: #64748B; }
+.nav-bar .level { font-size: 9px; font-weight: 700; color: #fff; padding: 2px 7px; border-radius: 4px; letter-spacing: 1px; }
+.nav-bar .l3 { background: #F59E0B; }
+
+/* ─── Toolbar (Print/Export) ─── */
+.toolbar {
+  position: sticky;
+  top: 50px;
+  z-index: 99;
+  background: rgba(248,250,252,0.95);
+  backdrop-filter: blur(8px);
+  padding: 12px 32px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.toolbar .info { flex: 1; }
+.toolbar button {
+  padding: 8px 18px;
+  border: 1px solid var(--brand-2);
+  background: var(--brand-2);
+  color: white;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.toolbar button:hover { background: var(--brand); }
+.toolbar button.secondary {
+  background: white;
+  color: var(--brand-2);
+}
+.toolbar button.secondary:hover { background: var(--brand-light); }
+
+/* ─── Main Document ─── */
+.document {
+  max-width: 880px;
+  margin: 32px auto;
+  background: var(--bg-card);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  border-radius: 4px;
+  padding: 56px 56px 40px;
+  position: relative;
+}
+
+/* Watermark */
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  font-size: 120px;
+  font-weight: 900;
+  color: rgba(30, 58, 138, 0.025);
+  letter-spacing: 8px;
+  pointer-events: none;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Header */
+.doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 24px;
+  border-bottom: 3px solid var(--brand);
+  margin-bottom: 32px;
+  position: relative;
+}
+.brand-block .brand-cn {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--brand);
+  letter-spacing: 1px;
+}
+.brand-block .brand-en {
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 2px;
+  margin-top: 2px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.brand-block .brand-dept {
+  font-size: 12px;
+  color: var(--text-2);
+  margin-top: 6px;
+}
+
+.doc-meta {
+  text-align: right;
+  font-size: 12px;
+  color: var(--text-2);
+}
+.doc-meta .doc-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.doc-meta .doc-no {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--brand);
+  font-weight: 600;
+}
+.doc-meta .doc-date {
+  margin-top: 4px;
+  color: var(--text-3);
+}
+
+/* Section */
+.section {
+  margin-bottom: 32px;
+  position: relative;
+}
+.sec-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--brand);
+  padding: 8px 14px;
+  background: var(--brand-light);
+  border-left: 4px solid var(--brand);
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+}
+
+/* Customer Info */
+.customer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.cust-cell {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cust-cell:nth-child(2n) { border-right: none; }
+.cust-cell:nth-last-child(-n+2) { border-bottom: none; }
+.cust-cell .label {
+  font-size: 12px;
+  color: var(--text-3);
+  font-weight: 600;
+  min-width: 80px;
+  letter-spacing: 1px;
+}
+.cust-cell .value {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 500;
+  border-bottom: 1px dashed var(--border-strong);
+  padding-bottom: 2px;
+  min-height: 22px;
+}
+.cust-cell .value[contenteditable]:focus {
+  outline: none;
+  border-bottom-color: var(--brand-2);
+  background: var(--brand-light);
+}
+
+/* Quote Table */
+.quote-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.quote-table thead th {
+  background: var(--brand);
+  color: white;
+  padding: 14px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+.quote-table thead th.right { text-align: right; }
+.quote-table thead th.center { text-align: center; }
+.quote-table tbody td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.quote-table tbody tr:nth-child(even) td { background: var(--bg-row); }
+.quote-table tbody tr.section-header td {
+  background: var(--brand-light) !important;
+  color: var(--brand);
+  font-weight: 700;
+  padding: 10px 12px;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+.quote-table .item-name {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.quote-table .item-desc {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+.quote-table .right { text-align: right; }
+.quote-table .center { text-align: center; }
+.quote-table .price {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: var(--text);
+}
+.quote-table .price-strike {
+  text-decoration: line-through;
+  color: var(--text-3);
+  font-size: 12px;
+  display: block;
+}
+.quote-table tfoot tr td {
+  border-bottom: none;
+  padding: 10px 12px;
+}
+.quote-table tfoot .subtotal td {
+  font-weight: 600;
+  border-top: 2px solid var(--border-strong);
+  padding-top: 14px;
+}
+.quote-table tfoot .discount td { color: var(--accent); }
+.quote-table tfoot .total td {
+  background: var(--brand);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 16px 12px;
+  border-radius: 4px;
+}
+.quote-table tfoot .total .price {
+  color: white;
+  font-size: 20px;
+}
+
+/* Version Selection */
+.version-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.version-option {
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  background: white;
+}
+.version-option:hover {
+  border-color: var(--brand-2);
+}
+.version-option.selected {
+  border-color: var(--brand);
+  background: var(--brand-light);
+}
+.version-option .v-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.version-option .v-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--brand);
+}
+.version-option .v-unit {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 2px;
+}
+.version-option .v-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-strong);
+  border-radius: 50%;
+}
+.version-option.selected .v-check {
+  background: var(--brand);
+  border-color: var(--brand);
+  position: relative;
+}
+.version-option.selected .v-check::after {
+  content: '✓';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* Total Box */
+.grand-total {
+  background: linear-gradient(135deg, var(--brand) 0%, #1e40af 100%);
+  color: white;
+  padding: 24px 28px;
+  border-radius: 8px;
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.grand-total .gt-label {
+  font-size: 13px;
+  letter-spacing: 1px;
+  opacity: 0.9;
+  margin-bottom: 4px;
+}
+.grand-total .gt-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 32px;
+  font-weight: 800;
+}
+.grand-total .gt-cn {
+  text-align: right;
+  font-size: 13px;
+}
+.grand-total .gt-cn .cn-label {
+  opacity: 0.85;
+  margin-bottom: 4px;
+}
+.grand-total .gt-cn .cn-value {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Terms */
+.terms {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.term-item {
+  background: var(--bg-row);
+  padding: 14px 16px;
+  border-radius: 6px;
+  border-left: 3px solid var(--brand-2);
+}
+.term-item .term-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--brand);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.term-item .term-value {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* Notes */
+.notes {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 6px;
+  padding: 16px 20px;
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.8;
+}
+.notes .notes-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+.notes ol {
+  padding-left: 18px;
+}
+.notes ol li {
+  margin-bottom: 4px;
+}
+
+/* Signature */
+.signature {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 2px dashed var(--border-strong);
+}
+.sig-block {
+  text-align: left;
+}
+.sig-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brand);
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+.sig-line {
+  border-bottom: 1px solid var(--text-3);
+  padding-bottom: 6px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: var(--text-3);
+  min-height: 32px;
+  display: flex;
+  align-items: flex-end;
+}
+.sig-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 12px;
+}
+.sig-stamp {
+  font-size: 11px;
+  color: var(--text-3);
+  font-style: italic;
+  margin-top: 8px;
+}
+
+/* Footer */
+.doc-footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-3);
+  text-align: center;
+  line-height: 1.8;
+}
+.doc-footer .contact {
+  margin-top: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Print styles */
+@media print {
+  body { background: white; padding: 0; }
+  .nav-bar, .toolbar { display: none !important; }
+  .document {
+    max-width: 100%;
+    margin: 0;
+    padding: 24px 32px;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  .watermark { display: block; }
+  .section { page-break-inside: avoid; }
+  .signature { page-break-inside: avoid; }
+  @page {
+    size: A4;
+    margin: 12mm 14mm;
+  }
+}
+
+@media (max-width: 768px) {
+  .document { padding: 32px 24px; margin: 16px; }
+  .doc-header { flex-direction: column; gap: 16px; }
+  .doc-meta { text-align: left; }
+  .customer-grid { grid-template-columns: 1fr; }
+  .cust-cell { border-right: none !important; }
+  .terms, .signature, .version-options { grid-template-columns: 1fr; }
+  .grand-total { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .grand-total .gt-cn { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<!-- 统一返回目录导航条 -->
+<div class="nav-bar">
+  <a href="index.html">← 返回文档中心</a>
+  <span class="sep">/</span>
+  <a href="学科大模型_销售方案_V1.html">学科大模型销售方案</a>
+  <span class="sep">/</span>
+  <span class="level l3">L3</span>
+  <span class="current">学科大模型 · 报价单模板 V1</span>
+</div>
+
+<!-- 工具栏 -->
+<div class="toolbar">
+  <div class="info">💡 提示：点击文档中的字段可直接编辑（客户名、日期、签字等），编辑完成后点"打印 / 导出 PDF"</div>
+  <button class="secondary" onclick="resetForm()">重置</button>
+  <button onclick="window.print()">🖨️ 打印 / 导出 PDF</button>
+</div>
+
+<!-- 报价单主体 -->
+<div class="document" id="quoteDoc">
+  <div class="watermark">CONFIDENTIAL</div>
+
+  <!-- HEADER -->
+  <header class="doc-header">
+    <div class="brand-block">
+      <div class="brand-cn">讯飞高教 AI 教学产品部</div>
+      <div class="brand-en">IFLYTEK · HIGHER EDUCATION · AI</div>
+      <div class="brand-dept">学科大模型方案中心</div>
+    </div>
+    <div class="doc-meta">
+      <div class="doc-title">商务报价单</div>
+      <div class="doc-no">No. <span contenteditable="true">XKDM-2026-0410-001</span></div>
+      <div class="doc-date">报价日期：<span contenteditable="true">2026 年 04 月 10 日</span></div>
+      <div class="doc-date">有效期至：<span contenteditable="true">2026 年 05 月 10 日</span></div>
+    </div>
+  </header>
+
+  <!-- 客户信息 -->
+  <section class="section">
+    <div class="sec-title">一 · 客户信息</div>
+    <div class="customer-grid">
+      <div class="cust-cell">
+        <span class="label">客户单位</span>
+        <span class="value" contenteditable="true">XX 大学</span>
+      </div>
+      <div class="cust-cell">
+        <span class="label">联系人</span>
+        <span class="value" contenteditable="true">XXX 处长</span>
+      </div>
+      <div class="cust-cell">
+        <span class="label">所在部门</span>
+        <span class="value" contenteditable="true">教务处 / 信息化处</span>
+      </div>
+      <div class="cust-cell">
+        <span class="label">联系电话</span>
+        <span class="value" contenteditable="true">138-XXXX-XXXX</span>
+      </div>
+      <div class="cust-cell">
+        <span class="label">通讯地址</span>
+        <span class="value" contenteditable="true">XX 省 XX 市 XX 区 XX 路</span>
+      </div>
+      <div class="cust-cell">
+        <span class="label">电子邮箱</span>
+        <span class="value" contenteditable="true">contact@xxx.edu.cn</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 版本选择 -->
+  <section class="section">
+    <div class="sec-title">二 · 选定方案</div>
+    <div class="version-options">
+      <div class="version-option" onclick="selectVersion('basic')" id="opt-basic">
+        <div class="v-check"></div>
+        <div class="v-name">入门版</div>
+        <div class="v-price">¥198 万</div>
+        <div class="v-unit">/ 年 · 单学科试点</div>
+      </div>
+      <div class="version-option selected" onclick="selectVersion('standard')" id="opt-standard">
+        <div class="v-check"></div>
+        <div class="v-name">标准版（主推）</div>
+        <div class="v-price">¥398 万</div>
+        <div class="v-unit">/ 年 · 多学科全场景</div>
+      </div>
+      <div class="version-option" onclick="selectVersion('flagship')" id="opt-flagship">
+        <div class="v-check"></div>
+        <div class="v-name">旗舰版</div>
+        <div class="v-price">¥598 万</div>
+        <div class="v-unit">/ 年 · 含微调模型</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 报价明细 -->
+  <section class="section">
+    <div class="sec-title">三 · 报价明细</div>
+    <table class="quote-table">
+      <thead>
+        <tr>
+          <th style="width:8%">序号</th>
+          <th style="width:42%">产品 / 服务</th>
+          <th class="center" style="width:10%">单位</th>
+          <th class="center" style="width:10%">数量</th>
+          <th class="right" style="width:15%">单价</th>
+          <th class="right" style="width:15%">小计</th>
+        </tr>
+      </thead>
+      <tbody id="quoteBody">
+        <!-- 三大组件 -->
+        <tr class="section-header"><td colspan="6">▌ 学科大模型 · 三大组件</td></tr>
+        <tr>
+          <td>1</td>
+          <td>
+            <div class="item-name">Coral 知识底座</div>
+            <div class="item-desc">学科共享知识库 · 100 万字结构化语料 · 含教学/学术/行业/校本四大子库 · 师生共建机制 · 学校永久资产</div>
+          </td>
+          <td class="center">套</td>
+          <td class="center">1</td>
+          <td class="right price">¥1,300,000</td>
+          <td class="right price">¥1,300,000</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>
+            <div class="item-name">XClaw 智能中枢</div>
+            <div class="item-desc">智能调度大脑 · Skill 编排 · 智能体调度 · 多模型路由 · 全链路溯源 · 学科 Prompt 工程 · 创编工具</div>
+          </td>
+          <td class="center">套</td>
+          <td class="center">1</td>
+          <td class="right price">¥1,080,000</td>
+          <td class="right price">¥1,080,000</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>
+            <div class="item-name">能力中心</div>
+            <div class="item-desc">原子 AI 能力 · 基础大模型（讯飞星火）· OCR 文字识别 · ASR 语音识别 · 视觉理解 · TTS 语音合成</div>
+          </td>
+          <td class="center">套</td>
+          <td class="center">1</td>
+          <td class="right price">¥600,000</td>
+          <td class="right price">¥600,000</td>
+        </tr>
+
+        <!-- 八大场景赋能 -->
+        <tr class="section-header"><td colspan="6">▌ 小雅平台 · 八大场景智能化</td></tr>
+        <tr>
+          <td>4</td>
+          <td>
+            <div class="item-name">教学全链路场景 Skills</div>
+            <div class="item-desc">建·备·教·学·测·评·督·管 八大场景 AI 升级 · 一句话生成教学设计 · 智能组卷 · 自动批改 · 学情画像</div>
+          </td>
+          <td class="center">套</td>
+          <td class="center">8</td>
+          <td class="right price">¥75,000</td>
+          <td class="right price">¥600,000</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>
+            <div class="item-name">标准智能体</div>
+            <div class="item-desc">助教 · 助学 · 助管 · 助国际交流 · 开箱即用 · 可定制扩展</div>
+          </td>
+          <td class="center">个</td>
+          <td class="center">4</td>
+          <td class="right price">¥50,000</td>
+          <td class="right price">¥200,000</td>
+        </tr>
+
+        <!-- 实施服务 -->
+        <tr class="section-header"><td colspan="6">▌ 实施与运营服务</td></tr>
+        <tr>
+          <td>6</td>
+          <td>
+            <div class="item-name">系统集成与部署</div>
+            <div class="item-desc">统一认证对接（CAS/OAuth/LDAP）· 教务系统数据对接 · 云端/本地部署 · 运维监控告警</div>
+          </td>
+          <td class="center">项</td>
+          <td class="center">1</td>
+          <td class="right price">¥250,000</td>
+          <td class="right price">¥250,000</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>
+            <div class="item-name">师生共建运营</div>
+            <div class="item-desc">共建运营方案 · 标准化模板 · 三级审核流程 · 激励机制 · 首批种子内容 30-50 条</div>
+          </td>
+          <td class="center">项</td>
+          <td class="center">1</td>
+          <td class="right price">¥150,000</td>
+          <td class="right price">¥150,000</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>
+            <div class="item-name">教师培训与陪跑</div>
+            <div class="item-desc">第一批 20 名种子教师培训 · 月度运营复盘 · 全年技术支持热线</div>
+          </td>
+          <td class="center">年</td>
+          <td class="center">1</td>
+          <td class="right price">¥100,000</td>
+          <td class="right price">¥100,000</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr class="subtotal">
+          <td colspan="5" class="right">小计（市场指导价）</td>
+          <td class="right price">¥4,280,000</td>
+        </tr>
+        <tr class="discount">
+          <td colspan="5" class="right">销售折扣（终端 8 折）</td>
+          <td class="right price">- ¥296,000</td>
+        </tr>
+      </tfoot>
+    </table>
+  </section>
+
+  <!-- 总价 -->
+  <div class="grand-total">
+    <div>
+      <div class="gt-label">本次报价合计金额（人民币）</div>
+      <div class="gt-value">¥3,984,000</div>
+    </div>
+    <div class="gt-cn">
+      <div class="cn-label">大写</div>
+      <div class="cn-value">叁佰玖拾捌万肆仟元整</div>
+    </div>
+  </div>
+
+  <!-- 商务条款 -->
+  <section class="section" style="margin-top:32px;">
+    <div class="sec-title">四 · 商务条款</div>
+    <div class="terms">
+      <div class="term-item">
+        <div class="term-label">付款方式</div>
+        <div class="term-value">合同签订后 7 个工作日内支付 30% 预付款；项目验收合格后支付 60% 进度款；试运行满 3 个月后支付 10% 尾款</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">交付周期</div>
+        <div class="term-value">合同签订之日起 90 天内完成全部交付。其中 30 天数据接入、60 天场景上线、90 天验收</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">服务期限</div>
+        <div class="term-value">自合同签订之日起 12 个月。续约可享 3 年长约 9 折优惠</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">质保承诺</div>
+        <div class="term-value">服务期内 7×24 故障响应；功能验收 + 效果验收 + 使用验收三类全部达标方付尾款</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">数据归属</div>
+        <div class="term-value">Coral 知识库及衍生数据归学校永久所有，停止合作时支持 7 种标准格式数据导出，零厂商锁定</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">报价有效期</div>
+        <div class="term-value">本报价单自签发之日起 30 个自然日内有效，逾期需重新核价</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 备注说明 -->
+  <section class="section">
+    <div class="sec-title">五 · 备注说明</div>
+    <div class="notes">
+      <div class="notes-title">📌 NOTES</div>
+      <ol>
+        <li>本报价为标准版（多学科全场景）的市场指导价，已应用终端销售 8 折优惠。如需渠道签约价（7 折），请联系区域销售经理。</li>
+        <li>如需升级旗舰版（含数据集工程 + 学科微调模型），补差价 ¥200 万 / 年即可。旗舰版可作为学校申报国家《高质量数据集建设》项目的支撑材料。</li>
+        <li>本报价不含以下定制服务：额外学科知识库深度建设（10-20 万 / 学科）、定制 Skill 开发（3-8 万 / 个）、全本地化部署（15-30 万 / 次），如需可单独报价。</li>
+        <li>所有价格均为人民币（CNY），含增值税专用发票（税率 6%）。</li>
+        <li>本报价单内容属于商业机密，未经书面授权不得对外披露。</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 签字盖章 -->
+  <section class="signature">
+    <div class="sig-block">
+      <div class="sig-label">客户方 · 确认签章</div>
+      <div class="sig-line"></div>
+      <div class="sig-meta">
+        <span>单位（公章）</span>
+        <span>授权代表</span>
+      </div>
+      <div class="sig-stamp">日期：______年______月______日</div>
+    </div>
+    <div class="sig-block">
+      <div class="sig-label">服务方 · 销售经理</div>
+      <div class="sig-line"><span contenteditable="true" style="color:var(--text);">________________</span></div>
+      <div class="sig-meta">
+        <span>讯飞高教 AI 教学产品部</span>
+        <span>销售经理（签字）</span>
+      </div>
+      <div class="sig-stamp">日期：<span contenteditable="true">2026 年 04 月 10 日</span></div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div class="doc-footer">
+    <div>本报价单由 讯飞高教 AI 教学产品部 出具 · 学科大模型方案中心</div>
+    <div class="contact">咨询热线：400-XXX-XXXX · 邮箱：highedu@iflytek.com · 地址：合肥市高新区望江西路</div>
+    <div style="margin-top:8px;">学科大模型 = Coral 知识底座 + XClaw 智能中枢 + 能力中心 → 赋能小雅平台八大场景</div>
+  </div>
+</div>
+
+<script>
+// 版本配置
+const versions = {
+  basic: {
+    name: '入门版',
+    price: 1980000,
+    discount: 0.8,
+    items: [
+      { section: '▌ 学科大模型 · 三大组件' },
+      { name: 'Coral 知识底座（单学科 30-50 万字）', desc: '单学科试点级语料库 · 教学+校本子库 · 师生共建', unit: '套', qty: 1, price: 700000 },
+      { name: 'XClaw 智能中枢（基础版）', desc: 'Skill 编排 · 智能体调度 · 多模型路由', unit: '套', qty: 1, price: 600000 },
+      { name: '能力中心', desc: '基础大模型 + OCR + ASR', unit: '套', qty: 1, price: 350000 },
+      { section: '▌ 小雅平台 · 核心场景智能化' },
+      { name: '核心场景 Skills', desc: '备 / 教 / 学 / 考 四大场景', unit: '套', qty: 4, price: 50000 },
+      { name: '标准智能体', desc: '助教 · 助学', unit: '个', qty: 2, price: 50000 },
+      { section: '▌ 实施与运营服务' },
+      { name: '系统集成与部署', desc: '统一认证对接 · 云端部署', unit: '项', qty: 1, price: 130000 },
+    ]
+  },
+  standard: {
+    name: '标准版',
+    price: 3980000,
+    discount: 0.8,
+    items: [
+      { section: '▌ 学科大模型 · 三大组件' },
+      { name: 'Coral 知识底座', desc: '学科共享知识库 · 100 万字结构化语料 · 含教学/学术/行业/校本四大子库 · 师生共建机制 · 学校永久资产', unit: '套', qty: 1, price: 1300000 },
+      { name: 'XClaw 智能中枢', desc: '智能调度大脑 · Skill 编排 · 智能体调度 · 多模型路由 · 全链路溯源 · 学科 Prompt 工程 · 创编工具', unit: '套', qty: 1, price: 1080000 },
+      { name: '能力中心', desc: '原子 AI 能力 · 基础大模型（讯飞星火）· OCR 文字识别 · ASR 语音识别 · 视觉理解 · TTS 语音合成', unit: '套', qty: 1, price: 600000 },
+      { section: '▌ 小雅平台 · 八大场景智能化' },
+      { name: '教学全链路场景 Skills', desc: '建·备·教·学·测·评·督·管 八大场景 AI 升级 · 一句话生成教学设计 · 智能组卷 · 自动批改 · 学情画像', unit: '套', qty: 8, price: 75000 },
+      { name: '标准智能体', desc: '助教 · 助学 · 助管 · 助国际交流 · 开箱即用 · 可定制扩展', unit: '个', qty: 4, price: 50000 },
+      { section: '▌ 实施与运营服务' },
+      { name: '系统集成与部署', desc: '统一认证对接（CAS/OAuth/LDAP）· 教务系统数据对接 · 云端/本地部署 · 运维监控告警', unit: '项', qty: 1, price: 250000 },
+      { name: '师生共建运营', desc: '共建运营方案 · 标准化模板 · 三级审核流程 · 激励机制 · 首批种子内容 30-50 条', unit: '项', qty: 1, price: 150000 },
+      { name: '教师培训与陪跑', desc: '第一批 20 名种子教师培训 · 月度运营复盘 · 全年技术支持热线', unit: '年', qty: 1, price: 100000 },
+    ]
+  },
+  flagship: {
+    name: '旗舰版',
+    price: 5980000,
+    discount: 0.8,
+    items: [
+      { section: '▌ 学科大模型 · 三大组件（升级版）' },
+      { name: 'Coral 知识底座（增强版）', desc: '多学科共享知识库 · 含数据集导出能力 · 数据 Datasheet · 7 种标准格式', unit: '套', qty: 1, price: 1500000 },
+      { name: 'XClaw 智能中枢（完整版）', desc: '全部中枢能力 + 数据集生成引擎 + 专家审核台', unit: '套', qty: 1, price: 1280000 },
+      { name: '能力中心（含微调模型）', desc: '基础大模型 + 学科微调模型（7B/14B）+ OCR/ASR/视觉/TTS 全套原子能力', unit: '套', qty: 1, price: 900000 },
+      { section: '▌ 小雅平台 · 八大场景智能化' },
+      { name: '教学全链路场景 Skills（增强版）', desc: '八大场景 + 学科评估体系 + 学生能力画像 + 雷达图可视化', unit: '套', qty: 8, price: 90000 },
+      { name: '标准智能体 + 定制智能体', desc: '4 个标准智能体 + 2 个学科定制智能体', unit: '个', qty: 6, price: 60000 },
+      { section: '▌ 数据集与模型工程' },
+      { name: '数据集工程', desc: '术语规范 + 金标样本库 + 质量监控仪表盘 + 首批 ≥3000 条 SFT + 评测基准 300 题', unit: '项', qty: 1, price: 980000 },
+      { name: '模型训练工程', desc: '学科微调模型训练 + 评测报告 + 部署 + 持续优化闭环', unit: '项', qty: 1, price: 620000 },
+      { section: '▌ 实施与运营服务' },
+      { name: '本地化部署', desc: '私有云全栈部署 + GPU 算力适配 + 等保三级合规', unit: '项', qty: 1, price: 350000 },
+      { name: '师生共建运营 + 培训陪跑', desc: '全年深度运营 + 50 名种子教师培训 + 季度复盘', unit: '年', qty: 1, price: 250000 },
+    ]
+  }
+};
+
+let currentVersion = 'standard';
+
+function selectVersion(key) {
+  currentVersion = key;
+  // 切换样式
+  document.querySelectorAll('.version-option').forEach(el => el.classList.remove('selected'));
+  document.getElementById('opt-' + key).classList.add('selected');
+  // 重新渲染表格
+  renderQuoteTable();
+}
+
+function renderQuoteTable() {
+  const v = versions[currentVersion];
+  const tbody = document.getElementById('quoteBody');
+  tbody.innerHTML = '';
+
+  let idx = 0;
+  let subtotal = 0;
+  v.items.forEach(item => {
+    if (item.section) {
+      const tr = document.createElement('tr');
+      tr.className = 'section-header';
+      tr.innerHTML = `<td colspan="6">${item.section}</td>`;
+      tbody.appendChild(tr);
+    } else {
+      idx++;
+      const lineTotal = item.qty * item.price;
+      subtotal += lineTotal;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${idx}</td>
+        <td>
+          <div class="item-name">${item.name}</div>
+          <div class="item-desc">${item.desc}</div>
+        </td>
+        <td class="center">${item.unit}</td>
+        <td class="center">${item.qty}</td>
+        <td class="right price">¥${item.price.toLocaleString()}</td>
+        <td class="right price">¥${lineTotal.toLocaleString()}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+  });
+
+  // 更新 footer
+  const tfoot = document.querySelector('.quote-table tfoot');
+  const discount = subtotal - v.price;
+  tfoot.innerHTML = `
+    <tr class="subtotal">
+      <td colspan="5" class="right">小计（市场指导价）</td>
+      <td class="right price">¥${subtotal.toLocaleString()}</td>
+    </tr>
+    <tr class="discount">
+      <td colspan="5" class="right">销售折扣（终端 8 折）</td>
+      <td class="right price">- ¥${discount.toLocaleString()}</td>
+    </tr>
+  `;
+
+  // 更新总价
+  document.querySelector('.gt-value').textContent = '¥' + v.price.toLocaleString();
+  document.querySelector('.cn-value').textContent = numberToChinese(v.price);
+}
+
+// 数字转中文大写
+function numberToChinese(num) {
+  const cnNums = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
+  const cnUnits = ['', '拾', '佰', '仟'];
+  const bigUnits = ['', '万', '亿'];
+  if (num === 0) return '零元整';
+
+  let result = '';
+  const wan = Math.floor(num / 10000);
+  const yu = num % 10000;
+
+  function convertSection(n) {
+    let s = '';
+    let zero = false;
+    let pos = 0;
+    while (n > 0) {
+      const d = n % 10;
+      if (d === 0) {
+        if (!zero && s) zero = true;
+      } else {
+        if (zero) { s = '零' + s; zero = false; }
+        s = cnNums[d] + cnUnits[pos] + s;
+      }
+      n = Math.floor(n / 10);
+      pos++;
+    }
+    return s;
+  }
+
+  if (wan > 0) result += convertSection(wan) + '万';
+  if (yu > 0) {
+    if (yu < 1000 && wan > 0) result += '零';
+    result += convertSection(yu);
+  }
+  return result + '元整';
+}
+
+function resetForm() {
+  if (confirm('确定要重置所有自定义内容吗？')) {
+    location.reload();
+  }
+}
+
+// 初始化
+renderQuoteTable();
+</script>
+
+</body>
+</html>

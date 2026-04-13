@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学科大模型 · 年度产品路标 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;900&display=swap');
+
+:root {
+  --bg: #08090d;
+  --bg-2: #0e1018;
+  --bg-3: #151821;
+  --bg-card: #181c28;
+  --bg-elevated: #1e2335;
+  --xclaw: #6366f1;
+  --xclaw-bg: rgba(99,102,241,0.08);
+  --xclaw-border: rgba(99,102,241,0.25);
+  --coral: #ec4899;
+  --coral-bg: rgba(236,72,153,0.08);
+  --coral-border: rgba(236,72,153,0.25);
+  --cap: #f59e0b;
+  --cap-bg: rgba(245,158,11,0.08);
+  --cap-border: rgba(245,158,11,0.25);
+  --emerald: #10b981;
+  --rose: #f43f5e;
+  --cyan: #06b6d4;
+  --text: #e8ecf4;
+  --text-2: #8b95a8;
+  --text-3: #555f73;
+  --border: rgba(136,148,172,0.08);
+  --border-2: rgba(136,148,172,0.15);
+  --q2: #3b82f6;
+  --q3: #8b5cf6;
+  --q4: #f59e0b;
+  --q1n: #10b981;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family: 'Noto Sans SC', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* NAV */
+.nav-bar {
+  background: rgba(8,9,13,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 32px;
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px;
+}
+.nav-bar a { color: var(--xclaw); text-decoration: none; font-weight: 600; }
+.nav-bar a:hover { opacity: 0.7; }
+.nav-bar .sep { color: var(--text-3); }
+.nav-bar .current { color: var(--text-2); }
+.nav-bar .level { font-size: 9px; font-weight: 700; color: #fff; padding: 2px 7px; border-radius: 4px; letter-spacing: 1px; background: #6366F1; }
+
+.container { max-width: 1600px; margin: 0 auto; padding: 0 40px; }
+
+/* HEADER */
+.header {
+  padding: 56px 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--border-2);
+  margin-bottom: 48px;
+}
+.header-left h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+.header-left h1 .yr {
+  font-family: 'DM Mono', monospace;
+  font-weight: 500;
+  font-size: 38px;
+  color: var(--text-2);
+  margin-left: 8px;
+}
+.header-left .sub {
+  font-size: 15px;
+  color: var(--text-2);
+  font-weight: 300;
+}
+.header-right {
+  display: flex; gap: 24px; align-items: center;
+}
+.legend {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: var(--text-2);
+}
+.legend .dot {
+  width: 10px; height: 10px; border-radius: 3px;
+}
+.legend.xclaw .dot { background: var(--xclaw); }
+.legend.coral .dot { background: var(--coral); }
+.legend.cap .dot { background: var(--cap); }
+
+/* STRATEGIC CONTEXT */
+.strategy-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--border-2);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+.strategy-phase {
+  background: var(--bg-card);
+  padding: 24px 28px;
+  position: relative;
+}
+.strategy-phase::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.strategy-phase:nth-child(1)::before { background: var(--q2); }
+.strategy-phase:nth-child(2)::before { background: var(--q3); }
+.strategy-phase:nth-child(3)::before { background: var(--q4); }
+.strategy-phase:nth-child(4)::before { background: var(--q1n); }
+
+.sp-quarter {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.strategy-phase:nth-child(1) .sp-quarter { color: var(--q2); }
+.strategy-phase:nth-child(2) .sp-quarter { color: var(--q3); }
+.strategy-phase:nth-child(3) .sp-quarter { color: var(--q4); }
+.strategy-phase:nth-child(4) .sp-quarter { color: var(--q1n); }
+
+.sp-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.sp-goal {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+.sp-resource {
+  display: inline-block;
+  margin-top: 10px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-2);
+  color: var(--text-3);
+}
+
+/* TIMELINE GRID */
+.timeline-section {
+  margin-bottom: 60px;
+}
+.timeline-header {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 0;
+  margin-bottom: 0;
+}
+.timeline-label-col {
+  padding: 0 16px 12px 0;
+}
+.month-ruler {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 0;
+  border-bottom: 1px solid var(--border-2);
+  padding-bottom: 12px;
+}
+.month-cell {
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 1px;
+  position: relative;
+}
+.month-cell .month-name { font-weight: 500; }
+.month-cell .month-q {
+  font-size: 9px;
+  letter-spacing: 2px;
+  margin-top: 2px;
+}
+.month-cell[data-q="Q2"] .month-q { color: var(--q2); }
+.month-cell[data-q="Q3"] .month-q { color: var(--q3); }
+.month-cell[data-q="Q4"] .month-q { color: var(--q4); }
+.month-cell[data-q="Q1'27"] .month-q { color: var(--q1n); }
+
+/* Today marker */
+.today-line {
+  position: absolute;
+  top: -8px;
+  width: 2px;
+  height: calc(100% + 8px);
+  background: var(--rose);
+  z-index: 10;
+}
+.today-dot {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--rose);
+  background: var(--bg);
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--rose);
+  white-space: nowrap;
+}
+
+/* PRODUCT LANES */
+.lane-group {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 0;
+  margin-bottom: 4px;
+}
+.lane-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 16px 16px 0;
+  border-right: 2px solid var(--border-2);
+}
+.lane-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.lane-icon.xclaw { background: var(--xclaw-bg); border: 1px solid var(--xclaw-border); }
+.lane-icon.coral { background: var(--coral-bg); border: 1px solid var(--coral-border); }
+.lane-icon.cap { background: var(--cap-bg); border: 1px solid var(--cap-border); }
+
+.lane-info .lane-name {
+  font-size: 14px;
+  font-weight: 700;
+}
+.lane-info .lane-sub {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.lane-track {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 0;
+  padding: 12px 0;
+  min-height: 70px;
+}
+.lane-track::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0; right: 0;
+  height: 1px;
+  background: var(--border);
+}
+
+/* Milestone bars */
+.ms-bar {
+  position: relative;
+  z-index: 2;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  margin: 2px 3px;
+  min-height: 48px;
+  overflow: hidden;
+}
+.ms-bar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  z-index: 20;
+}
+.ms-bar .ms-name {
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ms-bar .ms-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+.ms-bar .ms-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  opacity: 0.8;
+  margin-top: 3px;
+}
+
+/* Color variants */
+.ms-bar.xclaw {
+  background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(99,102,241,0.08));
+  border: 1px solid var(--xclaw-border);
+  color: #c4b5fd;
+}
+.ms-bar.xclaw:hover { border-color: var(--xclaw); background: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(99,102,241,0.12)); }
+
+.ms-bar.coral {
+  background: linear-gradient(135deg, rgba(236,72,153,0.2), rgba(236,72,153,0.08));
+  border: 1px solid var(--coral-border);
+  color: #f9a8d4;
+}
+.ms-bar.coral:hover { border-color: var(--coral); background: linear-gradient(135deg, rgba(236,72,153,0.3), rgba(236,72,153,0.12)); }
+
+.ms-bar.cap {
+  background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(245,158,11,0.08));
+  border: 1px solid var(--cap-border);
+  color: #fcd34d;
+}
+.ms-bar.cap:hover { border-color: var(--cap); background: linear-gradient(135deg, rgba(245,158,11,0.3), rgba(245,158,11,0.12)); }
+
+.ms-bar.planned {
+  border-style: dashed;
+  opacity: 0.7;
+}
+.ms-bar.planned:hover { opacity: 1; }
+
+/* KEY EVENT MARKERS */
+.event-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  margin-bottom: 4px;
+}
+.event-label {
+  padding: 8px 16px 8px 0;
+  border-right: 2px solid var(--border-2);
+  display: flex;
+  align-items: center;
+}
+.event-label span {
+  font-size: 11px;
+  color: var(--text-3);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+.event-track {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  position: relative;
+  padding: 6px 0;
+}
+.event-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.event-diamond {
+  width: 100%;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--rose);
+  padding: 4px 6px;
+  background: rgba(244,63,94,0.08);
+  border: 1px solid rgba(244,63,94,0.25);
+  border-radius: 6px;
+  margin: 0 3px;
+  line-height: 1.3;
+}
+.event-diamond.biz {
+  color: var(--emerald);
+  background: rgba(16,185,129,0.08);
+  border-color: rgba(16,185,129,0.25);
+}
+
+/* DETAIL PANEL */
+.detail-section {
+  margin-top: 60px;
+  padding-top: 48px;
+  border-top: 1px solid var(--border-2);
+}
+.detail-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+.detail-sub {
+  font-size: 14px;
+  color: var(--text-2);
+  margin-bottom: 36px;
+}
+
+.quarter-section {
+  margin-bottom: 48px;
+}
+.quarter-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.quarter-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 8px;
+  letter-spacing: 2px;
+}
+.quarter-badge.q2 { background: rgba(59,130,246,0.12); color: var(--q2); border: 1px solid rgba(59,130,246,0.3); }
+.quarter-badge.q3 { background: rgba(139,92,246,0.12); color: var(--q3); border: 1px solid rgba(139,92,246,0.3); }
+.quarter-badge.q4 { background: rgba(245,158,11,0.12); color: var(--q4); border: 1px solid rgba(245,158,11,0.3); }
+.quarter-badge.q1n { background: rgba(16,185,129,0.12); color: var(--q1n); border: 1px solid rgba(16,185,129,0.3); }
+
+.quarter-name {
+  font-size: 20px;
+  font-weight: 700;
+}
+.quarter-dates {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--text-3);
+  margin-left: auto;
+}
+
+.ms-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 16px;
+}
+.ms-detail-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  border-left: 4px solid;
+  transition: all 0.3s;
+}
+.ms-detail-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+}
+.ms-detail-card.xclaw { border-left-color: var(--xclaw); }
+.ms-detail-card.coral { border-left-color: var(--coral); }
+.ms-detail-card.cap { border-left-color: var(--cap); }
+
+.msd-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.msd-product {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+.msd-product.xclaw { background: var(--xclaw-bg); color: var(--xclaw); border: 1px solid var(--xclaw-border); }
+.msd-product.coral { background: var(--coral-bg); color: var(--coral); border: 1px solid var(--coral-border); }
+.msd-product.cap { background: var(--cap-bg); color: var(--cap); border: 1px solid var(--cap-border); }
+
+.msd-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+}
+.msd-quality {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.5px;
+}
+.msd-quality.alpha { background: rgba(244,63,94,0.1); color: var(--rose); }
+.msd-quality.beta { background: rgba(245,158,11,0.1); color: var(--cap); }
+.msd-quality.rc { background: rgba(139,92,246,0.1); color: var(--q3); }
+.msd-quality.ga { background: rgba(16,185,129,0.1); color: var(--emerald); }
+
+.msd-name {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.msd-goal {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.msd-scope {
+  list-style: none;
+  font-size: 12px;
+  color: var(--text-2);
+}
+.msd-scope li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+.msd-scope li:last-child { border-bottom: none; }
+.msd-scope li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: var(--text-3);
+  font-weight: 700;
+}
+.msd-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+.msd-metric {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-2);
+  color: var(--text-3);
+}
+.msd-workload {
+  margin-top: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+/* BARRIER + HONEST LIMITS */
+.insight-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 60px;
+}
+.insight-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.insight-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.insight-card.barrier::before { background: linear-gradient(90deg, var(--xclaw), var(--coral)); }
+.insight-card.limits::before { background: linear-gradient(90deg, var(--rose), var(--cap)); }
+
+.insight-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.insight-list {
+  list-style: none;
+}
+.insight-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-2);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.insight-list li:last-child { border-bottom: none; }
+.insight-list .i-icon {
+  flex-shrink: 0;
+  font-size: 14px;
+  margin-top: 2px;
+}
+.insight-list .i-star {
+  margin-left: auto;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--cap);
+  flex-shrink: 0;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 48px 0 32px;
+  border-top: 1px solid var(--border);
+  margin-top: 60px;
+}
+.footer p { font-size: 12px; color: var(--text-3); }
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .strategy-bar { grid-template-columns: repeat(2, 1fr); }
+  .insight-row { grid-template-columns: 1fr; }
+  .month-ruler { font-size: 9px; }
+}
+@media (max-width: 768px) {
+  .container { padding: 0 16px; }
+  .header { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .strategy-bar { grid-template-columns: 1fr; }
+  .lane-group, .timeline-header, .event-row { grid-template-columns: 120px 1fr; }
+}
+@media print {
+  .nav-bar { display: none; }
+  body { background: white; color: #1e293b; }
+  .ms-bar, .ms-detail-card, .strategy-phase, .insight-card { border: 1px solid #cbd5e1; }
+}
+</style>
+</head>
+<body>
+
+<div class="nav-bar">
+  <a href="index.html">← 返回文档中心</a>
+  <span class="sep">/</span>
+  <span class="level">L1</span>
+  <span class="current">学科大模型 · 年度产品路标 2026</span>
+</div>
+
+<div class="container">
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <h1>年度产品路标<span class="yr">2026</span></h1>
+    <div class="sub">学科大模型 = XClaw 智能中枢 + Coral 知识底座 + 能力中心 → 赋能小雅八大场景</div>
+  </div>
+  <div class="header-right">
+    <div class="legend xclaw"><span class="dot"></span>XClaw 智能中枢</div>
+    <div class="legend coral"><span class="dot"></span>Coral 知识底座</div>
+    <div class="legend cap"><span class="dot"></span>能力中心</div>
+  </div>
+</header>
+
+<!-- STRATEGIC CONTEXT -->
+<div class="strategy-bar">
+  <div class="strategy-phase">
+    <div class="sp-quarter">Q2 · APR — JUN</div>
+    <div class="sp-name">最小可签单</div>
+    <div class="sp-goal">RAG 核心跑通 + 两个杀手 Skill（自主学习 + 出题）+ 高博会首秀</div>
+    <div class="sp-resource">60% 资源 · 9 个里程碑</div>
+  </div>
+  <div class="strategy-phase">
+    <div class="sp-quarter">Q3 · JUL — SEP</div>
+    <div class="sp-name">首单交付 + 续费锁定</div>
+    <div class="sp-goal">首批客户 POC → 正式交付。备课/批改/学情 Skill 上线。Bad Case 闭环转起来</div>
+    <div class="sp-resource">30% 资源 · 5 个里程碑</div>
+  </div>
+  <div class="strategy-phase">
+    <div class="sp-quarter">Q4 · OCT — DEC</div>
+    <div class="sp-name">飞轮验证 + 学科复制</div>
+    <div class="sp-goal">师生共建数据回流可观测。第 2-3 个学科 SOP 复制。年费续约率 ≥ 80%</div>
+    <div class="sp-resource">10% 新增 · 4 个里程碑</div>
+  </div>
+</div>
+
+<!-- GANTT TIMELINE -->
+<section class="timeline-section">
+
+  <!-- Month ruler -->
+  <div class="timeline-header">
+    <div class="timeline-label-col"></div>
+    <div class="month-ruler">
+      <div class="month-cell" data-q="Q2"><div class="month-name">4月</div><div class="month-q">Q2</div></div>
+      <div class="month-cell" data-q="Q2"><div class="month-name">5月</div><div class="month-q">Q2</div></div>
+      <div class="month-cell" data-q="Q2"><div class="month-name">6月</div><div class="month-q">Q2</div></div>
+      <div class="month-cell" data-q="Q3"><div class="month-name">7月</div><div class="month-q">Q3</div></div>
+      <div class="month-cell" data-q="Q3"><div class="month-name">8月</div><div class="month-q">Q3</div></div>
+      <div class="month-cell" data-q="Q3"><div class="month-name">9月</div><div class="month-q">Q3</div></div>
+      <div class="month-cell" data-q="Q4"><div class="month-name">10月</div><div class="month-q">Q4</div></div>
+      <div class="month-cell" data-q="Q4"><div class="month-name">11月</div><div class="month-q">Q4</div></div>
+      <div class="month-cell" data-q="Q4"><div class="month-name">12月</div><div class="month-q">Q4</div></div>
+    </div>
+  </div>
+
+  <!-- XClaw Lane -->
+  <div class="lane-group">
+    <div class="lane-label">
+      <div class="lane-icon xclaw">🧠</div>
+      <div class="lane-info">
+        <div class="lane-name">XClaw</div>
+        <div class="lane-sub">智能中枢</div>
+      </div>
+    </div>
+    <div class="lane-track">
+      <div class="ms-bar xclaw" style="grid-column: 1 / 2;">
+        <div class="ms-name">M1 基础对话</div>
+        <div class="ms-date">→ 4.16</div>
+        <div class="ms-tag">ALPHA</div>
+      </div>
+      <div class="ms-bar xclaw" style="grid-column: 2 / 3;">
+        <div class="ms-name">M2 自主学习Skill</div>
+        <div class="ms-date">→ 5.10</div>
+        <div class="ms-tag">BETA</div>
+      </div>
+      <div class="ms-bar xclaw" style="grid-column: 3 / 4;">
+        <div class="ms-name">M3 Skill×10+训练</div>
+        <div class="ms-date">→ 6.9</div>
+        <div class="ms-tag">BETA</div>
+      </div>
+      <div class="ms-bar xclaw" style="grid-column: 3 / 4; margin-top: 56px;">
+        <div class="ms-name">M4 学科训练×32</div>
+        <div class="ms-date">→ 6.25</div>
+        <div class="ms-tag">RC</div>
+      </div>
+      <div class="ms-bar xclaw planned" style="grid-column: 4 / 6;">
+        <div class="ms-name">M5 备课+出题Skill</div>
+        <div class="ms-date">Q3</div>
+        <div class="ms-tag">GA</div>
+      </div>
+      <div class="ms-bar xclaw planned" style="grid-column: 6 / 7;">
+        <div class="ms-name">M6 批改+学情</div>
+        <div class="ms-date">→ 9.30</div>
+        <div class="ms-tag">GA</div>
+      </div>
+      <div class="ms-bar xclaw planned" style="grid-column: 7 / 9;">
+        <div class="ms-name">M7 教师创编平台</div>
+        <div class="ms-date">Q4</div>
+        <div class="ms-tag">BETA</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Coral Lane -->
+  <div class="lane-group">
+    <div class="lane-label">
+      <div class="lane-icon coral">📚</div>
+      <div class="lane-info">
+        <div class="lane-name">Coral</div>
+        <div class="lane-sub">知识底座</div>
+      </div>
+    </div>
+    <div class="lane-track">
+      <div class="ms-bar coral" style="grid-column: 1 / 2;">
+        <div class="ms-name">M1 资源导入+笔记</div>
+        <div class="ms-date">→ 4.28</div>
+        <div class="ms-tag">GA</div>
+      </div>
+      <div class="ms-bar coral" style="grid-column: 2 / 3;">
+        <div class="ms-name">M2 问答对+跨校</div>
+        <div class="ms-date">→ 5.28</div>
+        <div class="ms-tag">GA</div>
+      </div>
+      <div class="ms-bar coral" style="grid-column: 3 / 4;">
+        <div class="ms-name">M3 RAG 升级 ≥90%</div>
+        <div class="ms-date">→ 6.30</div>
+        <div class="ms-tag">GA</div>
+      </div>
+      <div class="ms-bar coral planned" style="grid-column: 4 / 6;">
+        <div class="ms-name">M4 术语表+质量评测</div>
+        <div class="ms-date">Q3</div>
+        <div class="ms-tag">GA</div>
+      </div>
+      <div class="ms-bar coral planned" style="grid-column: 6 / 7;">
+        <div class="ms-name">M5 师生共建运营</div>
+        <div class="ms-date">→ 9.30</div>
+        <div class="ms-tag">GA</div>
+      </div>
+      <div class="ms-bar coral planned" style="grid-column: 7 / 9;">
+        <div class="ms-name">M6 Bad Case闭环</div>
+        <div class="ms-date">Q4</div>
+        <div class="ms-tag">GA</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 能力中心 Lane -->
+  <div class="lane-group">
+    <div class="lane-label">
+      <div class="lane-icon cap">💪</div>
+      <div class="lane-info">
+        <div class="lane-name">能力中心</div>
+        <div class="lane-sub">原子能力</div>
+      </div>
+    </div>
+    <div class="lane-track">
+      <div class="ms-bar cap" style="grid-column: 2 / 3;">
+        <div class="ms-name">M1 高博会展示</div>
+        <div class="ms-date">→ 5.16</div>
+        <div class="ms-tag">BETA</div>
+      </div>
+      <div class="ms-bar cap" style="grid-column: 3 / 4;">
+        <div class="ms-name">M2 4通用+6学科+23能力</div>
+        <div class="ms-date">→ 6.30</div>
+        <div class="ms-tag">BETA</div>
+      </div>
+      <div class="ms-bar cap planned" style="grid-column: 5 / 7;">
+        <div class="ms-name">M3 多模型路由上线</div>
+        <div class="ms-date">Q3</div>
+        <div class="ms-tag">GA</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Events -->
+  <div class="event-row">
+    <div class="event-label"><span>关键节点</span></div>
+    <div class="event-track">
+      <div class="event-marker" style="grid-column: 1;">
+        <div class="event-diamond">4.16 内部演示</div>
+      </div>
+      <div class="event-marker" style="grid-column: 2;">
+        <div class="event-diamond">5.22 高博会</div>
+      </div>
+      <div class="event-marker" style="grid-column: 4;">
+        <div class="event-diamond biz">首单 POC</div>
+      </div>
+      <div class="event-marker" style="grid-column: 6;">
+        <div class="event-diamond biz">首单交付验收</div>
+      </div>
+      <div class="event-marker" style="grid-column: 8;">
+        <div class="event-diamond biz">第2学科复制</div>
+      </div>
+      <div class="event-marker" style="grid-column: 9;">
+        <div class="event-diamond">年度续费窗口</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- DETAIL CARDS -->
+<section class="detail-section">
+  <div class="detail-title">里程碑详情</div>
+  <div class="detail-sub">Q2 为已确认计划（来源：研发推进表），Q3-Q4 及 Q1'27 为战略推演（来源：Harness 战略框架 + 壁垒分析 + 场景评审）</div>
+
+  <!-- Q2 -->
+  <div class="quarter-section">
+    <div class="quarter-header">
+      <span class="quarter-badge q2">Q2</span>
+      <span class="quarter-name">最小可签单</span>
+      <span class="quarter-dates">2026.04 — 2026.06</span>
+    </div>
+    <div class="ms-detail-grid">
+      <div class="ms-detail-card xclaw">
+        <div class="msd-header">
+          <span class="msd-product xclaw">XCLAW</span>
+          <span class="msd-date">→ 04.16</span>
+          <span class="msd-quality alpha">Alpha</span>
+        </div>
+        <div class="msd-name">M1 · 校方可看到"AI 能力中心"的产品实体</div>
+        <div class="msd-goal"><strong>用户场景</strong>：校方领导/教务处首次看到 XClaw 产品界面，形成"学科大模型有实体、可体验"的第一印象。<br><strong>产品特性 · 成果驱动</strong>：可截图、可录屏、可汇报。</div>
+        <ul class="msd-scope">
+          <li>【场景：建】学科大模型落地页 → 产品形态从"概念"变为"可触摸"</li>
+          <li>【场景：学】1 个自动化场景演示 → 证明 AI 能在教学中"做事"</li>
+          <li>【底座】对话页流式输出 + Skill 中心占位</li>
+        </ul>
+        <div class="msd-workload">研发 44.5 人天</div>
+      </div>
+
+      <div class="ms-detail-card xclaw">
+        <div class="msd-header">
+          <span class="msd-product xclaw">XCLAW</span>
+          <span class="msd-date">→ 05.10</span>
+          <span class="msd-quality beta">Beta</span>
+        </div>
+        <div class="msd-name">M2 · 学生自主学习场景完整闭环</div>
+        <div class="msd-goal"><strong>用户场景</strong>：学生上传课件或提问 → AI 自动生成交互式学习材料（PPT+音频+测试题）→ 学完即时评价与建议。<br><strong>产品特性 · 教不是答</strong>：AI 不直接给结论，而是引导学生通过交互式材料自己理解。支撑 5.22 高博会演示。</div>
+        <ul class="msd-scope">
+          <li>【场景：学】自主学习 Skill 全闭环（输入→生成→学习→评价）</li>
+          <li>【场景：教】小雅平台嵌入 → 教师课堂中直接调用</li>
+          <li>【底座】教学平台登录对接 + 文件解析 + 意图识别</li>
+        </ul>
+        <div class="msd-metrics">
+          <span class="msd-metric">复用 OpenMAIC</span>
+          <span class="msd-metric">只读不写原则</span>
+        </div>
+        <div class="msd-workload">研发 47 人天</div>
+      </div>
+
+      <div class="ms-detail-card xclaw">
+        <div class="msd-header">
+          <span class="msd-product xclaw">XCLAW</span>
+          <span class="msd-date">→ 06.09</span>
+          <span class="msd-quality beta">Beta</span>
+        </div>
+        <div class="msd-name">M3 · 教师获得 AI 助教，学生获得能力训练</div>
+        <div class="msd-goal"><strong>用户场景</strong>：教师打开 XClaw 获得 10 个助教 Skill 提效备课/授课；学生获得 10 个通用能力训练 Skill 自主提升批判性思维/信息素养等核心素养。<br><strong>产品特性 · 三角色博弈</strong>：教师和学生各自看到不同的 Skill 视角。<strong>知识确权</strong>：XClaw 与 Coral 联动，AI 回答基于本校知识库。</div>
+        <ul class="msd-scope">
+          <li>【场景：教/备】10 个助教/助学/助研 Skill → 教师日常提效</li>
+          <li>【场景：学】10 个通用能力训练 → 学生批判性思维/创新/口语等</li>
+          <li>【场景：建】XClaw × Coral 联动 → AI 回答溯源到知识库</li>
+        </ul>
+        <div class="msd-workload">研发 40.5 人天</div>
+      </div>
+
+      <div class="ms-detail-card xclaw">
+        <div class="msd-header">
+          <span class="msd-product xclaw">XCLAW</span>
+          <span class="msd-date">→ 06.25</span>
+          <span class="msd-quality rc">RC</span>
+        </div>
+        <div class="msd-name">M4 · 10 大学科门类能力训练全覆盖，产品可交付</div>
+        <div class="msd-goal"><strong>用户场景</strong>：医学院学生训练临床诊断推理、工学学生训练算法设计、教育学学生训练教学设计——每个学科都有专属训练 Skill。<br><strong>产品特性 · 错不起</strong>：安全合规体系完整（内容审核+思政过滤+溯源标注），教育场景零容忍。<strong>成果驱动</strong>：32 个学科 Skill = 可向教育部汇报的"学科大模型覆盖面"。</div>
+        <ul class="msd-scope">
+          <li>【场景：学】32 个学科训练 Skill（教育3/工4/农4/医7/管3/经3/文2/艺2/理3/哲1）</li>
+          <li>【场景：管】安全合规 6 件套：API 网关/审核/思政/溯源/加密/审计</li>
+          <li>【底座】多模型切换（DeepSeek/Qwen/豆包）</li>
+        </ul>
+      </div>
+
+      <div class="ms-detail-card coral">
+        <div class="msd-header">
+          <span class="msd-product coral">CORAL</span>
+          <span class="msd-date">→ 04.28</span>
+          <span class="msd-quality ga">GA</span>
+        </div>
+        <div class="msd-name">M1 · 教师日常教学中无缝完成知识库建设</div>
+        <div class="msd-goal"><strong>用户场景</strong>：教师上传课件/教案 → 自动解析入库；在 XClaw 备课时生成的高价值内容一键沉淀到知识库；学生提问时 AI 可跨多个知识库联合检索回答。<br><strong>产品特性 · 知识确权</strong>：所有数据归学校永久所有，不依赖任何第三方。</div>
+        <ul class="msd-scope">
+          <li>【场景：建/备】课程资源/个人文档 → 知识库自动解析入库</li>
+          <li>【场景：学】@多知识库联合问答 → 学生得到跨课程的完整回答</li>
+          <li>【场景：备】备课成果一键沉淀 → 教师的隐性知识显性化</li>
+          <li>【底座】REST API + 内置通识资源（法律/医疗）</li>
+        </ul>
+        <div class="msd-workload">研发 57 人天 · 测试 10 人天</div>
+      </div>
+
+      <div class="ms-detail-card coral">
+        <div class="msd-header">
+          <span class="msd-product coral">CORAL</span>
+          <span class="msd-date">→ 05.28</span>
+          <span class="msd-quality ga">GA</span>
+        </div>
+        <div class="msd-name">M2 · 教师创建标准答案，AI 命中秒回不编造</div>
+        <div class="msd-goal"><strong>用户场景</strong>：教师把高频问题和标准答案录入 FAQ 库 → 学生提问时 AI 优先命中标准答案秒回 → 冲突检测确保不同知识源不矛盾。<br><strong>产品特性 · 错不起</strong>：有标准答案的问题绝不编造。<strong>学期脉搏</strong>：跨校引用让优质知识资产在学校间流动。</div>
+        <ul class="msd-scope">
+          <li>【场景：学】问答对 → 学生高频问题命中秒回</li>
+          <li>【场景：教】教师创建/审核标准答案 → 控制 AI 回答质量</li>
+          <li>【场景：管】可见范围管理 + 敏感词白名单 → 安全可控</li>
+          <li>【生态】跨校引用 → 课程发布至共享库</li>
+        </ul>
+        <div class="msd-workload">研发 67 人天 · 测试 12 人天</div>
+      </div>
+
+      <div class="ms-detail-card coral">
+        <div class="msd-header">
+          <span class="msd-product coral">CORAL</span>
+          <span class="msd-date">→ 06.30</span>
+          <span class="msd-quality ga">GA</span>
+        </div>
+        <div class="msd-name">M3 · 学生问"第三章习题5"，AI 精准定位并引用原文</div>
+        <div class="msd-goal"><strong>用户场景</strong>：学生晚上写作业卡住，问"第三章习题5怎么做"→ AI 精准定位到教材对应章节 → 引用原文分步引导 → 学生可点击溯源验证。<br><strong>产品特性 · 教不是答</strong>：分步引导不是给结论。<strong>错不起</strong>：准确率 ≥ 90% 是教育场景的及格线。</div>
+        <ul class="msd-scope">
+          <li>【场景：学】精准答疑 → 跨章节聚合 + 公式/代码精准覆盖</li>
+          <li>【场景：评】可衡量 → 准确率 ≥ 90%，溯源到页码</li>
+          <li>【底座】多路召回（语义+关键词+图谱）+ 全自动索引构建</li>
+        </ul>
+        <div class="msd-metrics">
+          <span class="msd-metric">准确率 ≥ 90%</span>
+          <span class="msd-metric">研发 60 人天</span>
+          <span class="msd-metric">测试 10 人天</span>
+        </div>
+      </div>
+
+      <div class="ms-detail-card cap">
+        <div class="msd-header">
+          <span class="msd-product cap">能力中心</span>
+          <span class="msd-date">→ 05.16 / 06.30</span>
+          <span class="msd-quality beta">Beta</span>
+        </div>
+        <div class="msd-name">M1-M2 · 向小雅八大场景输出"秀肌肉"的原子 AI 能力</div>
+        <div class="msd-goal"><strong>用户场景</strong>：教师使用智能出题时，背后是学科模型 + OCR 识别试卷图片 + TTS 朗读题目。用户无感，但每个场景都在调用能力中心的原子能力。<br><strong>产品特性 · 成果驱动</strong>：高博会展示"4 通用模型 + 6 学科模型 + 23 项 AI 能力"= 技术底气的直接呈现。</div>
+        <ul class="msd-scope">
+          <li>【全场景支撑】4 通用模型 + 6 学科模型 + 23 项 AI 能力</li>
+          <li>【场景：学/测/评】问答/出题/图谱/批改/助教/学伴 能力接入</li>
+          <li>【成果展示】高博会节点 → 模型库/案例集/数据集对外首秀</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quarter-section">
+    <div class="quarter-header">
+      <span class="quarter-badge q3">Q3</span>
+      <span class="quarter-name">首单交付 + 续费锁定</span>
+      <span class="quarter-dates">2026.07 — 2026.09 · 战略推演</span>
+    </div>
+    <div class="ms-detail-grid">
+      <div class="ms-detail-card xclaw">
+        <div class="msd-header">
+          <span class="msd-product xclaw">XCLAW</span>
+          <span class="msd-date">07 — 08</span>
+          <span class="msd-quality ga">GA</span>
+        </div>
+        <div class="msd-name">M5 · 教师备课从 3 小时降到 1 小时，出题零错答</div>
+        <div class="msd-goal"><strong>用户场景</strong>：教师说"帮我备下周的数据结构课"→ AI 生成教学设计七模块 + 溯源到指定教材页码；说"出10道中等难度题"→ 按知识点/难度/题型组卷，答案 100% 正确。<br><strong>产品特性 · 错不起</strong>：出题答案零错是底线。<strong>教不是答</strong>：教案引导学生思考，不是灌输。</div>
+        <ul class="msd-scope">
+          <li>【场景：备】一句话生成教学设计 → 教师二次编辑量 ≤ 30%</li>
+          <li>【场景：测】智能组卷 → 不超纲 + 难度可控 + 查重去重</li>
+          <li>【Wow Moment】故意问知识库没有的问题 → AI 正确拒答</li>
+          <li>【商业】首批客户 POC → 签约转化（15→5→2 漏斗）</li>
+        </ul>
+        <div class="msd-metrics">
+          <span class="msd-metric">教案可用率 ≥ 70%</span>
+          <span class="msd-metric">出题正确率 100%</span>
+          <span class="msd-metric">首单签约</span>
+        </div>
+      </div>
+
+      <div class="ms-detail-card xclaw">
+        <div class="msd-header">
+          <span class="msd-product xclaw">XCLAW</span>
+          <span class="msd-date">08 — 09</span>
+          <span class="msd-quality ga">GA</span>
+        </div>
+        <div class="msd-name">M6 · 200 份主观题不再占周末，挂科风险第 8 周预见</div>
+        <div class="msd-goal"><strong>用户场景</strong>：教师提交200份作业 → AI 按教师设定的 Rubric 逐份评分 + 给出"缺了什么/怎么改"的具体反馈；管理者在第8周收到预警"张三有挂科风险，建议约谈+补X知识点"。<br><strong>产品特性 · 三角色博弈</strong>：教师看批改、管理者看预警、学生看反馈——三个视角三种价值。</div>
+        <ul class="msd-scope">
+          <li>【场景：评】智能批改 → Rubric 评分 + 可申诉 + 反馈具体到知识点</li>
+          <li>【场景：督】学情预警 → 第 8 周识别 80% 挂科风险 + 干预建议</li>
+          <li>【续费锚】准确率退化 + 数据断裂 = 不续费就回到人工批改</li>
+        </ul>
+        <div class="msd-metrics">
+          <span class="msd-metric">偏差 ≤ 5 分</span>
+          <span class="msd-metric">预警准确 ≥ 80%</span>
+        </div>
+      </div>
+
+      <div class="ms-detail-card coral">
+        <div class="msd-header">
+          <span class="msd-product coral">CORAL</span>
+          <span class="msd-date">07 — 08</span>
+          <span class="msd-quality ga">GA</span>
+        </div>
+        <div class="msd-name">M4 · AI 说的"正确"有了可量化标准</div>
+        <div class="msd-goal"><strong>用户场景</strong>：教师/教务处要求"证明 AI 答得对"→ 3000 条术语表是学科的"字典"，300 题评测集是 AI 的"考试卷"→ A/B 对比报告可展示给校长。<br><strong>产品特性 · 错不起</strong>：没有评测体系，"准确率 ≥ 90%"就是空话——这个里程碑让"好不好用"变成可量化的事实。</div>
+        <ul class="msd-scope">
+          <li>【场景：督】3000-5000 条术语 = 学科"标准字典"→ AI 回答不再用错术语</li>
+          <li>【场景：评】Golden QA 300-500 题 → 可复现的效果评测</li>
+          <li>【成果驱动】A/B 对比报告 → 校长能看懂的"调优前/后"</li>
+        </ul>
+        <div class="msd-metrics">
+          <span class="msd-metric">术语 3000+</span>
+          <span class="msd-metric">评测 300+ 题</span>
+        </div>
+      </div>
+
+      <div class="ms-detail-card coral">
+        <div class="msd-header">
+          <span class="msd-product coral">CORAL</span>
+          <span class="msd-date">08 — 09</span>
+          <span class="msd-quality ga">GA</span>
+        </div>
+        <div class="msd-name">M5 · 知识库从"死库"变"活库"，越用越值钱</div>
+        <div class="msd-goal"><strong>用户场景</strong>：学生答疑时提了一个知识库没有的问题 → 系统自动推送给教师"需要补充"→ 教师补完后 AI 下次能答了 → 学生看到排行榜"张老师贡献了 50 条知识"→ 知识库越用越丰富。<br><strong>产品特性 · 学期脉搏</strong>：知识库跟着教学节奏自然生长。<strong>知识确权</strong>：师生贡献的每一条内容都是学校永久资产。</div>
+        <ul class="msd-scope">
+          <li>【场景：建】三级审核：AI 初审 → 研究生互审 → 教师终审</li>
+          <li>【场景：管】贡献度排行 + 学分激励 → 教师有动力参与</li>
+          <li>【飞轮】知识缺口看板 → 自动推送"学生问了但答不了"的问题</li>
+        </ul>
+        <div class="msd-metrics">
+          <span class="msd-metric">壁垒：教师生态 ★4</span>
+        </div>
+      </div>
+
+      <div class="ms-detail-card cap">
+        <div class="msd-header">
+          <span class="msd-product cap">能力中心</span>
+          <span class="msd-date">08 — 09</span>
+          <span class="msd-quality ga">GA</span>
+        </div>
+        <div class="msd-name">M3 · 出题用逻辑强模型，答疑用知识模型——自动选</div>
+        <div class="msd-goal"><strong>用户场景</strong>：教师出数学证明题时背后自动切换逻辑推理强的模型，学生问文学赏析时自动切换文本理解强的模型——用户无感，效果更好。<br><strong>产品特性 · 三角色博弈</strong>：不同场景不同模型 = 精准匹配每个角色的需求。</div>
+        <ul class="msd-scope">
+          <li>【全场景】按场景自动路由最优模型（用户无感切换）</li>
+          <li>【场景：管】管理后台配置 → 学校可指定首选模型</li>
+          <li>【成本】Token 用量监控 + 成本看板 → 学校预算可控</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quarter-section">
+    <div class="quarter-header">
+      <span class="quarter-badge q4">Q4</span>
+      <span class="quarter-name">飞轮验证 + 学科复制</span>
+      <span class="quarter-dates">2026.10 — 2026.12 · 战略推演</span>
+    </div>
+    <div class="ms-detail-grid">
+      <div class="ms-detail-card xclaw">
+        <div class="msd-header">
+          <span class="msd-product xclaw">XCLAW</span>
+          <span class="msd-date">10 — 11</span>
+          <span class="msd-quality beta">Beta</span>
+        </div>
+        <div class="msd-name">M7 · 教师从"用 AI"进化为"创造 AI"</div>
+        <div class="msd-goal"><strong>用户场景</strong>：医学院教师用拖拽方式创建"临床病例分析训练 Skill"→ 发布给全院学生使用 → 其他教师看到效果后也开始创建自己学科的 Skill。<br><strong>产品特性 · 三角色博弈</strong>：教师从使用者变为创造者，知识产出效率指数级提升。每个教师创编的 Skill 都成为本校独有资产——竞品无法复制。</div>
+        <ul class="msd-scope">
+          <li>【场景：建】教师可视化 Skill 创编器 → 无需写代码</li>
+          <li>【场景：教】Skill 模板库 → 从已有 42 个 Skill 抽象通用模板</li>
+          <li>【壁垒验证】教师创编 Skill = Prompt 工程壁垒 ★4</li>
+        </ul>
+        <div class="msd-metrics">
+          <span class="msd-metric">壁垒：Prompt 工程 ★4</span>
+        </div>
+      </div>
+
+      <div class="ms-detail-card coral">
+        <div class="msd-header">
+          <span class="msd-product coral">CORAL</span>
+          <span class="msd-date">10 — 12</span>
+          <span class="msd-quality ga">GA</span>
+        </div>
+        <div class="msd-name">M6 · AI 答错了能自我修复，新学期自动换教材</div>
+        <div class="msd-goal"><strong>用户场景</strong>：AI 答错一道题 → 教师标记 Bad Case → 系统自动修复知识库 → 下次同类问题答对了。新学期教材换版 → 知识库自动更新，教师不用手动重建。<br><strong>产品特性 · 学期脉搏</strong>：知识库跟着学期呼吸，不是建完就死了。<strong>续费锚</strong>：不续费 = 教材换版断裂 + 准确率退化回零。</div>
+        <ul class="msd-scope">
+          <li>【飞轮验证】Bad Case → 修复 → FAQ 沉淀 → 准确率肉眼可见提升</li>
+          <li>【场景：建】学期更新工具 → 教材换版自动处理</li>
+          <li>【场景：督】答疑质量看板 → 满意度/命中率/溯源覆盖率</li>
+          <li>【续费验证】"教材换版"+"准确率退化"两个续费绑定点生效</li>
+        </ul>
+        <div class="msd-metrics">
+          <span class="msd-metric">壁垒：数据飞轮 ★5</span>
+          <span class="msd-metric">续费率 ≥ 80%</span>
+        </div>
+      </div>
+
+      <div class="ms-detail-card xclaw">
+        <div class="msd-header">
+          <span class="msd-product xclaw">XCLAW</span>
+          <span class="msd-date">12</span>
+          <span class="msd-quality ga">GA</span>
+        </div>
+        <div class="msd-name">第 2 学科复制：从 14 周缩短到 8 周</div>
+        <div class="msd-goal"><strong>用户场景</strong>：第一个学科（如数据结构）全链路跑通后，院长说"计算机网络也要"→ 用已验证的 SOP 8 周完成，成本从 48 万降到 15 万。<br><strong>产品特性 · 成果驱动</strong>：每多复制一个学科，毛利从 40% → 60% → 70%，飞轮越转越快。</div>
+        <ul class="msd-scope">
+          <li>【场景：全链路】学科复制 SOP → 从第一个学科抽象通用模板</li>
+          <li>【商业验证】第 2 学科成本 ≤ 15 万 → 毛利 ≥ 60%</li>
+          <li>【续费验证】年费续约率 ≥ 80%</li>
+        </ul>
+        <div class="msd-metrics">
+          <span class="msd-metric">复制周期 8 周</span>
+          <span class="msd-metric">毛利 ≥ 60%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</section>
+
+<!-- BARRIER + HONEST LIMITS -->
+<div class="insight-row">
+  <div class="insight-card barrier">
+    <div class="insight-title">🛡️ 壁垒建设进度（对标 Harness 5 层壁垒）</div>
+    <ul class="insight-list">
+      <li><span class="i-icon">📊</span>数据飞轮：Q4 验证 Bad Case 闭环 + 师生共建回流是否可观测<span class="i-star">★★★★★</span></li>
+      <li><span class="i-icon">🎯</span>Prompt 工程：Q4 教师创编平台上线，200+ Prompt 模板 + Bad Case 报告积累<span class="i-star">★★★★</span></li>
+      <li><span class="i-icon">👨‍🏫</span>教师生态：Q3 师生共建运营启动，核心指标：种子教师 20+ / 学科<span class="i-star">★★★★</span></li>
+      <li><span class="i-icon">🔒</span>安全合规：Q2 M4 安全合规体系完整（API 网关/审核/思政/加密/审计）<span class="i-star">★★★</span></li>
+      <li><span class="i-icon">📐</span>标准定义：Q4+ 数据集对标国家标准，争取行业标准参与权<span class="i-star">★★★★★</span></li>
+    </ul>
+  </div>
+
+  <div class="insight-card limits">
+    <div class="insight-title">⚠️ 诚实边界（主动承认，不等客户来问）</div>
+    <ul class="insight-list">
+      <li><span class="i-icon">📖</span>人文学科评测未就绪 — Q2 聚焦理工医法，文史哲第二年</li>
+      <li><span class="i-icon">⏰</span>知识库有 3-6 个月时滞 — 前沿科研不能吹"实时"</li>
+      <li><span class="i-icon">💰</span>首单毛利 ~40% — 靠第 2-3 学科复制和年费补偿</li>
+      <li><span class="i-icon">🏢</span>无法靠政府关系打大厂 — 只能靠"可验证的溯源效果差异"</li>
+      <li><span class="i-icon">👥</span>团队产能：同时 2-3 个定制项目是上限</li>
+      <li><span class="i-icon">🔧</span>能力中心原子能力非自研 — OCR/ASR/大模型均为调用</li>
+    </ul>
+  </div>
+</div>
+
+<footer class="footer">
+  <p>学科大模型 · 年度产品路标 2026 · 讯飞高教 AI 教学产品部</p>
+  <p style="margin-top:6px;">Q2 来源：AI基座研发推进表 · Q3-Q4 来源：Harness 战略框架 + 壁垒分析 + 场景评审推演</p>
+  <p style="margin-top:4px;">学科大模型 = Coral 知识底座 + XClaw 智能中枢 + 能力中心 → 赋能小雅平台八大场景</p>
+</footer>
+
+</div>
+
+</body>
+</html>

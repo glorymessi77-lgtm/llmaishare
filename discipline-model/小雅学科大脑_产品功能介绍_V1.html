@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>小雅学科大脑 · 产品功能介绍 V1</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   小雅学科大脑 · 产品功能介绍 V1
+   依据 学科大模型系统架构图 + 真实产品截图
+   ============================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:            #F2F4F1;
+  --bg-deep:       #E8EBE4;
+  --paper:         #FAFAF6;
+  --card-bg:       #FFFFFF;
+  --ink:           #1A1F2C;
+  --ink-mute:      #55606F;
+  --ink-light:     #8E99A8;
+  --hairline:      rgba(26,31,44,0.10);
+  --hairline-bold: rgba(26,31,44,0.20);
+  --rule:          rgba(26,31,44,0.06);
+
+  /* 7 套章节色 */
+  --c1-deep: #0F5D3A; --c1-soft: #D9ECE2; --c1-ink: #0A3D26;  /* 知识建设 */
+  --c2-deep: #5B3DA9; --c2-soft: #E6DFF5; --c2-ink: #3D2878;  /* 智能交互 */
+  --c3-deep: #B04A1C; --c3-soft: #F6DECE; --c3-ink: #7A3213;  /* 协作治理 */
+  --c4-deep: #0E6B7C; --c4-soft: #CFEBF0; --c4-ink: #08444F;  /* 开放生态 */
+  --c5-deep: #8A5A0B; --c5-soft: #F4E6C2; --c5-ink: #5C3C07;  /* 工具链 */
+  --c6-deep: #2C4F9E; --c6-soft: #D7E1F5; --c6-ink: #1C3468;  /* 数据/AI */
+  --c7-deep: #A6262A; --c7-soft: #F5D2D3; --c7-ink: #721619;  /* 安全部署 */
+  --accent:  #C64512;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Noto Sans SC", -apple-system, "PingFang SC", sans-serif;
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(91,61,169,0.08), transparent 60%),
+    radial-gradient(900px 500px at -10% 30%, rgba(15,93,58,0.07), transparent 60%),
+    var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-width: 1280px;
+  padding-bottom: 80px;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.serif { font-family: "Noto Serif SC", "Songti SC", serif; }
+.mono  { font-family: "JetBrains Mono", monospace; }
+
+/* ============ 返回导航条 ============ */
+.nav-bar {
+  background: rgba(250,250,246,0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--hairline);
+  padding: 12px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+.nav-bar a { color: var(--c2-deep); font-weight: 700; transition: opacity 0.2s; }
+.nav-bar a:hover { opacity: 0.6; }
+.nav-bar .sep { color: var(--ink-light); }
+.nav-bar .current { color: var(--ink-mute); font-weight: 500; }
+.nav-bar .level {
+  font-size: 9px; font-weight: 800; color: #fff;
+  padding: 3px 8px; border-radius: 4px;
+  letter-spacing: 1.5px; background: var(--accent);
+}
+.nav-bar .right {
+  margin-left: auto; font-size: 10px; color: var(--ink-light);
+  letter-spacing: 2px; text-transform: uppercase;
+}
+
+/* ============ Wrap ============ */
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+/* ============ Hero ============ */
+.hero {
+  padding: 72px 0 48px;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 56px;
+  align-items: flex-end;
+  position: relative;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 90px;
+  width: 72px; height: 1px;
+  background: var(--ink);
+}
+.hero .kicker {
+  font-size: 11px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+  margin-bottom: 24px;
+  padding-left: 88px;
+  position: relative;
+}
+.hero .kicker::before {
+  content: "01 / 产品白皮书";
+  position: absolute;
+  left: 0; top: -2px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+.hero h1 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 76px;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+.hero h1 em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--c1-deep);
+  border-bottom: 3px solid var(--c1-deep);
+  padding-bottom: 4px;
+  font-size: 0.86em;
+  display: inline-block;
+}
+.hero h1 .dash {
+  font-weight: 300;
+  color: var(--ink-mute);
+  letter-spacing: -2px;
+}
+.hero .twist {
+  font-family: "Noto Serif SC", serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink-mute);
+  font-style: italic;
+  margin-bottom: 32px;
+  letter-spacing: -0.2px;
+  position: relative;
+  padding-left: 22px;
+}
+.hero .twist::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 50%;
+  width: 12px; height: 1px;
+  background: var(--accent);
+}
+.hero .lead {
+  font-size: 15px;
+  color: var(--ink-mute);
+  line-height: 1.95;
+  max-width: 660px;
+  margin-bottom: 32px;
+}
+.hero .lead strong { color: var(--ink); font-weight: 700; }
+.hero .lead .red { color: var(--accent); font-weight: 700; }
+
+/* 对比框：没有它 / 有了它 */
+.hero-vs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  max-width: 720px;
+  margin-bottom: 36px;
+  border-top: 1px solid var(--hairline-bold);
+  border-bottom: 1px solid var(--hairline-bold);
+}
+.hero-vs > div {
+  padding: 18px 22px 18px 0;
+}
+.hero-vs > div + div {
+  padding-left: 26px;
+  border-left: 1px solid var(--hairline);
+}
+.hero-vs .label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hero-vs .label::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ink-light);
+}
+.hero-vs .have .label::before { background: var(--c1-deep); }
+.hero-vs .have .label { color: var(--c1-deep); }
+.hero-vs .text {
+  font-size: 13.5px;
+  line-height: 1.85;
+  color: var(--ink-mute);
+}
+.hero-vs .have .text { color: var(--ink); }
+.hero-vs .text strong { color: var(--ink); font-weight: 700; }
+.hero-vs .have .text strong { color: var(--c1-deep); }
+
+/* manifesto 收尾印章 */
+.hero-manifesto {
+  position: relative;
+  padding: 22px 0 6px;
+  border-top: 2px solid var(--ink);
+  max-width: 720px;
+}
+.hero-manifesto::before {
+  content: "MANIFESTO";
+  position: absolute;
+  top: -7px;
+  left: 0;
+  background: var(--bg);
+  padding: 0 10px 0 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  font-weight: 700;
+}
+.hero-manifesto .line1 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 18px;
+  color: var(--ink-mute);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  margin-bottom: 4px;
+}
+.hero-manifesto .line2 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -1px;
+  line-height: 1.3;
+}
+.hero-manifesto .line2 em {
+  font-style: normal;
+  background: linear-gradient(180deg, transparent 60%, var(--c1-soft) 60%);
+  padding: 0 2px;
+}
+
+.hero-meta {
+  padding-bottom: 8px;
+  border-left: 1px solid var(--hairline);
+  padding-left: 28px;
+}
+.hero-meta dt {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.hero-meta dd {
+  font-size: 13px;
+  color: var(--ink);
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+.hero-meta dd.big {
+  font-family: "Noto Serif SC", serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+.hero-meta dd:last-child { margin-bottom: 0; }
+
+/* ============ What is it · 编辑导读 ============ */
+.intro-strip {
+  margin-top: 24px;
+  background: var(--paper);
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--hairline);
+  padding: 40px 0;
+}
+.intro-strip .wrap {
+  display: grid;
+  grid-template-columns: 200px 1fr 240px;
+  gap: 48px;
+  align-items: flex-start;
+}
+.intro-strip h2 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.4;
+  position: relative;
+  padding-top: 18px;
+}
+.intro-strip h2::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0;
+  width: 32px; height: 2px;
+  background: var(--accent);
+}
+.intro-strip .body p {
+  font-size: 13.5px;
+  line-height: 2;
+  color: var(--ink-mute);
+  margin-bottom: 12px;
+}
+.intro-strip .body p strong { color: var(--ink); font-weight: 700; border-bottom: 1px dotted var(--ink-mute); }
+.intro-strip .body p:last-child { margin-bottom: 0; }
+
+.intro-strip .stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+}
+.intro-strip .stats div {
+  padding-top: 10px;
+  border-top: 1px solid var(--hairline-bold);
+}
+.intro-strip .stats .n {
+  font-family: "Noto Serif SC", serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.intro-strip .stats .l {
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+/* ============ 目录 TOC ============ */
+.toc {
+  background: var(--ink);
+  color: #FAFAF6;
+  padding: 28px 0;
+  margin-top: 0;
+}
+.toc .wrap {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 24px;
+}
+.toc a {
+  display: block;
+  padding: 8px 0;
+  border-top: 1px solid rgba(250,250,246,0.2);
+  font-size: 11px;
+  color: #C6CAD2;
+  transition: all 0.2s;
+  position: relative;
+}
+.toc a:hover { color: #FAFAF6; transform: translateY(-2px); }
+.toc a .num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  color: var(--accent);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  display: block;
+}
+.toc a .tt {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FAFAF6;
+  font-family: "Noto Serif SC", serif;
+  letter-spacing: -0.2px;
+}
+
+/* ============ Section（大章节） ============ */
+.section {
+  padding: 80px 0 40px;
+  border-bottom: 1px solid var(--hairline);
+}
+.section-head {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 48px;
+  margin-bottom: 52px;
+  align-items: flex-start;
+}
+.section-head .stamp {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.section-head .num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.section-head .big-num {
+  font-family: "Noto Serif SC", "JetBrains Mono", serif;
+  font-size: 144px;
+  font-weight: 900;
+  line-height: 0.85;
+  color: var(--ink);
+  letter-spacing: -6px;
+  opacity: 0.94;
+  font-variant-numeric: tabular-nums;
+}
+.section-head .title {
+  padding-top: 28px;
+}
+.section-head .title .zh {
+  font-family: "Noto Serif SC", serif;
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.section-head .title .en {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
+.section-head .title .desc {
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--ink-mute);
+  max-width: 780px;
+}
+.section-head .title .desc strong { color: var(--ink); font-weight: 700; }
+
+/* chapter color tokens */
+.ch-1 .big-num, .ch-1 .num, .ch-1 h3::before { color: var(--c1-deep); }
+.ch-2 .big-num, .ch-2 .num, .ch-2 h3::before { color: var(--c2-deep); }
+.ch-3 .big-num, .ch-3 .num, .ch-3 h3::before { color: var(--c5-deep); }
+.ch-4 .big-num, .ch-4 .num, .ch-4 h3::before { color: var(--c6-deep); }
+.ch-5 .big-num, .ch-5 .num, .ch-5 h3::before { color: var(--c6-deep); }
+.ch-6 .big-num, .ch-6 .num, .ch-6 h3::before { color: var(--c7-deep); }
+
+/* ============ 子模块（group） ============ */
+.group {
+  margin-bottom: 60px;
+}
+.group-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1.5px solid var(--ink);
+  margin-bottom: 24px;
+}
+.group-head .tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  background: var(--ink);
+  color: #FAFAF6;
+  padding: 3px 9px;
+  letter-spacing: 1.5px;
+}
+.group-head h3 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.group-head .count {
+  margin-left: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--ink-light);
+  letter-spacing: 1px;
+}
+
+.group-desc {
+  font-size: 13px;
+  color: var(--ink-mute);
+  line-height: 1.9;
+  margin-bottom: 24px;
+  max-width: 920px;
+  padding-left: 16px;
+  border-left: 2px solid var(--hairline-bold);
+}
+.group-desc strong { color: var(--ink); font-weight: 700; }
+
+/* ============ 功能卡片（Feature） ============ */
+.features {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+.feature {
+  background: var(--card-bg);
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.25s;
+}
+.feature::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--c1-deep);
+}
+.ch-2 .feature::before { background: var(--c2-deep); }
+.ch-3 .feature::before { background: var(--c5-deep); }
+.ch-4 .feature::before { background: var(--c6-deep); }
+.ch-5 .feature::before { background: var(--c6-deep); }
+.ch-6 .feature::before { background: var(--c7-deep); }
+
+.feature:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 48px -24px rgba(26,31,44,0.18);
+  border-color: var(--hairline-bold);
+}
+
+.feature-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 24px 32px 18px 36px;
+  border-bottom: 1px dashed var(--hairline);
+}
+.feature-head .info h4 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+.feature-head .info .en {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--ink-light);
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.feature-head .info p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--ink-mute);
+  max-width: 720px;
+}
+.feature-head .info p strong { color: var(--ink); font-weight: 700; }
+
+.feature-head .meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+  min-width: 160px;
+}
+.feature-head .meta .chip {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  padding: 4px 11px;
+  letter-spacing: 0.5px;
+  border-radius: 2px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+/* 5 态状态 chip */
+.chip.yes  { background: #D9ECE2; color: #0A3D26; }
+.chip.part { background: #F6DECE; color: #7A3213; }
+.chip.no   { background: #EEF1F5; color: #475569; border: 1px dashed #94A3B8; padding: 3px 10px; }
+.chip.school { background: #D7E1F5; color: #1C3468; }
+.chip.na   { background: #F5F7FA; color: #94A3B8; border: 1px dashed #CBD5E1; padding: 3px 10px; }
+
+.feature-head .meta .bullet {
+  font-size: 11px;
+  color: var(--ink-mute);
+  max-width: 200px;
+  text-align: right;
+  line-height: 1.6;
+}
+
+/* 截图网格 */
+.shots {
+  padding: 24px 32px 28px 36px;
+  display: grid;
+  gap: 16px;
+}
+.shots.cols-1 { grid-template-columns: 1fr; }
+.shots.cols-2 { grid-template-columns: 1fr 1fr; }
+.shots.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.shots.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.shots.cols-5 { grid-template-columns: repeat(5, 1fr); }
+
+.shot {
+  position: relative;
+  background: var(--bg-deep);
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  overflow: hidden;
+  transition: all 0.25s;
+}
+.shot:hover {
+  border-color: var(--ink);
+  transform: scale(1.01);
+}
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+.shot:hover img {
+  transform: scale(1.02);
+}
+.shot .tag {
+  position: absolute;
+  top: 10px; left: 10px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  background: rgba(26,31,44,0.88);
+  color: #FAFAF6;
+  padding: 3px 8px;
+  letter-spacing: 1px;
+  border-radius: 2px;
+  backdrop-filter: blur(6px);
+}
+.shot .cap {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(26,31,44,0.92), rgba(26,31,44,0.6) 60%, transparent);
+  color: #FAFAF6;
+  padding: 24px 14px 12px;
+  font-size: 11px;
+  line-height: 1.5;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.shot:hover .cap { opacity: 1; }
+
+/* ============ 数据存储层 / AI 模型层 · 条带布局 ============ */
+.strip-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+.strip-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.strip-card {
+  background: var(--card-bg);
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.strip-card::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 3px;
+  background: var(--c6-deep);
+}
+.ch-6 .strip-card::before { background: var(--c7-deep); }
+.strip-card .thumb {
+  aspect-ratio: 16 / 10;
+  background: var(--bg-deep);
+  overflow: hidden;
+  border-bottom: 1px solid var(--hairline);
+}
+.strip-card .thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+.strip-card:hover .thumb img { transform: scale(1.04); }
+.strip-card .body {
+  padding: 16px 18px 18px;
+}
+.strip-card .body .idx {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  color: var(--accent);
+  letter-spacing: 1.5px;
+  margin-bottom: 4px;
+}
+.strip-card .body h5 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+.strip-card .body p {
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--ink-mute);
+}
+
+/* ============ 无截图占位 · 全私有化部署 ============ */
+.deploy-wrap {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 10px;
+}
+.deploy-card {
+  background: var(--card-bg);
+  border: 1.5px solid var(--hairline);
+  border-radius: 2px;
+  padding: 28px 26px;
+  position: relative;
+  overflow: hidden;
+}
+.deploy-card::after {
+  content: "";
+  position: absolute;
+  right: -40px; bottom: -40px;
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(166,38,42,0.08), transparent 70%);
+}
+.deploy-card .ico {
+  font-size: 26px;
+  margin-bottom: 14px;
+  display: block;
+}
+.deploy-card h5 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+.deploy-card p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--ink-mute);
+}
+.deploy-card p strong {
+  color: var(--c7-deep);
+  font-weight: 700;
+}
+
+/* ============ Footer ============ */
+.footer {
+  margin-top: 80px;
+  padding: 48px 0 24px;
+  border-top: 2px solid var(--ink);
+  text-align: center;
+}
+.footer .mark {
+  font-family: "Noto Serif SC", serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+.footer .meta-line {
+  font-size: 11px;
+  color: var(--ink-light);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: "JetBrains Mono", monospace;
+}
+.footer .note {
+  margin-top: 20px;
+  font-size: 11px;
+  color: var(--ink-mute);
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.8;
+}
+
+/* ============ Lightbox 点击放大 ============ */
+.shot { cursor: zoom-in; }
+.strip-card .thumb { cursor: zoom-in; }
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 18, 26, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 80px;
+  cursor: zoom-out;
+  animation: lbFade 0.25s ease-out;
+}
+.lightbox.active { display: flex; }
+@keyframes lbFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.lightbox img {
+  max-width: 100%;
+  max-height: calc(100vh - 140px);
+  object-fit: contain;
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 40px 120px -20px rgba(0,0,0,0.8);
+  animation: lbZoom 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes lbZoom {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+.lightbox .lb-caption {
+  position: absolute;
+  left: 0; right: 0; bottom: 24px;
+  text-align: center;
+  color: #FAFAF6;
+  font-family: "Noto Sans SC", sans-serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  padding: 0 40px;
+}
+.lightbox .lb-caption .idx {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: #C64512;
+  letter-spacing: 2px;
+  margin-right: 12px;
+}
+.lightbox .lb-close {
+  position: absolute;
+  top: 24px; right: 32px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
+  color: #FAFAF6;
+  font-size: 22px;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.lightbox .lb-close:hover { background: rgba(255,255,255,0.15); transform: rotate(90deg); }
+.lightbox .lb-counter {
+  position: absolute;
+  top: 32px; left: 40px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: rgba(250,250,246,0.65);
+  letter-spacing: 2px;
+}
+.lightbox .lb-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
+  color: #FAFAF6;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.lightbox .lb-nav:hover { background: rgba(255,255,255,0.15); }
+.lightbox .lb-prev { left: 20px; }
+.lightbox .lb-next { right: 20px; }
+
+/* ============ 动画（入场） ============ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.section-head, .group, .intro-strip .wrap, .toc .wrap, .hero > * {
+  animation: rise 0.6s ease-out backwards;
+}
+.hero .kicker { animation-delay: 0.05s; }
+.hero h1 { animation-delay: 0.15s; }
+.hero .lead { animation-delay: 0.25s; }
+.hero-meta { animation-delay: 0.35s; }
+
+</style>
+</head>
+<body>
+
+<!-- 返回导航条 -->
+<div class="nav-bar">
+  <a href="index.html">📚 学科大模型 · 文档中心</a>
+  <span class="sep">›</span>
+  <span class="level">L1</span>
+  <span class="current">小雅学科大脑 · 产品功能介绍</span>
+  <span class="right">PRODUCT · V1 · 2026-04</span>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero wrap">
+  <div>
+    <div class="kicker">小雅学科大脑 · 学科大模型产品白皮书</div>
+    <h1>
+      让每一本教材<br/>
+      都能 <em>自己说话</em><span class="dash"> ——</span>
+    </h1>
+    <p class="twist">这只是入口。我们真正在做的，远不止于此。</p>
+    <p class="lead">
+      小雅学科大脑是帮助高校完成<strong>学科知识体系数字化重建</strong>的 AI 底座产品。
+      它把散落在<strong>教材、课件、论文、试卷</strong>中的学科知识，
+      统一采集、解析、结构化，<strong>重建为完整的、AI 能理解的学科数字资产</strong>。
+    </p>
+
+    <div class="hero-vs">
+      <div class="without">
+        <div class="label">没有它</div>
+        <p class="text">任何大模型在学科问题上<br>都只能给出<strong>通用回答</strong>。</p>
+      </div>
+      <div class="have">
+        <div class="label">有了它</div>
+        <p class="text">
+          AI 的每句回答都能<strong>溯源到教材原文</strong>，<br>
+          每条学习路径都基于<strong>知识图谱推算</strong>，<br>
+          每份评估报告都由<strong>全链路教学数据</strong>自动生成。
+        </p>
+      </div>
+    </div>
+
+    <div class="hero-manifesto">
+      <div class="line1">大模型会过时——</div>
+      <div class="line2"><em>学科知识体系</em>，永远是学校自己的核心数字资产。</div>
+    </div>
+  </div>
+  <dl class="hero-meta">
+    <dt>版本</dt>
+    <dd class="big">V1 · 2026·04</dd>
+    <dt>依据</dt>
+    <dd>学科大模型系统架构图 V3</dd>
+    <dt>来源截图</dt>
+    <dd>40+ 张 · 真实产品界面</dd>
+    <dt>架构层数</dt>
+    <dd>6 大章节 · 14 个功能区</dd>
+  </dl>
+</section>
+
+<!-- ============ 编辑导读 ============ -->
+<section class="intro-strip">
+  <div class="wrap">
+    <h2>从教材<br/>到资产</h2>
+    <div class="body">
+      <p>
+        "教材开口说话"是直观的入口隐喻——但学科大脑要交付的不是一句对话，而是
+        <strong>一所高校散落在教材、课件、论文、试卷中的学科知识体系，被重建为可检索、可溯源、可演化的数字资产</strong>。
+        当这套资产沉淀完成，AI 就只是它的一个调用方而已。
+      </p>
+      <p>
+        本页呈现的是这套资产<strong>当前真实在线的产品形态</strong>——所有描述都来源于 2026-04 最新的具备状态盘点，
+        <strong>已具备就说已具备，未具备就说未具备</strong>，不把规划写成现状。
+        销售/售前可按章节导航讲"当前能交付什么 + 哪些仍在推进"；客户看到的就是即将拿到的。
+      </p>
+    </div>
+    <div class="stats">
+      <div><div class="n">✓ 3</div><div class="l">YES · 已具备</div></div>
+      <div><div class="n">◐ 5</div><div class="l">PARTIAL · 部分具备</div></div>
+      <div><div class="n">○ 1</div><div class="l">NOT YET · 引擎待封装</div></div>
+      <div><div class="n">⌂ 3</div><div class="l">SCHOOL · 学校负责</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 目录 TOC ============ -->
+<nav class="toc">
+  <div class="wrap">
+    <a href="#ch-1"><span class="num">CH · 01</span><span class="tt">十大核心模块</span></a>
+    <a href="#ch-2"><span class="num">CH · 02</span><span class="tt">智能交互</span></a>
+    <a href="#ch-3"><span class="num">CH · 03</span><span class="tt">工具链层</span></a>
+    <a href="#ch-4"><span class="num">CH · 04</span><span class="tt">数据存储层</span></a>
+    <a href="#ch-5"><span class="num">CH · 05</span><span class="tt">AI 模型层</span></a>
+    <a href="#ch-6"><span class="num">CH · 06</span><span class="tt">安全与部署</span></a>
+  </div>
+</nav>
+
+
+<!-- ============================================================
+     CH 01 · 十大核心产品模块 · 知识建设 / 协作治理 / 开放生态
+     ============================================================ -->
+<section class="section ch-1" id="ch-1">
+  <div class="wrap">
+
+    <header class="section-head">
+      <div class="stamp">
+        <div class="num">CHAPTER · 01</div>
+        <div class="big-num">01</div>
+      </div>
+      <div class="title">
+        <div class="zh">十大核心产品模块</div>
+        <div class="en">Ten Core Product Modules · Knowledge Build & Governance</div>
+        <div class="desc">
+          十大模块按功能分四组：<strong>知识建设</strong>（把教材变成可用资产）、
+          <strong>智能交互</strong>（让资产开口回答）、<strong>协作与治理</strong>（保证可共享可审计）、
+          <strong>开放生态</strong>（让资产流入 Agent 被复用）。本章优先呈现前三组，智能交互单列下一章详述。
+        </div>
+      </div>
+    </header>
+
+    <!-- Group: 知识建设 -->
+    <div class="group">
+      <div class="group-head">
+        <span class="tag">GROUP · 1.1</span>
+        <h3>知识建设 · Knowledge Build</h3>
+        <span class="count">03 modules · 08 screens</span>
+      </div>
+      <div class="group-desc">
+        把原始教材、论文、课件、视频逐步沉淀为<strong>结构化、可检索、可溯源的学科资产</strong>。
+        由三个模块协同完成：<strong>M1 学科语料库</strong>（原始资产管理）、
+        <strong>M2 术语与知识图谱</strong>（概念与关系的符号化）、
+        <strong>M3 问答标准库</strong>（高置信度问答对的沉淀）。
+      </div>
+
+      <div class="features">
+
+        <!-- M1 学科语料库 -->
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>M1 · 学科语料库</h4>
+              <div class="en">Discipline Corpus · Primary Knowledge Asset</div>
+              <p>学科大脑的<strong>底座资产</strong>。支持多种格式原始资料的上传、解析、切片、标签与资产视图管理，
+              按学科、章节、来源多维组织，是后续图谱、问答、检索的一手来源。</p>
+            </div>
+            <div class="meta">
+              <span class="chip part">M1 · ◐ 部分具备</span>
+              <span class="bullet">双来源上传<br/>切片与标签管理</span>
+            </div>
+          </div>
+          <div class="shots cols-3">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/2%20十大核心产品模块/1%20知识建设/学科语料库1.png" alt="学科语料库 - 主界面"><div class="cap">资产总览 · 按学科/版本/状态组织</div></div>
+            <div class="shot"><span class="tag">02</span><img src="screenshots/2%20十大核心产品模块/1%20知识建设/学科语料库2.png" alt="学科语料库 - 资料详情"><div class="cap">资料详情 · 元数据 + 切片预览</div></div>
+            <div class="shot"><span class="tag">03</span><img src="screenshots/2%20十大核心产品模块/1%20知识建设/学科语料库3.png" alt="学科语料库 - 批量处理"><div class="cap">批量处理 · 多文件同时解析</div></div>
+            <div class="shot"><span class="tag">04</span><img src="screenshots/2%20十大核心产品模块/1%20知识建设/学科语料库4.png" alt="学科语料库 - 切片视图"><div class="cap">切片视图 · 粒度可调 · 质量可审</div></div>
+            <div class="shot"><span class="tag">05</span><img src="screenshots/2%20十大核心产品模块/1%20知识建设/学科语料库5.jpg" alt="学科语料库 - 版本管理"><div class="cap">版本管理 · 回滚 · 差异对比</div></div>
+          </div>
+        </article>
+
+        <!-- M2 术语与知识图谱 -->
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>M2 · 术语与知识图谱</h4>
+              <div class="en">Terminology & Knowledge Graph</div>
+              <p>承载学科的核心术语与概念关系。由学科专家在外部整理好 Excel 表格后导入到系统，形成可视化图谱，
+              并作为问答检索的推理依据。</p>
+            </div>
+            <div class="meta">
+              <span class="chip part">M2 · ◐ 部分具备</span>
+              <span class="bullet">Excel 导入<br/>可视化 + 图谱问答</span>
+            </div>
+          </div>
+          <div class="shots cols-2">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/2%20十大核心产品模块/1%20知识建设/术语与知识图谱1.png" alt="术语与知识图谱 - 图谱视图"><div class="cap">知识图谱主视图 · 概念关系网络</div></div>
+            <div class="shot"><span class="tag">02</span><img src="screenshots/2%20十大核心产品模块/1%20知识建设/术语与知识图谱2.png" alt="术语与知识图谱 - 术语详情"><div class="cap">术语详情 · 定义 / 关联 / 溯源</div></div>
+          </div>
+        </article>
+
+        <!-- M3 问答标准库 -->
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>M3 · 问答标准库</h4>
+              <div class="en">Standard Q&A Repository</div>
+              <p>沉淀学科中<strong>高频、确定、权威</strong>的问答对，作为 RAG 命中链路的首选层——
+              命中标准问答时直接返回，未命中才走下层检索生成。</p>
+            </div>
+            <div class="meta">
+              <span class="chip yes">M3 · ✓ 已具备</span>
+              <span class="bullet">FAQ 能力<br/>首选命中层</span>
+            </div>
+          </div>
+          <div class="shots cols-1">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/2%20十大核心产品模块/1%20知识建设/问答标准库.png" alt="问答标准库 - 主界面"><div class="cap">问答标准库 · 学科 × 章节 × 状态视图</div></div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <!-- Group: 协作与治理 -->
+    <div class="group">
+      <div class="group-head">
+        <span class="tag">GROUP · 1.2</span>
+        <h3>协作与治理 · Collaboration & Governance</h3>
+        <span class="count">02 modules · 03 screens</span>
+      </div>
+      <div class="group-desc">
+        学科资产需要多人协作构建、跨机构共享，也需要严格的权限、审计、版本控制。
+        <strong>M7 管理与安全平台</strong>提供账号 / 权限 / 审计的统一治理面；
+        <strong>M8 社区与知识共享</strong>让资产在教师、院系、学校间自然流动、按需复用。
+      </div>
+
+      <div class="features">
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>M5 · 管理与安全平台</h4>
+              <div class="en">Admin & Security Console</div>
+              <p>统一的账号、角色、权限与行为审计后台。产品侧聚焦在<strong>访问控制</strong>和<strong>行为留痕</strong>，
+              物理机、网络、存储三层的基础设施安全由学校本地化保障。</p>
+            </div>
+            <div class="meta">
+              <span class="chip part">M5 · ◐ 部分具备</span>
+              <span class="bullet">访问控制<br/>行为审计</span>
+            </div>
+          </div>
+          <div class="shots cols-1">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/2%20十大核心产品模块/3%20协作与治理/管理与安全平台.png" alt="管理与安全平台"><div class="cap">管理后台 · 账号 / 角色 / 审计一站式</div></div>
+          </div>
+        </article>
+
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>M7 · 社区与知识共享</h4>
+              <div class="en">Community & Knowledge Share</div>
+              <p>已上线的社区与知识库共享能力——教师和学生可以在校内共享笔记、知识专题、优质问答，
+              让优质内容自然沉淀、复用。</p>
+            </div>
+            <div class="meta">
+              <span class="chip yes">M7 · ✓ 已具备</span>
+              <span class="bullet">社区<br/>知识库共享</span>
+            </div>
+          </div>
+          <div class="shots cols-2">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/2%20十大核心产品模块/3%20协作与治理/社区与知识共享1.png" alt="社区与知识共享 1"><div class="cap">社区主页 · 热门知识 / 学科圈子</div></div>
+            <div class="shot"><span class="tag">02</span><img src="screenshots/2%20十大核心产品模块/3%20协作与治理/社区与知识共享2.png" alt="社区与知识共享 2"><div class="cap">知识详情 · 评论 / 引用 / 订阅</div></div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Group: 开放生态 -->
+    <div class="group">
+      <div class="group-head">
+        <span class="tag">GROUP · 1.3</span>
+        <h3>开放生态 · Open Ecosystem</h3>
+        <span class="count">01 module · 01 screen</span>
+      </div>
+      <div class="group-desc">
+        学科资产的最终归宿是<strong>被 Agent 复用</strong>。开放生态层对外暴露 API / MCP 接口，
+        让"跑在 XClaw 上的智能体"可以安全调用学科大脑的语料、图谱、问答能力。
+      </div>
+
+      <div class="features">
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>M10 · Agent 生态入口</h4>
+              <div class="en">Agent Ecosystem Portal</div>
+              <p>学科大脑对外暴露 <strong>REST API</strong> 和首批 <strong>Skill</strong>（笔记 Skill），
+              让第三方智能体可以调用学科资产。这是"学科大脑 × XClaw 运行时"协同的产品化出口。</p>
+            </div>
+            <div class="meta">
+              <span class="chip part">M10 · ◐ 部分具备</span>
+              <span class="bullet">REST API<br/>笔记 Skill</span>
+            </div>
+          </div>
+          <div class="shots cols-1">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/2%20十大核心产品模块/4%20开放生态/agent生态.png" alt="Agent 生态"><div class="cap">智能体广场 · 学科 Agent 全景入口</div></div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     CH 02 · 智能交互 · 检索与溯源
+     ============================================================ -->
+<section class="section ch-2" id="ch-2">
+  <div class="wrap">
+
+    <header class="section-head">
+      <div class="stamp">
+        <div class="num">CHAPTER · 02</div>
+        <div class="big-num">02</div>
+      </div>
+      <div class="title">
+        <div class="zh">智能交互 · 让资产开口</div>
+        <div class="en">Intelligent Interaction · Retrieval with Provenance</div>
+        <div class="desc">
+          知识建设把原料沉淀为资产，<strong>智能交互</strong>则把资产转化为"答案 + 出处"。
+          本章核心是 <strong>M4 智能检索与溯源</strong>——问一个问题、得到一个答案、
+          同时<strong>逐句标注</strong>这句答案来自哪本教材、哪一页、哪一个切片。
+        </div>
+      </div>
+    </header>
+
+    <div class="group">
+      <div class="group-head">
+        <span class="tag">GROUP · 2.1</span>
+        <h3>M4 · 智能检索与溯源</h3>
+        <span class="count">01 module · 02 screens</span>
+      </div>
+      <div class="group-desc">
+        学科大脑的统一问答入口——对话式提问、答案卡片、原文溯源。目前底层已有基础检索与溯源能力，
+        但<strong>尚未封装为独立的"混合检索引擎"和"全链路溯源引擎"产品形态</strong>，用户侧的溯源感知仍较弱。
+      </div>
+
+      <div class="features">
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>M4 · 智能检索与溯源</h4>
+              <div class="en">Smart Retrieval with Provenance</div>
+              <p>对话式问答界面 + 答案卡片 + 原文溯源。支持基于问答标准库和语料切片的召回，
+              命中内容可定位到原文片段。多轮追问、跨文档交叉引用等能力正在完善中。</p>
+            </div>
+            <div class="meta">
+              <span class="chip part">M4 · ◐ 部分具备</span>
+              <span class="bullet">基础检索 + 溯源<br/>未封装为独立引擎</span>
+            </div>
+          </div>
+          <div class="shots cols-2">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/2%20十大核心产品模块/2%20智能交互/智能检索与溯源1.png" alt="智能检索与溯源 1"><div class="cap">对话式问答 + 答案卡片</div></div>
+            <div class="shot"><span class="tag">02</span><img src="screenshots/2%20十大核心产品模块/2%20智能交互/智能检索与溯源2.png" alt="智能检索与溯源 2"><div class="cap">溯源侧栏 · 原文片段 + 页码</div></div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     CH 03 · 工具链层 · 十大工具 + 八大引擎
+     ============================================================ -->
+<section class="section ch-3" id="ch-3">
+  <div class="wrap">
+
+    <header class="section-head">
+      <div class="stamp">
+        <div class="num">CHAPTER · 03</div>
+        <div class="big-num">03</div>
+      </div>
+      <div class="title">
+        <div class="zh">工具链层</div>
+        <div class="en">Toolchain · 10 Tools + 8 Engines</div>
+        <div class="desc">
+          如果说十大模块是产品的"可见面"，工具链就是它们背后的"施工机械"。
+          <strong>十大工具</strong>负责把原始资料变成结构化资产，<strong>八大引擎</strong>
+          则是驱动检索、问答、溯源的算法内核。
+        </div>
+      </div>
+    </header>
+
+    <!-- Group: 十大工具 -->
+    <div class="group">
+      <div class="group-head">
+        <span class="tag">GROUP · 3.1</span>
+        <h3>十大工具 · Ten Tools</h3>
+        <span class="count">05 tools · 10 screens</span>
+      </div>
+      <div class="group-desc">
+        面向"知识资产建设"的工具集，贯穿<strong>采集 → 解析 → 构建 → 管理 → 标注</strong>全流程。
+        非研发同学也能自助操作——这是小雅学科大脑"让教师和学科专家自己参与知识建设"的产品底气。
+      </div>
+
+      <div class="features">
+
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>T1 · 多模态数据采集工具</h4>
+              <div class="en">Multi-modal Ingestion Tool</div>
+              <p>把零散素材批量变成可用资产的入口工具。当前的主力通道是<strong>音视频与图片解析</strong>、
+              <strong>小程序拍照上传</strong>以及<strong>微信公众号文章导入</strong>。</p>
+            </div>
+            <div class="meta">
+              <span class="chip part">T1 · ◐ 部分具备</span>
+              <span class="bullet">音视频图片 · 拍照<br/>公众号导入</span>
+            </div>
+          </div>
+          <div class="shots cols-4">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/3%20工具链层/1%20十大工具/多模态数据采集1.png" alt="多模态采集 1"><div class="cap">批量上传主界面</div></div>
+            <div class="shot"><span class="tag">02</span><img src="screenshots/3%20工具链层/1%20十大工具/多模态数据采集2.png" alt="多模态采集 2"><div class="cap">处理进度 · 任务队列</div></div>
+            <div class="shot"><span class="tag">03</span><img src="screenshots/3%20工具链层/1%20十大工具/多模态数据采集3.png" alt="多模态采集 3"><div class="cap">OCR / 公式识别结果</div></div>
+            <div class="shot"><span class="tag">04</span><img src="screenshots/3%20工具链层/1%20十大工具/多模态数据采集4.jpg" alt="多模态采集 4"><div class="cap">采集资产详情视图</div></div>
+          </div>
+        </article>
+
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>T2 · 文档解析工具</h4>
+              <div class="en">Document Parser</div>
+              <p>将原始文档还原为章节、段落、表格等可检索单元，对接下游切片与问答库构建。
+              当前在 PDF、Word 文档上的解析效果较稳定。</p>
+            </div>
+            <div class="meta">
+              <span class="chip part">T2 · ◐ 部分具备</span>
+              <span class="bullet">PDF / Word OK<br/>PPT 待优化</span>
+            </div>
+          </div>
+          <div class="shots cols-2">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/3%20工具链层/1%20十大工具/文档解析工具1.png" alt="文档解析 1"><div class="cap">解析主界面 · 章节 + 段落树</div></div>
+            <div class="shot"><span class="tag">02</span><img src="screenshots/3%20工具链层/1%20十大工具/文档解析工具2.png" alt="文档解析 2"><div class="cap">校正视图 · 人工修订</div></div>
+          </div>
+        </article>
+
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>T3 · 问答库构建工具</h4>
+              <div class="en">Q&A Builder</div>
+              <p>为学科专家提供问答对的<strong>手动录入</strong>和<strong>批量操作</strong>入口，直接对接问答标准库（M3）。
+              录入的问答可按学科、章节、状态多维组织。</p>
+            </div>
+            <div class="meta">
+              <span class="chip part">T3 · ◐ 部分具备</span>
+              <span class="bullet">手动录入 · 批量<br/>自动构建待完善</span>
+            </div>
+          </div>
+          <div class="shots cols-2">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/3%20工具链层/1%20十大工具/问答库构建工具1.png" alt="问答库构建 1"><div class="cap">候选问答对列表</div></div>
+            <div class="shot"><span class="tag">02</span><img src="screenshots/3%20工具链层/1%20十大工具/问答库构建工具2.png" alt="问答库构建 2"><div class="cap">冲突检测 · 人工裁决</div></div>
+          </div>
+        </article>
+
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>T4 · 知识库管理后台</h4>
+              <div class="en">Knowledge Base Console</div>
+              <p>学科大脑的统一运营入口，支持对知识库资产的<strong>增、删、改、查</strong>。
+              面向学科专家和运营同学日常维护。</p>
+            </div>
+            <div class="meta">
+              <span class="chip part">T4 · ◐ 部分具备</span>
+              <span class="bullet">增删改查 OK<br/>版本/权限待建</span>
+            </div>
+          </div>
+          <div class="shots cols-1">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/3%20工具链层/1%20十大工具/知识库管理后台.png" alt="知识库管理后台"><div class="cap">知识库管理后台 · 运营中枢</div></div>
+          </div>
+        </article>
+
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>T5 · 知识图谱标注工具</h4>
+              <div class="en">Graph Annotation Tool</div>
+              <p>工具链中完成度最高的一环。学科专家在外部整理好 Excel 表格后，可批量导入术语与关系，
+              系统自动生成可视化图谱，并打通 M4 的图谱问答与溯源链路。</p>
+            </div>
+            <div class="meta">
+              <span class="chip yes">T5 · ✓ 已具备</span>
+              <span class="bullet">Excel 导入<br/>图谱问答 + 溯源</span>
+            </div>
+          </div>
+          <div class="shots cols-1">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/3%20工具链层/1%20十大工具/知识图谱标注工具.png" alt="知识图谱标注工具"><div class="cap">知识图谱标注画布</div></div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <!-- Group: 八大引擎 -->
+    <div class="group">
+      <div class="group-head">
+        <span class="tag">GROUP · 3.2</span>
+        <h3>八大引擎 · Eight Engines</h3>
+        <span class="count">03 engines · 06 screens</span>
+      </div>
+      <div class="group-desc">
+        引擎是学科大脑的"隐形底盘"。规划中的八大引擎（混合检索 / 全链路溯源 / 幻觉兜底 / 术语改写 /
+        学科 Prompt / Embedding 微调 / 多轮引导 / 冲突检测）中，<strong>已具备基础能力但未独立封装成引擎</strong>的有 2 个，
+        <strong>尚未开始建设</strong>的有 6 个——本页仅列出当前对外可见的截图。
+      </div>
+
+      <div class="features">
+
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>E1 · 混合检索引擎</h4>
+              <div class="en">Hybrid Retrieval Engine</div>
+              <p>底层已有向量检索和关键词检索的基础召回能力，支撑当前问答入口。
+              作为独立"混合检索引擎"产品形态的整合封装（多路召回策略 + 统一重排序）仍在推进中。</p>
+            </div>
+            <div class="meta">
+              <span class="chip part">E1 · ◐ 部分具备</span>
+              <span class="bullet">基础检索 OK<br/>未独立成引擎</span>
+            </div>
+          </div>
+          <div class="shots cols-4">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/3%20工具链层/2%20八大引擎/混合检索引擎1.png" alt="混合检索 1"><div class="cap">检索任务配置</div></div>
+            <div class="shot"><span class="tag">02</span><img src="screenshots/3%20工具链层/2%20八大引擎/混合检索引擎2.png" alt="混合检索 2"><div class="cap">三路召回结果对比</div></div>
+            <div class="shot"><span class="tag">03</span><img src="screenshots/3%20工具链层/2%20八大引擎/混合检索引擎3.png" alt="混合检索 3"><div class="cap">重排序与命中分析</div></div>
+            <div class="shot"><span class="tag">04</span><img src="screenshots/3%20工具链层/2%20八大引擎/混合检索引擎4.png" alt="混合检索 4"><div class="cap">召回指标看板</div></div>
+          </div>
+        </article>
+
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>E2 · Embedding 模型（含微调任务管理）</h4>
+              <div class="en">Embedding Model Management</div>
+              <p>当前提供<strong>多个可选 Embedding 模型</strong>，用户可按学科场景选择最合适的向量模型。
+              真正针对学科语料的 <strong>Embedding 微调引擎</strong>（训练任务调度 + 效果对比）尚未开放。</p>
+            </div>
+            <div class="meta">
+              <span class="chip no">E2 · ○ 未具备微调</span>
+              <span class="bullet">多模型可选<br/>微调引擎缺位</span>
+            </div>
+          </div>
+          <div class="shots cols-1">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/3%20工具链层/2%20八大引擎/Embedding微调模型.png" alt="Embedding 微调模型"><div class="cap">Embedding 微调 · 训练任务管理</div></div>
+          </div>
+        </article>
+
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>E3 · 全链路溯源引擎</h4>
+              <div class="en">Full-chain Provenance Engine</div>
+              <p>底层已有"召回 → 引用 → 生成"链路的追踪能力，答案可以关联到底层切片。
+              作为独立"全链路溯源引擎"的产品封装（可视化链路、置信度展示、对外 API）仍在推进中。</p>
+            </div>
+            <div class="meta">
+              <span class="chip part">E3 · ◐ 部分具备</span>
+              <span class="bullet">底层能力有<br/>未独立成引擎</span>
+            </div>
+          </div>
+          <div class="shots cols-1">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/3%20工具链层/2%20八大引擎/全链路溯源引擎.png" alt="全链路溯源引擎"><div class="cap">全链路溯源 · 召回→重排→引用→输出</div></div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     CH 04 · 数据存储层
+     ============================================================ -->
+<section class="section ch-4" id="ch-4">
+  <div class="wrap">
+
+    <header class="section-head">
+      <div class="stamp">
+        <div class="num">CHAPTER · 04</div>
+        <div class="big-num">04</div>
+      </div>
+      <div class="title">
+        <div class="zh">数据存储层</div>
+        <div class="en">Storage Layer · Five-tier Architecture</div>
+        <div class="desc">
+          学科大脑的数据底座由<strong>五种不同形态的存储协同组成</strong>：对象存储放原始资产，
+          关系库放结构化元数据，向量库支撑语义检索，图数据库承载图谱推理，缓存层吸收高频访问。
+          每一层都为上层能力服务，不可替代。
+        </div>
+      </div>
+    </header>
+
+    <div class="group">
+      <div class="group-head">
+        <span class="tag">GROUP · 4.1</span>
+        <h3>五级存储</h3>
+        <span class="count">05 tiers · 05 screens</span>
+      </div>
+      <div class="group-desc">
+        数据存储层是学科大脑中<strong>完成度最高的一层</strong>——五种存储形态全部 ✓ 已具备。
+        一次典型的问答请求依次触达：缓存层先命中高频问题 → 未命中走向量库语义召回 →
+        补充图数据库关联推理 → 通过关系库拿元数据 → 从对象存储取原文定位。
+      </div>
+
+      <div class="strip-grid">
+
+        <div class="strip-card">
+          <div class="thumb"><img src="screenshots/4%20数据存储层/原始资产-对象_文档存储.png" alt="对象存储"></div>
+          <div class="body">
+            <div class="idx">D1 · OBJECT STORE</div>
+            <h5>原始资产 · 对象/文档存储</h5>
+            <p>承载 PDF / Word / 图片 / 音视频等原始文件，按学科、版本、来源分桶；支持加密、快照与生命周期管理。</p>
+          </div>
+        </div>
+
+        <div class="strip-card">
+          <div class="thumb"><img src="screenshots/4%20数据存储层/元数据-业务-关系数据库.png" alt="关系数据库"></div>
+          <div class="body">
+            <div class="idx">D2 · RDBMS</div>
+            <h5>元数据与业务 · 关系数据库</h5>
+            <p>资产元数据、账号权限、版本记录、任务状态等结构化数据，支撑管理后台与审计功能。</p>
+          </div>
+        </div>
+
+        <div class="strip-card">
+          <div class="thumb"><img src="screenshots/4%20数据存储层/语义检索-向量数据库.png" alt="向量数据库"></div>
+          <div class="body">
+            <div class="idx">D3 · VECTOR DB</div>
+            <h5>语义检索 · 向量数据库</h5>
+            <p>存储切片的 Embedding 向量，支持大规模 ANN 检索；与 E1 混合检索引擎无缝联动。</p>
+          </div>
+        </div>
+
+        <div class="strip-card">
+          <div class="thumb"><img src="screenshots/4%20数据存储层/关系推理-图数据库.png" alt="图数据库"></div>
+          <div class="body">
+            <div class="idx">D4 · GRAPH DB</div>
+            <h5>关系推理 · 图数据库</h5>
+            <p>承载知识图谱的节点与关系，支持多跳遍历、路径查询与图算法，为图谱增强检索提供算力。</p>
+          </div>
+        </div>
+
+        <div class="strip-card">
+          <div class="thumb"><img src="screenshots/4%20数据存储层/高频FAQ-缓存层.png" alt="缓存层"></div>
+          <div class="body">
+            <div class="idx">D5 · CACHE</div>
+            <h5>高频 FAQ · 缓存层</h5>
+            <p>把高频命中的问答对直接缓存在内存层，常见问题毫秒级返回，显著降低后端检索压力与模型调用成本。</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     CH 05 · AI 模型层
+     ============================================================ -->
+<section class="section ch-5" id="ch-5">
+  <div class="wrap">
+
+    <header class="section-head">
+      <div class="stamp">
+        <div class="num">CHAPTER · 05</div>
+        <div class="big-num">05</div>
+      </div>
+      <div class="title">
+        <div class="zh">AI 模型层</div>
+        <div class="en">AI Model Layer · Multi-modal Input & LLM</div>
+        <div class="desc">
+          学科大脑调用多种 AI 模型协同：多模态识别负责把"非文字"变成"可索引的文字"，
+          Embedding 模型为语义检索提供向量表示，LLM 负责生成最终回答。各模型解耦、可替换、可私有化。
+        </div>
+      </div>
+    </header>
+
+    <div class="group">
+      <div class="group-head">
+        <span class="tag">GROUP · 5.1</span>
+        <h3>模型协同</h3>
+        <span class="count">03 capabilities · 05 screens</span>
+      </div>
+      <div class="group-desc">
+        AI 模型层整体完成度较高——多模态输入、问答 LLM、语义检索 Embedding、精排 Reranker 均已具备，
+        未上线的是面向内容生成类的 AIGC 能力。
+      </div>
+
+      <div class="features">
+
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>A1 · 多模态输入</h4>
+              <div class="en">Multi-modal Input</div>
+              <p>支持图像、公式、表格等非文字内容的识别与结构化。配合 T1 数据采集工具，
+              可以把扫描件、图表截图转为可检索文本。</p>
+            </div>
+            <div class="meta">
+              <span class="chip yes">A1 · ✓ 已具备</span>
+              <span class="bullet">图像 · 公式 · 表格</span>
+            </div>
+          </div>
+          <div class="shots cols-3">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/5%20AI模型层/多模态输入1.png" alt="多模态输入 1"><div class="cap">图像识别 · 公式还原</div></div>
+            <div class="shot"><span class="tag">02</span><img src="screenshots/5%20AI模型层/多模态输入2.jpg" alt="多模态输入 2"><div class="cap">扫描件结构化</div></div>
+            <div class="shot"><span class="tag">03</span><img src="screenshots/5%20AI模型层/多模态输入3.png" alt="多模态输入 3"><div class="cap">多模态素材入库</div></div>
+          </div>
+        </article>
+
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>A2 · 问答生成 LLM</h4>
+              <div class="en">Generative LLM for Q&A</div>
+              <p>承担最终答案生成的大模型，接入问答检索与溯源链路。
+              学科大脑未自研 LLM，使用通用大模型服务作为生成引擎。</p>
+            </div>
+            <div class="meta">
+              <span class="chip yes">A2 · ✓ 已具备</span>
+              <span class="bullet">生成链路已接入</span>
+            </div>
+          </div>
+          <div class="shots cols-1">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/5%20AI模型层/问答生成-llm.png" alt="问答生成 LLM"><div class="cap">LLM 答案生成 · 约束在召回范围</div></div>
+          </div>
+        </article>
+
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>A3 · 语义检索 Embedding</h4>
+              <div class="en">Retrieval Embedding</div>
+              <p>为检索召回提供向量表示的模型层。系统提供<strong>多个可选 Embedding 模型</strong>，
+              用户可按学科特点选用。针对学科语料的二次微调待 E2 微调引擎上线。</p>
+            </div>
+            <div class="meta">
+              <span class="chip yes">A3 · ✓ 已具备</span>
+              <span class="bullet">多模型可选</span>
+            </div>
+          </div>
+          <div class="shots cols-1">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/5%20AI模型层/语义检索-%20embedding.png" alt="语义检索 Embedding"><div class="cap">语义检索 Embedding · 召回实验</div></div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     CH 06 · 安全与部署
+     ============================================================ -->
+<section class="section ch-6" id="ch-6">
+  <div class="wrap">
+
+    <header class="section-head">
+      <div class="stamp">
+        <div class="num">CHAPTER · 06</div>
+        <div class="big-num">06</div>
+      </div>
+      <div class="title">
+        <div class="zh">安全防护 &amp; 全私有化部署</div>
+        <div class="en">Security & Fully On-Premise Deployment</div>
+        <div class="desc">
+          学科大脑面向 B 端高校与科研机构，<strong>数据不出校园</strong>是底线。
+          通过六层安全防护 + 全私有化部署架构，保证从硬件到模型到业务的每一环都可控、可审、可隔离。
+        </div>
+      </div>
+    </header>
+
+    <!-- 安全防护 -->
+    <div class="group">
+      <div class="group-head">
+        <span class="tag">GROUP · 6.1</span>
+        <h3>六层安全防护体系</h3>
+        <span class="count">1 layer visible · 02 screens</span>
+      </div>
+      <div class="group-desc">
+        学科大脑侧承担的是<strong>访问控制层</strong>（账号、权限、行为审计）。
+        <strong>物理部署、网络传输、数据存储</strong>三层的基础设施安全<strong>由学校本地化保障</strong>，我方提供部署建议。
+        内容合规、身份鉴权的独立封装仍在规划中。
+      </div>
+
+      <div class="features">
+        <article class="feature">
+          <div class="feature-head">
+            <div class="info">
+              <h4>S4 · 访问控制</h4>
+              <div class="en">Access Control</div>
+              <p>学科大脑统一的账号、权限与行为审计后台。支持按组织、角色授权，所有操作留下审计记录。
+              这是目前安全防护章节中完成度最高的一环。</p>
+            </div>
+            <div class="meta">
+              <span class="chip yes">S4 · ✓ 已具备</span>
+              <span class="bullet">账号 · 权限<br/>行为审计</span>
+            </div>
+          </div>
+          <div class="shots cols-2">
+            <div class="shot"><span class="tag">01</span><img src="screenshots/6%20六层安全防护体系/访问控制1.png" alt="访问控制 1"><div class="cap">角色与权限配置</div></div>
+            <div class="shot"><span class="tag">02</span><img src="screenshots/6%20六层安全防护体系/访问控制2.png" alt="访问控制 2"><div class="cap">访问策略审计</div></div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- 部署 -->
+    <div class="group">
+      <div class="group-head">
+        <span class="tag">GROUP · 6.2</span>
+        <h3>全私有化部署</h3>
+        <span class="count">03 deployment modes</span>
+      </div>
+      <div class="group-desc">
+        全私有化部署架构已具备。学科大脑支持按学校诉求提供部署方案，<strong>数据与模型权重均不出校</strong>。
+        以下三档是常见交付形态，具体组合按项目落地。
+      </div>
+
+      <div class="deploy-wrap">
+
+        <div class="deploy-card">
+          <span class="ico">🏛️</span>
+          <h5>Mode A · 全栈私有化</h5>
+          <p>硬件 + 存储 + 模型 + 业务应用全部交付到学校本地数据中心。支持信创<strong>国产化</strong>生态，
+          满足最高等级保密要求，适合重点高校与科研院所。</p>
+        </div>
+
+        <div class="deploy-card">
+          <span class="ico">🏢</span>
+          <h5>Mode B · 校园专有云</h5>
+          <p>硬件由学校自建，软件由小雅交付；上层应用可按学院多租户切分。适合<strong>有机房、有运维</strong>
+          但不想自己做算法的高校。</p>
+        </div>
+
+        <div class="deploy-card">
+          <span class="ico">☁️</span>
+          <h5>Mode C · 专有 SaaS</h5>
+          <p>由讯飞在<strong>学校独占集群</strong>内托管，合同期内数据隔离、专人运维。
+          适合中小高校与短期试点项目，部署最快。</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============ Footer ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="mark">小雅学科大脑 · Coral</div>
+    <div class="meta-line">PRODUCT · V1 · APRIL 2026 · IFLYTEK HIGHER EDUCATION</div>
+    <p class="note">
+      本页所有截图均来自小雅学科大脑当前在线产品，按学科大模型系统架构图 V3 的七层结构组织。
+      对应的具备状态标注请参见 · <a href="Coral_系统架构图_含状态标注_V1.html" style="color:var(--accent);text-decoration:underline;">Coral 系统架构图（含具备状态标注）</a>。
+    </p>
+  </div>
+</footer>
+
+<!-- ============ Lightbox ============ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="图片查看器">
+  <div class="lb-counter" id="lbCounter">01 / 40</div>
+  <button class="lb-close" id="lbClose" aria-label="关闭">×</button>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="上一张">‹</button>
+  <img id="lbImage" src="" alt="">
+  <button class="lb-nav lb-next" id="lbNext" aria-label="下一张">›</button>
+  <div class="lb-caption" id="lbCaption"></div>
+</div>
+
+<script>
+(function () {
+  // 收集所有可点击的图片（功能卡截图 + 数据存储层条带卡）
+  const selectors = '.shot img, .strip-card .thumb img';
+  const imgs = Array.from(document.querySelectorAll(selectors));
+
+  const lb       = document.getElementById('lightbox');
+  const lbImage  = document.getElementById('lbImage');
+  const lbCap    = document.getElementById('lbCaption');
+  const lbCount  = document.getElementById('lbCounter');
+  const lbClose  = document.getElementById('lbClose');
+  const lbPrev   = document.getElementById('lbPrev');
+  const lbNext   = document.getElementById('lbNext');
+
+  let currentIdx = 0;
+
+  // 从原始卡片中提取标题（feature 的 h4 或 strip-card 的 h5）
+  function getContext(img) {
+    const shot = img.closest('.shot');
+    if (shot) {
+      const feature = shot.closest('.feature');
+      const title = feature ? feature.querySelector('h4')?.textContent.trim() : '';
+      const tag   = shot.querySelector('.tag')?.textContent.trim() || '';
+      const cap   = shot.querySelector('.cap')?.textContent.trim() || img.alt || '';
+      return { idx: tag, title, desc: cap };
+    }
+    const strip = img.closest('.strip-card');
+    if (strip) {
+      const title = strip.querySelector('h5')?.textContent.trim() || '';
+      const idx   = strip.querySelector('.idx')?.textContent.trim() || '';
+      const desc  = strip.querySelector('p')?.textContent.trim() || '';
+      return { idx, title, desc };
+    }
+    return { idx: '', title: '', desc: img.alt || '' };
+  }
+
+  function render(i) {
+    currentIdx = (i + imgs.length) % imgs.length;
+    const img = imgs[currentIdx];
+    lbImage.src = img.src;
+    lbImage.alt = img.alt;
+    const ctx = getContext(img);
+    lbCap.innerHTML = (ctx.idx ? `<span class="idx">${ctx.idx}</span>` : '') +
+                      `<strong>${ctx.title}</strong>${ctx.desc ? ' · ' + ctx.desc : ''}`;
+    lbCount.textContent = String(currentIdx + 1).padStart(2, '0') + ' / ' + String(imgs.length).padStart(2, '0');
+  }
+
+  function open(i) {
+    render(i);
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function close() {
+    lb.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  imgs.forEach((img, i) => {
+    img.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      open(i);
+    });
+  });
+
+  lbClose.addEventListener('click', close);
+  lbPrev.addEventListener('click', (e) => { e.stopPropagation(); render(currentIdx - 1); });
+  lbNext.addEventListener('click', (e) => { e.stopPropagation(); render(currentIdx + 1); });
+
+  // 点击背景关闭，点击图片本身不关闭
+  lb.addEventListener('click', (e) => {
+    if (e.target === lb) close();
+  });
+  lbImage.addEventListener('click', (e) => e.stopPropagation());
+
+  // 键盘导航
+  document.addEventListener('keydown', (e) => {
+    if (!lb.classList.contains('active')) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') render(currentIdx - 1);
+    else if (e.key === 'ArrowRight') render(currentIdx + 1);
+  });
+})();
+</script>
+
+</body>
+</html>

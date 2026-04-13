@@ -1,0 +1,2169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>讯飞智能教学平台 · 智能化目标立项</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Inter:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   讯飞智能教学平台 · 智能化目标立项 PPT
+   商务高级 · 信息克制 · 重点突出
+   ============================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --paper:        #FBF6EC;
+  --paper-deep:   #F5EEDD;
+  --ink:          #1A1410;
+  --ink-soft:     #3D342B;
+  --ink-mute:     #75675A;
+  --ink-light:    #A89A8A;
+  --accent:       #D2541F;
+  --accent-deep:  #A03810;
+  --accent-soft:  #F4D9C7;
+  --hairline:     #E5DCC8;
+  --hairline-bold:#CFC3A9;
+}
+
+html, body {
+  height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Inter", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-weight: 400;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.serif { font-family: "Noto Serif SC", "Songti SC", "SimSun", serif; }
+.mono  { font-family: "JetBrains Mono", "SF Mono", monospace; }
+
+/* ============ 纸质底纹 ============ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 15% 18%, rgba(210, 84, 31, 0.035) 0%, transparent 40%),
+    radial-gradient(circle at 85% 82%, rgba(26, 20, 16, 0.025) 0%, transparent 45%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============ Deck ============ */
+.deck {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  padding: 72px 120px 88px;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* ============ Top bar ============ */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--hairline);
+  flex-shrink: 0;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-mark {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--accent);
+  border-radius: 3px;
+  position: relative;
+}
+.brand-mark::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+.brand-name { color: var(--ink); font-weight: 600; letter-spacing: 3px; }
+.brand-sub  { color: var(--ink-light); }
+.top-meta { display: flex; gap: 28px; }
+.top-meta span { display: inline-block; }
+.top-meta .pipe { color: var(--hairline-bold); }
+
+/* ============ Body region ============ */
+.body-region {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  padding: 20px 0;
+}
+
+/* ============ Bottom bar ============ */
+.bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  padding-top: 18px;
+  border-top: 1px solid var(--hairline);
+  flex-shrink: 0;
+}
+
+/* ============ Common type ============ */
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.eyebrow::before {
+  content: "";
+  display: inline-block;
+  width: 32px;
+  height: 1.5px;
+  background: var(--accent);
+}
+.headline {
+  font-family: "Noto Serif SC", serif;
+  font-weight: 900;
+  font-size: 68px;
+  line-height: 1.12;
+  letter-spacing: -1px;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+.headline .accent { color: var(--accent); }
+.headline em {
+  font-style: normal;
+  position: relative;
+  display: inline-block;
+}
+.headline em::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  height: 14px;
+  background: var(--accent-soft);
+  z-index: -1;
+}
+.subhead {
+  font-size: 18px;
+  color: var(--ink-mute);
+  line-height: 1.7;
+  max-width: 820px;
+  font-weight: 400;
+}
+.kicker {
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  max-width: 720px;
+  margin-top: 8px;
+}
+
+/* ============ Slide 1 · Cover ============ */
+.cover { position: relative; }
+.cover .body-region {
+  justify-content: center;
+  position: relative;
+}
+.cover-label {
+  position: absolute;
+  top: 10%;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.cover-label::before {
+  content: "";
+  width: 48px;
+  height: 1px;
+  background: var(--ink);
+}
+.cover-platform {
+  font-family: "Noto Serif SC", serif;
+  font-weight: 700;
+  font-size: 32px;
+  color: var(--ink-soft);
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+.cover-title {
+  font-family: "Noto Serif SC", serif;
+  font-weight: 900;
+  font-size: 116px;
+  line-height: 1.0;
+  letter-spacing: -3px;
+  color: var(--ink);
+  margin-bottom: 44px;
+  position: relative;
+}
+.cover-title .ink-accent {
+  color: var(--accent);
+  position: relative;
+}
+.cover-title .period {
+  color: var(--accent);
+  font-size: 116px;
+}
+.cover-tagline {
+  font-size: 19px;
+  color: var(--ink-soft);
+  font-weight: 400;
+  line-height: 1.6;
+  max-width: 720px;
+  padding-left: 48px;
+  position: relative;
+}
+.cover-tagline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 32px;
+  height: 1.5px;
+  background: var(--accent);
+}
+.cover-tagline strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.cover-footer {
+  position: absolute;
+  bottom: 10%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+.cover-footer .big {
+  font-family: "Noto Serif SC", serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.cover-footer .right { text-align: right; }
+.cover-seal {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  border: 1px solid var(--accent);
+  padding: 6px 12px;
+  border-radius: 2px;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+/* ============ Slide 2 · 窗口期 ============ */
+.window-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 64px;
+  align-items: center;
+}
+.window-left .subhead { margin-top: 12px; }
+.window-right {
+  border-left: 1px solid var(--hairline-bold);
+  padding-left: 48px;
+}
+.window-stat {
+  margin-bottom: 28px;
+}
+.window-stat:last-child { margin-bottom: 0; }
+.window-stat .num {
+  font-family: "Noto Serif SC", serif;
+  font-weight: 900;
+  font-size: 56px;
+  line-height: 1;
+  color: var(--accent);
+  letter-spacing: -1px;
+}
+.window-stat .num .unit { font-size: 22px; color: var(--ink); margin-left: 4px; }
+.window-stat .label {
+  font-size: 12px;
+  color: var(--ink-mute);
+  margin-top: 8px;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+/* ============ Slide 3 · 三重信号 ============ */
+.signal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-top: 32px;
+}
+.signal-card {
+  border-top: 2px solid var(--ink);
+  padding-top: 28px;
+  position: relative;
+}
+.signal-card .sig-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 2px;
+  position: absolute;
+  top: -11px;
+  background: var(--paper);
+  padding-right: 10px;
+}
+.signal-card h3 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+.signal-card .sig-tag {
+  display: inline-block;
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.signal-card p {
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+.signal-card p strong {
+  color: var(--ink);
+  font-weight: 600;
+  border-bottom: 1.5px solid var(--accent-soft);
+}
+
+/* ============ Slide 4 · 国家战略 ============ */
+.strategy-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 72px;
+  align-items: start;
+  margin-top: 24px;
+}
+.strategy-portrait {
+  padding: 36px 32px;
+  border: 1px solid var(--hairline-bold);
+  background: var(--paper-deep);
+  position: relative;
+}
+.strategy-portrait::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 40px;
+  height: 40px;
+  border-top: 2px solid var(--accent);
+  border-left: 2px solid var(--accent);
+}
+.strategy-portrait::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 40px;
+  height: 40px;
+  border-bottom: 2px solid var(--accent);
+  border-right: 2px solid var(--accent);
+}
+.portrait-label {
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.portrait-name {
+  font-family: "Noto Serif SC", serif;
+  font-size: 42px;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 18px;
+  letter-spacing: -0.5px;
+}
+.portrait-role {
+  font-size: 13px;
+  line-height: 1.9;
+  color: var(--ink-soft);
+  padding-top: 16px;
+  border-top: 1px solid var(--hairline-bold);
+}
+.portrait-role div { margin-bottom: 6px; }
+.portrait-role strong { color: var(--ink); font-weight: 600; }
+
+.strategy-moves {
+  padding-top: 8px;
+}
+.move-item {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.move-item:last-child { border-bottom: none; }
+.move-num {
+  font-family: "Noto Serif SC", serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--accent);
+  line-height: 1;
+}
+.move-body h4 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.move-body p {
+  font-size: 13px;
+  color: var(--ink-mute);
+  line-height: 1.7;
+}
+
+/* ============ Slide 5 · 现实挑战 ============ */
+.challenge-list {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.challenge-item {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 32px;
+  align-items: center;
+  padding: 28px 32px;
+  border: 1px solid var(--hairline);
+  background: rgba(255,255,255,0.4);
+  transition: all 0.3s;
+}
+.challenge-item:hover {
+  border-color: var(--accent);
+  background: rgba(255,255,255,0.7);
+}
+.chal-num {
+  font-family: "Noto Serif SC", serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -1px;
+}
+.chal-body h4 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.chal-body p {
+  font-size: 13px;
+  color: var(--ink-mute);
+  line-height: 1.7;
+}
+.chal-severity {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--accent);
+  font-weight: 600;
+  border: 1px solid var(--accent);
+  padding: 6px 12px;
+  text-transform: uppercase;
+}
+.challenge-verdict {
+  margin-top: 36px;
+  padding: 20px 28px;
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
+  font-family: "Noto Serif SC", serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.5px;
+}
+
+/* ============ Slide 6 · 核心判断 ============ */
+.thesis-quote {
+  font-family: "Noto Serif SC", serif;
+  font-weight: 700;
+  font-size: 54px;
+  line-height: 1.3;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  max-width: 1000px;
+  margin: 32px 0 56px;
+  position: relative;
+}
+.thesis-quote::before {
+  content: "";
+  font-family: "Noto Serif SC", serif;
+  font-size: 100px;
+  color: var(--accent);
+  position: absolute;
+  left: -72px;
+  top: -40px;
+  line-height: 1;
+}
+.thesis-quote .mark {
+  display: inline-block;
+  background: linear-gradient(180deg, transparent 55%, var(--accent-soft) 55%, var(--accent-soft) 92%, transparent 92%);
+  padding: 0 4px;
+}
+.thesis-quote .accent { color: var(--accent); }
+
+.compare-matrix {
+  display: grid;
+  grid-template-columns: 180px 1fr 40px 1fr;
+  gap: 0;
+  border-top: 1.5px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
+}
+.cm-header {
+  display: contents;
+}
+.cm-header > div {
+  padding: 14px 20px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  border-bottom: 1px solid var(--hairline-bold);
+}
+.cm-header > div:nth-child(2) { color: var(--ink-light); }
+.cm-header > div:nth-child(4) { color: var(--accent); }
+.cm-row {
+  display: contents;
+}
+.cm-row > div {
+  padding: 18px 20px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--hairline);
+}
+.cm-row:last-child > div { border-bottom: none; }
+.cm-row .cm-dim {
+  font-family: "Noto Serif SC", serif;
+  font-weight: 700;
+  color: var(--ink);
+}
+.cm-row .cm-old {
+  color: var(--ink-light);
+  text-decoration: line-through;
+  text-decoration-color: var(--ink-light);
+}
+.cm-row .cm-arrow {
+  color: var(--accent);
+  text-align: center;
+  font-family: "Noto Serif SC", serif;
+  font-weight: 400;
+}
+.cm-row .cm-new {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ============ Slide 7 · 五大目标 ============ */
+.goals-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  margin-top: 32px;
+  border-top: 1.5px solid var(--ink);
+}
+.goal-cell {
+  padding: 36px 24px;
+  border-right: 1px solid var(--hairline-bold);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.goal-cell:last-child { border-right: none; }
+.goal-cell::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: var(--accent);
+  transition: width 0.4s;
+}
+.slide.active .goal-cell::before { width: 100%; }
+.slide.active .goal-cell:nth-child(1)::before { transition-delay: 0.2s; }
+.slide.active .goal-cell:nth-child(2)::before { transition-delay: 0.35s; }
+.slide.active .goal-cell:nth-child(3)::before { transition-delay: 0.5s; }
+.slide.active .goal-cell:nth-child(4)::before { transition-delay: 0.65s; }
+.slide.active .goal-cell:nth-child(5)::before { transition-delay: 0.8s; }
+.goal-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+.goal-title {
+  font-family: "Noto Serif SC", serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 20px;
+  letter-spacing: -0.3px;
+}
+.goal-from-to {
+  font-size: 11px;
+  color: var(--ink-mute);
+  line-height: 1.8;
+  margin-top: auto;
+}
+.goal-from-to .from { color: var(--ink-light); text-decoration: line-through; }
+.goal-from-to .to { color: var(--ink); font-weight: 600; display: block; margin-top: 4px; }
+
+/* ============ Slide 8 · 产品主轴 ============ */
+.trinity-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 80px;
+  align-items: center;
+  margin-top: 24px;
+}
+.trinity-diagram {
+  position: relative;
+  aspect-ratio: 1;
+  max-width: 440px;
+}
+.tri-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--paper);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  box-shadow: 0 20px 60px rgba(210, 84, 31, 0.35);
+}
+.tri-center .core-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  opacity: 0.9;
+  margin-bottom: 4px;
+}
+.tri-center .core-name {
+  font-family: "Noto Serif SC", serif;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+.tri-node {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.tri-node .node-label {
+  font-size: 9px;
+  color: var(--ink-mute);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+.tri-node .node-name {
+  font-family: "Noto Serif SC", serif;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--ink);
+}
+.tri-node.top { top: 0; left: 50%; transform: translateX(-50%); }
+.tri-node.bl  { bottom: 0; left: 0; }
+.tri-node.br  { bottom: 0; right: 0; }
+.tri-line {
+  position: absolute;
+  background: var(--hairline-bold);
+  z-index: 1;
+}
+
+.trinity-desc {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.tri-item {
+  padding-left: 24px;
+  border-left: 2px solid var(--accent);
+}
+.tri-item h4 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.tri-item h4 .en {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  margin-left: 10px;
+  font-weight: 500;
+}
+.tri-item p {
+  font-size: 13px;
+  color: var(--ink-mute);
+  line-height: 1.75;
+}
+.tri-item p strong { color: var(--ink); font-weight: 600; }
+
+/* ============ Slide 9 · 八大场景 ============ */
+.scenes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 1fr 1fr;
+  gap: 1px;
+  background: var(--hairline-bold);
+  margin-top: 32px;
+  border: 1px solid var(--hairline-bold);
+}
+.scene-cell {
+  background: var(--paper);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 170px;
+  transition: background 0.3s;
+}
+.scene-cell:hover {
+  background: rgba(255,255,255,0.7);
+}
+.scene-char {
+  font-family: "Noto Serif SC", serif;
+  font-size: 72px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--accent);
+  margin-bottom: 14px;
+  letter-spacing: -2px;
+  position: relative;
+}
+.scene-char .tiny {
+  position: absolute;
+  top: 8px;
+  right: -4px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+.scene-name {
+  font-family: "Noto Serif SC", serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.scene-desc {
+  font-size: 11px;
+  color: var(--ink-mute);
+  line-height: 1.7;
+}
+
+/* ============ Slide 10 · 六大护城河 ============ */
+.moat-list {
+  margin-top: 20px;
+}
+.moat-row {
+  display: grid;
+  grid-template-columns: 70px 240px 1fr 120px;
+  gap: 28px;
+  align-items: center;
+  padding: 22px 8px;
+  border-bottom: 1px solid var(--hairline);
+}
+.moat-row:first-child { border-top: 1.5px solid var(--ink); }
+.moat-row:last-child {
+  border-bottom: 1.5px solid var(--ink);
+  background: var(--accent-soft);
+  padding: 26px 8px;
+}
+.moat-num {
+  font-family: "Noto Serif SC", serif;
+  font-size: 36px;
+  font-weight: 300;
+  color: var(--accent);
+  line-height: 1;
+}
+.moat-row:last-child .moat-num {
+  font-weight: 900;
+  font-size: 40px;
+}
+.moat-name {
+  font-family: "Noto Serif SC", serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.moat-row:last-child .moat-name { font-weight: 900; font-size: 21px; }
+.moat-desc {
+  font-size: 13px;
+  color: var(--ink-mute);
+  line-height: 1.6;
+}
+.moat-row:last-child .moat-desc { color: var(--ink-soft); }
+.moat-tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--ink-light);
+  text-align: right;
+}
+.moat-row:last-child .moat-tag {
+  color: var(--accent-deep);
+  font-weight: 600;
+}
+
+/* ============ Slide 11 · 路线图 ============ */
+.roadmap-wrap {
+  margin-top: 36px;
+  position: relative;
+}
+.roadmap-line {
+  position: absolute;
+  top: 36px;
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  background: var(--hairline-bold);
+}
+.roadmap-line::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.roadmap-line::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.roadmap-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  position: relative;
+  z-index: 1;
+}
+.rm-col {
+  padding: 0 20px;
+  text-align: left;
+}
+.rm-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 2;
+}
+.rm-col:nth-child(3) .rm-dot { border-color: var(--accent); }
+.rm-col:nth-child(4) .rm-dot { background: var(--accent); border-color: var(--accent); }
+.rm-phase {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.rm-title {
+  font-family: "Noto Serif SC", serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 16px;
+  letter-spacing: -0.3px;
+}
+.rm-list {
+  list-style: none;
+  padding: 0;
+}
+.rm-list li {
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  padding: 6px 0 6px 14px;
+  position: relative;
+  border-bottom: 1px dashed var(--hairline);
+}
+.rm-list li:last-child { border-bottom: none; }
+.rm-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 13px;
+  width: 6px;
+  height: 1px;
+  background: var(--accent);
+}
+
+/* ============ Slide 12 · 北邮标杆 ============ */
+.anchor-wrap {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 72px;
+  margin-top: 24px;
+  align-items: start;
+}
+.anchor-quote {
+  font-family: "Noto Serif SC", serif;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--ink);
+  margin-bottom: 32px;
+  position: relative;
+  padding: 28px 0 28px 48px;
+  border-left: 3px solid var(--accent);
+}
+.anchor-quote .quote-mark {
+  position: absolute;
+  left: 12px;
+  top: -8px;
+  font-family: "Noto Serif SC", serif;
+  font-size: 60px;
+  color: var(--accent);
+  line-height: 1;
+}
+.anchor-quote .highlight {
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 2px;
+}
+.anchor-source {
+  font-size: 13px;
+  color: var(--ink-mute);
+  padding-left: 48px;
+  font-style: italic;
+}
+
+.anchor-stats {
+  border: 1px solid var(--hairline-bold);
+  background: var(--paper-deep);
+  padding: 36px 32px;
+}
+.anchor-stat-row {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--hairline-bold);
+}
+.anchor-stat-row:first-child { padding-top: 0; }
+.anchor-stat-row:last-child { padding-bottom: 0; border-bottom: none; }
+.anchor-stat-row .label {
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.anchor-stat-row .value {
+  font-family: "Noto Serif SC", serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--ink);
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+.anchor-stat-row .value .accent { color: var(--accent); }
+.anchor-stat-row .sub {
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin-top: 4px;
+}
+
+/* ============ Slide 13 · 商业回报 ============ */
+.return-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin-top: 32px;
+  border: 1px solid var(--hairline-bold);
+}
+.return-cell {
+  padding: 44px 32px;
+  border-right: 1px solid var(--hairline-bold);
+  position: relative;
+}
+.return-cell:last-child { border-right: none; }
+.return-cell:nth-child(1) { background: rgba(210, 84, 31, 0.04); }
+.return-label {
+  font-size: 11px;
+  color: var(--ink-mute);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.return-num {
+  font-family: "Noto Serif SC", serif;
+  font-size: 72px;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -2px;
+  margin-bottom: 8px;
+}
+.return-num .unit { font-size: 24px; color: var(--ink); margin-left: 2px; }
+.return-num .sign { font-size: 32px; vertical-align: super; }
+.return-desc {
+  font-size: 12px;
+  color: var(--ink-mute);
+  line-height: 1.7;
+  padding-top: 14px;
+  border-top: 1px solid var(--hairline);
+  margin-top: 14px;
+}
+.return-desc strong { color: var(--ink); font-weight: 600; }
+
+.return-footer {
+  margin-top: 32px;
+  padding: 18px 24px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 13px;
+  line-height: 1.7;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.return-footer .foot-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.return-footer .foot-text {
+  font-family: "Noto Serif SC", serif;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ============ Slide 14 · 结论 ============ */
+.verdict-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 80px;
+  align-items: center;
+}
+.verdict-stamp {
+  text-align: center;
+  position: relative;
+}
+.verdict-big {
+  font-family: "Noto Serif SC", serif;
+  font-size: 280px;
+  font-weight: 900;
+  line-height: 0.85;
+  color: var(--accent);
+  letter-spacing: -10px;
+  position: relative;
+}
+.verdict-big::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  width: 340px;
+  height: 340px;
+  border: 4px solid var(--accent);
+  border-radius: 50%;
+  opacity: 0.15;
+  pointer-events: none;
+}
+.verdict-label {
+  font-family: "Noto Serif SC", serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 16px;
+  letter-spacing: 2px;
+}
+.verdict-sub {
+  font-size: 12px;
+  color: var(--ink-mute);
+  margin-top: 6px;
+  letter-spacing: 1px;
+}
+
+.ask-list {
+  border-top: 1.5px solid var(--ink);
+}
+.ask-item {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--hairline);
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 24px;
+  align-items: baseline;
+}
+.ask-item:last-child { border-bottom: 1.5px solid var(--ink); }
+.ask-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--accent);
+  font-weight: 600;
+}
+.ask-body {
+  font-family: "Noto Serif SC", serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.ask-body .muted {
+  font-weight: 400;
+  color: var(--ink-mute);
+  font-size: 13px;
+  display: block;
+  margin-top: 4px;
+}
+
+/* ============ Navigation ============ */
+.nav-ui {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+  pointer-events: none;
+}
+.progress-track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: transparent;
+  z-index: 100;
+}
+.progress-bar {
+  height: 100%;
+  background: var(--accent);
+  width: 0;
+  transition: width 0.5s ease;
+}
+.slide-counter {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ink-light);
+  letter-spacing: 1px;
+  pointer-events: auto;
+}
+.slide-counter .current {
+  color: var(--accent);
+  font-weight: 500;
+}
+.key-hint {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--ink-light);
+  letter-spacing: 1px;
+  pointer-events: auto;
+}
+.key-hint kbd {
+  display: inline-block;
+  padding: 2px 6px;
+  border: 1px solid var(--hairline-bold);
+  border-radius: 3px;
+  background: var(--paper);
+  margin: 0 2px;
+  font-family: inherit;
+  font-size: 10px;
+  color: var(--ink-soft);
+}
+
+/* ============ Scale for small screens ============ */
+@media (max-width: 1400px) {
+  .slide { padding: 56px 80px 72px; }
+  .cover-title { font-size: 92px; }
+  .headline { font-size: 56px; }
+  .thesis-quote { font-size: 44px; }
+  .verdict-big { font-size: 220px; }
+}
+@media (max-width: 1100px) {
+  .slide { padding: 48px 56px 64px; }
+  .cover-title { font-size: 72px; }
+  .headline { font-size: 42px; }
+  .thesis-quote { font-size: 36px; }
+  .verdict-big { font-size: 180px; }
+  .goals-grid { grid-template-columns: repeat(5, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- 顶部进度条 -->
+<div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+
+<div class="deck" id="deck">
+
+  <!-- ============ 01 · Cover ============ -->
+  <section class="slide cover active">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span class="brand-name">IFLYTEK</span>
+        <span class="brand-sub">· AI 教学产品部</span>
+      </div>
+      <div class="top-meta">
+        <span>立项汇报</span>
+        <span class="pipe">/</span>
+        <span>面向高管</span>
+        <span class="pipe">/</span>
+        <span>机密 · CONFIDENTIAL</span>
+      </div>
+    </div>
+
+    <div class="body-region">
+      <div class="cover-label">01 · PROPOSAL &nbsp; FY26-Q2</div>
+
+      <div class="cover-platform">讯飞智能教学平台</div>
+      <h1 class="cover-title">智能化目标<span class="ink-accent">立项</span><span class="period">.</span></h1>
+
+      <p class="cover-tagline">
+        从 <strong>数字化教学工具</strong> 进化为 <strong>智能化教学生命体</strong>——<br>
+        这不是一次功能迭代，是一次物种跨越。
+      </p>
+
+      <div class="cover-footer">
+        <div>
+          <div class="big">AI 教学产品部</div>
+          <div>Product Director · 郭文坚</div>
+        </div>
+        <div class="right">
+          <div>讯飞高等教育事业部</div>
+          <div class="cover-seal">2026 · APR · V1</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 02 · 窗口期 ============ -->
+  <section class="slide">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span class="brand-name">02 · WHY NOW</span>
+      </div>
+      <div class="top-meta"><span>窗口期判断</span></div>
+    </div>
+
+    <div class="body-region">
+      <div class="window-grid">
+        <div class="window-left">
+          <div class="eyebrow">不会再来的窗口</div>
+          <h2 class="headline">教育 AI 的<br><em>国运级窗口</em>，<br>正在<span class="accent">此刻</span>打开。</h2>
+          <p class="subhead">
+            国家战略、行业拐点、技术爆发、友商追赶——四个齿轮在同一个时间点咬合。
+            先动 6 个月，决定未来 5 年的格局。错过这扇窗，讯飞高教将从 <strong style="color:var(--ink)">定义者</strong> 降格为 <strong style="color:var(--ink)">跟随者</strong>。
+          </p>
+        </div>
+        <div class="window-right">
+          <div class="window-stat">
+            <div class="num">7<span class="unit">亿</span></div>
+            <div class="label">国家教育智联网 · 中央专项</div>
+          </div>
+          <div class="window-stat">
+            <div class="num">2300<span class="unit">万</span></div>
+            <div class="label">北邮特战队 · 已提交项目</div>
+          </div>
+          <div class="window-stat">
+            <div class="num">6<span class="unit">个月</span></div>
+            <div class="label">友商 Fork OpenClaw · 追赶期</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>讯飞智能教学平台 · 智能化目标立项</span>
+      <span>机密 · Confidential</span>
+    </div>
+  </section>
+
+  <!-- ============ 03 · 三重信号 ============ -->
+  <section class="slide">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span class="brand-name">03 · SIGNALS</span>
+      </div>
+      <div class="top-meta"><span>三重信号同时发出</span></div>
+    </div>
+
+    <div class="body-region">
+      <div class="eyebrow">三重信号</div>
+      <h2 class="headline">为什么<em>必须立项</em>？</h2>
+      <p class="subhead">我们同时听到三个方向的鼓声，而过去十年，它们从未在一个时间点上合鸣过。</p>
+
+      <div class="signal-grid">
+        <div class="signal-card">
+          <div class="sig-num">01 &nbsp;— &nbsp;NATION</div>
+          <div class="sig-tag">来自国家</div>
+          <h3>从政策到国标</h3>
+          <p>
+            <strong>徐坤校长</strong>带着"AI赋能教学、千人千面"走进两会，
+            正在主导<strong>新一代教学平台国家标准</strong>起草。
+            国家教育智联网 <strong>7 亿</strong> 专项已经启动。
+          </p>
+        </div>
+        <div class="signal-card">
+          <div class="sig-num">02 &nbsp;— &nbsp;MARKET</div>
+          <div class="sig-tag">来自市场</div>
+          <h3>小雅到了拐点</h3>
+          <p>
+            平台用户与数据规模已经建立，但智能化停留在<strong>搜索 + 答疑</strong>浅层。
+            <strong>八大场景数据丰富</strong>却没被真正利用。
+            客户在问：为什么还只是工具？
+          </p>
+        </div>
+        <div class="signal-card">
+          <div class="sig-num">03 &nbsp;— &nbsp;RIVALS</div>
+          <div class="sig-tag">来自对手</div>
+          <h3>OpenClaw 已开源</h3>
+          <p>
+            底层调度框架被友商<strong>零成本 Fork</strong>。
+            通用 AI 厂商、Coze/Dify 和学科专做的创业公司都在加速进攻。
+            护城河不在<strong>调度本身</strong>，必须在<strong>别的地方</strong>。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>三重信号 · 国家 / 市场 / 对手</span>
+      <span>立项 PPT · 03 / 14</span>
+    </div>
+  </section>
+
+  <!-- ============ 04 · 国家战略 ============ -->
+  <section class="slide">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span class="brand-name">04 · NATIONAL STRATEGY</span>
+      </div>
+      <div class="top-meta"><span>国家战略视角</span></div>
+    </div>
+
+    <div class="body-region">
+      <div class="eyebrow">国家战略锚点</div>
+      <h2 class="headline">我们不是在做<em>一个产品</em>，<br>而是在对齐<span class="accent">国家标准</span>。</h2>
+
+      <div class="strategy-grid">
+        <div class="strategy-portrait">
+          <div class="portrait-label">KEY FIGURE · 战略锚点人物</div>
+          <div class="portrait-name">徐坤 校长</div>
+          <div class="portrait-role">
+            <div><strong>北京邮电大学</strong> 校长</div>
+            <div><strong>全国政协委员</strong></div>
+            <div><strong>教育部高等学校教育指导委员会</strong> 主任委员</div>
+            <div>"新一代教学平台" <strong>国家标准</strong> 主持起草人</div>
+          </div>
+        </div>
+
+        <div class="strategy-moves">
+          <div class="move-item">
+            <div class="move-num">01</div>
+            <div class="move-body">
+              <h4>两会直达总书记的"千人千面"</h4>
+              <p>2024 年全国政协会议现场，徐校长系统汇报"AI 赋能教学、千人千面"理念，获高层认同。这不是学术概念，是国家方向。</p>
+            </div>
+          </div>
+          <div class="move-item">
+            <div class="move-num">02</div>
+            <div class="move-body">
+              <h4>国家教育智联网 · 7 亿专项</h4>
+              <p>徐校长主导的国家级教育基础设施工程已经启动。讯飞是否入场，决定我们是"供应商"还是"基础设施参与方"。</p>
+            </div>
+          </div>
+          <div class="move-item">
+            <div class="move-num">03</div>
+            <div class="move-body">
+              <h4>"一个字都不用改"</h4>
+              <p>北邮顾处看完 XClaw × 小雅学科大脑方案原话：<strong style="color:var(--accent)">"一个字都不用改。"</strong> 这不是产品契合，是理念契合——我们提前对齐了国标。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>北邮特战队 · 教育部指委会 · 国家教育智联网</span>
+      <span>04 / 14</span>
+    </div>
+  </section>
+
+  <!-- ============ 05 · 现实挑战 ============ -->
+  <section class="slide">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span class="brand-name">05 · REALITY CHECK</span>
+      </div>
+      <div class="top-meta"><span>现实三大挑战</span></div>
+    </div>
+
+    <div class="body-region">
+      <div class="eyebrow">不升级的代价</div>
+      <h2 class="headline">小雅今天的<em>三个瓶颈</em>。</h2>
+
+      <div class="challenge-list">
+        <div class="challenge-item">
+          <div class="chal-num">01</div>
+          <div class="chal-body">
+            <h4>智能停留在"搜索 + 答疑"浅层</h4>
+            <p>没有主动建议，没有个性化推理，没有跨场景闭环——用户把它当"升级版 Baidu"，不是教学伙伴。</p>
+          </div>
+          <div class="chal-severity">High Risk</div>
+        </div>
+        <div class="challenge-item">
+          <div class="chal-num">02</div>
+          <div class="chal-body">
+            <h4>八大场景数据丰富，却从未被用起来</h4>
+            <p>建、备、教、学、测、评、督、管每天产生海量数据，平台却没有一个统一的智能大脑去消化、串联、反哺。</p>
+          </div>
+          <div class="chal-severity">Core Gap</div>
+        </div>
+        <div class="challenge-item">
+          <div class="chal-num">03</div>
+          <div class="chal-body">
+            <h4>通用化体验，做不到"千人千面"</h4>
+            <p>一个学校一套模板，一个专业一堆 PPT，学科化、个性化都还停在口号——正是国家标准里最核心的那部分。</p>
+          </div>
+          <div class="chal-severity">Top Miss</div>
+        </div>
+      </div>
+
+      <div class="challenge-verdict">
+        不升级，小雅会从 <span style="color:var(--accent)">"高教 AI 教学领先者"</span> 降格为 <span style="text-decoration:line-through;color:var(--ink-light)">"又一个数字化教务系统"</span>。
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>三大瓶颈 · 三重风险</span>
+      <span>05 / 14</span>
+    </div>
+  </section>
+
+  <!-- ============ 06 · 核心判断 ============ -->
+  <section class="slide">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span class="brand-name">06 · THESIS</span>
+      </div>
+      <div class="top-meta"><span>我们的核心判断</span></div>
+    </div>
+
+    <div class="body-region">
+      <div class="eyebrow">核心判断</div>
+
+      <div class="thesis-quote">
+        让小雅从 <span class="mark">工具</span>，<br>
+        进化为一个能<span class="accent">看见教学</span>、<span class="accent">理解学生</span>、<br>
+        <span class="mark">主动建议</span>的 <em>教学生命体</em>。
+      </div>
+
+      <div class="compare-matrix">
+        <div class="cm-header">
+          <div>对比维度</div>
+          <div>旧范式 · 数字化教学工具</div>
+          <div></div>
+          <div>新范式 · 智能化教学生命体</div>
+        </div>
+        <div class="cm-row">
+          <div class="cm-dim">响应方式</div>
+          <div class="cm-old">被动响应 · 用户问才答</div>
+          <div class="cm-arrow">→</div>
+          <div class="cm-new">主动服务 · 先一步提供建议</div>
+        </div>
+        <div class="cm-row">
+          <div class="cm-dim">数据利用</div>
+          <div class="cm-old">各场景独立 · 数据沉睡</div>
+          <div class="cm-arrow">→</div>
+          <div class="cm-new">全流程闭环 · 数据反哺学习</div>
+        </div>
+        <div class="cm-row">
+          <div class="cm-dim">个性化</div>
+          <div class="cm-old">一套模板 · 千人一面</div>
+          <div class="cm-arrow">→</div>
+          <div class="cm-new">学科大脑 · 千人千面</div>
+        </div>
+        <div class="cm-row">
+          <div class="cm-dim">产品形态</div>
+          <div class="cm-old">SaaS 教务工具</div>
+          <div class="cm-arrow">→</div>
+          <div class="cm-new">国标级教学基础设施</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>从工具到生命体 · 一次物种跨越</span>
+      <span>06 / 14</span>
+    </div>
+  </section>
+
+  <!-- ============ 07 · 五大智能化目标 ============ -->
+  <section class="slide">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span class="brand-name">07 · FIVE GOALS</span>
+      </div>
+      <div class="top-meta"><span>五大智能化目标</span></div>
+    </div>
+
+    <div class="body-region">
+      <div class="eyebrow">五大智能化目标</div>
+      <h2 class="headline">从 <em>五个维度</em>，<br>让小雅彻底<span class="accent">换一个物种</span>。</h2>
+
+      <div class="goals-grid">
+        <div class="goal-cell">
+          <div class="goal-num">GOAL / 01</div>
+          <div class="goal-title">从工具<br>到智能体</div>
+          <div class="goal-from-to">
+            <span class="from">被动响应的功能集合</span>
+            <span class="to">能看见、理解、建议的智能中枢</span>
+          </div>
+        </div>
+        <div class="goal-cell">
+          <div class="goal-num">GOAL / 02</div>
+          <div class="goal-title">从单点<br>到全流程</div>
+          <div class="goal-from-to">
+            <span class="from">各场景彼此孤立</span>
+            <span class="to">建备教学测评督管 · 一站闭环</span>
+          </div>
+        </div>
+        <div class="goal-cell">
+          <div class="goal-num">GOAL / 03</div>
+          <div class="goal-title">从通用<br>到学科</div>
+          <div class="goal-from-to">
+            <span class="from">一个通用大模型打所有专业</span>
+            <span class="to">每个学科拥有自己的学科大脑</span>
+          </div>
+        </div>
+        <div class="goal-cell">
+          <div class="goal-num">GOAL / 04</div>
+          <div class="goal-title">从标准化<br>到千人千面</div>
+          <div class="goal-from-to">
+            <span class="from">一套模板服务所有学生</span>
+            <span class="to">每个学生拥有自己的 AI 学伴</span>
+          </div>
+        </div>
+        <div class="goal-cell">
+          <div class="goal-num">GOAL / 05</div>
+          <div class="goal-title">从产品<br>到国标</div>
+          <div class="goal-from-to">
+            <span class="from">一个卖给学校的 SaaS</span>
+            <span class="to">新一代教学平台国标的标杆案例</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>五大目标 · 同步推进 · 互为表里</span>
+      <span>07 / 14</span>
+    </div>
+  </section>
+
+  <!-- ============ 08 · 产品主轴 ============ -->
+  <section class="slide">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span class="brand-name">08 · PRODUCT SPINE</span>
+      </div>
+      <div class="top-meta"><span>产品主轴</span></div>
+    </div>
+
+    <div class="body-region">
+      <div class="eyebrow">三位一体</div>
+      <h2 class="headline"><em>XClaw · Coral · 小雅</em><br>教学生命体的<span class="accent">三个器官</span>。</h2>
+
+      <div class="trinity-wrap">
+        <div class="trinity-diagram">
+          <div class="tri-center">
+            <div class="core-label">XCLAW · 八爪智枢</div>
+            <div class="core-name">调度引擎</div>
+          </div>
+          <div class="tri-node top">
+            <div class="node-label">KNOWLEDGE</div>
+            <div class="node-name">Coral</div>
+          </div>
+          <div class="tri-node bl">
+            <div class="node-label">PLATFORM</div>
+            <div class="node-name">小雅</div>
+          </div>
+          <div class="tri-node br">
+            <div class="node-label">USERS</div>
+            <div class="node-name">师生</div>
+          </div>
+          <svg width="100%" height="100%" style="position:absolute;inset:0;pointer-events:none;z-index:1" viewBox="0 0 440 440">
+            <line x1="220" y1="120" x2="220" y2="220" stroke="#CFC3A9" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <line x1="60" y1="380" x2="220" y2="220" stroke="#CFC3A9" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <line x1="380" y1="380" x2="220" y2="220" stroke="#CFC3A9" stroke-width="1.5" stroke-dasharray="4,4"/>
+          </svg>
+        </div>
+
+        <div class="trinity-desc">
+          <div class="tri-item">
+            <h4>XClaw 八爪智枢<span class="en">· NEURAL HUB</span></h4>
+            <p>神经中枢 · <strong>调度引擎</strong>——把大模型能力、Skill 生态、平台数据组装成"能主动做事"的智能体。XClaw 不直接对用户开放，而是<strong>嵌入小雅的每一个场景</strong>。</p>
+          </div>
+          <div class="tri-item">
+            <h4>Coral 学科知识底座<span class="en">· KNOWLEDGE</span></h4>
+            <p>血液 · <strong>学科知识资产</strong>——每个专业的教材、教案、题库、教学过程数据沉淀成学科大脑，让 XClaw 不再"通用回答"，而是"学科级推理"。</p>
+          </div>
+          <div class="tri-item">
+            <h4>小雅教学平台<span class="en">· BODY</span></h4>
+            <p>身体 · <strong>业务载体与数据源</strong>——八大场景既是 Skill 的落地点，也是数据飞轮的入口。小雅提供数据，XClaw 提供智能，Coral 提供知识——三者缺一不可。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>产品主轴 · 三位一体 · 数据飞轮</span>
+      <span>08 / 14</span>
+    </div>
+  </section>
+
+  <!-- ============ 09 · 八大场景 ============ -->
+  <section class="slide">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span class="brand-name">09 · EIGHT SCENES</span>
+      </div>
+      <div class="top-meta"><span>八大教学场景</span></div>
+    </div>
+
+    <div class="body-region">
+      <div class="eyebrow">八大场景 · Skill 落地点</div>
+      <h2 class="headline">一个场景一个<em>智能体</em>，<br>构成完整<span class="accent">教学闭环</span>。</h2>
+
+      <div class="scenes-grid">
+        <div class="scene-cell">
+          <div class="scene-char">建<span class="tiny">/ 01</span></div>
+          <div class="scene-name">课程建设</div>
+          <div class="scene-desc">自动从 PPT、教材、论文抽取知识图谱，一键生成课程大纲。</div>
+        </div>
+        <div class="scene-cell">
+          <div class="scene-char">备<span class="tiny">/ 02</span></div>
+          <div class="scene-name">智能备课</div>
+          <div class="scene-desc">基于学科大脑生成教案、课件、配套资源，支持 OBE 对齐。</div>
+        </div>
+        <div class="scene-cell">
+          <div class="scene-char">教<span class="tiny">/ 03</span></div>
+          <div class="scene-name">课堂教学</div>
+          <div class="scene-desc">实时课堂助手：学情监测、互动命中、板书归档、录音转写。</div>
+        </div>
+        <div class="scene-cell">
+          <div class="scene-char">学<span class="tiny">/ 04</span></div>
+          <div class="scene-name">AI 学伴</div>
+          <div class="scene-desc">千人千面学伴：学科级答疑、个性化学习路径、错题追踪。</div>
+        </div>
+        <div class="scene-cell">
+          <div class="scene-char">测<span class="tiny">/ 05</span></div>
+          <div class="scene-name">智能组卷</div>
+          <div class="scene-desc">按能力模型、难度分布、OBE 指标一键生成试卷，支持自动命题。</div>
+        </div>
+        <div class="scene-cell">
+          <div class="scene-char">评<span class="tiny">/ 06</span></div>
+          <div class="scene-name">自动评阅</div>
+          <div class="scene-desc">主观题、代码题、报告类作业 AI 初评 + 人工复核，效率提升 5×。</div>
+        </div>
+        <div class="scene-cell">
+          <div class="scene-char">督<span class="tiny">/ 07</span></div>
+          <div class="scene-name">教学督导</div>
+          <div class="scene-desc">课堂视频分析、教学质量画像、OBE 达成度实时追踪。</div>
+        </div>
+        <div class="scene-cell">
+          <div class="scene-char">管<span class="tiny">/ 08</span></div>
+          <div class="scene-name">教务运营</div>
+          <div class="scene-desc">教学数据驾驶舱、异常预警、资源调度、决策建议全自动生成。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>建 · 备 · 教 · 学 · 测 · 评 · 督 · 管</span>
+      <span>09 / 14</span>
+    </div>
+  </section>
+
+  <!-- ============ 10 · 六大护城河 ============ -->
+  <section class="slide">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span class="brand-name">10 · SIX MOATS</span>
+      </div>
+      <div class="top-meta"><span>差异化护城河</span></div>
+    </div>
+
+    <div class="body-region">
+      <div class="eyebrow">六大护城河</div>
+      <h2 class="headline">友商可以 Fork <em>代码</em>，<br>但 Fork 不走<span class="accent">这六样东西</span>。</h2>
+
+      <div class="moat-list">
+        <div class="moat-row">
+          <div class="moat-num">01</div>
+          <div class="moat-name">产品组合壁垒</div>
+          <div class="moat-desc">XClaw + Coral + 小雅 + 星火——四件套共生，缺一不可。</div>
+          <div class="moat-tag">ECOSYSTEM</div>
+        </div>
+        <div class="moat-row">
+          <div class="moat-num">02</div>
+          <div class="moat-name">数据飞轮壁垒</div>
+          <div class="moat-desc">八大场景每天产生教学数据，持续反哺学科大脑——时间越长越强。</div>
+          <div class="moat-tag">DATA FLYWHEEL</div>
+        </div>
+        <div class="moat-row">
+          <div class="moat-num">03</div>
+          <div class="moat-name">渠道壁垒</div>
+          <div class="moat-desc">讯飞覆盖全国 2000+ 高校的教学平台存量，友商要从零起。</div>
+          <div class="moat-tag">DISTRIBUTION</div>
+        </div>
+        <div class="moat-row">
+          <div class="moat-num">04</div>
+          <div class="moat-name">Skill 生态壁垒</div>
+          <div class="moat-desc">24+ 预置 Skill + 学校自建 Skill 市场——越多人用，生态越厚。</div>
+          <div class="moat-tag">SKILL MARKET</div>
+        </div>
+        <div class="moat-row">
+          <div class="moat-num">05</div>
+          <div class="moat-name">血管级融合壁垒</div>
+          <div class="moat-desc">XClaw 原生嵌入小雅八大场景，不是外挂——Fork 代码带不走这层融合。</div>
+          <div class="moat-tag">DEEP INTEGRATION</div>
+        </div>
+        <div class="moat-row">
+          <div class="moat-num">06</div>
+          <div class="moat-name">国家标准壁垒</div>
+          <div class="moat-desc">参与新一代教学平台国标起草——我们不是跟标准，我们就是标准的一部分。</div>
+          <div class="moat-tag">NATIONAL STANDARD</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>六大护城河 · 从产品到国标</span>
+      <span>10 / 14</span>
+    </div>
+  </section>
+
+  <!-- ============ 11 · 路线图 ============ -->
+  <section class="slide">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span class="brand-name">11 · ROADMAP</span>
+      </div>
+      <div class="top-meta"><span>分阶段路线图</span></div>
+    </div>
+
+    <div class="body-region">
+      <div class="eyebrow">路线图 · 2026 FY</div>
+      <h2 class="headline">九个月，<em>三步走</em>——<br>从<span class="accent">引擎</span>到<span class="accent">生命体</span>。</h2>
+
+      <div class="roadmap-wrap">
+        <div class="roadmap-line"></div>
+        <div class="roadmap-grid">
+          <div class="rm-col">
+            <div class="rm-dot"></div>
+            <div class="rm-phase">NOW · 2026-Q1</div>
+            <div class="rm-title">起点</div>
+            <ul class="rm-list">
+              <li>小雅 平台存量</li>
+              <li>Coral 知识底座 V1</li>
+              <li>OpenClaw 开源框架</li>
+              <li>北邮 2300 万订单在途</li>
+            </ul>
+          </div>
+          <div class="rm-col">
+            <div class="rm-dot"></div>
+            <div class="rm-phase">Q2 · 引擎就位</div>
+            <div class="rm-title">XClaw MVP</div>
+            <ul class="rm-list">
+              <li>调度引擎 V1 上线</li>
+              <li>20 个核心 Skill 交付</li>
+              <li>北邮 标杆场景落地</li>
+              <li>品牌与 Demo 视频</li>
+            </ul>
+          </div>
+          <div class="rm-col">
+            <div class="rm-dot"></div>
+            <div class="rm-phase">Q3 · 学科进场</div>
+            <div class="rm-title">Coral 深度嵌入</div>
+            <ul class="rm-list">
+              <li>5 个学科大脑</li>
+              <li>Skill 生态市场</li>
+              <li>数据飞轮启动</li>
+              <li>国标起草参与</li>
+            </ul>
+          </div>
+          <div class="rm-col">
+            <div class="rm-dot"></div>
+            <div class="rm-phase">Q4 · 生命体</div>
+            <div class="rm-title">千人千面学伴</div>
+            <ul class="rm-list">
+              <li>AI 学伴全面上线</li>
+              <li>10+ 标杆校交付</li>
+              <li>国标配套资质</li>
+              <li>商业化快车道</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>Q2 引擎 · Q3 学科 · Q4 学伴</span>
+      <span>11 / 14</span>
+    </div>
+  </section>
+
+  <!-- ============ 12 · 北邮锚点 ============ -->
+  <section class="slide">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span class="brand-name">12 · BEACON CASE</span>
+      </div>
+      <div class="top-meta"><span>标杆锚点 · 北邮特战队</span></div>
+    </div>
+
+    <div class="body-region">
+      <div class="eyebrow">标杆锚点</div>
+      <h2 class="headline">北邮特战队——<br>我们<em>国家战略</em>的<span class="accent">第一个着陆点</span>。</h2>
+
+      <div class="anchor-wrap">
+        <div>
+          <div class="anchor-quote">
+            <span class="quote-mark">"</span>
+            XClaw 加小雅学科大脑的方案，<br>
+            <span class="highlight">一个字都不用改</span>，<br>
+            这就是我们要的东西。
+          </div>
+          <div class="anchor-source">— 北邮教务处顾处长 · 方案评审现场</div>
+        </div>
+
+        <div class="anchor-stats">
+          <div class="anchor-stat-row">
+            <div class="label">PROJECT VALUE · 项目金额</div>
+            <div class="value"><span class="accent">2300</span> 万</div>
+            <div class="sub">已提交 · 进入审批流程</div>
+          </div>
+          <div class="anchor-stat-row">
+            <div class="label">STRATEGIC LEVERAGE · 战略撬动</div>
+            <div class="value">7 亿 · 国家智联网</div>
+            <div class="sub">教育部指委会 · 国标起草参与资质</div>
+          </div>
+          <div class="anchor-stat-row">
+            <div class="label">CORE DEMAND · 客户三问</div>
+            <div class="value" style="font-size:16px; line-height:1.6;">
+              国家级项目配套 · 深度定制化 · 高时效响应
+            </div>
+            <div class="sub">三项我们全部具备——这不是运气，是提前押注</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>北邮特战队 · 国家战略第一着陆点</span>
+      <span>12 / 14</span>
+    </div>
+  </section>
+
+  <!-- ============ 13 · 商业回报 ============ -->
+  <section class="slide">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span class="brand-name">13 · RETURN</span>
+      </div>
+      <div class="top-meta"><span>商业价值</span></div>
+    </div>
+
+    <div class="body-region">
+      <div class="eyebrow">商业回报</div>
+      <h2 class="headline">立项 ROI——<br><em>四个数字</em>说话。</h2>
+
+      <div class="return-grid">
+        <div class="return-cell">
+          <div class="return-label">Year-1 Revenue</div>
+          <div class="return-num">2300<span class="unit">万</span><span class="sign">+</span></div>
+          <div class="return-desc">北邮在途 + 3~5 家标杆校跟进，Q4 落袋 <strong>5000 万</strong> 有确定性。</div>
+        </div>
+        <div class="return-cell">
+          <div class="return-label">Gross Margin Lift</div>
+          <div class="return-num">+<span style="font-size:72px">12</span><span class="unit">pp</span></div>
+          <div class="return-desc">智能化产品单价比传统教务 SaaS <strong>高 3~5 倍</strong>，拉高整体毛利率。</div>
+        </div>
+        <div class="return-cell">
+          <div class="return-label">Strategic Asset</div>
+          <div class="return-num">国标<span class="unit">资质</span></div>
+          <div class="return-desc">参与国标起草带来的资质壁垒，<strong>未来 5 年的准入门票</strong>。</div>
+        </div>
+        <div class="return-cell">
+          <div class="return-label">Brand Equity</div>
+          <div class="return-num">No.1<span class="unit">势能</span></div>
+          <div class="return-desc">"千人千面" 国家叙事的<strong>第一解释者</strong>——品牌无法被赎买的位置。</div>
+        </div>
+      </div>
+
+      <div class="return-footer">
+        <div class="foot-label">结论</div>
+        <div class="foot-text">收入、毛利、资质、品牌——四条线同时跃迁，ROI 不是锦上添花，是国运级回报。</div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>收入 · 毛利 · 资质 · 品牌</span>
+      <span>13 / 14</span>
+    </div>
+  </section>
+
+  <!-- ============ 14 · 立项结论 ============ -->
+  <section class="slide">
+    <div class="top-bar">
+      <div class="brand">
+        <div class="brand-mark"></div>
+        <span class="brand-name">14 · DECISION</span>
+      </div>
+      <div class="top-meta"><span>立项结论</span></div>
+    </div>
+
+    <div class="body-region">
+      <div class="verdict-wrap">
+        <div class="verdict-stamp">
+          <div class="verdict-big">GO</div>
+          <div class="verdict-label">建议立项 · 全力推进</div>
+          <div class="verdict-sub">WINDOW OPEN · ACT NOW</div>
+        </div>
+
+        <div>
+          <div class="eyebrow" style="margin-bottom:20px">资源请求 · ASK</div>
+          <div class="ask-list">
+            <div class="ask-item">
+              <div class="ask-label">PEOPLE</div>
+              <div class="ask-body">专职研发团队 25 人<span class="muted">算法 8 / 后端 8 / 前端 6 / 产品 3 · 覆盖 Q2–Q4</span></div>
+            </div>
+            <div class="ask-item">
+              <div class="ask-label">BUDGET</div>
+              <div class="ask-body">研发 &amp; 算力 4500 万<span class="muted">含学科大脑训练、大模型推理、Demo 物料、标杆校交付</span></div>
+            </div>
+            <div class="ask-item">
+              <div class="ask-label">SPONSOR</div>
+              <div class="ask-body">集团级高管站台<span class="muted">参与北邮、国家教育智联网等关键会议的站位决策</span></div>
+            </div>
+            <div class="ask-item">
+              <div class="ask-label">TIMELINE</div>
+              <div class="ask-body">本月拍板 · Q2 启动<span class="muted">晚一个月，错过国标起草参与窗口期</span></div>
+            </div>
+            <div class="ask-item">
+              <div class="ask-label">COMMIT</div>
+              <div class="ask-body">Q4 交付可宣讲的教学生命体<span class="muted">2300 万北邮订单落袋 + 3~5 家标杆校上线 + 国标配套资质</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span>立项结论 · 请求决策</span>
+      <span>14 / 14 · END</span>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============ 导航 UI ============ -->
+<div class="nav-ui">
+  <div class="slide-counter">
+    <span class="current" id="currentNum">01</span>
+    <span style="margin:0 4px">/</span>
+    <span id="totalNum">14</span>
+  </div>
+  <div class="key-hint">
+    <kbd>←</kbd> <kbd>→</kbd> 翻页 · <kbd>Home</kbd> 首页 · <kbd>End</kbd> 末页
+  </div>
+</div>
+
+<script>
+(function() {
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const progressBar = document.getElementById('progressBar');
+  const currentNum = document.getElementById('currentNum');
+  const totalNum = document.getElementById('totalNum');
+  let index = 0;
+
+  totalNum.textContent = String(total).padStart(2, '0');
+
+  function go(i) {
+    index = Math.max(0, Math.min(total - 1, i));
+    slides.forEach((s, idx) => {
+      s.classList.toggle('active', idx === index);
+    });
+    currentNum.textContent = String(index + 1).padStart(2, '0');
+    progressBar.style.width = ((index + 1) / total * 100) + '%';
+  }
+
+  document.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'PageDown':
+      case ' ':
+        e.preventDefault();
+        go(index + 1);
+        break;
+      case 'ArrowLeft':
+      case 'PageUp':
+        e.preventDefault();
+        go(index - 1);
+        break;
+      case 'Home':
+        e.preventDefault();
+        go(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        go(total - 1);
+        break;
+    }
+    if (/^[1-9]$/.test(e.key)) go(parseInt(e.key) - 1);
+    if (e.key === '0') go(9);
+  });
+
+  // 点击右半屏前进、左半屏后退
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('a, button, kbd')) return;
+    const w = window.innerWidth;
+    if (e.clientX > w / 2) go(index + 1);
+    else go(index - 1);
+  });
+
+  // 触摸滑动
+  let touchStart = 0;
+  document.addEventListener('touchstart', (e) => {
+    touchStart = e.changedTouches[0].clientX;
+  });
+  document.addEventListener('touchend', (e) => {
+    const diff = e.changedTouches[0].clientX - touchStart;
+    if (Math.abs(diff) > 50) {
+      go(index + (diff < 0 ? 1 : -1));
+    }
+  });
+
+  go(0);
+})();
+</script>
+
+</body>
+</html>

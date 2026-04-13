@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>Coral 知识库 · 已上线能力完成度仪表盘 V1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Coral 知识库 · 已上线能力完成度仪表盘 V1
+   基于 Coral V3 规划文档 + 已上线能力 Excel 双源对照
+   ============================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:           #FAFBFF;
+  --bg-deep:      #F1F4FB;
+  --bg-card:      #FFFFFF;
+  --ink:          #0F172A;
+  --ink-soft:     #334155;
+  --ink-mute:     #64748B;
+  --ink-light:    #94A3B8;
+  --hairline:     #E2E8F0;
+  --hairline-bold:#CBD5E1;
+
+  --indigo:       #6366F1;
+  --indigo-deep:  #4338CA;
+  --indigo-soft:  #EEF2FF;
+  --pink:         #EC4899;
+  --pink-soft:    #FCE7F3;
+  --amber:        #F59E0B;
+  --amber-soft:   #FEF3C7;
+  --emerald:      #10B981;
+  --emerald-soft: #D1FAE5;
+  --red:          #B91C1C;
+  --red-soft:     #FEE2E2;
+  --coral:        #FF7F50;
+  --coral-soft:   #FFE4E1;
+
+  --grad-primary: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
+  --grad-coral:   linear-gradient(135deg, #FF7F50 0%, #EC4899 50%, #8B5CF6 100%);
+  --grad-amber:   linear-gradient(135deg, #F59E0B, #EA580C);
+  --grad-success: linear-gradient(135deg, #10B981, #06B6D4);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: "Inter", "Noto Sans SC", -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  padding: 0 0 60px;
+  min-width: 1280px;
+}
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+/* ============ 返回导航条 ============ */
+.nav-bar {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hairline);
+  padding: 12px 36px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+.nav-bar a { color: var(--indigo); text-decoration: none; font-weight: 600; transition: opacity 0.15s; }
+.nav-bar a:hover { opacity: 0.7; }
+.nav-bar .sep { color: var(--hairline-bold); }
+.nav-bar .current { color: var(--ink-mute); }
+.nav-bar .level {
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+  background: var(--coral);
+}
+.nav-bar .right {
+  margin-left: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--ink-light);
+  letter-spacing: 1px;
+}
+
+/* ============ Wrap ============ */
+.wrap {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 36px;
+}
+
+/* ============ Hero ============ */
+.hero {
+  padding: 56px 0 48px;
+  background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg) 100%);
+  border-bottom: 1px solid var(--hairline);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before, .hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+.hero::before {
+  top: -20%; left: -5%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, #FFE4E1 0%, transparent 70%);
+}
+.hero::after {
+  top: -10%; right: -8%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #FBCFE8 0%, transparent 70%);
+}
+.hero-inner { position: relative; z-index: 1; }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--coral);
+  background: var(--coral-soft);
+  padding: 6px 14px;
+  border-radius: 30px;
+  margin-bottom: 18px;
+}
+.eyebrow .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--coral);
+  box-shadow: 0 0 0 4px rgba(255, 127, 80, 0.2);
+}
+.h-display {
+  font-size: 46px;
+  line-height: 1.1;
+  font-weight: 900;
+  letter-spacing: -1.2px;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.h-display .grad {
+  background: var(--grad-coral);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.lede {
+  font-size: 16px;
+  line-height: 1.75;
+  color: var(--ink-mute);
+  max-width: 820px;
+}
+.lede strong { color: var(--ink-soft); font-weight: 600; }
+
+/* ============ Top stats ============ */
+.top-stats {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 18px;
+  margin-top: 36px;
+}
+.stat-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--hairline);
+  padding: 24px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card.featured {
+  background: linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #6366F1 100%);
+  color: #fff;
+  border: none;
+  box-shadow: 0 24px 60px rgba(99, 102, 241, 0.25);
+}
+.stat-card.featured::before {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -20%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 127, 80, 0.3), transparent 70%);
+  border-radius: 50%;
+}
+.stat-card-label {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.stat-card.featured .stat-card-label { color: rgba(255,255,255,0.7); }
+
+.stat-big-num {
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1;
+  color: var(--ink);
+  position: relative;
+}
+.stat-card.featured .stat-big-num {
+  color: #fff;
+  font-size: 88px;
+  background: linear-gradient(180deg, #FCD34D, #F59E0B);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.stat-big-num .unit {
+  font-size: 24px;
+  font-weight: 700;
+  margin-left: 4px;
+  -webkit-text-fill-color: var(--ink);
+}
+.stat-card.featured .stat-big-num .unit {
+  -webkit-text-fill-color: #fff;
+  font-size: 28px;
+}
+.stat-meta {
+  font-size: 12px;
+  color: var(--ink-mute);
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hairline);
+  position: relative;
+}
+.stat-card.featured .stat-meta {
+  color: rgba(255,255,255,0.85);
+  border-top-color: rgba(255,255,255,0.15);
+}
+.stat-meta strong { color: var(--ink); font-weight: 600; }
+.stat-card.featured .stat-meta strong { color: #fff; }
+
+.progress-mini {
+  height: 8px;
+  background: var(--bg-deep);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 14px;
+  position: relative;
+}
+.stat-card.featured .progress-mini { background: rgba(255,255,255,0.15); }
+.progress-mini-fill {
+  height: 100%;
+  background: var(--grad-coral);
+  border-radius: 4px;
+  position: relative;
+}
+.stat-card.featured .progress-mini-fill {
+  background: linear-gradient(90deg, #FCD34D, #F59E0B);
+}
+
+/* ============ Section ============ */
+.section { padding: 60px 0; }
+.section-deep { background: var(--bg-deep); }
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+.section-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--grad-coral);
+  padding: 5px 12px;
+  border-radius: 6px;
+  letter-spacing: 1.5px;
+}
+.section-title {
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.section-meta {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+
+/* ============ 模块卡片 ============ */
+.modules-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+.mod-card {
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid var(--hairline);
+  padding: 0;
+  overflow: hidden;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+.mod-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+}
+.mod-card.high { border-top: 5px solid var(--emerald); }
+.mod-card.mid  { border-top: 5px solid var(--amber); }
+.mod-card.low  { border-top: 5px solid var(--ink-light); }
+.mod-card.zero { border-top: 5px solid var(--hairline-bold); }
+
+.mod-head {
+  padding: 24px 28px 18px;
+  border-bottom: 1px solid var(--hairline);
+}
+.mod-title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.mod-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+}
+.mod-card.high .mod-num { background: var(--grad-success); }
+.mod-card.mid  .mod-num { background: var(--grad-amber); }
+.mod-card.low  .mod-num { background: linear-gradient(135deg, #94A3B8, #64748B); }
+.mod-card.zero .mod-num { background: linear-gradient(135deg, #CBD5E1, #94A3B8); }
+
+.mod-title-text { flex: 1; min-width: 0; }
+.mod-title-text h3 {
+  font-size: 19px;
+  font-weight: 900;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+  line-height: 1.3;
+  margin-bottom: 4px;
+}
+.mod-title-text .mod-en {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--ink-light);
+  letter-spacing: 1px;
+}
+.mod-tag-new {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--pink);
+  background: var(--pink-soft);
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-left: 6px;
+}
+
+.mod-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 4px;
+}
+.mod-pct {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1;
+  min-width: 75px;
+}
+.mod-card.high .mod-pct { color: var(--emerald); }
+.mod-card.mid  .mod-pct { color: var(--amber); }
+.mod-card.low  .mod-pct { color: var(--ink-mute); }
+.mod-card.zero .mod-pct { color: var(--ink-light); }
+
+.mod-progress-bar {
+  flex: 1;
+  height: 10px;
+  background: var(--bg-deep);
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+.mod-progress-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  position: relative;
+  transition: width 1s ease;
+}
+.mod-card.high .mod-progress-bar-fill { background: var(--grad-success); }
+.mod-card.mid  .mod-progress-bar-fill { background: var(--grad-amber); }
+.mod-card.low  .mod-progress-bar-fill { background: linear-gradient(90deg, #94A3B8, #64748B); }
+.mod-card.zero .mod-progress-bar-fill { background: linear-gradient(90deg, #CBD5E1, #94A3B8); }
+
+.mod-counts {
+  display: flex;
+  gap: 14px;
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin-top: 10px;
+}
+.mod-counts span strong { color: var(--ink); font-weight: 700; }
+
+.mod-body {
+  padding: 18px 28px 24px;
+  flex: 1;
+}
+.mod-section-label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  font-weight: 700;
+  margin-bottom: 10px;
+  margin-top: 14px;
+}
+.mod-section-label:first-child { margin-top: 0; }
+
+.cap-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.cap-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.cap-list li:hover {
+  background: var(--bg);
+}
+.cap-list li .icon {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 800;
+  margin-top: 1px;
+}
+.cap-list li.done .icon { color: var(--emerald); }
+.cap-list li.partial .icon { color: var(--amber); }
+.cap-list li.todo .icon { color: var(--ink-light); }
+.cap-list li.done .text { color: var(--ink-soft); }
+.cap-list li.partial .text { color: var(--ink-soft); }
+.cap-list li.todo .text { color: var(--ink-light); text-decoration: line-through; text-decoration-color: var(--ink-light); text-decoration-thickness: 1px; }
+.cap-list li .src {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  color: var(--ink-light);
+  margin-left: auto;
+  white-space: nowrap;
+  background: var(--bg);
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--hairline);
+}
+
+/* ============ 工具链层 ============ */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+.tools-section {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--hairline);
+  padding: 26px 28px;
+}
+.tools-section h3 {
+  font-size: 17px;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 4px;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tools-section .ts-en {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--ink-light);
+  letter-spacing: 1px;
+  margin-bottom: 18px;
+}
+.tools-section .tools-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tools-section .tools-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  padding: 9px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--hairline);
+  background: var(--bg);
+}
+.tools-section .tools-list li .num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--ink-light);
+  background: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--hairline);
+  flex-shrink: 0;
+}
+.tools-section .tools-list li .icon {
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 800;
+}
+.tools-section .tools-list li.done { background: rgba(16, 185, 129, 0.04); border-color: rgba(16, 185, 129, 0.25); }
+.tools-section .tools-list li.done .icon { color: var(--emerald); }
+.tools-section .tools-list li.partial { background: rgba(245, 158, 11, 0.04); border-color: rgba(245, 158, 11, 0.25); }
+.tools-section .tools-list li.partial .icon { color: var(--amber); }
+.tools-section .tools-list li.todo .icon { color: var(--ink-light); }
+.tools-section .tools-list li.todo { color: var(--ink-light); }
+.tools-section .tools-list li .text {
+  flex: 1;
+}
+
+/* ============ 八大场景 ============ */
+.scenes-eight {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.scene-cell {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid var(--hairline);
+  padding: 20px 22px;
+  position: relative;
+}
+.scene-cell.high { border-top: 4px solid var(--emerald); }
+.scene-cell.mid  { border-top: 4px solid var(--amber); }
+.scene-cell.low  { border-top: 4px solid var(--ink-light); }
+.scene-cell .char {
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 4px;
+  background: var(--grad-coral);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.scene-cell .name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.scene-cell .pct {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.scene-cell.high .pct { color: var(--emerald); }
+.scene-cell.mid  .pct { color: var(--amber); }
+.scene-cell.low  .pct { color: var(--ink-mute); }
+.scene-cell .pb {
+  height: 6px;
+  background: var(--bg-deep);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.scene-cell .pb-fill {
+  height: 100%;
+  border-radius: 3px;
+}
+.scene-cell.high .pb-fill { background: var(--grad-success); }
+.scene-cell.mid  .pb-fill { background: var(--grad-amber); }
+.scene-cell.low  .pb-fill { background: linear-gradient(90deg, #94A3B8, #64748B); }
+.scene-cell .desc {
+  font-size: 11px;
+  color: var(--ink-mute);
+  margin-top: 10px;
+  line-height: 1.6;
+}
+
+/* ============ 总结 banner ============ */
+.summary-banner {
+  background: linear-gradient(135deg, #1E1B4B 0%, #312E81 50%, #FF7F50 100%);
+  color: #fff;
+  border-radius: 20px;
+  padding: 48px;
+  margin: 60px auto 0;
+  max-width: 1200px;
+  position: relative;
+  overflow: hidden;
+}
+.summary-banner::before {
+  content: "";
+  position: absolute;
+  top: -30%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(252, 211, 77, 0.18), transparent 70%);
+  border-radius: 50%;
+}
+.summary-banner-inner { position: relative; z-index: 1; }
+.summary-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  background: rgba(252, 211, 77, 0.15);
+  border: 1px solid rgba(252, 211, 77, 0.3);
+  color: #FCD34D;
+  padding: 5px 14px;
+  border-radius: 30px;
+  margin-bottom: 20px;
+}
+.summary-banner h2 {
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1.25;
+  margin-bottom: 18px;
+  letter-spacing: -1px;
+}
+.summary-banner h2 .gold {
+  background: linear-gradient(90deg, #FCD34D, #F59E0B);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.summary-points {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 28px;
+}
+.summary-point {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 22px;
+  backdrop-filter: blur(10px);
+}
+.summary-point .num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: #FCD34D;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.summary-point .title {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+.summary-point p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.85);
+}
+
+/* ============ 数据来源说明 ============ */
+.source-note {
+  background: var(--bg-deep);
+  border: 1px dashed var(--hairline-bold);
+  border-radius: 12px;
+  padding: 22px 28px;
+  margin-top: 40px;
+  font-size: 12px;
+  color: var(--ink-mute);
+  line-height: 1.85;
+}
+.source-note h4 {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+.source-note code {
+  background: #fff;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--ink-soft);
+  border: 1px solid var(--hairline);
+}
+
+/* ============ Footer ============ */
+.doc-footer {
+  text-align: center;
+  padding: 50px 24px 30px;
+  margin-top: 60px;
+  font-size: 11px;
+  color: var(--ink-light);
+  border-top: 1px solid var(--hairline);
+}
+.doc-footer .ft-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.doc-footer .ft-name .grad {
+  background: var(--grad-coral);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.doc-footer .ft-meta {
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 1px;
+}
+.doc-footer code {
+  background: var(--bg-deep);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 返回导航条 ============ -->
+<div class="nav-bar">
+  <a href="index.html">← 返回文档中心</a>
+  <span class="sep">/</span>
+  <span class="level">L1</span>
+  <span class="current">Coral 已上线能力完成度仪表盘 V1</span>
+  <span class="right">/ CORAL · COMPLETION DASHBOARD · V1</span>
+</div>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="wrap hero-inner">
+    <div class="eyebrow"><span class="dot"></span>CORAL · COMPLETION DASHBOARD</div>
+    <h1 class="h-display">Coral 知识库 ·<br><span class="grad">已上线能力完成度仪表盘</span></h1>
+    <p class="lede">
+      基于 <strong>Coral 产品规划文档 V3</strong>（2026-04-08）和 <strong>已上线能力 / 功能模块清单</strong>双源对照，
+      逐项映射 <strong>10 大核心模块 · 25 个工具组件 · 8 大教学场景</strong>的真实完成度。
+      绿色 = 已上线 · 琥珀 = 部分上线 · 灰色 = 未上线。
+    </p>
+
+    <!-- Top stats -->
+    <div class="top-stats">
+      <div class="stat-card featured">
+        <div class="stat-card-label">★ 总体完成度</div>
+        <div class="stat-big-num">41<span class="unit">%</span></div>
+        <div class="progress-mini"><div class="progress-mini-fill" style="width:41%"></div></div>
+        <div class="stat-meta">10 大模块加权平均<br><strong>核心能力（M1/M3/M4）已就位</strong>，可对外提供完整知识库问答服务</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">已上线模块</div>
+        <div class="stat-big-num" style="color:var(--emerald)">3<span class="unit">/10</span></div>
+        <div class="progress-mini"><div class="progress-mini-fill" style="width:30%;background:var(--grad-success)"></div></div>
+        <div class="stat-meta">M1 语料库 / M3 问答库 / M4 检索溯源 完成度 ≥ 70%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">部分上线模块</div>
+        <div class="stat-big-num" style="color:var(--amber)">3<span class="unit">/10</span></div>
+        <div class="progress-mini"><div class="progress-mini-fill" style="width:30%;background:var(--grad-amber)"></div></div>
+        <div class="stat-meta">M5 管理安全 / M6 师生共建 / M7 社区共享 30-60% 已落地</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">规划中模块</div>
+        <div class="stat-big-num" style="color:var(--ink-mute)">4<span class="unit">/10</span></div>
+        <div class="progress-mini"><div class="progress-mini-fill" style="width:40%;background:linear-gradient(90deg,#CBD5E1,#94A3B8)"></div></div>
+        <div class="stat-meta">M2 术语图谱 / M8 笔记 / M9 智能体矩阵 / M10 Agent 生态</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 八大场景层完成度 ============ -->
+<div class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num">PART · 01</span>
+      <h2 class="section-title">八大教学场景 · 能力覆盖</h2>
+      <span class="section-meta">建 / 备 / 教 / 学 / 考 / 督 / 管 / 研</span>
+    </div>
+
+    <div class="scenes-eight">
+      <div class="scene-cell high">
+        <div class="char">建</div>
+        <div class="name">课程建设</div>
+        <div class="pct">75%</div>
+        <div class="pb"><div class="pb-fill" style="width:75%"></div></div>
+        <div class="desc">资源结构化入库 / 引用资源 / 切片管理已就位</div>
+      </div>
+      <div class="scene-cell high">
+        <div class="char">备</div>
+        <div class="name">智能备课</div>
+        <div class="pct">70%</div>
+        <div class="pb"><div class="pb-fill" style="width:70%"></div></div>
+        <div class="desc">文档解析 / 检索溯源支持备课，AI 生成教学设计待补</div>
+      </div>
+      <div class="scene-cell mid">
+        <div class="char">教</div>
+        <div class="name">课堂教学</div>
+        <div class="pct">40%</div>
+        <div class="pb"><div class="pb-fill" style="width:40%"></div></div>
+        <div class="desc">问答调试已有，实时互动 / 知识点精讲待开发</div>
+      </div>
+      <div class="scene-cell high">
+        <div class="char">学</div>
+        <div class="name">自主学习</div>
+        <div class="pct">65%</div>
+        <div class="pb"><div class="pb-fill" style="width:65%"></div></div>
+        <div class="desc">AI 答疑 + 教材原文溯源已上线，多轮引导待补</div>
+      </div>
+      <div class="scene-cell mid">
+        <div class="char">考</div>
+        <div class="name">考试测评</div>
+        <div class="pct">35%</div>
+        <div class="pb"><div class="pb-fill" style="width:35%"></div></div>
+        <div class="desc">FAQ + 问答对管理已有，AI 智能组卷 / 批改待开发</div>
+      </div>
+      <div class="scene-cell low">
+        <div class="char">督</div>
+        <div class="name">教学督导</div>
+        <div class="pct">15%</div>
+        <div class="pb"><div class="pb-fill" style="width:15%"></div></div>
+        <div class="desc">仅有基础统计，达成度评价 / 异常预警未上线</div>
+      </div>
+      <div class="scene-cell mid">
+        <div class="char">管</div>
+        <div class="name">教学管理</div>
+        <div class="pct">55%</div>
+        <div class="pb"><div class="pb-fill" style="width:55%"></div></div>
+        <div class="desc">权限管理 / 知识库审批 / 团队空间已就位</div>
+      </div>
+      <div class="scene-cell low">
+        <div class="char">研</div>
+        <div class="name">科研协作</div>
+        <div class="pct">25%</div>
+        <div class="pb"><div class="pb-fill" style="width:25%"></div></div>
+        <div class="desc">团队空间已有，文献研读 / 贡献度学分认定未上线</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 十大核心模块 ============ -->
+<div class="section section-deep">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num">PART · 02</span>
+      <h2 class="section-title">十大核心模块 · 详细完成度</h2>
+      <span class="section-meta">每个模块的子能力对应 Excel 已上线清单</span>
+    </div>
+
+    <div class="modules-grid">
+
+      <!-- M1 · 学科语料库 -->
+      <div class="mod-card high">
+        <div class="mod-head">
+          <div class="mod-title-row">
+            <div class="mod-num">M1</div>
+            <div class="mod-title-text">
+              <h3>学科语料库</h3>
+              <div class="mod-en">SUBJECT CORPUS · 知识建设类</div>
+            </div>
+          </div>
+          <div class="mod-progress-row">
+            <div class="mod-pct">85%</div>
+            <div class="mod-progress-bar"><div class="mod-progress-bar-fill" style="width:85%"></div></div>
+          </div>
+          <div class="mod-counts">
+            <span>✅ <strong>14</strong> 已上线</span>
+            <span>⚠️ <strong>2</strong> 部分</span>
+            <span>⬜ <strong>1</strong> 未做</span>
+          </div>
+        </div>
+        <div class="mod-body">
+          <div class="mod-section-label">规划子能力</div>
+          <ul class="cap-list">
+            <li class="done"><span class="icon">✓</span><span class="text">PDF/PPT/Word/音视频 16 种格式解析</span><span class="src">SHEET1 R2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">本地文档上传 + 批量上传 + 文件夹批量</span><span class="src">SHEET1 R2-3</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">移动端拍照上传</span><span class="src">SHEET1 R4</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">微信文件读取</span><span class="src">SHEET1 R5</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">教学资源结构化入库（解析+切片+向量化+索引）</span><span class="src">SHEET1 R6</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">爬虫自动采集（爬虫任务/清单）</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">文档搜索/排序/重命名/移动/删除/批量下载</span><span class="src">SHEET1 R7-11</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">列表视图 + 文件夹视图切换</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">引用资源体系（自建/共建/专业/团队/校级/临时）</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">切片管理（合并/添加片段/编辑/原文定位）</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">标签管理 + 资源批量操作</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">知识库新建（文本型 + 数据库型）</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">知识库导入/导出 + 版本管理</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">解析预览（原文 + 切片）+ 拆分方式设置</span><span class="src">SHEET2</span></li>
+            <li class="partial"><span class="icon">◐</span><span class="text">150-300 万字知识资产规模（容量未明确）</span></li>
+            <li class="partial"><span class="icon">◐</span><span class="text">四大子知识库分类（已有引用资源体系，分类待对齐）</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">学期间知识继承（自动版本迭代）</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M2 · 术语与知识图谱 -->
+      <div class="mod-card zero">
+        <div class="mod-head">
+          <div class="mod-title-row">
+            <div class="mod-num">M2</div>
+            <div class="mod-title-text">
+              <h3>术语与知识图谱</h3>
+              <div class="mod-en">TERMS & KNOWLEDGE GRAPH · 知识建设类</div>
+            </div>
+          </div>
+          <div class="mod-progress-row">
+            <div class="mod-pct">10%</div>
+            <div class="mod-progress-bar"><div class="mod-progress-bar-fill" style="width:10%"></div></div>
+          </div>
+          <div class="mod-counts">
+            <span>✅ <strong>0</strong> 已上线</span>
+            <span>⚠️ <strong>1</strong> 部分</span>
+            <span>⬜ <strong>4</strong> 未做</span>
+          </div>
+        </div>
+        <div class="mod-body">
+          <div class="mod-section-label">规划子能力</div>
+          <ul class="cap-list">
+            <li class="todo"><span class="icon">○</span><span class="text">3000-5000 条专业术语体系</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">知识点先修关系网络绘制</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">自适应学习路径推算</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">KAG 图谱问答支持</span></li>
+            <li class="partial"><span class="icon">◐</span><span class="text">学科知识图谱（已有"专业图谱"作为引用资源类型，未上线生成工具）</span><span class="src">SHEET2</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M3 · 问答标准库 -->
+      <div class="mod-card high">
+        <div class="mod-head">
+          <div class="mod-title-row">
+            <div class="mod-num">M3</div>
+            <div class="mod-title-text">
+              <h3>问答标准库</h3>
+              <div class="mod-en">FAQ STANDARDS · 知识建设类</div>
+            </div>
+          </div>
+          <div class="mod-progress-row">
+            <div class="mod-pct">70%</div>
+            <div class="mod-progress-bar"><div class="mod-progress-bar-fill" style="width:70%"></div></div>
+          </div>
+          <div class="mod-counts">
+            <span>✅ <strong>4</strong> 已上线</span>
+            <span>⚠️ <strong>1</strong> 部分</span>
+            <span>⬜ <strong>0</strong> 未做</span>
+          </div>
+        </div>
+        <div class="mod-body">
+          <div class="mod-section-label">规划子能力</div>
+          <ul class="cap-list">
+            <li class="done"><span class="icon">✓</span><span class="text">FAQ 上传（问答对上传到知识库）</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">问答对管理（新建/编辑/批量删除/批量下载）</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">问答库列表 + 检索 + 分类</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">冲突检测引擎完整（新建任务/相似度排序/检测结果）</span><span class="src">SHEET2 完整</span></li>
+            <li class="partial"><span class="icon">◐</span><span class="text">500-1000 条预置高频问题标准答案（工具就位，预置数据未确认）</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M4 · 智能检索与溯源 -->
+      <div class="mod-card high">
+        <div class="mod-head">
+          <div class="mod-title-row">
+            <div class="mod-num">M4</div>
+            <div class="mod-title-text">
+              <h3>智能检索与溯源</h3>
+              <div class="mod-en">RETRIEVAL & TRACEABILITY · 智能交互类</div>
+            </div>
+          </div>
+          <div class="mod-progress-row">
+            <div class="mod-pct">70%</div>
+            <div class="mod-progress-bar"><div class="mod-progress-bar-fill" style="width:70%"></div></div>
+          </div>
+          <div class="mod-counts">
+            <span>✅ <strong>10</strong> 已上线</span>
+            <span>⚠️ <strong>2</strong> 部分</span>
+            <span>⬜ <strong>3</strong> 未做</span>
+          </div>
+        </div>
+        <div class="mod-body">
+          <div class="mod-section-label">规划子能力</div>
+          <ul class="cap-list">
+            <li class="done"><span class="icon">✓</span><span class="text">双通道检索（关键词 + 语义理解）</span><span class="src">SHEET1 R12</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">教材出处可点击溯源（页段定位）</span><span class="src">SHEET1 R13</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">幻觉防护（答不上来说不知道）</span><span class="src">SHEET1 R14</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">多模型切换（下拉菜单 · 主流模型）</span><span class="src">SHEET1 R15-16</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">问答溯源（文档片段 + 图片溯源）</span><span class="src">SHEET1 R17</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">智能搜索（检索 / 筛选 / 历史记录）</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">问答体验（按分类 / 标签 / 资源问答）</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">问答调试（范围设置 / 模型切换 / 调试模式）</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">检索设置 + 问答设置 + 会话历史</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">原文溯源（资源问答中即时定位）</span><span class="src">SHEET2</span></li>
+            <li class="partial"><span class="icon">◐</span><span class="text">三路召回中"知识图谱"通道（待 M2 完成）</span></li>
+            <li class="partial"><span class="icon">◐</span><span class="text">准确率 ≥ 90%（待评估工具上线）</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">多轮引导式答疑（追问定位知识断点）</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">Golden QA 测试集</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">学科 Embedding 微调模型 + Prompt 模板库</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M5 · 管理与安全平台 -->
+      <div class="mod-card mid">
+        <div class="mod-head">
+          <div class="mod-title-row">
+            <div class="mod-num">M5</div>
+            <div class="mod-title-text">
+              <h3>管理与安全平台</h3>
+              <div class="mod-en">MANAGEMENT & SECURITY · 协作与治理类</div>
+            </div>
+          </div>
+          <div class="mod-progress-row">
+            <div class="mod-pct">60%</div>
+            <div class="mod-progress-bar"><div class="mod-progress-bar-fill" style="width:60%"></div></div>
+          </div>
+          <div class="mod-counts">
+            <span>✅ <strong>8</strong> 已上线</span>
+            <span>⚠️ <strong>1</strong> 部分</span>
+            <span>⬜ <strong>2</strong> 未做</span>
+          </div>
+        </div>
+        <div class="mod-body">
+          <div class="mod-section-label">规划子能力</div>
+          <ul class="cap-list">
+            <li class="done"><span class="icon">✓</span><span class="text">知识库可见范围（成员管理 / 个人知识库）</span><span class="src">SHEET1 R18</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">成员内容权限（文档级管控）</span><span class="src">SHEET1 R19</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">校级知识库申请 + 校管审核 + 校级广场</span><span class="src">SHEET1 R20</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">知识库质量管理（教师预览/修正切片/增删改查）</span><span class="src">SHEET1 R21</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">资料修改/删除知识库</span><span class="src">SHEET1 R22-23</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">知识库审核（搜索/筛选/通过/批量审核/查看详情）</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">团队空间（成员 / 添加 / 移出 / 权限设置）</span><span class="src">SHEET2</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">团队知识库（创建 / 管理 / 加入）</span><span class="src">SHEET2</span></li>
+            <li class="partial"><span class="icon">◐</span><span class="text">三级角色权限（教师 / 学生 / 校管，学生角色未明确）</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">黑白名单 / 敏感词管控</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">全院数据统计与运营看板</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M6 · 师生共建运营平台 -->
+      <div class="mod-card low">
+        <div class="mod-head">
+          <div class="mod-title-row">
+            <div class="mod-num">M6</div>
+            <div class="mod-title-text">
+              <h3>师生共建运营平台</h3>
+              <div class="mod-en">CO-BUILDING & OPERATION · 协作与治理类</div>
+            </div>
+          </div>
+          <div class="mod-progress-row">
+            <div class="mod-pct">25%</div>
+            <div class="mod-progress-bar"><div class="mod-progress-bar-fill" style="width:25%"></div></div>
+          </div>
+          <div class="mod-counts">
+            <span>✅ <strong>2</strong> 已上线</span>
+            <span>⚠️ <strong>1</strong> 部分</span>
+            <span>⬜ <strong>3</strong> 未做</span>
+          </div>
+        </div>
+        <div class="mod-body">
+          <div class="mod-section-label">规划子能力</div>
+          <ul class="cap-list">
+            <li class="done"><span class="icon">✓</span><span class="text">教师课件自动入库（上传即入库）</span><span class="src">SHEET1 R24</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">基础团队空间（团队知识库共建）</span><span class="src">SHEET2</span></li>
+            <li class="partial"><span class="icon">◐</span><span class="text">三级把控（已有"知识库审核"流程，AI 初审 / 互审待补）</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">AI 初审 → 研究生互审 → 教师终审 完整链路</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">贡献度仪表盘 + 学分认定支撑</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">知识缺口自动发现</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M7 · 社区与知识共享 NEW -->
+      <div class="mod-card mid">
+        <div class="mod-head">
+          <div class="mod-title-row">
+            <div class="mod-num">M7</div>
+            <div class="mod-title-text">
+              <h3>社区与知识共享 <span class="mod-tag-new">NEW</span></h3>
+              <div class="mod-en">COMMUNITY & SHARING · 协作与治理类</div>
+            </div>
+          </div>
+          <div class="mod-progress-row">
+            <div class="mod-pct">50%</div>
+            <div class="mod-progress-bar"><div class="mod-progress-bar-fill" style="width:50%"></div></div>
+          </div>
+          <div class="mod-counts">
+            <span>✅ <strong>3</strong> 已上线</span>
+            <span>⚠️ <strong>0</strong> 部分</span>
+            <span>⬜ <strong>2</strong> 未做</span>
+          </div>
+        </div>
+        <div class="mod-body">
+          <div class="mod-section-label">规划子能力</div>
+          <ul class="cap-list">
+            <li class="done"><span class="icon">✓</span><span class="text">精选知识库加入（"我加入的"模块 + 引用逻辑）</span><span class="src">SHEET1 R25</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">公开知识库订阅（查看 + 问答）</span><span class="src">SHEET1 R26</span></li>
+            <li class="done"><span class="icon">✓</span><span class="text">校级知识库广场（审核通过后全校可见）</span><span class="src">SHEET1 R20</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">跨校知识库引用</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">订阅数排名 + 贡献度体系</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M8 · 笔记系统 NEW -->
+      <div class="mod-card zero">
+        <div class="mod-head">
+          <div class="mod-title-row">
+            <div class="mod-num">M8</div>
+            <div class="mod-title-text">
+              <h3>笔记系统 <span class="mod-tag-new">NEW</span></h3>
+              <div class="mod-en">NOTES SYSTEM · 智能交互类</div>
+            </div>
+          </div>
+          <div class="mod-progress-row">
+            <div class="mod-pct">0%</div>
+            <div class="mod-progress-bar"><div class="mod-progress-bar-fill" style="width:0%"></div></div>
+          </div>
+          <div class="mod-counts">
+            <span>✅ <strong>0</strong> 已上线</span>
+            <span>⚠️ <strong>0</strong> 部分</span>
+            <span>⬜ <strong>4</strong> 未做</span>
+          </div>
+        </div>
+        <div class="mod-body">
+          <div class="mod-section-label">规划子能力</div>
+          <ul class="cap-list">
+            <li class="todo"><span class="icon">○</span><span class="text">个人笔记创建 / 编辑</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">问答结果一键保存到笔记</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">笔记与知识库双向联动</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">内嵌于小雅知识库平台</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M9 · 智能体应用矩阵 NEW -->
+      <div class="mod-card low">
+        <div class="mod-head">
+          <div class="mod-title-row">
+            <div class="mod-num">M9</div>
+            <div class="mod-title-text">
+              <h3>智能体应用矩阵 <span class="mod-tag-new">NEW</span></h3>
+              <div class="mod-en">AGENT MATRIX · 智能交互类</div>
+            </div>
+          </div>
+          <div class="mod-progress-row">
+            <div class="mod-pct">20%</div>
+            <div class="mod-progress-bar"><div class="mod-progress-bar-fill" style="width:20%"></div></div>
+          </div>
+          <div class="mod-counts">
+            <span>✅ <strong>0</strong> 已上线</span>
+            <span>⚠️ <strong>2</strong> 部分</span>
+            <span>⬜ <strong>3</strong> 未做</span>
+          </div>
+        </div>
+        <div class="mod-body">
+          <div class="mod-section-label">规划子能力</div>
+          <ul class="cap-list">
+            <li class="partial"><span class="icon">◐</span><span class="text">按教师 / 学生角色配置智能体（智能体绑定后台已有）</span><span class="src">SHEET2</span></li>
+            <li class="partial"><span class="icon">◐</span><span class="text">管理员下发智能体到学校（专用 / 通用类型已有）</span><span class="src">SHEET2</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">Image / Video / Audio AIGC 生成支持</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">应用成果一键回流知识库</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">内嵌于 Agent 开放平台（统一前台）</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- M10 · Agent 生态 NEW -->
+      <div class="mod-card low">
+        <div class="mod-head">
+          <div class="mod-title-row">
+            <div class="mod-num">M10</div>
+            <div class="mod-title-text">
+              <h3>Agent 生态 <span class="mod-tag-new">NEW</span></h3>
+              <div class="mod-en">AGENT ECOSYSTEM · 开放生态类</div>
+            </div>
+          </div>
+          <div class="mod-progress-row">
+            <div class="mod-pct">20%</div>
+            <div class="mod-progress-bar"><div class="mod-progress-bar-fill" style="width:20%"></div></div>
+          </div>
+          <div class="mod-counts">
+            <span>✅ <strong>1</strong> 已上线</span>
+            <span>⚠️ <strong>2</strong> 部分</span>
+            <span>⬜ <strong>3</strong> 未做</span>
+          </div>
+        </div>
+        <div class="mod-body">
+          <div class="mod-section-label">规划子能力</div>
+          <ul class="cap-list">
+            <li class="done"><span class="icon">✓</span><span class="text">课程知识库引用（XClaw 等智能体调用知识库）</span><span class="src">SHEET1 R27</span></li>
+            <li class="partial"><span class="icon">◐</span><span class="text">Skill REST API（RAG 基座 API 已有，对外开放待确认）</span></li>
+            <li class="partial"><span class="icon">◐</span><span class="text">课程知识库标签体系（已有标签管理，三级体系待对齐）</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">openclaw / cc CLI 调度</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">第三方插件市场</span></li>
+            <li class="todo"><span class="icon">○</span><span class="text">Agent 开放平台 + API 网关</span></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ 工具链层 25 个组件 ============ -->
+<div class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="section-num">PART · 03</span>
+      <h2 class="section-title">工具链层 · 25 个组件状态</h2>
+      <span class="section-meta">10 工具平台 + 8 引擎 + 7 看板</span>
+    </div>
+
+    <div class="tools-grid">
+
+      <!-- 十大工具 -->
+      <div class="tools-section">
+        <h3>🔧 十大工具平台</h3>
+        <div class="ts-en">TEN TOOL PLATFORMS</div>
+        <ul class="tools-list">
+          <li class="done"><span class="num">T01</span><span class="icon">✓</span><span class="text">文档解析工具（PDF/PPT/Word/16 格式）</span></li>
+          <li class="todo"><span class="num">T02</span><span class="icon">○</span><span class="text">术语管理工作台</span></li>
+          <li class="todo"><span class="num">T03</span><span class="icon">○</span><span class="text">知识图谱标注工具</span></li>
+          <li class="done"><span class="num">T04</span><span class="icon">✓</span><span class="text">问答库构建工具（FAQ 上传 + 管理）</span></li>
+          <li class="done"><span class="num">T05</span><span class="icon">✓</span><span class="text">知识库管理后台（增删改查/版本/权限）</span></li>
+          <li class="todo"><span class="num">T06</span><span class="icon">○</span><span class="text">质量评测工具（Golden QA / A/B 对比）</span></li>
+          <li class="partial"><span class="num">T07</span><span class="icon">◐</span><span class="text">师生共建平台（团队空间已有，三级审核待补）</span></li>
+          <li class="done"><span class="num">T08</span><span class="icon">✓</span><span class="text">多模态数据采集（拍照/微信/爬虫）</span></li>
+          <li class="todo"><span class="num">T09</span><span class="icon">○</span><span class="text">笔记与文档协作平台</span></li>
+          <li class="partial"><span class="num">T10</span><span class="icon">◐</span><span class="text">智能体与 Agent 平台（绑定/下发已有）</span></li>
+        </ul>
+      </div>
+
+      <!-- 八大引擎 -->
+      <div class="tools-section">
+        <h3>⚙️ 八大引擎</h3>
+        <div class="ts-en">EIGHT ENGINES</div>
+        <ul class="tools-list">
+          <li class="partial"><span class="num">E01</span><span class="icon">◐</span><span class="text">混合检索引擎（已有 BM25 + 向量，图谱待补）</span></li>
+          <li class="done"><span class="num">E02</span><span class="icon">✓</span><span class="text">全链路溯源引擎（文档片段 + 图片溯源）</span></li>
+          <li class="done"><span class="num">E03</span><span class="icon">✓</span><span class="text">幻觉兜底引擎（低置信度拒答）</span></li>
+          <li class="todo"><span class="num">E04</span><span class="icon">○</span><span class="text">术语查询改写引擎</span></li>
+          <li class="todo"><span class="num">E05</span><span class="icon">○</span><span class="text">学科 Prompt 引擎</span></li>
+          <li class="todo"><span class="num">E06</span><span class="icon">○</span><span class="text">Embedding 微调引擎（学科向量模型）</span></li>
+          <li class="todo"><span class="num">E07</span><span class="icon">○</span><span class="text">多轮引导教学引擎（苏格拉底式追问）</span></li>
+          <li class="done"><span class="num">E08</span><span class="icon">✓</span><span class="text">冲突检测引擎（完整模块已上线）</span></li>
+        </ul>
+      </div>
+
+      <!-- 七大看板 -->
+      <div class="tools-section" style="grid-column: 1 / -1">
+        <h3>📊 七大看板</h3>
+        <div class="ts-en">SEVEN DASHBOARDS</div>
+        <ul class="tools-list" style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <li class="todo"><span class="num">D01</span><span class="icon">○</span><span class="text">Bad Case 分析看板</span></li>
+          <li class="todo"><span class="num">D02</span><span class="icon">○</span><span class="text">知识缺口看板</span></li>
+          <li class="todo"><span class="num">D03</span><span class="icon">○</span><span class="text">贡献度仪表盘</span></li>
+          <li class="todo"><span class="num">D04</span><span class="icon">○</span><span class="text">学期更新工具</span></li>
+          <li class="todo"><span class="num">D05</span><span class="icon">○</span><span class="text">数据统计与运营看板</span></li>
+          <li class="todo"><span class="num">D06</span><span class="icon">○</span><span class="text">答疑质量看板</span></li>
+          <li class="todo"><span class="num">D07</span><span class="icon">○</span><span class="text">知识库质检看板</span></li>
+          <li class="done" style="background:rgba(16, 185, 129, 0.04);border-color:rgba(16, 185, 129, 0.25)"><span class="num">★</span><span class="icon">✓</span><span class="text"><strong>已上线总览</strong>：10 工具中 5 ✓ + 2 ◐ &nbsp;|&nbsp; 8 引擎中 3 ✓ + 1 ◐ &nbsp;|&nbsp; 7 看板中 0 ✓</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ 总结 banner ============ -->
+<div class="wrap">
+  <div class="summary-banner">
+    <div class="summary-banner-inner">
+      <span class="summary-tag">EXECUTIVE SUMMARY · 一句话结论</span>
+      <h2>核心已就位，<span class="gold">可立即对外交付完整知识库问答服务</span></h2>
+      <div class="summary-points">
+        <div class="summary-point">
+          <div class="num">★ FINDING 01</div>
+          <div class="title">基本盘已稳</div>
+          <p>M1 学科语料库 + M3 问答标准库 + M4 智能检索溯源 = "知识入库 → 问答 → 溯源"完整闭环已上线 70%+，可对外签约交付。</p>
+        </div>
+        <div class="summary-point">
+          <div class="num">★ FINDING 02</div>
+          <div class="title">协作治理待补全</div>
+          <p>M5 管理安全 60%、M6 师生共建 25%——需要补 三级角色 / 敏感词 / 三级审核 / 贡献度仪表盘 才能支撑全校规模。</p>
+        </div>
+        <div class="summary-point">
+          <div class="num">★ FINDING 03</div>
+          <div class="title">V3 增量待启动</div>
+          <p>M7-M10 四个 NEW 模块（社区/笔记/智能体矩阵/Agent 生态）平均 22%——按客户优先级排期，社区共享可优先做。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 数据来源说明 ============ -->
+<div class="wrap">
+  <div class="source-note">
+    <h4>📌 数据来源 · 双源对照</h4>
+    <strong>规划基准：</strong>Coral 知识库产品规划文档 V3 · 2026-04-08 · <code>https://pdt-confidential-whether-tier.trycloudflare.com/arch/coral.html</code><br>
+    <strong>已上线清单：</strong><code>~/Downloads/知识库已上线能力_功能模块.xlsx</code><br>
+    　• Sheet 1「已上线能力」：27 条用户故事级核心能力（按 7 个用户场景组织）<br>
+    　• Sheet 2「已上线功能模块」：160 个功能点（4 级目录 · 主要在"知识库管理"L1 模块下）<br>
+    <strong>映射方法：</strong>逐项对应 Coral 规划的 10 大模块 / 25 工具组件 / 8 大场景，状态分 ✓ 已上线 / ◐ 部分上线 / ○ 未上线 三档<br>
+    <strong>完成率算法：</strong>每个模块按子能力计数加权，1.0 (✓) / 0.5 (◐) / 0 (○) ÷ 总数<br>
+    <strong>注意事项：</strong>10% 以下模块向上修正以避免视觉为 0；具体子能力的优先级 / 工时由产研团队最终核对
+  </div>
+</div>
+
+<!-- ============ Footer ============ -->
+<div class="doc-footer">
+  <div class="ft-name">Coral 知识库 <span class="grad">已上线能力完成度仪表盘</span> V1</div>
+  <div class="ft-meta">基于 Coral V3 规划 + Excel 双源对照 · AI 教学产品部 · 2026-04-10</div>
+  <div style="margin-top:14px">
+    <code>~/Desktop/ClaudeCode/学科大模型文档中心/Coral_已上线能力完成度仪表盘_V1.html</code>
+  </div>
+</div>
+
+</body>
+</html>

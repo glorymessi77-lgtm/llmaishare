@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280">
+<title>小雅学科大脑 · 系统架构图（含具备状态标注）V1</title>
+<style>
+/* ============================================================
+   小雅学科大脑 · 系统架构图（含具备状态标注） V1
+   1:1 复刻 Coral 原架构页 · 每个模块叠加状态徽章 + 备注
+   ============================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* Coral 原页配色 */
+  --bg:           #F0F4F8;
+  --card-bg:      #FFFFFF;
+  --ink:          #1a2740;
+  --ink-mute:     #64748b;
+  --ink-light:    #94a3b8;
+  --hairline:     rgba(0,0,0,0.08);
+  --hairline-bold:rgba(0,0,0,0.15);
+  --hairline-dash:rgba(0,0,0,0.10);
+
+  /* Coral 7 套色系（按模块功能区分） */
+  --c-blue-deep: #2563EB; --c-blue-soft: #DBEAFE;   /* 用户层 / 自主学习 */
+  --c-green-deep:#059669; --c-green-soft:#D1FAE5;   /* 知识建设 */
+  --c-purple-deep:#7C3AED;--c-purple-soft:#EDE9FE;  /* 智能交互 */
+  --c-orange-deep:#C2410C;--c-orange-soft:#FFEDD5;  /* 协作 */
+  --c-cyan-deep: #0E7490; --c-cyan-soft: #CFFAFE;   /* 开放生态 */
+  --c-yellow-deep:#92400E;--c-yellow-soft:#FEF9C3;  /* 引擎 */
+  --c-red-deep:  #DC2626; --c-red-soft:  #FEE2E2;   /* 安全防护 */
+  --c-gray-deep: #475569; --c-gray-soft: #F1F5F9;   /* 工具/基础 */
+
+  --new-red: #ef4444;
+
+  /* 状态颜色 5 套 */
+  --st-yes:     #059669;
+  --st-yes-bg:  #D1FAE5;
+  --st-part:    #C2410C;
+  --st-part-bg: #FFEDD5;
+  --st-no:      #475569;
+  --st-no-bg:   #F1F5F9;
+  --st-school:  #2563EB;
+  --st-school-bg:#DBEAFE;
+  --st-na:      #94a3b8;
+  --st-na-bg:   #F5F7FA;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  padding: 0 0 60px;
+  min-width: 1280px;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ============ 返回导航条 ============ */
+.nav-bar {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hairline);
+  padding: 12px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+.nav-bar a { color: var(--c-blue-deep); font-weight: 600; transition: opacity 0.15s; }
+.nav-bar a:hover { opacity: 0.7; }
+.nav-bar .sep { color: var(--ink-light); }
+.nav-bar .current { color: var(--ink-mute); }
+.nav-bar .level {
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+  background: #FF7F50;
+}
+.nav-bar .right {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--ink-light);
+  letter-spacing: 1px;
+}
+
+/* ============ Wrap ============ */
+.wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ============ Hero ============ */
+.hero {
+  padding: 32px 0 24px;
+  text-align: center;
+}
+.hero h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+.hero .subtitle {
+  font-size: 12px;
+  color: var(--ink-mute);
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+.hero .legend {
+  font-size: 11px;
+  color: var(--ink-mute);
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  background: var(--card-bg);
+  border: 1px solid var(--hairline);
+  border-radius: 20px;
+  padding: 6px 18px;
+}
+
+/* What is it 区 */
+.whatis {
+  background: var(--card-bg);
+  border: 1.5px solid var(--hairline);
+  border-radius: 12px;
+  padding: 22px 28px;
+  margin-top: 22px;
+  position: relative;
+}
+.whatis::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--c-blue-deep), var(--c-purple-deep), var(--c-green-deep));
+  border-radius: 12px 0 0 12px;
+}
+.whatis h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 12px;
+  letter-spacing: -0.3px;
+}
+.whatis p {
+  font-size: 12.5px;
+  line-height: 1.85;
+  color: var(--ink-mute);
+  margin-bottom: 10px;
+}
+.whatis p strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+.whatis p:last-child { margin-bottom: 0; }
+.whatis .pill-line {
+  margin-top: 14px;
+  font-size: 11px;
+  color: var(--ink-mute);
+  display: flex;
+  gap: 14px;
+}
+.whatis .pill-line span {
+  background: var(--c-green-soft);
+  color: var(--c-green-deep);
+  padding: 4px 11px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+/* ============ 状态总览 ============ */
+.status-overview {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+.so-card {
+  background: var(--card-bg);
+  border: 1.5px solid var(--hairline);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.so-card .lbl {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.so-card .num {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.so-card .num .unit {
+  font-size: 12px;
+  color: var(--ink-mute);
+  font-weight: 500;
+  margin-left: 3px;
+}
+.so-card.yes  { border-left: 3px solid var(--st-yes); }
+.so-card.yes  .num { color: var(--st-yes); }
+.so-card.part { border-left: 3px solid var(--st-part); }
+.so-card.part .num { color: var(--st-part); }
+.so-card.no   { border-left: 3px solid var(--st-no); }
+.so-card.no   .num { color: var(--st-no); }
+.so-card.school { border-left: 3px solid var(--st-school); }
+.so-card.school .num { color: var(--st-school); }
+.so-card.na   { border-left: 3px solid var(--st-na); }
+.so-card.na   .num { color: var(--st-na); }
+.so-card .desc {
+  font-size: 10px;
+  color: var(--ink-mute);
+  margin-top: 6px;
+}
+
+/* ============ 章节 ============ */
+.layer {
+  margin-top: 28px;
+}
+.layer-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 12px 12px 0 0;
+  border: 1.5px solid;
+  border-bottom: none;
+}
+.layer-num {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+.layer-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.layer-meta {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+.layer-body {
+  background: var(--card-bg);
+  border: 1.5px solid;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  padding: 18px;
+}
+
+/* 7 套色系应用 */
+.l-blue   .layer-head { background: var(--c-blue-soft); border-color: var(--c-blue-deep); }
+.l-blue   .layer-head .layer-num,
+.l-blue   .layer-head .layer-title { color: var(--c-blue-deep); }
+.l-blue   .layer-head .layer-meta { background: var(--c-blue-deep); color: #fff; }
+.l-blue   .layer-body { border-color: var(--c-blue-deep); }
+
+.l-green  .layer-head { background: var(--c-green-soft); border-color: var(--c-green-deep); }
+.l-green  .layer-head .layer-num,
+.l-green  .layer-head .layer-title { color: var(--c-green-deep); }
+.l-green  .layer-head .layer-meta { background: var(--c-green-deep); color: #fff; }
+.l-green  .layer-body { border-color: var(--c-green-deep); }
+
+.l-gray   .layer-head { background: var(--c-gray-soft); border-color: var(--c-gray-deep); }
+.l-gray   .layer-head .layer-num,
+.l-gray   .layer-head .layer-title { color: var(--c-gray-deep); }
+.l-gray   .layer-head .layer-meta { background: var(--c-gray-deep); color: #fff; }
+.l-gray   .layer-body { border-color: var(--c-gray-deep); }
+
+.l-purple .layer-head { background: var(--c-purple-soft); border-color: var(--c-purple-deep); }
+.l-purple .layer-head .layer-num,
+.l-purple .layer-head .layer-title { color: var(--c-purple-deep); }
+.l-purple .layer-head .layer-meta { background: var(--c-purple-deep); color: #fff; }
+.l-purple .layer-body { border-color: var(--c-purple-deep); }
+
+.l-cyan   .layer-head { background: var(--c-cyan-soft); border-color: var(--c-cyan-deep); }
+.l-cyan   .layer-head .layer-num,
+.l-cyan   .layer-head .layer-title { color: var(--c-cyan-deep); }
+.l-cyan   .layer-head .layer-meta { background: var(--c-cyan-deep); color: #fff; }
+.l-cyan   .layer-body { border-color: var(--c-cyan-deep); }
+
+.l-red    .layer-head { background: var(--c-red-soft); border-color: var(--c-red-deep); }
+.l-red    .layer-head .layer-num,
+.l-red    .layer-head .layer-title { color: var(--c-red-deep); }
+.l-red    .layer-head .layer-meta { background: var(--c-red-deep); color: #fff; }
+.l-red    .layer-body { border-color: var(--c-red-deep); }
+
+.l-yellow .layer-head { background: var(--c-yellow-soft); border-color: var(--c-yellow-deep); }
+.l-yellow .layer-head .layer-num,
+.l-yellow .layer-head .layer-title { color: var(--c-yellow-deep); }
+.l-yellow .layer-head .layer-meta { background: var(--c-yellow-deep); color: #fff; }
+.l-yellow .layer-body { border-color: var(--c-yellow-deep); }
+
+/* ============ 八大场景 卡片 ============ */
+.scenes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.scene {
+  background: #FAFBFC;
+  border: 1.5px solid var(--hairline);
+  border-radius: 8px;
+  padding: 12px 14px;
+  position: relative;
+}
+.scene-num {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-light);
+}
+.scene-icon-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.2px;
+}
+.scene-tagline {
+  font-size: 11px;
+  color: var(--c-blue-deep);
+  font-weight: 600;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--hairline-dash);
+}
+.scene-desc {
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+.scene-meta {
+  font-size: 10px;
+  color: var(--ink-light);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.scene-meta span { white-space: nowrap; }
+
+/* ============ 模块卡片 ============ */
+.mod-category {
+  margin-bottom: 18px;
+}
+.mod-category:last-child { margin-bottom: 0; }
+.mod-category-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.2px;
+  margin-bottom: 10px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.mc-knowledge { background: var(--c-green-soft); color: var(--c-green-deep); }
+.mc-interact  { background: var(--c-purple-soft); color: var(--c-purple-deep); }
+.mc-collab    { background: var(--c-orange-soft); color: var(--c-orange-deep); }
+.mc-open      { background: var(--c-cyan-soft); color: var(--c-cyan-deep); }
+
+.mod-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.mod {
+  background: #FAFBFC;
+  border: 1.5px solid var(--hairline);
+  border-radius: 8px;
+  padding: 14px 16px;
+  position: relative;
+}
+.mod.knowledge { border-left: 3px solid var(--c-green-deep); }
+.mod.interact  { border-left: 3px solid var(--c-purple-deep); }
+.mod.collab    { border-left: 3px solid var(--c-orange-deep); }
+.mod.open      { border-left: 3px solid var(--c-cyan-deep); }
+
+.mod-head-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.mod-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.2px;
+}
+.mod-name .mod-no {
+  font-size: 11px;
+  color: var(--ink-light);
+  font-weight: 600;
+  margin-right: 4px;
+}
+.new-badge {
+  background: var(--new-red);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+.mod-desc {
+  font-size: 11.5px;
+  color: var(--ink-mute);
+  line-height: 1.7;
+  margin-bottom: 8px;
+}
+.mod-deliverable {
+  font-size: 10.5px;
+  color: var(--ink);
+  background: var(--c-yellow-soft);
+  border: 1px dashed var(--c-yellow-deep);
+  border-radius: 6px;
+  padding: 7px 10px;
+  margin-top: 8px;
+}
+.mod-deliverable strong { color: var(--c-yellow-deep); font-weight: 700; }
+.mod-embedded {
+  font-size: 10.5px;
+  color: var(--ink);
+  background: var(--c-purple-soft);
+  border: 1px dashed var(--c-purple-deep);
+  border-radius: 6px;
+  padding: 7px 10px;
+  margin-top: 8px;
+}
+.mod-embedded strong { color: var(--c-purple-deep); font-weight: 700; }
+
+/* ============ 状态徽章（核心新增） ============ */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+.status-badge.yes    { background: var(--st-yes-bg);    color: var(--st-yes); }
+.status-badge.part   { background: var(--st-part-bg);   color: var(--st-part); }
+.status-badge.no     { background: var(--st-no-bg);     color: var(--st-no); }
+.status-badge.school { background: var(--st-school-bg); color: var(--st-school); }
+.status-badge.na     { background: var(--st-na-bg);     color: var(--st-na); border: 1px dashed var(--st-na); padding: 2px 8px; }
+
+/* 状态备注（核心新增） */
+.status-note {
+  margin-top: 8px;
+  padding: 8px 11px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  line-height: 1.6;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.status-note .ico {
+  flex-shrink: 0;
+  font-weight: 700;
+  margin-top: 1px;
+}
+.status-note.yes {
+  background: rgba(5, 150, 105, 0.06);
+  border-left: 2px solid var(--st-yes);
+  color: var(--st-yes);
+}
+.status-note.part {
+  background: rgba(194, 65, 12, 0.06);
+  border-left: 2px solid var(--st-part);
+  color: var(--st-part);
+}
+.status-note.no {
+  background: rgba(71, 85, 105, 0.06);
+  border-left: 2px solid var(--st-no);
+  color: var(--st-no);
+}
+.status-note.school {
+  background: rgba(37, 99, 235, 0.06);
+  border-left: 2px solid var(--st-school);
+  color: var(--st-school);
+}
+.status-note.na {
+  background: rgba(148, 163, 184, 0.06);
+  border-left: 2px solid var(--st-na);
+  color: var(--st-na);
+}
+.status-note strong { font-weight: 700; }
+
+/* ============ 工具链 ============ */
+.tool-section {
+  margin-bottom: 18px;
+}
+.tool-section:last-child { margin-bottom: 0; }
+.tool-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  width: fit-content;
+}
+.tst-tools  { background: var(--c-gray-soft); color: var(--c-gray-deep); }
+.tst-engine { background: var(--c-yellow-soft); color: var(--c-yellow-deep); }
+.tst-board  { background: var(--c-purple-soft); color: var(--c-purple-deep); }
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.tool-grid.three { grid-template-columns: repeat(3, 1fr); }
+.tool-grid.four { grid-template-columns: repeat(4, 1fr); }
+
+.tool-item {
+  background: #FAFBFC;
+  border: 1.5px solid var(--hairline);
+  border-radius: 8px;
+  padding: 12px 14px;
+  border-left: 3px solid var(--c-gray-deep);
+}
+.tool-item.engine { border-left-color: var(--c-yellow-deep); }
+.tool-item.board  { border-left-color: var(--c-purple-deep); }
+.tool-item-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.tool-item-no {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-light);
+  font-family: "SF Mono", monospace;
+}
+.tool-item-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.tool-item-price {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--c-yellow-deep);
+  background: var(--c-yellow-soft);
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-left: auto;
+}
+.tool-item-desc {
+  font-size: 11px;
+  color: var(--ink-mute);
+  line-height: 1.65;
+}
+
+/* ============ 数据飞轮 + 流程图 ============ */
+.flywheel {
+  background: linear-gradient(135deg, #FDE68A, #FCA5A5);
+  border-radius: 12px;
+  padding: 16px 22px;
+  margin: 16px 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #7C2D12;
+}
+.flywheel .label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  margin-bottom: 4px;
+  color: #92400E;
+}
+.process-flow {
+  background: #FAFBFC;
+  border: 1px dashed var(--hairline-bold);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-top: 16px;
+  font-size: 11.5px;
+  color: var(--ink-mute);
+  text-align: center;
+  line-height: 2;
+}
+
+/* ============ 数据存储/AI模型/部署 ============ */
+.simple-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+.simple-grid.three { grid-template-columns: repeat(3, 1fr); }
+.simple-grid.six   { grid-template-columns: repeat(3, 1fr); }
+.simple-item {
+  background: #FAFBFC;
+  border: 1.5px solid var(--hairline);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.simple-item-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.simple-item-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.2px;
+}
+.simple-item-bullets {
+  list-style: none;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  line-height: 1.7;
+}
+.simple-item-bullets li::before { content: "· "; color: var(--ink-light); }
+
+/* ============ 6 层安全 ============ */
+.security-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.security-item {
+  background: #FAFBFC;
+  border: 1.5px solid var(--hairline);
+  border-left: 3px solid var(--c-red-deep);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.security-item-no {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--c-red-deep);
+  margin-bottom: 4px;
+}
+.security-item-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.security-item-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.security-item-desc {
+  font-size: 11px;
+  color: var(--ink-mute);
+  line-height: 1.6;
+}
+
+/* ============ 底部商业信息 ============ */
+.business-info {
+  background: linear-gradient(135deg, #1E3A8A 0%, #6D28D9 50%, #BE185D 100%);
+  color: #fff;
+  border-radius: 14px;
+  padding: 28px 36px;
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: center;
+}
+.business-info .item .lbl {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.75);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.business-info .item .val {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(90deg, #FDE68A, #FCA5A5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.business-info .item .sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.75);
+  margin-top: 4px;
+}
+
+/* ============ Footer ============ */
+.doc-footer {
+  text-align: center;
+  padding: 30px 24px 16px;
+  margin-top: 24px;
+  font-size: 11px;
+  color: var(--ink-light);
+  border-top: 1px solid var(--hairline);
+}
+.doc-footer .ft-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-mute);
+  margin-bottom: 4px;
+}
+.doc-footer code {
+  background: rgba(0,0,0,0.05);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: "SF Mono", Monaco, monospace;
+  font-size: 10px;
+  color: var(--ink-mute);
+}
+</style>
+</head>
+<body>
+
+<!-- ============ 返回导航条 ============ -->
+<div class="nav-bar">
+  <a href="index.html">← 返回文档中心</a>
+  <span class="sep">/</span>
+  <span class="level">L1</span>
+  <span class="current">小雅学科大脑 · 系统架构图（含具备状态标注）V1</span>
+  <span class="right">/ CORAL · ARCHITECTURE WITH STATUS · V1</span>
+</div>
+
+<!-- ============ HERO ============ -->
+<div class="wrap">
+  <div class="hero">
+    <h1>小雅学科大脑 — 系统架构图</h1>
+    <div class="subtitle">V3 · 2026-04-08 · 八大教学场景 · 十大核心模块 · 25 个工具链组件 · 六层安全防护 · 全私有化部署</div>
+    <div class="legend">
+      📦 = 独立交付物 &nbsp; · &nbsp; ╌╌ = 内嵌功能 &nbsp; · &nbsp; ✓◐○⌂◌ = 当前具备状态
+    </div>
+  </div>
+
+  <!-- What is it -->
+  <div class="whatis">
+    <h3>小雅学科大脑是什么？</h3>
+    <p>小雅学科大脑是帮助高校完成<strong>学科知识体系数字化重建</strong>的 AI 底座产品。它把散落在教材、课件、论文、试卷中的学科知识，统一采集、解析、结构化，重建为完整的、AI 能理解的学科数字资产——然后向上驱动<strong>建、备、教、学、考、督、管、研</strong>八大教学场景的智能化升级。</p>
+    <p>没有它，任何大模型在学科问题上都只能给出通用回答；有了它，AI 的每句回答都能<strong>溯源到教材原文</strong>，每条学习路径都基于<strong>知识图谱推算</strong>，每份评估报告都由<strong>全链路教学数据</strong>自动生成。</p>
+    <div class="pill-line">
+      <span>全私有化部署</span>
+      <span>数据不出校园</span>
+      <span>大模型会过时，学科知识体系永远是学校自己的核心数字资产</span>
+    </div>
+  </div>
+
+  <!-- 状态总览 -->
+  <div class="status-overview">
+    <div class="so-card yes">
+      <div class="lbl">✓ 已具备</div>
+      <div class="num">14<span class="unit">项</span></div>
+      <div class="desc">占比 <strong>27%</strong> · 可立即对外讲</div>
+    </div>
+    <div class="so-card part">
+      <div class="lbl">◐ 部分具备</div>
+      <div class="num">17<span class="unit">项</span></div>
+      <div class="desc">占比 <strong>33%</strong> · 待补全 / 独立化</div>
+    </div>
+    <div class="so-card no">
+      <div class="lbl">○ 未具备</div>
+      <div class="num">17<span class="unit">项</span></div>
+      <div class="desc">占比 <strong>33%</strong> · 待启动开发</div>
+    </div>
+    <div class="so-card school">
+      <div class="lbl">⌂ 学校负责</div>
+      <div class="num">3<span class="unit">项</span></div>
+      <div class="desc">占比 <strong>6%</strong> · 本地化保障</div>
+    </div>
+    <div class="so-card na" style="border-left-color:var(--st-yes);background:linear-gradient(135deg,#D1FAE5,#FFEDD5)">
+      <div class="lbl" style="color:var(--c-green-deep)">✓ + ◐ 合计</div>
+      <div class="num" style="color:var(--c-green-deep)">31<span class="unit">项</span></div>
+      <div class="desc"><strong style="color:var(--c-green-deep);font-size:16px">占比 61%</strong> · 已具备 + 部分具备</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ① 使用场景层 ============ -->
+<div class="wrap">
+  <div class="layer l-blue">
+    <div class="layer-head">
+      <span class="layer-num">①</span>
+      <span class="layer-title">使用场景层（八大教学场景）</span>
+      <span class="layer-meta">USAGE SCENES</span>
+    </div>
+    <div class="layer-body">
+      <div class="scenes-grid">
+
+        <div class="scene">
+          <span class="scene-num">1️⃣</span>
+          <div class="scene-icon-name">📐 建 · 课程建设</div>
+          <div class="scene-tagline">建设精品课程 · 共享课 · MOOC/SPOC</div>
+          <div class="scene-desc">课程资源组织与结构化，支撑精品课程建设与申报</div>
+          <div class="scene-meta"><span>👥 教师 + 教务处</span><span>💻 PC Web</span></div>
+        </div>
+
+        <div class="scene">
+          <span class="scene-num">2️⃣</span>
+          <div class="scene-icon-name">📝 备 · 智能备课</div>
+          <div class="scene-tagline">30 分钟生成教学设计 · AI 出题组卷</div>
+          <div class="scene-desc">七模块教学设计自动生成，按知识点/难度出题，课件自动入库</div>
+          <div class="scene-meta"><span>👥 教师</span><span>💻 PC Web</span></div>
+        </div>
+
+        <div class="scene">
+          <span class="scene-num">3️⃣</span>
+          <div class="scene-icon-name">🎓 教 · 课堂教学</div>
+          <div class="scene-tagline">课堂互动 · 知识点讲解 · 活动管理</div>
+          <div class="scene-desc">课堂实时互动、知识点精准讲解、教学活动全流程管理</div>
+          <div class="scene-meta"><span>👥 教师</span><span>💻 PC · 小程序</span></div>
+        </div>
+
+        <div class="scene">
+          <span class="scene-num">4️⃣</span>
+          <div class="scene-icon-name">📖 学 · 自主学习</div>
+          <div class="scene-tagline">AI 答疑溯源 · 图谱学习 · 多轮引导</div>
+          <div class="scene-desc">答疑溯源到教材原文，知识图谱引导学习路径，多轮引导式答疑</div>
+          <div class="scene-meta"><span>👥 学生</span><span>💻 PC · 小程序 · H5</span></div>
+        </div>
+
+        <div class="scene">
+          <span class="scene-num">5️⃣</span>
+          <div class="scene-icon-name">✅ 考 · 考试测评</div>
+          <div class="scene-tagline">智能组卷 · AI 批改 · 成绩分析</div>
+          <div class="scene-desc">按知识点/难度智能组卷，AI 辅助批改，作业反馈与成绩分析</div>
+          <div class="scene-meta"><span>👥 教师 + 学生</span><span>💻 PC Web</span></div>
+        </div>
+
+        <div class="scene">
+          <span class="scene-num">6️⃣</span>
+          <div class="scene-icon-name">👁 督 · 教学督导</div>
+          <div class="scene-tagline">达成度评价 · 质量画像 · 预警</div>
+          <div class="scene-desc">课程目标达成度评价，教学质量画像，教师/学生异常预警</div>
+          <div class="scene-meta"><span>👥 管理者</span><span>💻 PC Web</span></div>
+        </div>
+
+        <div class="scene">
+          <span class="scene-num">7️⃣</span>
+          <div class="scene-icon-name">⚙️ 管 · 教学管理</div>
+          <div class="scene-tagline">权限配置 · 审批 · 数据看板</div>
+          <div class="scene-desc">校级知识库审批，角色权限管理，数据看板与用量统计</div>
+          <div class="scene-meta"><span>👥 管理员</span><span>💻 PC Web</span></div>
+        </div>
+
+        <div class="scene">
+          <span class="scene-num">8️⃣</span>
+          <div class="scene-icon-name">🔬 研 · 科研协作</div>
+          <div class="scene-tagline">师生共建 · 文献研读 · 贡献积分</div>
+          <div class="scene-desc">师生共建知识库，文献研读与三级审核，贡献度积分支撑学分认定</div>
+          <div class="scene-meta"><span>👥 师生</span><span>💻 PC · 小程序</span></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ② 十大核心产品模块 ============ -->
+<div class="wrap">
+  <div class="layer l-green">
+    <div class="layer-head">
+      <span class="layer-num">②</span>
+      <span class="layer-title">十大核心产品模块</span>
+      <span class="layer-meta">TEN CORE MODULES</span>
+    </div>
+    <div class="layer-body">
+
+      <!-- 知识建设类 -->
+      <div class="mod-category">
+        <div class="mod-category-title mc-knowledge">📚 知识建设（模块 1 · 2 · 3）</div>
+        <div class="mod-grid">
+
+          <div class="mod knowledge">
+            <div class="mod-head-row">
+              <div class="mod-name"><span class="mod-no">M1</span>学科语料库</div>
+              <span class="status-badge part">◐ 部分具备</span>
+            </div>
+            <div class="mod-desc">将散落在教材、论文、课件中的学科知识统一采集、解析、结构化，形成 150-300 万字的可检索知识资产。支持 <strong>15 种主流格式</strong>解析（文档 / 表格 / 图片 / 音视频），学期间知识继承。</div>
+            <div class="mod-deliverable"><strong>📦 交付物：</strong>小雅知识库平台 · 结构化语料 150-300 万字 · 四大子知识库</div>
+            <div class="status-note part"><span class="ico">◐</span><div><strong>当前状态：</strong><strong>不支持爬虫</strong>。需协助学校搭建，支持<strong>我方输出 + 学校上传</strong>双来源。</div></div>
+          </div>
+
+          <div class="mod knowledge">
+            <div class="mod-head-row">
+              <div class="mod-name"><span class="mod-no">M2</span>术语与知识图谱</div>
+              <span class="status-badge part">◐ 部分具备</span>
+            </div>
+            <div class="mod-desc">构建 3000-5000 条学科专业术语体系，让 AI 听得懂学科"行话"。绘制知识点先修关系网络，支撑自适应学习路径推算和 KAG 图谱问答。</div>
+            <div class="mod-deliverable"><strong>📦 交付物：</strong>学科术语表 · 学科知识图谱</div>
+            <div class="status-note part"><span class="ico">◐</span><div><strong>当前状态：</strong>支持 <strong>Excel 导入</strong>，<strong>不支持自动提取</strong>；可<strong>展示图谱呈现</strong>，并支持基于<strong>已导入图谱进行推理问答</strong>。</div></div>
+          </div>
+
+          <div class="mod knowledge">
+            <div class="mod-head-row">
+              <div class="mod-name"><span class="mod-no">M3</span>问答标准库</div>
+              <span class="status-badge yes">✓ 已具备</span>
+            </div>
+            <div class="mod-desc">积累 500-1000 条高频问题标准答案，命中即秒回，是 AI 回答效果的保底层。支持冲突检测，确保知识一致性。</div>
+            <div class="mod-deliverable"><strong>📦 交付物：</strong>学科 FAQ 库</div>
+            <div class="status-note yes"><span class="ico">✓</span><div><strong>当前状态：</strong>已有 FAQ 能力。</div></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 智能交互类 -->
+      <div class="mod-category">
+        <div class="mod-category-title mc-interact">🤖 智能交互（模块 4 · 8 · 9）</div>
+        <div class="mod-grid">
+
+          <div class="mod interact">
+            <div class="mod-head-row">
+              <div class="mod-name"><span class="mod-no">M4</span>智能检索与溯源</div>
+              <span class="status-badge part">◐ 部分具备</span>
+            </div>
+            <div class="mod-desc">三路召回（语义+关键词+知识图谱），每句回答标注教材出处可点击溯源。多轮引导式答疑，AI 不直接给答案而是追问定位知识断点。准确率 ≥ 90%。</div>
+            <div class="mod-deliverable"><strong>📦 交付物：</strong>知识问答服务 · 可见溯源文档 · 知识图谱</div>
+            <div class="status-note part"><span class="ico">◐</span><div><strong>当前状态：</strong>有基础检索与溯源，<strong>未形成独立引擎</strong>，溯源用户感知弱。</div></div>
+          </div>
+
+          <div class="mod interact">
+            <div class="mod-head-row">
+              <div class="mod-name"><span class="mod-no">M8</span>笔记系统</div>
+              <span class="new-badge">NEW</span>
+              <span class="status-badge yes">✓ 已具备</span>
+            </div>
+            <div class="mod-desc">个人笔记创建/编辑，问答结果一键保存到笔记，笔记与知识库双向联动（删除互不影响）。</div>
+            <div class="mod-deliverable"><strong>📦 交付物：</strong>小雅知识库平台 · 笔记 Skill</div>
+            <div class="status-note yes"><span class="ico">✓</span><div><strong>当前状态：</strong><strong>4 月 28 日正式上线</strong>，已具备。</div></div>
+          </div>
+
+          <div class="mod interact">
+            <div class="mod-head-row">
+              <div class="mod-name"><span class="mod-no">M9</span>智能体应用矩阵</div>
+              <span class="new-badge">NEW</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="mod-desc">按教师/学生角色配置智能体，管理员下发，支持 Image/Video/Audio 生成，应用成果一键回流知识库。</div>
+            <div class="mod-embedded"><strong>🔗 交付物：</strong>根据教师/学生角色下发智能体，与小雅平台的智能应用联动，无独立交付物</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>暂未与平台做深度融合，<strong>后期可提供简单入口</strong>，不具备。</div></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 协作与治理类 -->
+      <div class="mod-category">
+        <div class="mod-category-title mc-collab">👥 协作与治理（模块 5 · 6 · 7）</div>
+        <div class="mod-grid">
+
+          <div class="mod collab">
+            <div class="mod-head-row">
+              <div class="mod-name"><span class="mod-no">M5</span>管理与安全平台</div>
+              <span class="status-badge part">◐ 部分具备</span>
+            </div>
+            <div class="mod-desc">教师/学生/校管三级角色权限，校级知识库审批流程，黑白名单/敏感词管控，全院数据统计与运营看板。</div>
+            <div class="mod-deliverable"><strong>📦 交付物：</strong>运行管理后台</div>
+            <div class="status-note part"><span class="ico">◐</span><div><strong>当前状态：</strong>支持访问安全、行为审计；<strong>物理 / 网络 / 存储</strong>安全由学校本地化保障。</div></div>
+          </div>
+
+          <div class="mod collab">
+            <div class="mod-head-row">
+              <div class="mod-name"><span class="mod-no">M6</span>师生共建运营平台</div>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="mod-desc">AI 初审 → 研究生互审 → 教师终审的三级质量把控，贡献度仪表盘支撑学分认定，知识缺口自动发现。</div>
+            <div class="mod-deliverable"><strong>📦 交付物：</strong>师生共建平台</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>需搭建 <strong>上传、审核、知识增长、动态迭代</strong> 机制。</div></div>
+          </div>
+
+          <div class="mod collab">
+            <div class="mod-head-row">
+              <div class="mod-name"><span class="mod-no">M7</span>社区与知识共享</div>
+              <span class="new-badge">NEW</span>
+              <span class="status-badge yes">✓ 已具备</span>
+            </div>
+            <div class="mod-desc">预置通识精选知识库，校级知识库广场，跨校知识库引用，按订阅数排名的贡献度体系。</div>
+            <div class="mod-deliverable"><strong>📦 交付物：</strong>社区与知识共享平台</div>
+            <div class="status-note yes"><span class="ico">✓</span><div><strong>当前状态：</strong>已具备，<strong>社区和知识库共享</strong>。</div></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 开放生态类 -->
+      <div class="mod-category">
+        <div class="mod-category-title mc-open">🔓 开放生态（模块 10）</div>
+        <div class="mod-grid">
+
+          <div class="mod open" style="grid-column: 1 / -1; max-width:50%">
+            <div class="mod-head-row">
+              <div class="mod-name"><span class="mod-no">M10</span>Agent 生态</div>
+              <span class="new-badge">NEW</span>
+              <span class="status-badge part">◐ 部分具备</span>
+            </div>
+            <div class="mod-desc">与开放平台 Skill REST API 开放，openclaw/cc CLI 调度，第三方插件市场，课程知识库标签体系（系统/自建/引入）。</div>
+            <div class="mod-deliverable"><strong>📦 交付物：</strong>Agent 开放平台 · API 网关</div>
+            <div class="status-note part"><span class="ico">◐</span><div><strong>当前状态：</strong><strong>4 月 28 日上线</strong>，支持 <strong>REST API</strong>、<strong>笔记 Skill</strong>。</div></div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ ③ 工具链层 ============ -->
+<div class="wrap">
+  <div class="layer l-gray">
+    <div class="layer-head">
+      <span class="layer-num">③</span>
+      <span class="layer-title">工具链层（25 个组件）</span>
+      <span class="layer-meta">TOOLCHAIN · 25 COMPONENTS</span>
+    </div>
+    <div class="layer-body">
+
+      <!-- 十大工具 -->
+      <div class="tool-section">
+        <div class="tool-section-title tst-tools">🔧 十大工具（120 万）</div>
+        <div class="tool-grid">
+
+          <div class="tool-item">
+            <div class="tool-item-head">
+              <span class="tool-item-no">T01</span>
+              <span class="tool-item-name">文档解析工具</span>
+              <span class="tool-item-price">15 万</span>
+              <span class="status-badge part">◐ 部分具备</span>
+            </div>
+            <div class="tool-item-desc">PDF/PPT/Word 公式表格精准解析，15 种格式支持，OCR 识别</div>
+            <div class="status-note part"><span class="ico">◐</span><div><strong>当前状态：</strong><strong>PPT 解析效果差</strong>，需针对教材、课件、论文切片优化。</div></div>
+          </div>
+
+          <div class="tool-item">
+            <div class="tool-item-head">
+              <span class="tool-item-no">T02</span>
+              <span class="tool-item-name">术语管理工作台</span>
+              <span class="tool-item-price">12 万</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">术语自动提取、教师审核、同义词改写查询，构建学科术语体系</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>学科术语 <strong>识别、管理、标准化</strong> 能力待建设。</div></div>
+          </div>
+
+          <div class="tool-item">
+            <div class="tool-item-head">
+              <span class="tool-item-no">T03</span>
+              <span class="tool-item-name">知识图谱标注工具</span>
+              <span class="tool-item-price">15 万</span>
+              <span class="status-badge yes">✓ 已具备</span>
+            </div>
+            <div class="tool-item-desc">知识点先修关系标注与可视化，KAG 一键图谱转换，图谱问答</div>
+            <div class="status-note yes"><span class="ico">✓</span><div><strong>当前状态：</strong>支持 <strong>Excel 表格导入图谱</strong>，可视化图谱展示，可基于图谱进行<strong>问答及溯源</strong>。</div></div>
+          </div>
+
+          <div class="tool-item">
+            <div class="tool-item-head">
+              <span class="tool-item-no">T04</span>
+              <span class="tool-item-name">问答库构建工具</span>
+              <span class="tool-item-price">10 万</span>
+              <span class="status-badge part">◐ 部分具备</span>
+            </div>
+            <div class="tool-item-desc">AI 自动生成候选问答、教师审核发布，支持单条/Excel 批量创建</div>
+            <div class="status-note part"><span class="ico">◐</span><div><strong>当前状态：</strong>有 FAQ，支持<strong>手动录入、批量操作</strong>，自动构建 + 审核流程待完善。</div></div>
+          </div>
+
+          <div class="tool-item">
+            <div class="tool-item-head">
+              <span class="tool-item-no">T05</span>
+              <span class="tool-item-name">知识库管理后台</span>
+              <span class="tool-item-price">15 万</span>
+              <span class="status-badge part">◐ 部分具备</span>
+            </div>
+            <div class="tool-item-desc">知识库增删改查、版本管理、三级角色权限、校级审批流程</div>
+            <div class="status-note part"><span class="ico">◐</span><div><strong>当前状态：</strong>支持知识库<strong>增删改查</strong>，不具备<strong>版本管理</strong>和<strong>三级角色权限</strong>、<strong>校级审核流程</strong>。</div></div>
+          </div>
+
+          <div class="tool-item">
+            <div class="tool-item-head">
+              <span class="tool-item-no">T06</span>
+              <span class="tool-item-name">质量评测工具</span>
+              <span class="tool-item-price">12 万</span>
+              <span class="status-badge part">◐ 部分具备</span>
+            </div>
+            <div class="tool-item-desc">300-500 题标准测试集、A/B 效果对比、答疑质量看板、知识库质检</div>
+            <div class="status-note part"><span class="ico">◐</span><div><strong>当前状态：</strong>有自动测试平台，<strong>与知识库未打通</strong>，无闭环评测。</div></div>
+          </div>
+
+          <div class="tool-item">
+            <div class="tool-item-head">
+              <span class="tool-item-no">T07</span>
+              <span class="tool-item-name">师生共建平台</span>
+              <span class="tool-item-price">18 万</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">多端上传研读、三级审核流、社区知识共享、贡献度排名、运营看板</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>多端上传、审核、贡献统计、<strong>知识动态生长</strong> 能力待建。</div></div>
+          </div>
+
+          <div class="tool-item">
+            <div class="tool-item-head">
+              <span class="tool-item-no">T08</span>
+              <span class="tool-item-name">多模态数据采集</span>
+              <span class="tool-item-price">8 万</span>
+              <span class="status-badge part">◐ 部分具备</span>
+            </div>
+            <div class="tool-item-desc">图片/音频/视频解析、拍照上传、录音转文字、网页爬虫、微信/浏览器导入</div>
+            <div class="status-note part"><span class="ico">◐</span><div><strong>当前状态：</strong>支持<strong>音视频图片解析</strong>、<strong>小程序拍照上传</strong>、<strong>微信公众号文章导入</strong>，不具备<strong>网页爬虫</strong>、<strong>录音转文字</strong>。</div></div>
+          </div>
+
+          <div class="tool-item">
+            <div class="tool-item-head">
+              <span class="tool-item-no">T09</span>
+              <span class="tool-item-name">笔记与文档协作</span>
+              <span class="tool-item-price">5 万</span>
+              <span class="status-badge part">◐ 部分具备</span>
+            </div>
+            <div class="tool-item-desc">个人笔记创建编辑、问答结果保存、白板输入、文档摘要编辑</div>
+            <div class="status-note part"><span class="ico">◐</span><div><strong>当前状态：</strong><strong>4 月 28 日</strong>将上线笔记功能，<strong>暂不支持协作</strong>。</div></div>
+          </div>
+
+          <div class="tool-item">
+            <div class="tool-item-head">
+              <span class="tool-item-no">T10</span>
+              <span class="tool-item-name">智能体与 Agent 平台</span>
+              <span class="tool-item-price">10 万</span>
+              <span class="status-badge part">◐ 部分具备</span>
+            </div>
+            <div class="tool-item-desc">智能体配置下发、AIGC 生成管理、CLI 工具、Skill API 开放、插件市场</div>
+            <div class="status-note part"><span class="ico">◐</span><div><strong>当前状态：</strong><strong>4 月 28 日</strong>支持<strong>笔记 Skill 发布</strong>，暂不支持 <strong>CLI 工具</strong>及<strong>插件市场</strong>。</div></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 八大引擎 -->
+      <div class="tool-section">
+        <div class="tool-section-title tst-engine">⚙️ 八大引擎（含于效果调优服务）</div>
+        <div class="tool-grid">
+
+          <div class="tool-item engine">
+            <div class="tool-item-head">
+              <span class="tool-item-no">E01</span>
+              <span class="tool-item-name">混合检索引擎</span>
+              <span class="status-badge part">◐ 部分具备</span>
+            </div>
+            <div class="tool-item-desc">BM25 + 向量 + 知识图谱三路召回，RRF 融合排序，跨章节多段落聚合</div>
+            <div class="status-note part"><span class="ico">◐</span><div><strong>当前状态：</strong>基础检索有，<strong>未形成混合检索引擎</strong>。</div></div>
+          </div>
+
+          <div class="tool-item engine">
+            <div class="tool-item-head">
+              <span class="tool-item-no">E02</span>
+              <span class="tool-item-name">全链路溯源引擎</span>
+              <span class="status-badge part">◐ 部分具备</span>
+            </div>
+            <div class="tool-item-desc">回答追踪到文档/章节/页码，段落级高亮，图片溯源</div>
+            <div class="status-note part"><span class="ico">◐</span><div><strong>当前状态：</strong>有溯源能力，<strong>未做成独立引擎</strong>。</div></div>
+          </div>
+
+          <div class="tool-item engine">
+            <div class="tool-item-head">
+              <span class="tool-item-no">E03</span>
+              <span class="tool-item-name">幻觉兜底引擎</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">低置信度自动拒答，标注"基于模型通用知识"</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>无独立 <strong>幻觉拦截 / 兜底</strong> 能力。</div></div>
+          </div>
+
+          <div class="tool-item engine">
+            <div class="tool-item-head">
+              <span class="tool-item-no">E04</span>
+              <span class="tool-item-name">术语查询改写引擎</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">基于术语表自动扩展同义词，消除歧义提升召回</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>无学科术语 <strong>理解、改写、纠错</strong> 引擎。</div></div>
+          </div>
+
+          <div class="tool-item engine">
+            <div class="tool-item-head">
+              <span class="tool-item-no">E05</span>
+              <span class="tool-item-name">学科 Prompt 引擎</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">学科约束 + 术语注入 + 格式控制，提示词库管理</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>无 <strong>学科专属提示词工程</strong> 引擎。</div></div>
+          </div>
+
+          <div class="tool-item engine">
+            <div class="tool-item-head">
+              <span class="tool-item-no">E06</span>
+              <span class="tool-item-name">Embedding 微调引擎</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">学科专属向量模型训练，检索精度提升 10-30%</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong><strong>不具备微调引擎</strong>，具备<strong>多个 Embedding 模型可选择</strong>。</div></div>
+          </div>
+
+          <div class="tool-item engine">
+            <div class="tool-item-head">
+              <span class="tool-item-no">E07</span>
+              <span class="tool-item-name">多轮引导教学引擎</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">苏格拉底式追问定位知识断点，理解后切换巩固模式</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>未具备。</div></div>
+          </div>
+
+          <div class="tool-item engine">
+            <div class="tool-item-head">
+              <span class="tool-item-no">E08</span>
+              <span class="tool-item-name">冲突检测引擎</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">同库文档间知识冲突检测，相似度排序，结果对比</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>未具备。</div></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 七大看板 -->
+      <div class="tool-section">
+        <div class="tool-section-title tst-board">📊 七大看板（含于调优服务）</div>
+        <div class="tool-grid">
+
+          <div class="tool-item board">
+            <div class="tool-item-head">
+              <span class="tool-item-no">D01</span>
+              <span class="tool-item-name">Bad Case 分析</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">答错案例分类追踪，定位问题根因</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>无 badcase <strong>收集、分析、迭代</strong> 闭环。</div></div>
+          </div>
+
+          <div class="tool-item board">
+            <div class="tool-item-head">
+              <span class="tool-item-no">D02</span>
+              <span class="tool-item-name">知识缺口看板</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">答不了的问题按频次推送，发现知识盲区</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>无知识 <strong>覆盖度、缺口检测与提醒</strong>。</div></div>
+          </div>
+
+          <div class="tool-item board">
+            <div class="tool-item-head">
+              <span class="tool-item-no">D03</span>
+              <span class="tool-item-name">贡献度仪表盘</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">师生贡献排行、知识资产增长、调用统计</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>无师生 <strong>贡献统计、排行、激励</strong>。</div></div>
+          </div>
+
+          <div class="tool-item board">
+            <div class="tool-item-head">
+              <span class="tool-item-no">D04</span>
+              <span class="tool-item-name">学期更新工具</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">教材换版自动处理，新课清单生成</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>无按学期 <strong>自动更新、迭代知识</strong> 能力。</div></div>
+          </div>
+
+          <div class="tool-item board">
+            <div class="tool-item-head">
+              <span class="tool-item-no">D05</span>
+              <span class="tool-item-name">数据统计与运营</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">用户/知识库/问答核心指标，院系维度，导出 Excel</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>未具备。</div></div>
+          </div>
+
+          <div class="tool-item board">
+            <div class="tool-item-head">
+              <span class="tool-item-no">D06</span>
+              <span class="tool-item-name">答疑质量看板</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">满意度/命中率/溯源覆盖率，负反馈推送教师</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>未具备。</div></div>
+          </div>
+
+          <div class="tool-item board">
+            <div class="tool-item-head">
+              <span class="tool-item-no">D07</span>
+              <span class="tool-item-name">知识库质检看板</span>
+              <span class="status-badge no">○ 未具备</span>
+            </div>
+            <div class="tool-item-desc">覆盖度评分，低引用资源 30 天预警</div>
+            <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>未具备。</div></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 数据飞轮 -->
+      <div class="flywheel">
+        <div class="label">🔄 知识库数据飞轮</div>
+        教师修订回流 → FAQ 沉淀 → 学期继承 → 持续增长
+      </div>
+
+      <!-- 流程图 -->
+      <div class="process-flow">
+        📄 文档解析 → 语义切片 → 🔢 Embedding 向量化 → 🗂 索引构建 → 🔍 三路召回（语义 + 关键词 + 图谱） → 📐 重排序 + 聚合 → 💬 生成 + 溯源
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ ④ 数据存储层 ============ -->
+<div class="wrap">
+  <div class="layer l-purple">
+    <div class="layer-head">
+      <span class="layer-num">④</span>
+      <span class="layer-title">数据存储层</span>
+      <span class="layer-meta">DATA STORAGE</span>
+    </div>
+    <div class="layer-body">
+      <div class="simple-grid">
+
+        <div class="simple-item">
+          <div class="simple-item-head">
+            <div class="simple-item-name">🗃 语义检索 · 向量数据库</div>
+          </div>
+          <ul class="simple-item-bullets">
+            <li>知识切片 Embedding 索引</li>
+            <li>多学科分区隔离</li>
+          </ul>
+          <span class="status-badge yes" style="margin-top:8px">✓ 已具备</span>
+        </div>
+
+        <div class="simple-item">
+          <div class="simple-item-head">
+            <div class="simple-item-name">🕸 关系推理 · 图数据库</div>
+          </div>
+          <ul class="simple-item-bullets">
+            <li>知识点先修关系图</li>
+            <li>KAG 图谱存储</li>
+          </ul>
+          <span class="status-badge yes" style="margin-top:8px">✓ 已具备</span>
+        </div>
+
+        <div class="simple-item">
+          <div class="simple-item-head">
+            <div class="simple-item-name">📦 原始资产 · 对象/文档存储</div>
+          </div>
+          <ul class="simple-item-bullets">
+            <li>教材/论文/音视频原文件</li>
+            <li>解析结果 · 切片文本</li>
+          </ul>
+          <span class="status-badge yes" style="margin-top:8px">✓ 已具备</span>
+        </div>
+
+        <div class="simple-item">
+          <div class="simple-item-head">
+            <div class="simple-item-name">🗄 元数据 · 业务 · 关系数据库</div>
+          </div>
+          <ul class="simple-item-bullets">
+            <li>用户 · 权限 · 审批流</li>
+            <li>统计数据 · 问答记录</li>
+          </ul>
+          <span class="status-badge yes" style="margin-top:8px">✓ 已具备</span>
+        </div>
+
+        <div class="simple-item">
+          <div class="simple-item-head">
+            <div class="simple-item-name">⚡ 高频 FAQ · 缓存层</div>
+          </div>
+          <ul class="simple-item-bullets">
+            <li>命中 FAQ 秒级返回</li>
+            <li>热门问答预缓存</li>
+          </ul>
+          <span class="status-badge yes" style="margin-top:8px">✓ 已具备</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ⑤ AI 模型层 ============ -->
+<div class="wrap">
+  <div class="layer l-cyan">
+    <div class="layer-head">
+      <span class="layer-num">⑤</span>
+      <span class="layer-title">AI 模型层</span>
+      <span class="layer-meta">AI MODELS</span>
+    </div>
+    <div class="layer-body">
+      <div class="simple-grid">
+
+        <div class="simple-item">
+          <div class="simple-item-head">
+            <div class="simple-item-name">🧠 问答生成 · LLM</div>
+          </div>
+          <ul class="simple-item-bullets">
+            <li>主流模型下拉切换</li>
+            <li>学科 Prompt 注入</li>
+          </ul>
+          <span class="status-badge yes" style="margin-top:8px">✓ 已具备</span>
+        </div>
+
+        <div class="simple-item">
+          <div class="simple-item-head">
+            <div class="simple-item-name">🔡 语义检索 · Embedding</div>
+          </div>
+          <ul class="simple-item-bullets">
+            <li>通用 + 学科微调版</li>
+            <li>检索精度 +10-30%</li>
+          </ul>
+          <span class="status-badge yes" style="margin-top:8px">✓ 已具备</span>
+        </div>
+
+        <div class="simple-item">
+          <div class="simple-item-head">
+            <div class="simple-item-name">📐 精排优化 · Reranker</div>
+          </div>
+          <ul class="simple-item-bullets">
+            <li>多路召回结果精排</li>
+            <li>可配置切换</li>
+          </ul>
+          <span class="status-badge yes" style="margin-top:8px">✓ 已具备</span>
+        </div>
+
+        <div class="simple-item">
+          <div class="simple-item-head">
+            <div class="simple-item-name">🎨 多模态输入</div>
+          </div>
+          <ul class="simple-item-bullets">
+            <li>图片 OCR · 视频关键帧</li>
+            <li>ASR 语音转文字</li>
+          </ul>
+          <span class="status-badge yes" style="margin-top:8px">✓ 已具备</span>
+        </div>
+
+        <div class="simple-item">
+          <div class="simple-item-head">
+            <div class="simple-item-name">✨ 内容生成 · AIGC</div>
+          </div>
+          <ul class="simple-item-bullets">
+            <li>Image / Video / Audio 生成</li>
+          </ul>
+          <span class="status-badge no" style="margin-top:8px">○ 未具备</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ⑥ 六层安全防护 ============ -->
+<div class="wrap">
+  <div class="layer l-red">
+    <div class="layer-head">
+      <span class="layer-num">⑥</span>
+      <span class="layer-title">六层安全防护体系</span>
+      <span class="layer-meta">SIX-LAYER SECURITY</span>
+    </div>
+    <div class="layer-body">
+      <div class="security-grid">
+
+        <div class="security-item">
+          <div class="security-item-no">第一层</div>
+          <div class="security-item-head">
+            <div class="security-item-name">🏢 物理部署安全</div>
+            <span class="status-badge school" style="margin-left:auto">⌂ 学校负责</span>
+          </div>
+          <div class="security-item-desc">全私有化 · 内网隔离</div>
+          <div class="status-note school"><span class="ico">⌂</span><div><strong>当前状态：</strong>本地化部署，<strong>我方提供建议</strong>。</div></div>
+        </div>
+
+        <div class="security-item">
+          <div class="security-item-no">第二层</div>
+          <div class="security-item-head">
+            <div class="security-item-name">🌐 网络传输安全</div>
+            <span class="status-badge school" style="margin-left:auto">⌂ 学校负责</span>
+          </div>
+          <div class="security-item-desc">TLS 1.3 · WAF · API 限流</div>
+          <div class="status-note school"><span class="ico">⌂</span><div><strong>当前状态：</strong>本地化部署，<strong>我方提供建议</strong>。</div></div>
+        </div>
+
+        <div class="security-item">
+          <div class="security-item-no">第三层</div>
+          <div class="security-item-head">
+            <div class="security-item-name">💾 数据存储安全</div>
+            <span class="status-badge school" style="margin-left:auto">⌂ 学校负责</span>
+          </div>
+          <div class="security-item-desc">AES-256 · TDE · 备份加密</div>
+          <div class="status-note school"><span class="ico">⌂</span><div><strong>当前状态：</strong>备份、加密、容灾<strong>由学校保障</strong>。</div></div>
+        </div>
+
+        <div class="security-item">
+          <div class="security-item-no">第四层</div>
+          <div class="security-item-head">
+            <div class="security-item-name">🔑 访问控制</div>
+            <span class="status-badge yes" style="margin-left:auto">✓ 已具备</span>
+          </div>
+          <div class="security-item-desc">四级 RBAC · 双因子认证</div>
+          <div class="status-note yes"><span class="ico">✓</span><div><strong>当前状态：</strong>账号、权限、<strong>行为审计</strong>。</div></div>
+        </div>
+
+        <div class="security-item">
+          <div class="security-item-no">第五层</div>
+          <div class="security-item-head">
+            <div class="security-item-name">©️ 知识产权保护</div>
+            <span class="status-badge no" style="margin-left:auto">○ 未具备</span>
+          </div>
+          <div class="security-item-desc">确权追踪 · 版权水印 · 脱敏</div>
+          <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>未具备。</div></div>
+        </div>
+
+        <div class="security-item">
+          <div class="security-item-no">第六层</div>
+          <div class="security-item-head">
+            <div class="security-item-name">🤖 AI 输出安全</div>
+            <span class="status-badge no" style="margin-left:auto">○ 未具备</span>
+          </div>
+          <div class="security-item-desc">Prompt 注入检测 · 敏感词 · 黑白名单</div>
+          <div class="status-note no"><span class="ico">○</span><div><strong>当前状态：</strong>无 <strong>输出内容合规、风控、审核</strong> 机制。</div></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ⑦ 全私有化部署 ============ -->
+<div class="wrap">
+  <div class="layer l-yellow">
+    <div class="layer-head">
+      <span class="layer-num">⑦</span>
+      <span class="layer-title">全私有化部署（数据不出校园）</span>
+      <span class="layer-meta">PRIVATE DEPLOYMENT</span>
+    </div>
+    <div class="layer-body">
+      <div class="simple-grid three">
+
+        <div class="simple-item">
+          <div class="simple-item-head">
+            <div class="simple-item-name">🏫 校园内网服务器</div>
+          </div>
+          <ul class="simple-item-bullets">
+            <li>等保二级 / 三级合规</li>
+          </ul>
+          <span class="status-badge na" style="margin-top:8px">◌ 未评估</span>
+        </div>
+
+        <div class="simple-item">
+          <div class="simple-item-head">
+            <div class="simple-item-name">📋 合规认证</div>
+          </div>
+          <ul class="simple-item-bullets">
+            <li>《数据安全法》·《个保法》</li>
+            <li>《教育数据规范》</li>
+          </ul>
+          <span class="status-badge na" style="margin-top:8px">◌ 未评估</span>
+        </div>
+
+        <div class="simple-item">
+          <div class="simple-item-head">
+            <div class="simple-item-name">🔗 三方系统对接</div>
+          </div>
+          <ul class="simple-item-bullets">
+            <li>教务系统 · 图书馆</li>
+            <li>SSO 单点登录</li>
+          </ul>
+          <span class="status-badge na" style="margin-top:8px">◌ 未评估</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 商业信息 ============ -->
+<div class="wrap">
+  <div class="business-info">
+    <div class="item">
+      <div class="lbl">总价</div>
+      <div class="val">198 万</div>
+      <div class="sub">十大工具平台 120 万 + 四项专业服务 78 万</div>
+    </div>
+    <div class="item">
+      <div class="lbl">建设周期</div>
+      <div class="val">14 周</div>
+      <div class="sub">原有能力 · 新增能力（V3）· 内嵌功能（无独立交付物）</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Footer ============ -->
+<div class="doc-footer">
+  <div class="ft-name">小雅学科大脑 · 系统架构图（含具备状态标注）V1</div>
+  <div>1:1 复刻 Coral 原架构页 · 叠加 ✓◐○⌂◌ 五态状态徽章 + 备注 · AI 教学产品部 · 2026-04-10</div>
+  <div style="margin-top:10px">
+    <code>~/Desktop/ClaudeCode/学科大模型文档中心/Coral_系统架构图_含状态标注_V1.html</code>
+  </div>
+</div>
+
+</body>
+</html>

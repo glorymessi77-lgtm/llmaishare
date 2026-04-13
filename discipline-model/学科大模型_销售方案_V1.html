@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学科大模型 · 销售方案 V1</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg: #0a0e17;
+  --bg-2: #111827;
+  --bg-card: #161e2e;
+  --bg-elevated: #1c2538;
+  --indigo: #6366f1;
+  --indigo-light: #818cf8;
+  --pink: #ec4899;
+  --pink-light: #f472b6;
+  --amber: #f59e0b;
+  --amber-light: #fbbf24;
+  --emerald: #10b981;
+  --emerald-light: #34d399;
+  --rose: #f43f5e;
+  --cyan: #06b6d4;
+  --text: #f1f5f9;
+  --text-2: #94a3b8;
+  --text-3: #64748b;
+  --border: rgba(148,163,184,0.1);
+  --border-2: rgba(148,163,184,0.18);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans SC', -apple-system, "PingFang SC", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.75;
+  padding: 0 0 80px;
+  overflow-x: hidden;
+}
+
+/* ─── NAV BAR (XClaw 文档中心规范) ─── */
+.nav-bar {
+  background: rgba(10,14,23,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+.nav-bar a { color: var(--indigo-light); text-decoration: none; font-weight: 600; transition: opacity 0.15s; }
+.nav-bar a:hover { opacity: 0.7; }
+.nav-bar .sep { color: var(--text-3); }
+.nav-bar .current { color: var(--text-2); }
+.nav-bar .level { font-size: 9px; font-weight: 700; color: #fff; padding: 2px 7px; border-radius: 4px; letter-spacing: 1px; }
+.nav-bar .l1 { background: #6366F1; }
+.nav-bar .l2 { background: #EC4899; }
+.nav-bar .l3 { background: #F59E0B; }
+
+/* ─── Ambient ─── */
+.ambient {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.ambient::before {
+  content: ''; position: absolute;
+  width: 700px; height: 700px;
+  top: -200px; right: -150px;
+  background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+  filter: blur(80px);
+}
+.ambient::after {
+  content: ''; position: absolute;
+  width: 500px; height: 500px;
+  bottom: -100px; left: -100px;
+  background: radial-gradient(circle, rgba(236,72,153,0.06) 0%, transparent 70%);
+  filter: blur(80px);
+}
+
+.page { position: relative; z-index: 1; }
+.container { max-width: 1240px; margin: 0 auto; padding: 0 48px; }
+
+/* ─── COVER ─── */
+.cover {
+  padding: 80px 0 60px;
+  text-align: center;
+}
+.cover-tag {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 7px 22px;
+  background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(236,72,153,0.12));
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: 100px;
+  font-size: 12px; font-weight: 600;
+  color: var(--indigo-light);
+  letter-spacing: 1.5px;
+  margin-bottom: 28px;
+}
+.cover-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--indigo-light);
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(1.5)} }
+
+.cover h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: -2px;
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+.cover h1 .grad {
+  background: linear-gradient(135deg, var(--indigo-light) 0%, var(--pink-light) 50%, var(--amber-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.cover .lead {
+  font-size: 22px;
+  color: var(--text-2);
+  font-weight: 300;
+  max-width: 760px;
+  margin: 0 auto 16px;
+  line-height: 1.7;
+}
+.cover .meta {
+  font-size: 13px;
+  color: var(--text-3);
+  margin-top: 32px;
+  letter-spacing: 1px;
+}
+.cover .meta span { margin: 0 12px; }
+
+/* ─── ONE-LINER (核心定义卡) ─── */
+.oneliner {
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(236,72,153,0.05));
+  border: 1px solid rgba(99,102,241,0.2);
+  border-radius: 24px;
+  padding: 48px 56px;
+  margin: 60px 0;
+  position: relative;
+  overflow: hidden;
+}
+.oneliner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--indigo), var(--pink), var(--amber));
+}
+.oneliner-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: var(--indigo-light);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.oneliner-text {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.5px;
+}
+.oneliner-text .key {
+  background: linear-gradient(120deg, transparent 0%, transparent 50%, rgba(245,158,11,0.25) 50%, rgba(245,158,11,0.25) 100%);
+  padding: 0 4px;
+}
+.oneliner-text .accent {
+  color: var(--amber-light);
+}
+
+/* ─── SECTION ─── */
+.section { padding: 70px 0; }
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--indigo-light);
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.section-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+}
+.section-desc {
+  font-size: 17px;
+  color: var(--text-2);
+  max-width: 680px;
+  margin-bottom: 48px;
+  font-weight: 300;
+}
+
+/* ─── PAIN POINTS ─── */
+.pain-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.pain-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 32px;
+  position: relative;
+  transition: all 0.3s;
+}
+.pain-card:hover {
+  border-color: rgba(244,63,94,0.3);
+  transform: translateY(-3px);
+}
+.pain-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--rose);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.pain-card h4 {
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.pain-quote {
+  font-size: 14px;
+  color: var(--text-3);
+  font-style: italic;
+  padding: 12px 16px;
+  background: rgba(244,63,94,0.06);
+  border-left: 3px solid var(--rose);
+  border-radius: 6px;
+  margin-top: 14px;
+}
+
+/* ─── ARCHITECTURE ─── */
+.arch-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 56px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.arch-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.arch-layer {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 32px;
+  align-items: center;
+  padding: 28px;
+  border-radius: 16px;
+  position: relative;
+}
+.arch-layer.scene {
+  background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02));
+  border: 1px solid rgba(245,158,11,0.2);
+}
+.arch-layer.brain {
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(99,102,241,0.02));
+  border: 1px solid rgba(99,102,241,0.2);
+}
+.arch-layer.base {
+  background: linear-gradient(135deg, rgba(236,72,153,0.08), rgba(236,72,153,0.02));
+  border: 1px solid rgba(236,72,153,0.2);
+}
+
+.arch-left { text-align: center; }
+.arch-icon {
+  font-size: 40px;
+  margin-bottom: 8px;
+  display: block;
+}
+.arch-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.arch-en {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 1.5px;
+}
+.arch-right h5 {
+  font-size: 15px;
+  color: var(--text-2);
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+.arch-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.arch-item {
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-2);
+  color: var(--text-2);
+}
+.arch-layer.scene .arch-item { color: var(--amber-light); border-color: rgba(245,158,11,0.3); }
+.arch-layer.brain .arch-item { color: var(--indigo-light); border-color: rgba(99,102,241,0.3); }
+.arch-layer.base .arch-item { color: var(--pink-light); border-color: rgba(236,72,153,0.3); }
+
+.arch-arrow {
+  text-align: center;
+  font-size: 24px;
+  color: var(--text-3);
+  margin: -8px 0;
+}
+
+/* ─── VALUE PROPS (核心 1+2) ─── */
+.value-main {
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%);
+  border: 1px solid var(--border-2);
+  border-radius: 24px;
+  padding: 56px 48px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.value-main::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--amber), var(--pink), var(--indigo));
+}
+.value-main-label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--amber);
+  background: rgba(245,158,11,0.12);
+  padding: 5px 14px;
+  border-radius: 100px;
+  margin-bottom: 18px;
+}
+.value-main h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.4;
+  margin-bottom: 18px;
+}
+.value-main h3 .underline {
+  border-bottom: 4px solid var(--amber);
+  padding-bottom: 2px;
+}
+.value-main p {
+  font-size: 16px;
+  color: var(--text-2);
+  line-height: 1.85;
+  max-width: 880px;
+}
+
+.value-sub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.value-sub {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 36px;
+  transition: all 0.3s;
+}
+.value-sub:hover {
+  border-color: var(--border-2);
+  transform: translateY(-3px);
+}
+.value-sub-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 14px;
+}
+.value-sub:nth-child(1) .value-sub-tag {
+  background: rgba(99,102,241,0.12);
+  color: var(--indigo-light);
+}
+.value-sub:nth-child(2) .value-sub-tag {
+  background: rgba(236,72,153,0.12);
+  color: var(--pink-light);
+}
+.value-sub h4 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.value-sub p {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.8;
+}
+
+/* ─── DECISION MAKERS ─── */
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+.role-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 20px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.role-card:hover {
+  border-color: var(--indigo);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+}
+.role-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+.role-name {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.role-title {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-bottom: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.5px;
+}
+.role-care {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.7;
+  padding: 10px 12px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+.role-care .label {
+  display: block;
+  font-size: 10px;
+  color: var(--text-3);
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.role-script {
+  font-size: 12px;
+  color: var(--amber-light);
+  line-height: 1.7;
+  padding: 10px 12px;
+  background: rgba(245,158,11,0.06);
+  border-left: 2px solid var(--amber);
+  border-radius: 4px;
+}
+.role-script .label {
+  display: block;
+  font-size: 10px;
+  color: var(--amber);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+/* ─── PRODUCT VERSIONS ─── */
+.versions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.version-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 40px 32px;
+  position: relative;
+  transition: all 0.3s;
+}
+.version-card.recommended {
+  border: 2px solid var(--amber);
+  background: linear-gradient(180deg, rgba(245,158,11,0.06) 0%, var(--bg-card) 100%);
+  transform: scale(1.03);
+}
+.recommended-badge {
+  position: absolute;
+  top: -14px; left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--amber), #ea580c);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 6px 18px;
+  border-radius: 100px;
+  box-shadow: 0 6px 16px rgba(245,158,11,0.4);
+}
+.version-name {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.version-positioning {
+  font-size: 13px;
+  color: var(--text-3);
+  margin-bottom: 24px;
+}
+.version-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 42px;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--indigo-light), var(--pink-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+.version-card.recommended .version-price {
+  background: linear-gradient(135deg, var(--amber-light), #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.version-unit {
+  font-size: 13px;
+  color: var(--text-3);
+  margin-bottom: 24px;
+}
+.version-features {
+  list-style: none;
+  margin-bottom: 24px;
+}
+.version-features li {
+  font-size: 14px;
+  color: var(--text-2);
+  padding: 8px 0;
+  padding-left: 24px;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+.version-features li:last-child { border-bottom: none; }
+.version-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--emerald);
+  font-weight: 700;
+}
+.version-features li.disabled { color: var(--text-3); }
+.version-features li.disabled::before { content: '×'; color: var(--text-3); }
+
+.version-target {
+  padding: 14px 16px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+.version-target .label {
+  display: block;
+  font-size: 10px;
+  color: var(--text-3);
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  margin-bottom: 4px;
+}
+
+/* ─── DELIVERY (结果导向) ─── */
+.delivery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.delivery-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  text-align: center;
+  transition: all 0.3s;
+}
+.delivery-card:hover {
+  border-color: var(--emerald);
+  transform: translateY(-3px);
+}
+.delivery-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 44px;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--emerald-light), var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.1;
+}
+.delivery-unit {
+  font-size: 14px;
+  color: var(--text-2);
+  margin-top: 4px;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.delivery-detail {
+  font-size: 12px;
+  color: var(--text-3);
+  line-height: 1.6;
+}
+
+/* ─── FAQ ─── */
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.faq-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.faq-item:hover {
+  border-color: var(--border-2);
+}
+.faq-q {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 22px 28px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  user-select: none;
+}
+.faq-q::before {
+  content: 'Q';
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--indigo-light);
+  background: rgba(99,102,241,0.12);
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.faq-toggle {
+  margin-left: auto;
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-3);
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+.faq-item.open .faq-toggle { transform: rotate(45deg); }
+
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.faq-item.open .faq-a { max-height: 600px; }
+.faq-a-inner {
+  padding: 0 28px 24px 68px;
+  color: var(--text-2);
+  font-size: 14px;
+  line-height: 1.85;
+}
+.faq-a-inner strong { color: var(--amber-light); font-weight: 600; }
+
+/* ─── COMPETITOR TABLE ─── */
+.compete-table {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.compete-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.compete-table th, .compete-table td {
+  padding: 18px 24px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.compete-table th {
+  background: rgba(0,0,0,0.3);
+  font-weight: 700;
+  font-size: 12px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.compete-table th.us {
+  color: var(--amber-light);
+  background: rgba(245,158,11,0.08);
+}
+.compete-table tr:last-child td { border-bottom: none; }
+.compete-table .dim {
+  font-weight: 600;
+  color: var(--text);
+}
+.compete-table td.us-cell {
+  background: rgba(245,158,11,0.04);
+  color: var(--amber-light);
+  font-weight: 500;
+}
+.compete-table td.weak {
+  color: var(--rose);
+}
+.compete-table td.ok {
+  color: var(--text-2);
+}
+
+/* ─── OBJECTION ─── */
+.obj-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.obj-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(244,63,94,0.18);
+  border-radius: 16px;
+  padding: 28px;
+}
+.obj-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.obj-icon {
+  width: 32px; height: 32px;
+  background: rgba(244,63,94,0.12);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  color: var(--rose);
+  font-weight: 700;
+}
+.obj-q {
+  font-size: 15px;
+  color: var(--rose);
+  font-weight: 600;
+  line-height: 1.6;
+}
+.obj-a {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.85;
+}
+.obj-a strong { color: var(--text); }
+.obj-a .key {
+  background: rgba(245,158,11,0.1);
+  color: var(--amber-light);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+/* ─── ROI ─── */
+.roi-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 56px 48px;
+}
+.roi-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.roi-sub {
+  font-size: 14px;
+  color: var(--text-3);
+  margin-bottom: 36px;
+}
+.roi-flow {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr 60px 1fr;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 32px;
+}
+.roi-step {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+}
+.roi-step-label {
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.roi-step-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.roi-step-desc {
+  font-size: 12px;
+  color: var(--text-3);
+}
+.roi-arrow {
+  text-align: center;
+  font-size: 22px;
+  color: var(--indigo-light);
+}
+.roi-summary {
+  background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(6,182,212,0.04));
+  border: 1px solid rgba(16,185,129,0.3);
+  border-radius: 14px;
+  padding: 24px 28px;
+  text-align: center;
+}
+.roi-summary .label {
+  font-size: 12px;
+  color: var(--emerald);
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.roi-summary .value {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--emerald-light);
+}
+
+/* ─── SECTION INDEX ─── */
+.toc {
+  position: fixed;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  background: rgba(22,30,46,0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-2);
+  border-radius: 14px;
+  padding: 16px 14px;
+  display: none;
+}
+.toc.show { display: block; }
+.toc-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  font-size: 11px;
+  color: var(--text-3);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.toc-item:hover { background: rgba(99,102,241,0.1); color: var(--text-2); }
+.toc-item.active { color: var(--indigo-light); }
+.toc-item .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--text-3);
+}
+.toc-item.active .dot { background: var(--indigo-light); }
+.toc-num {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ─── FOOTER ─── */
+.footer {
+  text-align: center;
+  padding: 60px 0 30px;
+  border-top: 1px solid var(--border);
+  margin-top: 80px;
+}
+.footer p { font-size: 13px; color: var(--text-3); }
+.footer .brand { font-weight: 700; color: var(--indigo-light); }
+
+@media (max-width: 1100px) {
+  .role-grid { grid-template-columns: repeat(2, 1fr); }
+  .versions { grid-template-columns: 1fr; }
+  .delivery-grid { grid-template-columns: repeat(2, 1fr); }
+  .pain-grid, .obj-grid, .value-sub-grid { grid-template-columns: 1fr; }
+  .arch-layer { grid-template-columns: 1fr; gap: 16px; }
+  .toc { display: none !important; }
+  .roi-flow { grid-template-columns: 1fr; gap: 12px; }
+  .roi-arrow { transform: rotate(90deg); }
+  .cover h1 { font-size: 40px; }
+  .oneliner-text { font-size: 22px; }
+}
+@media (max-width: 768px) {
+  .container { padding: 0 24px; }
+  .compete-table { overflow-x: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- 统一返回目录导航条 -->
+<div class="nav-bar">
+  <a href="index.html">← 返回文档中心</a>
+  <span class="sep">/</span>
+  <span class="level l3">L3</span>
+  <span class="current">学科大模型 · 销售方案 V1</span>
+</div>
+
+<div class="ambient"></div>
+
+<div class="page">
+
+<!-- ═══════════ COVER ═══════════ -->
+<section class="container cover">
+  <div class="cover-tag">销售 & 售前实战手册 · V1</div>
+  <h1><span class="grad">学科大模型</span><br>销售售前方案</h1>
+  <p class="lead">从产品讲清楚，到客户谈下来。<br>一份能直接拿到客户面前用的实战方案。</p>
+  <div class="meta">
+    <span>📌 替代"八大工程方案"</span>
+    <span>·</span>
+    <span>🎯 销售/售前/渠道适用</span>
+    <span>·</span>
+    <span>📅 2026-04-10</span>
+  </div>
+</section>
+
+<!-- ═══════════ ONE-LINER ═══════════ -->
+<div class="container">
+  <div class="oneliner">
+    <div class="oneliner-label">一句话产品定义</div>
+    <div class="oneliner-text">
+      <span class="key">学科大模型</span> = 让<span class="accent">小雅平台</span>真正"懂"高校学科的整体方案，由<span class="key">Coral 知识底座 + XClaw 智能中枢 + 能力中心</span>三大组件构成，赋能<span class="accent">小雅平台八大场景</span>。
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ 01 · 客户痛点 ═══════════ -->
+<section class="section container" id="s1">
+  <div class="section-num">01 · 切入痛点</div>
+  <h2 class="section-title">高校买了 AI，为什么没人用？</h2>
+  <p class="section-desc">不是 AI 不行，是 AI 不"懂"你这所学校。这就是我们的销售开场白——不讲产品，先讲客户的真实痛点。</p>
+
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-num">PAIN 01</div>
+      <h4>买了通用大模型，但跟教学场景对不上</h4>
+      <div class="pain-quote">"我们买了星火/豆包/智谱给老师用，结果老师说生成的教案跟我们教材对不上，备课还是得自己写。"</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-num">PAIN 02</div>
+      <h4>建了知识库，但变成"死库"没人维护</h4>
+      <div class="pain-quote">"上一年花了几十万建知识库，结果没人录入数据，也没人用，今年成了死库。"</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-num">PAIN 03</div>
+      <h4>有数据却用不上，AI 看不到学校自己的资产</h4>
+      <div class="pain-quote">"我们教务系统、学习平台、题库、教材都有数据，但 AI 用不上。等于花钱买了一台不知道我们家情况的家政机器人。"</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-num">PAIN 04</div>
+      <h4>领导要"学科大模型"，但不知道做出来长啥样</h4>
+      <div class="pain-quote">"上面要求建学科大模型响应国家政策，但我们不懂技术，也不知道做成什么样能交差。"</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 02 · 产品架构 ═══════════ -->
+<section class="section container" id="s2">
+  <div class="section-num">02 · 产品架构</div>
+  <h2 class="section-title">三大组件 + 八大场景</h2>
+  <p class="section-desc">告别"八大工程"。客户买的不是工程清单，是一套清晰的产品。学科大模型由 <strong style="color:var(--text)">Coral 知识底座 + XClaw 智能中枢 + 能力中心</strong> 三大组件构成，整体赋能小雅平台的八大场景。</p>
+
+  <div class="arch-container">
+
+    <!-- 三大组件横向展示 -->
+    <div style="text-align:center; margin-bottom:24px;">
+      <span style="display:inline-block; padding:6px 18px; font-size:12px; font-weight:700; letter-spacing:1.5px; color:var(--amber-light); background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); border-radius:100px;">⬇ 学科大模型 · 三大组件 ⬇</span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; margin-bottom:32px;">
+      <!-- Coral 知识底座 -->
+      <div class="arch-layer base" style="grid-template-columns:1fr; gap:14px; text-align:center;">
+        <div class="arch-left">
+          <span class="arch-icon">📚</span>
+          <div class="arch-name">Coral 知识底座</div>
+          <div class="arch-en">KNOWLEDGE BASE</div>
+        </div>
+        <div class="arch-right">
+          <h5 style="text-align:center; margin-bottom:12px;">校本知识资产层<br><span style="font-size:12px; color:var(--text-3);">（积累 · 越用越值钱）</span></h5>
+          <div class="arch-items" style="justify-content:center;">
+            <span class="arch-item">教学知识库</span>
+            <span class="arch-item">学术文献库</span>
+            <span class="arch-item">行业标准库</span>
+            <span class="arch-item">校本特色库</span>
+            <span class="arch-item">师生共建</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- XClaw 智能中枢 -->
+      <div class="arch-layer brain" style="grid-template-columns:1fr; gap:14px; text-align:center;">
+        <div class="arch-left">
+          <span class="arch-icon">🧠</span>
+          <div class="arch-name">XClaw 智能中枢</div>
+          <div class="arch-en">INTELLIGENCE HUB</div>
+        </div>
+        <div class="arch-right">
+          <h5 style="text-align:center; margin-bottom:12px;">智能调度大脑<br><span style="font-size:12px; color:var(--text-3);">（编排 · 让能力流动起来）</span></h5>
+          <div class="arch-items" style="justify-content:center;">
+            <span class="arch-item">Skill 编排</span>
+            <span class="arch-item">智能体调度</span>
+            <span class="arch-item">多模型路由</span>
+            <span class="arch-item">全链路溯源</span>
+            <span class="arch-item">学科 Prompt</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 能力中心 -->
+      <div class="arch-layer scene" style="grid-template-columns:1fr; gap:14px; text-align:center;">
+        <div class="arch-left">
+          <span class="arch-icon">💪</span>
+          <div class="arch-name">能力中心</div>
+          <div class="arch-en">CAPABILITY HUB</div>
+        </div>
+        <div class="arch-right">
+          <h5 style="text-align:center; margin-bottom:12px;">原子 AI 能力层<br><span style="font-size:12px; color:var(--text-3);">（秀肌肉 · 技术底气）</span></h5>
+          <div class="arch-items" style="justify-content:center;">
+            <span class="arch-item">基础大模型</span>
+            <span class="arch-item">OCR 识别</span>
+            <span class="arch-item">ASR 语音</span>
+            <span class="arch-item">视觉理解</span>
+            <span class="arch-item">TTS 合成</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 赋能箭头 -->
+    <div style="text-align:center; padding:8px 0 24px;">
+      <div style="display:inline-block; padding:8px 24px; font-size:13px; font-weight:600; color:var(--emerald-light); background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.3); border-radius:100px;">
+        ↓ 整体赋能 ↓
+      </div>
+    </div>
+
+    <!-- 小雅平台八大场景 -->
+    <div style="background:linear-gradient(135deg, rgba(16,185,129,0.06), rgba(6,182,212,0.04)); border:1px solid rgba(16,185,129,0.25); border-radius:16px; padding:28px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <div style="font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--emerald); letter-spacing:1.5px; font-weight:600; margin-bottom:4px;">XIAOYA PLATFORM · 8 SCENARIOS</div>
+          <div style="font-size:18px; font-weight:700; color:var(--text);">小雅平台 · 八大教学场景（应用 surface）</div>
+        </div>
+        <span style="font-size:12px; color:var(--text-3); font-style:italic;">学科大模型为这八个场景提供智能化能力</span>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(8, 1fr); gap:8px;">
+        <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:14px 8px; text-align:center;">
+          <div style="font-size:20px; font-weight:800; color:var(--emerald-light); margin-bottom:4px;">建</div>
+          <div style="font-size:11px; color:var(--text-3);">建课</div>
+        </div>
+        <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:14px 8px; text-align:center;">
+          <div style="font-size:20px; font-weight:800; color:var(--emerald-light); margin-bottom:4px;">备</div>
+          <div style="font-size:11px; color:var(--text-3);">备课</div>
+        </div>
+        <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:14px 8px; text-align:center;">
+          <div style="font-size:20px; font-weight:800; color:var(--emerald-light); margin-bottom:4px;">教</div>
+          <div style="font-size:11px; color:var(--text-3);">授课</div>
+        </div>
+        <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:14px 8px; text-align:center;">
+          <div style="font-size:20px; font-weight:800; color:var(--emerald-light); margin-bottom:4px;">学</div>
+          <div style="font-size:11px; color:var(--text-3);">学习</div>
+        </div>
+        <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:14px 8px; text-align:center;">
+          <div style="font-size:20px; font-weight:800; color:var(--emerald-light); margin-bottom:4px;">测</div>
+          <div style="font-size:11px; color:var(--text-3);">测验</div>
+        </div>
+        <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:14px 8px; text-align:center;">
+          <div style="font-size:20px; font-weight:800; color:var(--emerald-light); margin-bottom:4px;">评</div>
+          <div style="font-size:11px; color:var(--text-3);">评价</div>
+        </div>
+        <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:14px 8px; text-align:center;">
+          <div style="font-size:20px; font-weight:800; color:var(--emerald-light); margin-bottom:4px;">督</div>
+          <div style="font-size:11px; color:var(--text-3);">督导</div>
+        </div>
+        <div style="background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:14px 8px; text-align:center;">
+          <div style="font-size:20px; font-weight:800; color:var(--emerald-light); margin-bottom:4px;">管</div>
+          <div style="font-size:11px; color:var(--text-3);">管理</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p style="margin-top:32px; font-size:15px; color:var(--text-3); text-align:center; font-style:italic;">
+    🔑 销售记忆口诀：<strong style="color:var(--text-2);">"三大组件（知识底座 + 智能中枢 + 能力中心），赋能小雅八大场景"</strong>。
+  </p>
+</section>
+
+<!-- ═══════════ 03 · 核心价值 ═══════════ -->
+<section class="section container" id="s3">
+  <div class="section-num">03 · 核心价值</div>
+  <h2 class="section-title">一个核心价值，两个支撑卖点</h2>
+  <p class="section-desc">告别 5 个并列卖点。销售记不住、客户听不进。我们只讲 1 个核心 + 2 个支撑，简单有力。</p>
+
+  <div class="value-main">
+    <div class="value-main-label">⭐ CORE VALUE · 核心价值</div>
+    <h3>把<span class="underline">通用 AI</span>变成<span class="underline">"懂你学校"的学科 AI</span>，让小雅平台八大场景效果立竿见影。</h3>
+    <p>客户不需要懂 RAG、不需要懂微调、不需要懂智能体——他们只需要一件事：<strong style="color:var(--text)">把学校的数据喂进去，AI 出来的东西要能用</strong>。学科大模型干的就是这一件事，而且把小雅平台 8 个教学场景一次性升级到位。</p>
+  </div>
+
+  <div class="value-sub-grid">
+    <div class="value-sub">
+      <div class="value-sub-tag">支撑卖点 ①</div>
+      <h4>师生共建飞轮：越用越值钱</h4>
+      <p>不是建完就完事的"死库"。师生在日常教学中自然产出知识卡片，知识库越用越丰富，AI 效果越用越好——这是<strong style="color:var(--indigo-light)">学校永久拥有的数字资产</strong>，不会因为换平台就消失。</p>
+    </div>
+    <div class="value-sub">
+      <div class="value-sub-tag">支撑卖点 ②</div>
+      <h4>响应国家政策：可申报、可交付、可汇报</h4>
+      <p>国家正在推《高质量数据集建设指引》和"学科大模型"政策。学科大模型旗舰版直接对应数据集 + 微调模型建设，<strong style="color:var(--pink-light)">可以作为政策项目申报材料</strong>，帮校长讲清楚"我们做了学科大模型"。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 04 · 决策链 ═══════════ -->
+<section class="section container" id="s4">
+  <div class="section-num">04 · 决策链分层</div>
+  <h2 class="section-title">见不同的人，讲不同的话</h2>
+  <p class="section-desc">校长、信息化处长、教务处长、院长、教师，每个角色关心的完全不一样。一套话打天下，必然吃瘪。</p>
+
+  <div class="role-grid">
+    <div class="role-card">
+      <div class="role-icon">🎓</div>
+      <div class="role-name">校长 / 副校长</div>
+      <div class="role-title">DECISION MAKER</div>
+      <div class="role-care">
+        <span class="label">他关心什么</span>
+        学校能不能拿出"全国首个 XX 学科大模型"成果向上汇报；钱花得值不值；能不能申报省/部级项目。
+      </div>
+      <div class="role-script">
+        <span class="label">怎么讲</span>
+        "我们帮您打造学校永久拥有的学科 AI 资产，可以作为响应国家政策的标志性成果对外发布。"
+      </div>
+    </div>
+    <div class="role-card">
+      <div class="role-icon">💻</div>
+      <div class="role-name">信息化处长</div>
+      <div class="role-title">TECH OWNER</div>
+      <div class="role-care">
+        <span class="label">他关心什么</span>
+        系统集成是否复杂；数据安全合规；运维复杂度；是否绑定厂商。
+      </div>
+      <div class="role-script">
+        <span class="label">怎么讲</span>
+        "支持私有化部署、统一认证、教务系统对接。知识库是您学校的，可以随时迁出，零厂商锁定。"
+      </div>
+    </div>
+    <div class="role-card">
+      <div class="role-icon">📋</div>
+      <div class="role-name">教务处长</div>
+      <div class="role-title">BUSINESS OWNER</div>
+      <div class="role-care">
+        <span class="label">他关心什么</span>
+        老师是否真的会用；能不能减轻教师工作量；推得动还是推不动。
+      </div>
+      <div class="role-script">
+        <span class="label">怎么讲</span>
+        "教学全链路 8 个场景一次到位，老师备课时间从 3 小时降到 1 小时，您可以拿数据向校长汇报。"
+      </div>
+    </div>
+    <div class="role-card">
+      <div class="role-icon">🏛️</div>
+      <div class="role-name">院长 / 系主任</div>
+      <div class="role-title">DEPT HEAD</div>
+      <div class="role-care">
+        <span class="label">他关心什么</span>
+        本专业本学科能不能用得上；学科建设有没有亮点；专业评估有没有加分。
+      </div>
+      <div class="role-script">
+        <span class="label">怎么讲</span>
+        "为您的学科定制知识库和评估体系，可以作为专业认证、双一流建设的智能化亮点。"
+      </div>
+    </div>
+    <div class="role-card">
+      <div class="role-icon">👨‍🏫</div>
+      <div class="role-name">教师 / 教研室</div>
+      <div class="role-title">END USER</div>
+      <div class="role-care">
+        <span class="label">他关心什么</span>
+        是不是又增加工作量；学不学得会；对教学有没有真帮助。
+      </div>
+      <div class="role-script">
+        <span class="label">怎么讲</span>
+        "一句话生成教学设计、自动出题组卷、自动批改主观题——这是给您减负的工具，不是给您添活的。"
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 05 · 产品版本 ═══════════ -->
+<section class="section container" id="s5">
+  <div class="section-num">05 · 产品版本</div>
+  <h2 class="section-title">三档版本，一目了然</h2>
+  <p class="section-desc">告别"标准版+全量版+渠道价+终端价"绕来绕去。三档报价，每档对应一类客户。销售一眼就能匹配。</p>
+
+  <div class="versions">
+    <div class="version-card">
+      <div class="version-name">入门版</div>
+      <div class="version-positioning">先体验、再扩展</div>
+      <div class="version-price">¥198<span style="font-size:18px;color:var(--text-3);">万</span></div>
+      <div class="version-unit">/ 年 · 单学科</div>
+      <ul class="version-features">
+        <li>Coral 知识库（单学科 30-50 万字）</li>
+        <li>XClaw 中枢 · 基础场景能力</li>
+        <li>4 个核心场景：备/教/学/考</li>
+        <li>2 个标准智能体</li>
+        <li class="disabled">数据集建设</li>
+        <li class="disabled">模型微调</li>
+      </ul>
+      <div class="version-target">
+        <span class="label">目标客户</span>
+        预算紧、想先验证效果的高校；单一学院/专业试点
+      </div>
+    </div>
+
+    <div class="version-card recommended">
+      <div class="recommended-badge">⭐ 主推</div>
+      <div class="version-name">标准版</div>
+      <div class="version-positioning">教学全场景智能化</div>
+      <div class="version-price">¥398<span style="font-size:18px;color:var(--text-3);">万</span></div>
+      <div class="version-unit">/ 年 · 多学科</div>
+      <ul class="version-features">
+        <li>Coral 知识库（60-100 万字 · 多学科）</li>
+        <li>XClaw 中枢 · 完整能力</li>
+        <li>8 大场景全覆盖：建/备/教/学/测/评/督/管</li>
+        <li>4 个标准智能体 + 师生共建运营</li>
+        <li>能力评估体系 + 学生能力画像</li>
+        <li class="disabled">数据集 + 微调模型</li>
+      </ul>
+      <div class="version-target">
+        <span class="label">目标客户</span>
+        想做教学全场景智能化、追求看得见效果的本科/双高校
+      </div>
+    </div>
+
+    <div class="version-card">
+      <div class="version-name">旗舰版</div>
+      <div class="version-positioning">学科大模型完全自主可控</div>
+      <div class="version-price">¥598<span style="font-size:18px;color:var(--text-3);">万</span></div>
+      <div class="version-unit">/ 年 · 含模型</div>
+      <ul class="version-features">
+        <li>包含标准版全部能力</li>
+        <li>数据集工程（≥3000 条 SFT + 评测基准）</li>
+        <li>学科微调模型（7B/14B 轻量级）</li>
+        <li>本地化部署 + 算力适配</li>
+        <li>"全国首个 XX 学科大模型"标志性成果包</li>
+        <li>可申报省/部级数据集项目</li>
+      </ul>
+      <div class="version-target">
+        <span class="label">目标客户</span>
+        有政策申报需求、追求自主可控、有 GPU 算力的双一流/部属高校
+      </div>
+    </div>
+  </div>
+
+  <p style="margin-top:24px; font-size:13px; color:var(--text-3); text-align:center;">
+    💡 销售折扣：终端最低 8 折 · 渠道签约 7 折 · 单笔超 500 万需总部审批
+  </p>
+</section>
+
+<!-- ═══════════ 06 · 交付承诺 ═══════════ -->
+<section class="section container" id="s6">
+  <div class="section-num">06 · 交付承诺</div>
+  <h2 class="section-title">客户拿到的是结果，不是文档清单</h2>
+  <p class="section-desc">不再列"30 份交付物"。客户问"我能得到什么"，销售直接背这 4 个数字。（以标准版为例）</p>
+
+  <div class="delivery-grid">
+    <div class="delivery-card">
+      <div class="delivery-num">8</div>
+      <div class="delivery-unit">小雅场景智能化</div>
+      <div class="delivery-detail">建·备·教·学·测·评·督·管，全链路 AI 升级</div>
+    </div>
+    <div class="delivery-card">
+      <div class="delivery-num">100<span style="font-size:24px;">万字</span></div>
+      <div class="delivery-unit">学科知识库</div>
+      <div class="delivery-detail">教材+文献+标准+校本，学校永久资产</div>
+    </div>
+    <div class="delivery-card">
+      <div class="delivery-num">4</div>
+      <div class="delivery-unit">个智能体可用</div>
+      <div class="delivery-detail">助教/助学/助管/助国际交流，开箱即用</div>
+    </div>
+    <div class="delivery-card">
+      <div class="delivery-num">90<span style="font-size:24px;">天</span></div>
+      <div class="delivery-unit">从签约到上线</div>
+      <div class="delivery-detail">前 30 天数据接入，60 天场景上线，90 天验收</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 07 · ROI ═══════════ -->
+<section class="section container" id="s7">
+  <div class="section-num">07 · 投入产出</div>
+  <h2 class="section-title">客户一定会问"398 万值不值"</h2>
+  <p class="section-desc">这是 ROI 测算话术。销售背下来，客户再问就有底气。</p>
+
+  <div class="roi-box">
+    <div class="roi-title">标准版 398 万 / 年 · 投入产出测算</div>
+    <div class="roi-sub">以一所 200 教师 / 1 万学生 / 200 门课的本科院校为例</div>
+
+    <div class="roi-flow">
+      <div class="roi-step">
+        <div class="roi-step-label">投入</div>
+        <div class="roi-step-num">¥398万</div>
+        <div class="roi-step-desc">年度服务费</div>
+      </div>
+      <div class="roi-arrow">→</div>
+      <div class="roi-step">
+        <div class="roi-step-label">教师效率</div>
+        <div class="roi-step-num">省 4 万小时</div>
+        <div class="roi-step-desc">200 师 × 200 时/年</div>
+      </div>
+      <div class="roi-arrow">→</div>
+      <div class="roi-step">
+        <div class="roi-step-label">折算价值</div>
+        <div class="roi-step-num">¥800 万+</div>
+        <div class="roi-step-desc">按 200 元/工时</div>
+      </div>
+    </div>
+
+    <div class="roi-summary">
+      <div class="label">客户价值</div>
+      <div class="value">投入 398 万，节省 800 万 + 学校永久知识资产 + 政策申报材料</div>
+    </div>
+
+    <div style="margin-top:24px; padding:20px 24px; background:rgba(99,102,241,0.06); border-radius:12px; border-left:3px solid var(--indigo-light);">
+      <p style="font-size:14px; color:var(--text-2); line-height:1.85;">
+        <strong style="color:var(--indigo-light)">话术参考：</strong>"校长，您不是花 398 万买软件，您是花 398 万买回 800 万的教师工时 + 一份学校永久的学科 AI 资产 + 一个能向教育部汇报的标志性项目。这笔账怎么算都划算。"
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 08 · 竞品对比 ═══════════ -->
+<section class="section container" id="s8">
+  <div class="section-num">08 · 竞品对比</div>
+  <h2 class="section-title">遇到这些竞品，怎么打</h2>
+  <p class="section-desc">客户最常拿的三类竞品对比。这张表销售必须背熟。</p>
+
+  <div class="compete-table">
+    <table>
+      <thead>
+        <tr>
+          <th>对比维度</th>
+          <th>通用大模型<br><span style="font-weight:400;color:var(--text-3);">（豆包/星火/通义）</span></th>
+          <th>智慧教学平台<br><span style="font-weight:400;color:var(--text-3);">（超星/学堂在线/智慧树）</span></th>
+          <th>友商学科 AI<br><span style="font-weight:400;color:var(--text-3);">（部分高校自研）</span></th>
+          <th class="us">学科大模型方案</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="dim">是否懂学校学科</td>
+          <td class="weak">✗ 通用知识</td>
+          <td class="ok">部分懂</td>
+          <td class="ok">单点懂</td>
+          <td class="us-cell">✓ 全学科深度懂</td>
+        </tr>
+        <tr>
+          <td class="dim">是否覆盖教学全链路</td>
+          <td class="weak">✗ 单点工具</td>
+          <td class="ok">平台型，AI 浅</td>
+          <td class="weak">单场景</td>
+          <td class="us-cell">✓ 8 大场景闭环</td>
+        </tr>
+        <tr>
+          <td class="dim">数据是否归学校</td>
+          <td class="weak">✗ 数据进对方</td>
+          <td class="ok">归学校</td>
+          <td class="ok">归学校</td>
+          <td class="us-cell">✓ 永久归学校</td>
+        </tr>
+        <tr>
+          <td class="dim">是否含微调模型</td>
+          <td class="weak">✗</td>
+          <td class="weak">✗</td>
+          <td class="ok">部分有</td>
+          <td class="us-cell">✓ 旗舰版含 7B 模型</td>
+        </tr>
+        <tr>
+          <td class="dim">能否申报政策项目</td>
+          <td class="weak">✗</td>
+          <td class="weak">✗</td>
+          <td class="ok">部分可以</td>
+          <td class="us-cell">✓ 可作申报材料</td>
+        </tr>
+        <tr>
+          <td class="dim">部署 + 上线时间</td>
+          <td class="ok">即开即用</td>
+          <td class="ok">数月</td>
+          <td class="weak">半年起</td>
+          <td class="us-cell">90 天</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════ 09 · 异议处理 ═══════════ -->
+<section class="section container" id="s9">
+  <div class="section-num">09 · 异议处理</div>
+  <h2 class="section-title">客户最常说的"NO"，怎么破</h2>
+  <p class="section-desc">把客户的反对意见提前演练。这 6 个异议覆盖了 90% 的拒绝场景。</p>
+
+  <div class="obj-grid">
+    <div class="obj-card">
+      <div class="obj-head">
+        <div class="obj-icon">!</div>
+        <div class="obj-q">"我们已经买了星火/豆包了，还要学科大模型干嘛？"</div>
+      </div>
+      <div class="obj-a">
+        星火/豆包是<strong>通用大模型</strong>（属于能力中心里的"基础模型"层），它不知道您学校用的什么教材、教学进度到哪。<strong>学科大模型 = 通用大模型 + 校本知识底座 + 智能调度</strong>——把您学校的数据喂进去，让 AI 真正"懂"您的学科。<span class="key">两者不冲突，学科大模型是站在通用大模型上面的"学科化方案"</span>，让大模型变得对您学校真正有用。
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-head">
+        <div class="obj-icon">!</div>
+        <div class="obj-q">"知识库我们自己建不行吗？"</div>
+      </div>
+      <div class="obj-a">
+        可以建，但<strong>建完没人用就成死库</strong>了。学科大模型不只是建库工具，更重要的是<span class="key">师生共建运营机制 + 八大场景调用</span>——知识库在日常教学中自然产出、自然消耗，越用越值钱。这才是"活的知识库"和"死的文档库"的区别。
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-head">
+        <div class="obj-icon">!</div>
+        <div class="obj-q">"398 万太贵了，能不能砍价？"</div>
+      </div>
+      <div class="obj-a">
+        我们对比一下账：您学校 200 个教师，平均一年因为备课/出题/批改加班的时间值多少？<span class="key">学科大模型能省下的工时折算就超过 800 万</span>。还不算学校永久拥有的学科资产、可以申报的政策项目。砍价不如砍范围——可以先从入门版 198 万开始，明年再扩展。
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-head">
+        <div class="obj-icon">!</div>
+        <div class="obj-q">"老师不会用怎么办？买了浪费。"</div>
+      </div>
+      <div class="obj-a">
+        学科大模型用的是<strong>对话式交互</strong>——"帮我备一下下周的课"、"出 10 道高数题"，老师不需要学任何工具。我们标准版自带<span class="key">教师培训 + 种子用户运营</span>，第一批 20 个教师上手后，剩下的会主动来用。这是经验数据。
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-head">
+        <div class="obj-icon">!</div>
+        <div class="obj-q">"数据安全怎么保证？我们不能放云上。"</div>
+      </div>
+      <div class="obj-a">
+        旗舰版支持<strong>完全本地化部署</strong>，模型、知识库、推理全在学校机房，零数据外发。标准版云端也是<span class="key">单租户隔离 + 数据加密 + 通过等保三级</span>。我们做高校客户做了 X 年，所有客户数据零事故。
+      </div>
+    </div>
+
+    <div class="obj-card">
+      <div class="obj-head">
+        <div class="obj-icon">!</div>
+        <div class="obj-q">"今年预算紧，明年再说吧。"</div>
+      </div>
+      <div class="obj-a">
+        这正是我推荐<strong>入门版 198 万</strong>的原因——单学科试点，预算门槛降一半。<span class="key">关键是政策窗口期：2026-2027 年是国家数据集项目申报窗口</span>，错过这一年，您学校做学科大模型就拿不到政策红利了。早做早拿政策，晚做就成"跟随者"。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 10 · FAQ ═══════════ -->
+<section class="section container" id="s10">
+  <div class="section-num">10 · FAQ</div>
+  <h2 class="section-title">客户问什么，怎么答</h2>
+  <p class="section-desc">点击展开。这 8 个问题覆盖售前 80% 的场景。</p>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">学科大模型 跟小雅平台是什么关系？<span class="faq-toggle">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">小雅是<strong>教学平台</strong>（承载课程、班级、作业、教务等业务，已有八大教学场景）。学科大模型是<strong>给小雅平台装的"AI 大脑"</strong>——由 Coral 知识底座 + XClaw 智能中枢 + 能力中心三大组件构成，让小雅的八大场景从"传统教学"升级为"智能教学"。<strong>买学科大模型必须有小雅作为承载</strong>，没有小雅的场景，再好的 AI 也无处发挥。</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Coral 知识库跟普通文档库有什么区别？<span class="faq-toggle">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">普通文档库是"文件仓库"，Coral 是<strong>"AI 可消费的结构化知识"</strong>。Coral 把教材、文献、案例处理成 AI 能精准检索、引用、推理的格式（向量化 + 知识图谱 + 术语表 + FAQ），并且<strong>每个回答都能溯源到具体页码</strong>。这是文档库做不到的。</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">"能力中心"具体是指什么？跟 XClaw 有什么区别？<span class="faq-toggle">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">能力中心 = <strong>学科大模型背后的原子 AI 能力</strong>，包括基础大模型（讯飞星火/GPT/Claude 等）、OCR 文字识别、ASR 语音识别、视觉理解、TTS 语音合成等。它是学科大模型的<strong>"肌肉层"</strong>，向客户展示我们的技术底气。<br><br>而 XClaw 是<strong>"调度大脑"</strong>——能力中心是各种零件，XClaw 负责把这些零件按场景需要组合编排起来。打个比方：能力中心 = 各种工具，XClaw = 工匠的双手。</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">数据需要学校提前准备吗？需要多少？<span class="faq-toggle">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">需要，但我们有兜底方案。<strong>最低门槛</strong>：每个学科至少提供 1 本主教材 + 课程大纲。<strong>理想情况</strong>：教材 + 课件 + 题库 + 历年试卷 + 学生学情数据。学校数据不够时，Coral 会从公开学术资源补充，不会"无米下锅"。</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">我们没有 GPU，旗舰版能买吗？<span class="faq-toggle">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">可以。<strong>三种方案</strong>：① 我们提供云端 GPU 算力（按 Token 计费）；② 学校采购 1-2 台 A100 即可（我们协助选型）；③ 接入合作的算力中心。模型训练只在阶段性进行，不需要持续大规模算力。</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">合同是按年签还是按项目签？续费率怎样？<span class="faq-toggle">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">标准合同<strong>按年签</strong>，鼓励 3 年长约（享受 9 折）。续费率高的核心原因是<strong>知识库的迁移成本</strong>——师生共建出来的内容、能力画像、智能体配置都沉淀在学科大模型平台里，换平台等于从零开始。这是结构性壁垒。</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">效果好不好怎么验收？有客观标准吗？<span class="faq-toggle">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">合同里写明<strong>三类验收指标</strong>：① 功能验收（场景可用、智能体可调用）；② 效果验收（如答疑准确率 ≥ 85%、备课可用率 ≥ 70%）；③ 使用验收（教师月活 ≥ X%）。三类全部达标才付尾款。</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">学校如果中途想停，数据怎么办？<span class="faq-toggle">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner"><strong>所有 Coral 知识库数据归学校永久所有</strong>。停止合作时，我们提供<strong>7 种标准格式数据导出</strong>（JSON/Markdown/Excel/数据集 Datasheet 等），学校可以直接迁移到任何其他平台。这是我们写在合同里的承诺，零厂商锁定。</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer container">
+  <p><span class="brand">学科大模型 · 销售方案 V1</span></p>
+  <p style="margin-top:8px;">讯飞高教 AI 教学产品部 · 2026-04-10 · Confidential</p>
+  <p style="margin-top:6px; font-size:11px; color:var(--text-3);">本方案替代 "学科大模型八大工程方案 V4"，专为销售/售前实战使用</p>
+  <p style="margin-top:4px; font-size:11px; color:var(--text-3);">学科大模型 = Coral 知识底座 + XClaw 智能中枢 + 能力中心 → 赋能小雅平台八大场景</p>
+</footer>
+
+</div>
+
+<script>
+// FAQ toggle
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+
+// Section nav (TOC)
+const sections = document.querySelectorAll('.section');
+const tocItems = document.querySelectorAll('.toc-item');
+window.addEventListener('scroll', () => {
+  let current = 0;
+  sections.forEach((s, i) => {
+    if (s.getBoundingClientRect().top < window.innerHeight * 0.4) current = i;
+  });
+  tocItems.forEach((t, i) => t.classList.toggle('active', i === current));
+});
+</script>
+
+</body>
+</html>
