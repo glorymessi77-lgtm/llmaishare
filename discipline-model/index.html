@@ -140,6 +140,83 @@ body {
 .doc-card.l2 { border-left-color: #EC4899; }
 .doc-card.l3 { border-left-color: #F59E0B; }
 
+/* ============ 引用卡片（外部文档，非本人产出） ============ */
+.doc-card.ref {
+  background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+  border-style: dashed;
+  border-width: 1px;
+  border-color: #CBD5E1;
+  border-left-width: 4px;
+  border-left-style: dashed;
+  border-left-color: #94A3B8;
+  position: relative;
+}
+.doc-card.ref::before {
+  content: "📎 引用";
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  background: #64748B;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 4px 10px 4px 12px;
+  letter-spacing: 1px;
+  font-family: "SF Mono", monospace;
+  border-radius: 0 14px 0 10px;
+  box-shadow: 0 2px 6px rgba(100,116,139,0.25);
+}
+.doc-card.ref:hover {
+  border-color: #64748B;
+  box-shadow: 0 8px 24px rgba(100,116,139,0.12);
+}
+.doc-card.ref .doc-title {
+  color: #334155;
+}
+.doc-card.ref .doc-title .arrow {
+  color: #64748B;
+}
+.doc-card.ref .doc-level {
+  background: #94A3B8 !important;
+  color: #fff !important;
+}
+.doc-card.ref .doc-status {
+  background: #F1F5F9 !important;
+  color: #64748B !important;
+}
+.doc-card.ref .ref-author {
+  display: block;
+  font-size: 11px;
+  color: #64748B;
+  font-weight: 600;
+  margin-top: -4px;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed #E2E8F0;
+}
+.doc-card.ref .ref-author .label {
+  font-family: "SF Mono", monospace;
+  font-size: 9px;
+  color: #94A3B8;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-right: 6px;
+}
+.doc-card.ref .ref-author strong {
+  color: #334155;
+  font-weight: 700;
+}
+.doc-card.ref .doc-tag {
+  background: #F1F5F9;
+  color: #475569;
+  border: 1px dashed #CBD5E1;
+}
+.doc-card.ref .doc-tag.pin {
+  background: #F3E8FF;
+  color: #6B21A8;
+  border: 1px solid #C4B5FD;
+}
+
 .doc-top {
   display: flex;
   align-items: center;
@@ -677,7 +754,7 @@ details.archive-fold .arch-list a:hover { background: #EEF2FF; color: #4338CA; }
   <div class="cat-head pline xclaw">
     <span class="cat-num xclaw">XCLAW</span>
     <h2>🧠 XClaw · 智能体运行时</h2>
-    <span class="count">05 docs · 中枢调度</span>
+    <span class="count">05 自产 + 02 引用 · 中枢调度</span>
     <span class="desc">智能体广场 / Skill 库 / 调度引擎 / 场景融合</span>
   </div>
   <div class="card-grid">
@@ -745,6 +822,42 @@ details.archive-fold .arch-list a:hover { background: #EEF2FF; color: #4338CA; }
       </div>
     </a>
 
+    <!-- ▼ 引用文档 · 外部作者原创 ▼ -->
+
+    <a href="https://www.pushplus.plus/shortMessage/4a02395cfa9d45a3b1d4cafa8384f9f7" target="_blank" rel="noopener" class="doc-card ref l1">
+      <div class="doc-top">
+        <span class="doc-level">REF</span>
+        <span class="doc-status">引用</span>
+        <span class="doc-date">2026-04-10</span>
+      </div>
+      <div class="doc-title">📎 XClaw Harness · 工程详解 <span class="arrow">↗</span></div>
+      <div class="ref-author"><span class="label">原作者</span><strong>孙玉欣</strong> · 引用自 pushplus 短消息</div>
+      <div class="doc-desc">Harness 框架六大工程层（调度引擎 / Skill 编排 / 知识接入 / 模型管理 / 安全审计 / 运营进化），含 8 大 Smart Skills、4 大智能体、14 周建设路径。是 XClaw 从"概念"到"工程落地"最完整的技术推演。</div>
+      <div class="doc-tags">
+        <span class="doc-tag pin">📎 外部引用</span>
+        <span class="doc-tag">Harness</span>
+        <span class="doc-tag">六层架构</span>
+        <span class="doc-tag">14 周路径</span>
+      </div>
+    </a>
+
+    <a href="https://www.pushplus.plus/shortMessage/a2e671a85b0c473e9fefc657d5bf941c" target="_blank" rel="noopener" class="doc-card ref l1">
+      <div class="doc-top">
+        <span class="doc-level">REF</span>
+        <span class="doc-status">引用</span>
+        <span class="doc-date">2026-04-10</span>
+      </div>
+      <div class="doc-title">📎 Harness 壁垒建设路径 <span class="arrow">↗</span></div>
+      <div class="ref-author"><span class="label">原作者</span><strong>孙玉欣</strong> · 引用自 pushplus 短消息</div>
+      <div class="doc-desc">5 层壁垒分析：数据飞轮 ★5 &gt; Prompt 工程 ★4 &gt; 教师生态 ★4 &gt; 安全合规 ★3 &gt; 标准定义 ★5。核心洞察：<strong>先发优势在于让飞轮尽早转动</strong>。XClaw 战略防御视角的一号文档。</div>
+      <div class="doc-tags">
+        <span class="doc-tag pin">📎 外部引用</span>
+        <span class="doc-tag">5 层壁垒</span>
+        <span class="doc-tag">数据飞轮</span>
+        <span class="doc-tag">战略防御</span>
+      </div>
+    </a>
+
   </div>
 </div>
 
@@ -754,7 +867,7 @@ details.archive-fold .arch-list a:hover { background: #EEF2FF; color: #4338CA; }
   <div class="cat-head pline model">
     <span class="cat-num model">MODEL</span>
     <h2>📦 学科大模型 · 销售与整合</h2>
-    <span class="count">02 docs · 跨产品线</span>
+    <span class="count">02 自产 + 02 引用 · 跨产品线</span>
     <span class="desc">三条产品线合流的商业化与路标物料</span>
   </div>
   <div class="card-grid">
@@ -788,6 +901,42 @@ details.archive-fold .arch-list a:hover { background: #EEF2FF; color: #4338CA; }
         <span class="doc-tag">甘特图</span>
         <span class="doc-tag">壁垒进度</span>
         <span class="doc-tag">诚实边界</span>
+      </div>
+    </a>
+
+    <!-- ▼ 引用文档 · 外部作者原创 ▼ -->
+
+    <a href="https://www.pushplus.plus/shortMessage/91a0523151a74b798cc8f043e3e61f69" target="_blank" rel="noopener" class="doc-card ref l1">
+      <div class="doc-top">
+        <span class="doc-level">REF</span>
+        <span class="doc-status">引用</span>
+        <span class="doc-date">2026-04-10</span>
+      </div>
+      <div class="doc-title">📎 高教 Harness 战略框架 <span class="arrow">↗</span></div>
+      <div class="ref-author"><span class="label">原作者</span><strong>孙玉欣</strong> · 引用自 pushplus 短消息</div>
+      <div class="doc-desc">高教 AI 商业策略：<strong>6 大独特点 → 投入优先级 → 服务计划 → 收费模型</strong>。3 期建设路径（60%/30%/10%），5 个续费绑定点，5 年 LTV 722 万。学科大模型商业化的最完整顶层设计。</div>
+      <div class="doc-tags">
+        <span class="doc-tag pin">📎 外部引用</span>
+        <span class="doc-tag">商业策略</span>
+        <span class="doc-tag">LTV 722 万</span>
+        <span class="doc-tag">续费绑定</span>
+      </div>
+    </a>
+
+    <a href="https://www.pushplus.plus/shortMessage/dfd8045daaa84edebf13eb560e3ca53f" target="_blank" rel="noopener" class="doc-card ref l1">
+      <div class="doc-top">
+        <span class="doc-level">REF</span>
+        <span class="doc-status">引用</span>
+        <span class="doc-date">2026-04-10</span>
+      </div>
+      <div class="doc-title">📎 学科大脑辩论会 · 四角色压力测试 <span class="arrow">↗</span></div>
+      <div class="ref-author"><span class="label">原作者</span><strong>孙玉欣</strong> · 引用自 pushplus 短消息</div>
+      <div class="doc-desc">4 角色（校长 / 公司领导 / CTO / 销售）对 <strong>198 万学科大脑方案</strong>的全方位质疑与回应。含 5 个诚实承认的短板、Wow moment 设计、漏斗筛选策略。<strong>辩论方法值得复用</strong>到其他项目的售前压力测试。</div>
+      <div class="doc-tags">
+        <span class="doc-tag pin">📎 外部引用</span>
+        <span class="doc-tag">四角色辩论</span>
+        <span class="doc-tag">异议处理</span>
+        <span class="doc-tag">压力测试方法</span>
       </div>
     </a>
 
