@@ -444,6 +444,7 @@ body {
 .cat-num.coral { background: linear-gradient(135deg, #FF7F50, #0F5D3A); }
 .cat-num.xclaw { background: linear-gradient(135deg, #6366F1, #8B5CF6); }
 .cat-num.model { background: linear-gradient(135deg, #1E3A8A, #F59E0B); }
+.cat-num.proj  { background: linear-gradient(135deg, #0057B8, #C89B3C); }
 .cat-num.brand { background: linear-gradient(135deg, #64748B, #94A3B8); }
 
 .cat-head.pline {
@@ -458,6 +459,7 @@ body {
 .cat-head.pline.coral { border-left-color: #FF7F50; }
 .cat-head.pline.xclaw { border-left-color: #6366F1; }
 .cat-head.pline.model { border-left-color: #1E3A8A; }
+.cat-head.pline.proj  { border-left-color: #0057B8; }
 .cat-head.pline.brand { border-left-color: #64748B; }
 .cat-head.pline h2 { font-size: 18px; }
 .cat-head.pline .count {
@@ -599,11 +601,12 @@ details.archive-fold .arch-list a:hover { background: #EEF2FF; color: #4338CA; }
   </div>
 
   <div class="pan-legend">
-    <strong>🗂 本页组织方式：</strong>按三条产品线横向切分 ——
-    <strong style="color:#FF7F50">🪸 Coral 小雅学科大脑</strong>的文档讲"知识资产怎么建"、
-    <strong style="color:#6366F1">🧠 XClaw 智能体运行时</strong>的文档讲"智能体怎么跑"、
-    <strong style="color:#1E3A8A">📦 学科大模型（整合）</strong>的文档讲"三者合流的销售与路标"。
-    卡片右上的 <code style="background:#EEF2FF;color:#4338CA;padding:1px 5px;border-radius:3px;font-family:'SF Mono',monospace;font-size:10px">L1/L2/L3</code> 徽章表示详略程度——L1 是总览一号文档，L2 是深度展开，L3 是专题物料。
+    <strong>🗂 本页组织方式：</strong>按产品线 + 客户项目横向切分 ——
+    <strong style="color:#FF7F50">🪸 Coral</strong>讲"知识资产怎么建"、
+    <strong style="color:#6366F1">🧠 XClaw</strong>讲"智能体怎么跑"、
+    <strong style="color:#1E3A8A">📦 学科大模型</strong>讲"三者合流的销售与路标"、
+    <strong style="color:#0057B8">🏛 项目</strong>讲"真实高校项目的方案物料（可复用）"。
+    卡片右上的 <code style="background:#EEF2FF;color:#4338CA;padding:1px 5px;border-radius:3px;font-family:'SF Mono',monospace;font-size:10px">L1/L2/L3</code> 徽章表示详略程度。
   </div>
 </div>
 
@@ -674,27 +677,10 @@ details.archive-fold .arch-list a:hover { background: #EEF2FF; color: #4338CA; }
   <div class="cat-head pline xclaw">
     <span class="cat-num xclaw">XCLAW</span>
     <h2>🧠 XClaw · 智能体运行时</h2>
-    <span class="count">06 docs · 中枢调度 + 落地案例</span>
-    <span class="desc">智能体广场 / Skill 库 / 调度引擎 / 场景融合 / 真实项目案例</span>
+    <span class="count">05 docs · 中枢调度</span>
+    <span class="desc">智能体广场 / Skill 库 / 调度引擎 / 场景融合</span>
   </div>
   <div class="card-grid">
-
-    <a href="同济数字分身_系统架构图_V1.html" class="doc-card l1" style="border-left-color:#0057B8">
-      <div class="doc-top">
-        <span class="doc-level" style="background:linear-gradient(135deg,#0057B8,#C89B3C)">L1</span>
-        <span class="doc-status">已发布</span>
-        <span class="doc-date">2026-04-13</span>
-      </div>
-      <div class="doc-title">🏛 同济数字分身 · 系统架构与 XClaw 能力映射 V1 <span class="arrow">→</span></div>
-      <div class="doc-desc">同济大学 500 万标杆项目的技术方案架构图。7 层架构（数据源/采集/Coral 资产/AI 模型/<strong>XClaw 运行时</strong>/应用/用户）+ 三路核心数据流（教师沉淀 / 学生响应 / 纠偏反向）+ <strong>XClaw 10 项核心能力清单</strong>（4 新建 + 5 扩展 + 1 复用）+ 10 个 Skill（6 新建 + 4 复用）+ 工期估算（29 人月 / 7 人团队 / 3 位样板教师）。XClaw 作为 Agent Runtime 在真实项目中落地的第一份完整技术参考。</div>
-      <div class="doc-tags">
-        <span class="doc-tag">同济标杆项目</span>
-        <span class="doc-tag">XClaw 能力映射</span>
-        <span class="doc-tag">数字分身</span>
-        <span class="doc-tag">工期 29 人月</span>
-      </div>
-    </a>
-
     <a href="XClaw_完整产品演示Demo_V1.html" class="doc-card l1" style="border-left-color:#EC4899">
       <div class="doc-top">
         <span class="doc-level" style="background:linear-gradient(135deg,#6366F1,#EC4899)">L1</span>
@@ -802,6 +788,82 @@ details.archive-fold .arch-list a:hover { background: #EEF2FF; color: #4338CA; }
         <span class="doc-tag">甘特图</span>
         <span class="doc-tag">壁垒进度</span>
         <span class="doc-tag">诚实边界</span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+
+<!-- ==== 🏛 项目 · 客户落地 ==== -->
+<div class="category">
+  <div class="cat-head pline proj">
+    <span class="cat-num proj">PROJECT</span>
+    <h2>🏛 项目 · 客户落地</h2>
+    <span class="count">1 个在进行 · 03 docs</span>
+    <span class="desc">真实高校项目的方案物料 · 可复用到其他客户</span>
+  </div>
+
+  <!-- 项目：同济大学 · 500 万标杆项目 -->
+  <div style="background:linear-gradient(135deg,#E6EEF8 0%,#FBF4E3 100%);border:1.5px solid #0057B8;border-radius:12px;padding:18px 22px;margin-bottom:16px;position:relative">
+    <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:6px">
+      <span style="font-family:'SF Mono',monospace;font-size:10px;background:#0057B8;color:#fff;padding:3px 9px;border-radius:4px;letter-spacing:1px;font-weight:700">PROJECT · 01</span>
+      <h3 style="font-size:16px;font-weight:800;color:#003F86">同济大学 · AI 教学平台标杆项目</h3>
+      <span style="margin-left:auto;font-size:10px;color:#64748B;font-family:'SF Mono',monospace">预算 500 万 · 周四交 Demo · 周五汇报</span>
+    </div>
+    <div style="font-size:12px;color:#334155;line-height:1.7">
+      客户：同济大学（王从军、徐闻筠）· 决策人：校领导郑书记 · 讯飞方：张睿、吕东、沈默 · 三家 PK：竞业达 / 西安智元 / 讯飞。
+      核心差异化：<strong>一人一空间 + 教师数字分身绑定到人</strong>。本项目用于打造上海乃至全国 AI 教学标杆。
+    </div>
+  </div>
+
+  <div class="card-grid">
+
+    <a href="同济大学教学平台_Demo骨架_V0.1.html" class="doc-card l1" style="border-left-color:#0057B8">
+      <div class="doc-top">
+        <span class="doc-level" style="background:linear-gradient(135deg,#0057B8,#C89B3C)">L1</span>
+        <span class="doc-status">草稿中</span>
+        <span class="doc-date">2026-04-13</span>
+      </div>
+      <div class="doc-title">🌟 同济教学平台 · 完整 Demo 骨架 V0.1 <span class="arrow">→</span></div>
+      <div class="doc-desc">交互式 SPA Demo，8 个 Page：<strong>战略定位 / 产品全景 / 四大场景 / 数字分身 Wow / 三期路标 / 融合共生 / FAQ / 技术承诺</strong>。P1 + P4 完整可用，其他页面有明确的 TODO 横幅。P4 数字分身是全场 Wow——3 位教师（王立群/李志远/张薇）苏格拉底式引导对话可交互演示 + 源溯源 + 纠偏面板。fork 自 XClaw 演示 Demo 改造而来，同济学术蓝+院徽金主题。</div>
+      <div class="doc-tags">
+        <span class="doc-tag">SPA 8 Page</span>
+        <span class="doc-tag">数字分身可交互</span>
+        <span class="doc-tag">苏格拉底对话</span>
+        <span class="doc-tag">4/16 交初稿</span>
+      </div>
+    </a>
+
+    <a href="同济数字分身_系统架构图_V1.html" class="doc-card l1" style="border-left-color:#0057B8">
+      <div class="doc-top">
+        <span class="doc-level" style="background:linear-gradient(135deg,#0057B8,#C89B3C)">L1</span>
+        <span class="doc-status">已发布</span>
+        <span class="doc-date">2026-04-13</span>
+      </div>
+      <div class="doc-title">🏛 同济数字分身 · 系统架构与 XClaw 能力映射 V1 <span class="arrow">→</span></div>
+      <div class="doc-desc">技术方案架构图。<strong>7 层架构</strong>（数据源/采集/Coral 资产/AI 模型/XClaw 运行时/应用/用户）+ <strong>三路核心数据流</strong>（教师沉淀 / 学生响应 / 纠偏反向）+ <strong>XClaw 10 项核心能力清单</strong>（4 新建 + 5 扩展 + 1 复用）+ 10 个 Skill（6 新建 + 4 复用）+ 工期估算（29 人月 / 7 人团队 / 3 位样板教师）。XClaw 作为 Agent Runtime 在真实项目落地的第一份完整技术参考。</div>
+      <div class="doc-tags">
+        <span class="doc-tag">7 层架构</span>
+        <span class="doc-tag">XClaw 能力映射</span>
+        <span class="doc-tag">三路数据流</span>
+        <span class="doc-tag">工期 29 人月</span>
+      </div>
+    </a>
+
+    <a href="同济数字分身_方案选型_V1.html" class="doc-card l1" style="border-left-color:#0057B8">
+      <div class="doc-top">
+        <span class="doc-level" style="background:linear-gradient(135deg,#0057B8,#C89B3C)">L1</span>
+        <span class="doc-status">已发布</span>
+        <span class="doc-date">2026-04-13</span>
+      </div>
+      <div class="doc-title">🧪 同济数字分身 · 技术方案选型 V1 · 9 方案对比 <span class="arrow">→</span></div>
+      <div class="doc-desc">数字分身的 <strong>9 条技术路径</strong>横向对比（RAG 系列 / 多 Agent / 微调系列 / 图谱 / Hybrid）。每个方案四维评估：技术核心 × 数据需求 × 工期 × 风险。<strong>三期渐进路径</strong>：一期 A RAG + Prompt（29 人月）→ 二期 F Multi-Agent（+5 人月）→ 三期 I Hybrid LoRA（+8 人月）。含三个必须避开的坑：把分身等同于模型个性化 / 为 1% 效果付 50% 工期 / 盲目追前沿。标书和技术评审通用文档。</div>
+      <div class="doc-tags">
+        <span class="doc-tag">9 方案对比</span>
+        <span class="doc-tag">三期路径</span>
+        <span class="doc-tag">对抗性分析</span>
+        <span class="doc-tag">标书素材</span>
       </div>
     </a>
 

@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>同济数字分身 · 技术方案选型 V1 · 9 方案对比</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&family=Noto+Serif+SC:wght@700;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   同济数字分身 · 技术方案选型 V1
+   9 方案对比 · 推荐路径 · 决策建议
+   ============================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:         #F1F4FB;
+  --bg-deep:    #E6EEF8;
+  --paper:      #FFFFFF;
+  --ink:        #0A1628;
+  --ink-soft:   #334155;
+  --ink-mute:   #64748B;
+  --ink-light:  #94A3B8;
+  --hairline:   #E2E8F0;
+  --hairline-bold: #CBD5E1;
+
+  --tj-blue:      #0057B8;
+  --tj-blue-deep: #003F86;
+  --tj-blue-soft: #E6EEF8;
+  --tj-gold:      #C89B3C;
+  --tj-gold-soft: #FBF4E3;
+  --tj-gold-deep: #92400E;
+
+  /* 推荐度色系 */
+  --rec-5: #059669;  /* 强推 */
+  --rec-5-bg: #D1FAE5;
+  --rec-4: #0E7490;
+  --rec-4-bg: #CFFAFE;
+  --rec-3: #C2410C;
+  --rec-3-bg: #FFEDD5;
+  --rec-2: #64748B;
+  --rec-2-bg: #F1F5F9;
+  --rec-0: #B91C1C;
+  --rec-0-bg: #FEE2E2;
+}
+
+body {
+  font-family: "Noto Sans SC", -apple-system, sans-serif;
+  background:
+    radial-gradient(1200px 500px at 85% -10%, rgba(0,87,184,0.08), transparent 60%),
+    radial-gradient(900px 400px at 0% 30%, rgba(200,155,60,0.06), transparent 60%),
+    var(--bg);
+  color: var(--ink);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  padding: 0 0 80px;
+  min-width: 1440px;
+}
+
+.mono { font-family: "JetBrains Mono", monospace; }
+.serif { font-family: "Noto Serif SC", "Songti SC", serif; }
+
+/* ============ 返回导航 ============ */
+.nav-bar {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hairline);
+  padding: 14px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 12px;
+}
+.nav-bar a { color: var(--tj-blue); font-weight: 700; text-decoration: none; }
+.nav-bar a:hover { opacity: 0.7; }
+.nav-bar .sep { color: var(--ink-light); }
+.nav-bar .current { color: var(--ink-mute); }
+.nav-bar .level {
+  font-size: 9px; font-weight: 800; color: #fff;
+  padding: 3px 8px; border-radius: 4px;
+  letter-spacing: 1.5px; background: var(--tj-gold);
+}
+.nav-bar .right {
+  margin-left: auto; font-size: 10px;
+  color: var(--ink-light); letter-spacing: 2px;
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* ============ Wrap ============ */
+.wrap { max-width: 1440px; margin: 0 auto; padding: 0 40px; }
+
+/* ============ Hero ============ */
+.hero {
+  padding: 64px 40px 40px;
+  background:
+    radial-gradient(1000px 400px at 70% -30%, rgba(0,87,184,0.10), transparent 60%),
+    var(--paper);
+  border-bottom: 2px solid var(--tj-blue);
+}
+.hero-grid {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+.hero .kicker {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--tj-gold-deep);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-left: 32px;
+  position: relative;
+}
+.hero .kicker::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 50%;
+  width: 22px; height: 1px;
+  background: var(--tj-gold);
+}
+.hero h1 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 52px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1.08;
+  margin-bottom: 20px;
+  max-width: 900px;
+}
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(180deg, transparent 62%, var(--tj-gold-soft) 62%);
+  padding: 0 4px;
+}
+.hero .lead {
+  font-size: 14px;
+  color: var(--ink-mute);
+  line-height: 1.9;
+  max-width: 880px;
+  margin-bottom: 28px;
+}
+.hero .lead strong { color: var(--ink); font-weight: 700; }
+
+/* 结论三卡 */
+.verdict-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 24px;
+}
+.verdict-card {
+  background: #fff;
+  border: 1.5px solid var(--hairline);
+  border-radius: 12px;
+  padding: 22px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.verdict-card::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+}
+.verdict-card.phase1::before { background: var(--rec-5); }
+.verdict-card.phase2::before { background: var(--tj-blue); }
+.verdict-card.phase3::before { background: var(--tj-gold); }
+
+.verdict-card .v-phase {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--ink-light);
+  margin-bottom: 6px;
+}
+.verdict-card h3 {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+.verdict-card h3 .tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 1px;
+}
+.verdict-card.phase1 .tag { background: var(--rec-5); }
+.verdict-card.phase2 .tag { background: var(--tj-blue); }
+.verdict-card.phase3 .tag { background: var(--tj-gold); }
+
+.verdict-card p {
+  font-size: 12px;
+  color: var(--ink-mute);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+.verdict-card .v-meta {
+  display: flex;
+  gap: 14px;
+  font-size: 10px;
+  color: var(--ink-light);
+  font-family: "JetBrains Mono", monospace;
+  padding-top: 10px;
+  border-top: 1px dashed var(--hairline);
+}
+.verdict-card .v-meta strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* ============ Section head ============ */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 0 0 24px;
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: 32px;
+  margin-top: 72px;
+}
+.section-head .num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: #fff;
+  background: var(--ink);
+  padding: 5px 12px;
+  border-radius: 4px;
+  letter-spacing: 1.5px;
+}
+.section-head h2 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.section-head .lead {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--ink-mute);
+  max-width: 480px;
+  line-height: 1.7;
+  padding-bottom: 4px;
+}
+
+/* ============ 9 方案卡片 ============ */
+.schemes {
+  padding: 0;
+}
+.scheme-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.scheme {
+  background: #fff;
+  border: 1.5px solid var(--hairline);
+  border-radius: 14px;
+  padding: 24px 26px 22px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s;
+}
+.scheme:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 48px -24px rgba(15,23,42,0.18);
+  border-color: var(--hairline-bold);
+}
+.scheme::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 4px;
+}
+
+/* 推荐度配色 */
+.scheme.r5::before { background: linear-gradient(90deg, var(--rec-5), #10B981); }
+.scheme.r4::before { background: linear-gradient(90deg, var(--rec-4), #06B6D4); }
+.scheme.r3::before { background: linear-gradient(90deg, var(--rec-3), #F59E0B); }
+.scheme.r2::before { background: var(--rec-2); }
+.scheme.r0::before { background: linear-gradient(90deg, var(--rec-0), #EF4444); }
+
+.scheme .s-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.scheme .s-letter {
+  width: 40px; height: 40px;
+  background: var(--tj-blue-soft);
+  color: var(--tj-blue-deep);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 900;
+  font-family: "Noto Serif SC", serif;
+  flex-shrink: 0;
+}
+.scheme.r5 .s-letter { background: var(--rec-5-bg); color: var(--rec-5); }
+.scheme.r4 .s-letter { background: var(--rec-4-bg); color: var(--rec-4); }
+.scheme.r3 .s-letter { background: var(--rec-3-bg); color: var(--rec-3); }
+.scheme.r2 .s-letter { background: var(--rec-2-bg); color: var(--rec-2); }
+.scheme.r0 .s-letter { background: var(--rec-0-bg); color: var(--rec-0); }
+
+.scheme .s-rec {
+  margin-left: auto;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  color: var(--ink-mute);
+}
+.scheme .s-rec .stars {
+  color: #F59E0B;
+  letter-spacing: 1px;
+}
+
+.scheme h3 {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.3;
+  margin-bottom: 4px;
+  letter-spacing: -0.3px;
+}
+.scheme .s-en {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  color: var(--ink-light);
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+
+.scheme .s-core {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  background: var(--bg);
+  border-radius: 6px;
+  border-left: 2px solid var(--tj-blue);
+}
+.scheme .s-core strong { color: var(--ink); font-weight: 700; }
+
+.scheme .s-row {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 8px;
+  font-size: 11px;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--hairline);
+}
+.scheme .s-row:last-child { border-bottom: none; }
+.scheme .s-row .lbl {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  color: var(--ink-light);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding-top: 2px;
+}
+.scheme .s-row .val {
+  color: var(--ink-soft);
+  line-height: 1.65;
+}
+.scheme .s-row .val strong { color: var(--ink); font-weight: 700; }
+.scheme .s-row .val .hl {
+  color: var(--tj-blue-deep);
+  font-weight: 700;
+}
+.scheme .s-row .val .warn {
+  color: var(--rec-0);
+  font-weight: 700;
+}
+
+.scheme .s-verdict {
+  margin-top: 14px;
+  padding: 10px 12px;
+  font-size: 11px;
+  border-radius: 6px;
+  line-height: 1.65;
+}
+.scheme.r5 .s-verdict { background: var(--rec-5-bg); color: #064E3B; }
+.scheme.r4 .s-verdict { background: var(--rec-4-bg); color: #0C4A6E; }
+.scheme.r3 .s-verdict { background: var(--rec-3-bg); color: #7C2D12; }
+.scheme.r2 .s-verdict { background: var(--rec-2-bg); color: #475569; }
+.scheme.r0 .s-verdict { background: var(--rec-0-bg); color: #7F1D1D; }
+.scheme .s-verdict strong { font-weight: 800; }
+
+/* ============ 对比矩阵表 ============ */
+.matrix {
+  padding: 0;
+}
+.matrix table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1.5px solid var(--hairline);
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 12px;
+}
+.matrix th {
+  background: var(--tj-blue-soft);
+  color: var(--tj-blue-deep);
+  padding: 14px 12px;
+  font-weight: 800;
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--tj-blue);
+}
+.matrix th:first-child { padding-left: 20px; }
+.matrix td {
+  padding: 14px 12px;
+  border-bottom: 1px dashed var(--hairline);
+  color: var(--ink-soft);
+  line-height: 1.7;
+  vertical-align: middle;
+}
+.matrix td:first-child { padding-left: 20px; }
+.matrix tr:last-child td { border-bottom: none; }
+.matrix tr:hover td { background: var(--bg); }
+.matrix tr.rec td {
+  background: rgba(5,150,105,0.05);
+  font-weight: 600;
+}
+.matrix tr.rec:hover td { background: rgba(5,150,105,0.10); }
+
+.matrix .idx {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--tj-blue);
+}
+.matrix .name-main {
+  font-weight: 800;
+  color: var(--ink);
+  font-size: 13px;
+}
+.matrix .stars {
+  color: #F59E0B;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+.matrix .badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.5px;
+}
+.matrix .badge.low  { background: var(--rec-5-bg); color: var(--rec-5); }
+.matrix .badge.mid  { background: var(--rec-3-bg); color: var(--rec-3); }
+.matrix .badge.high { background: var(--rec-0-bg); color: var(--rec-0); }
+.matrix .badge.no   { background: var(--rec-2-bg); color: var(--rec-2); border: 1px dashed var(--rec-2); }
+
+.matrix .w-pill {
+  display: inline-block;
+  background: var(--tj-blue);
+  color: #fff;
+  padding: 3px 9px;
+  font-size: 10px;
+  font-weight: 800;
+  border-radius: 4px;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.5px;
+}
+
+/* ============ 4 大范式说明 ============ */
+.paradigms {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-top: 24px;
+}
+.paradigm {
+  background: #fff;
+  border: 1.5px solid var(--hairline);
+  border-radius: 12px;
+  padding: 20px 22px;
+  position: relative;
+}
+.paradigm .p-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--tj-blue-soft);
+  position: absolute;
+  right: 18px;
+  top: 10px;
+  line-height: 1;
+}
+.paradigm h4 {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 6px;
+  letter-spacing: -0.2px;
+  position: relative;
+  z-index: 2;
+}
+.paradigm .p-methods {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--tj-gold-deep);
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+.paradigm p {
+  font-size: 11.5px;
+  color: var(--ink-mute);
+  line-height: 1.75;
+  position: relative;
+  z-index: 2;
+}
+
+/* ============ 推荐路径时间线 ============ */
+.roadmap {
+  padding: 40px 40px;
+  background: #fff;
+  border: 1.5px solid var(--hairline);
+  border-radius: 16px;
+  margin-top: 32px;
+}
+.roadmap-timeline {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  position: relative;
+}
+.roadmap-timeline::before {
+  content: "";
+  position: absolute;
+  top: 48px;
+  left: 8%;
+  right: 8%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--rec-5), var(--tj-blue), var(--tj-gold));
+  z-index: 0;
+}
+.rm-node {
+  position: relative;
+  z-index: 1;
+  padding: 0 20px;
+}
+.rm-dot {
+  width: 32px;
+  height: 32px;
+  background: #fff;
+  border: 4px solid var(--rec-5);
+  border-radius: 50%;
+  margin: 32px auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: var(--rec-5);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+}
+.rm-node.n2 .rm-dot { border-color: var(--tj-blue); color: var(--tj-blue); }
+.rm-node.n3 .rm-dot { border-color: var(--tj-gold); color: var(--tj-gold); }
+
+.rm-node .rm-phase {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--ink-light);
+  text-align: center;
+  margin-bottom: 6px;
+}
+.rm-node h4 {
+  font-family: "Noto Serif SC", serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 12px;
+  letter-spacing: -0.3px;
+}
+.rm-node .rm-tag {
+  display: block;
+  width: fit-content;
+  margin: 0 auto 14px;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.5px;
+}
+.rm-node.n1 .rm-tag { background: var(--rec-5-bg); color: var(--rec-5); }
+.rm-node.n2 .rm-tag { background: var(--tj-blue-soft); color: var(--tj-blue); }
+.rm-node.n3 .rm-tag { background: var(--tj-gold-soft); color: var(--tj-gold-deep); }
+
+.rm-node ul {
+  list-style: none;
+  padding: 0;
+}
+.rm-node ul li {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  padding: 6px 0 6px 16px;
+  position: relative;
+}
+.rm-node ul li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--tj-blue);
+  font-weight: 800;
+}
+.rm-node ul li strong { color: var(--ink); font-weight: 700; }
+
+/* ============ 3 个坑 ============ */
+.pitfalls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 24px;
+}
+.pitfall {
+  background: #fff;
+  border: 1.5px solid var(--rec-0-bg);
+  border-left: 4px solid var(--rec-0);
+  border-radius: 10px;
+  padding: 18px 20px;
+  position: relative;
+}
+.pitfall .p-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--rec-0);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+}
+.pitfall h4 {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 8px;
+  letter-spacing: -0.2px;
+}
+.pitfall p {
+  font-size: 11.5px;
+  color: var(--ink-mute);
+  line-height: 1.75;
+}
+.pitfall p strong { color: var(--rec-0); font-weight: 700; }
+
+/* ============ Footer ============ */
+.footer {
+  padding: 56px 40px 24px;
+  max-width: 1440px;
+  margin: 56px auto 0;
+  border-top: 2px solid var(--hairline);
+  text-align: center;
+}
+.footer .brand {
+  font-family: "Noto Serif SC", serif;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.footer .meta {
+  font-size: 11px;
+  color: var(--ink-light);
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* 动画 */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.scheme { animation: rise 0.6s ease-out backwards; }
+.scheme:nth-child(1) { animation-delay: 0.02s; }
+.scheme:nth-child(2) { animation-delay: 0.05s; }
+.scheme:nth-child(3) { animation-delay: 0.08s; }
+.scheme:nth-child(4) { animation-delay: 0.11s; }
+.scheme:nth-child(5) { animation-delay: 0.14s; }
+.scheme:nth-child(6) { animation-delay: 0.17s; }
+.scheme:nth-child(7) { animation-delay: 0.20s; }
+.scheme:nth-child(8) { animation-delay: 0.23s; }
+.scheme:nth-child(9) { animation-delay: 0.26s; }
+
+</style>
+</head>
+<body>
+
+<!-- 返回导航 -->
+<div class="nav-bar">
+  <a href="index.html">📚 学科大模型 · 文档中心</a>
+  <span class="sep">›</span>
+  <span class="level">项目 · 同济</span>
+  <span class="current">数字分身 · 技术方案选型 V1 · 9 方案对比</span>
+  <span class="right">2026-04-13 · V1</span>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-grid">
+    <div class="kicker">TECHNICAL OPTION ANALYSIS · 9 SCHEMES</div>
+    <h1>数字分身的 9 条技术路径，<br>为什么我们选<em>RAG + Prompt</em>而不是微调</h1>
+    <p class="lead">
+      同济数字分身方案的技术路径不是"唯一正确答案"，而是<strong>在 9 条可能路径中做的选择</strong>。
+      本文把所有方案盘点一遍：<strong>RAG 系列 / 多 Agent 编排 / 模型微调系列 / 知识图谱 / Hybrid 折衷</strong>——
+      对每个方案做"技术路径 × 数据需求 × 工期 × 风险"四维评估，给出<strong>三期渐进推荐路径</strong>和
+      <strong>三个必须避开的坑</strong>。
+    </p>
+
+    <div class="verdict-grid">
+      <div class="verdict-card phase1">
+        <div class="v-phase">PHASE 01 · 一期 · 8 月底</div>
+        <h3>方案 A · RAG + Prompt<span class="tag">主推</span></h3>
+        <p>用教师个人知识库 + 个性化 Prompt + 星火 X2，<strong>不做任何模型微调</strong>。快、可控、可扩展。</p>
+        <div class="v-meta">
+          <span>工期 · <strong>29 人月</strong></span>
+          <span>团队 · <strong>7 人</strong></span>
+          <span>风险 · <strong>🟢 低</strong></span>
+        </div>
+      </div>
+
+      <div class="verdict-card phase2">
+        <div class="v-phase">PHASE 02 · 二期 · 12 月</div>
+        <h3>方案 F · 多 Agent 编排<span class="tag">升级</span></h3>
+        <p>在方案 A 基础上升级为 5 个 sub-agent 协作（风格/知识/引导/溯源/纠偏）。<strong>XClaw 最擅长的架构</strong>。</p>
+        <div class="v-meta">
+          <span>增量 · <strong>+5 人月</strong></span>
+          <span>效果 · <strong>85%</strong></span>
+          <span>风险 · <strong>🟡 中</strong></span>
+        </div>
+      </div>
+
+      <div class="verdict-card phase3">
+        <div class="v-phase">PHASE 03 · 三期 · 明年</div>
+        <h3>方案 I · Hybrid + LoRA<span class="tag">选装</span></h3>
+        <p>只对 3-5 位"镇店之宝"教师做 LoRA 精调。基于方案 F 加一层参数级个性化。</p>
+        <div class="v-meta">
+          <span>增量 · <strong>+8 人月</strong></span>
+          <span>效果 · <strong>92%</strong></span>
+          <span>风险 · <strong>🟡 中</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ 01 · 9 方案详解 ============ -->
+<section class="schemes wrap">
+  <div class="section-head">
+    <span class="num">01 · SCHEMES</span>
+    <h2>9 条技术路径全景</h2>
+    <div class="lead">每张卡标注推荐度（★1-5）、技术核心、工期估算、致命伤。<strong>5 星是一期主推</strong>，<strong>0 星是必须避开</strong>。</div>
+  </div>
+
+  <div class="scheme-grid">
+
+    <!-- A -->
+    <div class="scheme r5">
+      <div class="s-top">
+        <div class="s-letter">A</div>
+        <div class="s-rec">推荐度 · <span class="stars">★★★★★</span></div>
+      </div>
+      <h3>RAG + Prompt Engineering</h3>
+      <div class="s-en">Retrieval-Augmented Generation + Prompt</div>
+      <div class="s-core">
+        向量检索 + 个性化 System Prompt + 星火 X2 生成。<strong>不做任何模型层面的个性化</strong>——教师的"灵魂"来自独立知识库命名空间 + Prompt 里的风格标签 + few-shot 示例。
+      </div>
+      <div class="s-row"><span class="lbl">数据</span><span class="val">教师现有语料即可（论文/视频/讲义）</span></div>
+      <div class="s-row"><span class="lbl">基建</span><span class="val">Coral 现有 · <span class="hl">无额外投入</span></span></div>
+      <div class="s-row"><span class="lbl">天花板</span><span class="val"><strong>70-80%</strong> 相似度</span></div>
+      <div class="s-row"><span class="lbl">扩展性</span><span class="val">加教师 = 加知识库（<span class="hl">1 小时</span>）</span></div>
+      <div class="s-row"><span class="lbl">工期</span><span class="val"><strong>29 人月</strong> / 4.5 月 / 7 人团队</span></div>
+      <div class="s-verdict">
+        <strong>✓ 一期主推方案</strong>。Coral 基础设施现有，教师扩展到 100 位成本近似线性为零。风格模仿有天花板是它最大短板——但能在 8 月底交付的**唯一路径**。
+      </div>
+    </div>
+
+    <!-- B -->
+    <div class="scheme r2">
+      <div class="s-top">
+        <div class="s-letter">B</div>
+        <div class="s-rec">推荐度 · <span class="stars">★★</span></div>
+      </div>
+      <h3>LoRA 微调（每教师 adapter）</h3>
+      <div class="s-en">LoRA Per-Teacher Fine-Tuning</div>
+      <div class="s-core">
+        基础模型 + 每位教师一个 LoRA adapter（~10-100MB）。训练数据需求：每人 <strong>500-1000 对高质量问答对</strong>，外加风格语料。
+      </div>
+      <div class="s-row"><span class="lbl">数据</span><span class="val"><span class="warn">每人 500-1000 问答对 · 稀缺</span></span></div>
+      <div class="s-row"><span class="lbl">基建</span><span class="val"><span class="warn">Coral E2 微调引擎 ○ 未具备</span></span></div>
+      <div class="s-row"><span class="lbl">天花板</span><span class="val"><strong>85-90%</strong> 相似度</span></div>
+      <div class="s-row"><span class="lbl">扩展性</span><span class="val"><span class="warn">线性成本 · 20 位教师 = 20 倍</span></span></div>
+      <div class="s-row"><span class="lbl">工期</span><span class="val"><strong>42 人月</strong>（含基建 6 + 评估 3）</span></div>
+      <div class="s-verdict">
+        <strong>✗ 不推荐作为主方案</strong>。致命伤三条：数据极难构造 + Coral 没有微调平台 + 扩展到 100 位教师成本爆炸。<strong>8 月底交付不完</strong>。可作为三期 Hybrid 选装包。
+      </div>
+    </div>
+
+    <!-- C -->
+    <div class="scheme r0">
+      <div class="s-top">
+        <div class="s-letter">C</div>
+        <div class="s-rec">推荐度 · <span class="stars">—</span></div>
+      </div>
+      <h3>Full Fine-Tuning（完整模型）</h3>
+      <div class="s-en">Full Model Per-Teacher Training</div>
+      <div class="s-core">
+        每教师一个完整的微调模型（7B/14B 参数全量微调）。<strong>工程上不现实</strong>——列在这里只为堵住领导可能问"为什么不训练专属模型"。
+      </div>
+      <div class="s-row"><span class="lbl">数据</span><span class="val"><span class="warn">每人万级问答对 · 不可达</span></span></div>
+      <div class="s-row"><span class="lbl">基建</span><span class="val"><span class="warn">每教师占一份 GPU 显存</span></span></div>
+      <div class="s-row"><span class="lbl">天花板</span><span class="val">95% 相似度</span></div>
+      <div class="s-row"><span class="lbl">扩展性</span><span class="val"><span class="warn">完全不可扩展</span></span></div>
+      <div class="s-row"><span class="lbl">工期</span><span class="val"><span class="warn">100+ 人月</span></span></div>
+      <div class="s-verdict">
+        <strong>❌ 直接 pass</strong>。存储爆炸、算力爆炸、运维爆炸，20 位教师就要 20 份基础模型在线。只在研究场景有意义，B 端工程化无解。
+      </div>
+    </div>
+
+    <!-- D -->
+    <div class="scheme r2">
+      <div class="s-top">
+        <div class="s-letter">D</div>
+        <div class="s-rec">推荐度 · <span class="stars">★★</span></div>
+      </div>
+      <h3>P-Tuning · 轻量化 Prompt 训练</h3>
+      <div class="s-en">Prompt Tuning / P-Tuning v2</div>
+      <div class="s-core">
+        只训练一个 <strong>soft prompt 向量</strong>（几千到几万参数），不改基础模型权重。比 LoRA 更轻但效果也更有限。
+      </div>
+      <div class="s-row"><span class="lbl">数据</span><span class="val">每人 200-500 问答对</span></div>
+      <div class="s-row"><span class="lbl">基建</span><span class="val">需微调平台 · <span class="warn">星火是否开放未知</span></span></div>
+      <div class="s-row"><span class="lbl">天花板</span><span class="val"><strong>75%</strong> 相似度</span></div>
+      <div class="s-row"><span class="lbl">扩展性</span><span class="val">线性成本 · 比 LoRA 轻 30%</span></div>
+      <div class="s-row"><span class="lbl">工期</span><span class="val">35 人月</span></div>
+      <div class="s-verdict">
+        <strong>⚠ 不推荐</strong>。国内生态支持弱，星火 X2 是否开放底层接口未知。LoRA 搞不动的情况下，P-Tuning 也搞不动。
+      </div>
+    </div>
+
+    <!-- E -->
+    <div class="scheme r4">
+      <div class="s-top">
+        <div class="s-letter">E</div>
+        <div class="s-rec">推荐度 · <span class="stars">★★★★</span></div>
+      </div>
+      <h3>RAG + Agent Memory</h3>
+      <div class="s-en">RAG with Long-term Memory</div>
+      <div class="s-core">
+        方案 A 的增强版——加一层"长期记忆库"，把教师纠偏过的答案、学生常见问题存成可检索条目。<strong>本质是方案 A 的运营强化</strong>，不是独立架构。
+      </div>
+      <div class="s-row"><span class="lbl">数据</span><span class="val">运行时累积（教师纠偏）</span></div>
+      <div class="s-row"><span class="lbl">基建</span><span class="val">Coral + 额外 KV 存储</span></div>
+      <div class="s-row"><span class="lbl">天花板</span><span class="val"><strong>80%</strong> · 有"学习感"</span></div>
+      <div class="s-row"><span class="lbl">扩展性</span><span class="val">⭐⭐⭐⭐ 与 A 相同</span></div>
+      <div class="s-row"><span class="lbl">工期</span><span class="val">33 人月（比 A 多 3-4）</span></div>
+      <div class="s-verdict">
+        <strong>✓ 二期追加合适</strong>。一期 MVP 不强必要——先让方案 A 跑稳定，二期用它增强"越用越像"的感知。
+      </div>
+    </div>
+
+    <!-- F -->
+    <div class="scheme r4">
+      <div class="s-top">
+        <div class="s-letter">F</div>
+        <div class="s-rec">推荐度 · <span class="stars">★★★★</span></div>
+      </div>
+      <h3>Multi-Agent · 多智能体编排</h3>
+      <div class="s-en">Teacher Persona Agent Network</div>
+      <div class="s-core">
+        把"王教授数字分身"拆成 5 个 sub-agent 协作：<strong>🎭 风格 · 🧠 知识 · 🤔 苏格拉底 · 🔗 溯源 · ✏️ 纠偏</strong>。XClaw 作为 Agent Runtime 天然适配这种架构。
+      </div>
+      <div class="s-row"><span class="lbl">数据</span><span class="val">同 A · 无额外要求</span></div>
+      <div class="s-row"><span class="lbl">基建</span><span class="val"><span class="hl">XClaw 天然支持</span></span></div>
+      <div class="s-row"><span class="lbl">天花板</span><span class="val"><strong>85%</strong> · Wow 感最强</span></div>
+      <div class="s-row"><span class="lbl">扩展性</span><span class="val">⭐⭐⭐⭐ 高</span></div>
+      <div class="s-row"><span class="lbl">工期</span><span class="val">34 人月（+5 vs A）</span></div>
+      <div class="s-verdict">
+        <strong>✓ 二期升级首选</strong>。"竞对是单个 AI 在装教师，我们是小团队在协同装教师"——这是 XClaw 作为 Agent Runtime 的<strong>差异化护城河</strong>。
+      </div>
+    </div>
+
+    <!-- G -->
+    <div class="scheme r2">
+      <div class="s-top">
+        <div class="s-letter">G</div>
+        <div class="s-rec">推荐度 · <span class="stars">★★</span></div>
+      </div>
+      <h3>Knowledge Graph-Centric</h3>
+      <div class="s-en">Pure Graph-Based Reasoning</div>
+      <div class="s-core">
+        完全靠教师的学科知识图谱做推理回答，不依赖向量检索，不依赖 LLM 生成风格。适合强结构化学科，不适合人文社科。
+      </div>
+      <div class="s-row"><span class="lbl">数据</span><span class="val"><span class="warn">图谱 · 手工构建 · 极难</span></span></div>
+      <div class="s-row"><span class="lbl">基建</span><span class="val">Coral M2 仅 Excel 导入 · 严重不足</span></div>
+      <div class="s-row"><span class="lbl">天花板</span><span class="val"><strong>60%</strong>（通用场景）</span></div>
+      <div class="s-row"><span class="lbl">扩展性</span><span class="val">⭐⭐ 学科覆盖窄</span></div>
+      <div class="s-row"><span class="lbl">工期</span><span class="val">45+ 人月</span></div>
+      <div class="s-verdict">
+        <strong>⚠ 不推荐</strong>。同济建筑史/哲学等王牌文科无法图谱化。可作为方案 A 的"专业学科增强模块"——比如高数数字分身叠加图谱推理层。
+      </div>
+    </div>
+
+    <!-- H -->
+    <div class="scheme r2">
+      <div class="s-top">
+        <div class="s-letter">H</div>
+        <div class="s-rec">推荐度 · <span class="stars">★★</span></div>
+      </div>
+      <h3>DSPy · 可训练 Prompt</h3>
+      <div class="s-en">Programmable Prompt Framework</div>
+      <div class="s-core">
+        用 Stanford 的 DSPy 框架把 Prompt 变成"可训练的对象"——教师纠偏会自动反向训练 Prompt。<strong>技术前沿但风险高</strong>。
+      </div>
+      <div class="s-row"><span class="lbl">数据</span><span class="val">A 的数据 + 纠偏数据</span></div>
+      <div class="s-row"><span class="lbl">基建</span><span class="val"><span class="warn">DSPy 新栈 · 团队零经验</span></span></div>
+      <div class="s-row"><span class="lbl">天花板</span><span class="val"><strong>85%</strong></span></div>
+      <div class="s-row"><span class="lbl">扩展性</span><span class="val">⭐⭐⭐ 有一定扩展</span></div>
+      <div class="s-row"><span class="lbl">工期</span><span class="val">37 人月（+学习曲线）</span></div>
+      <div class="s-verdict">
+        <strong>⚠ 不推荐作为主方案</strong>。国内 B 端几乎没人用过，标杆项目用前沿技术是赌博。<strong>可作为 F2 纠偏 Skill 的底层技术选型</strong>——但这是二三期的事。
+      </div>
+    </div>
+
+    <!-- I -->
+    <div class="scheme r4">
+      <div class="s-top">
+        <div class="s-letter">I</div>
+        <div class="s-rec">推荐度 · <span class="stars">★★★★</span></div>
+      </div>
+      <h3>Hybrid · RAG + LoRA 组合</h3>
+      <div class="s-en">RAG for All + LoRA for VIPs</div>
+      <div class="s-core">
+        大部分教师走方案 A（RAG），只对 3-5 位"镇店之宝"教师做 LoRA 精调。<strong>最务实的折衷方案</strong>，分期交付友好。
+      </div>
+      <div class="s-row"><span class="lbl">数据</span><span class="val">A 数据 + 样板教师 LoRA 数据</span></div>
+      <div class="s-row"><span class="lbl">基建</span><span class="val">A 全量 + 微调平台（二期建）</span></div>
+      <div class="s-row"><span class="lbl">天花板</span><span class="val"><strong>85%</strong> 深 / 75% 广</span></div>
+      <div class="s-row"><span class="lbl">扩展性</span><span class="val">⭐⭐⭐⭐ A 兜底 + LoRA 加 buff</span></div>
+      <div class="s-row"><span class="lbl">工期</span><span class="val">36.5 人月（一期 A + 二期 LoRA）</span></div>
+      <div class="s-verdict">
+        <strong>✓ 三期选装方案</strong>。方案 A 兜住全员，3-5 位样板教师有 LoRA 加成做到 90% 风格模仿——<strong>Demo 时效果拉满</strong>。
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============ 02 · 对比矩阵 ============ -->
+<section class="matrix wrap">
+  <div class="section-head">
+    <span class="num">02 · MATRIX</span>
+    <h2>9 方案横向对比矩阵</h2>
+    <div class="lead">按<strong>一期工期</strong>升序排列。绿色高亮行是一期推荐方案。</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:4%">#</th>
+        <th style="width:18%">方案</th>
+        <th style="width:10%">数据需求</th>
+        <th style="width:12%">基建依赖</th>
+        <th style="width:8%">效果天花板</th>
+        <th style="width:8%">扩展性</th>
+        <th style="width:10%">一期工期</th>
+        <th style="width:8%">风险</th>
+        <th style="width:22%">关键判断</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="rec">
+        <td><span class="idx">A</span></td>
+        <td>
+          <div class="name-main">RAG + Prompt</div>
+          <span class="stars">★★★★★</span>
+        </td>
+        <td>语料即可</td>
+        <td>Coral 现有</td>
+        <td>70-80%</td>
+        <td>⭐⭐⭐⭐⭐</td>
+        <td><span class="w-pill">29 人月</span></td>
+        <td><span class="badge low">🟢 低</span></td>
+        <td><strong>一期主推</strong> · 唯一能在 8 月底交付的路径</td>
+      </tr>
+      <tr>
+        <td><span class="idx">E</span></td>
+        <td>
+          <div class="name-main">RAG + Memory</div>
+          <span class="stars">★★★★</span>
+        </td>
+        <td>运行时累积</td>
+        <td>A + KV 库</td>
+        <td>80%</td>
+        <td>⭐⭐⭐⭐</td>
+        <td><span class="w-pill">33 人月</span></td>
+        <td><span class="badge low">🟢 低</span></td>
+        <td>二期追加 · 本质是 A 的运营强化</td>
+      </tr>
+      <tr class="rec">
+        <td><span class="idx">F</span></td>
+        <td>
+          <div class="name-main">Multi-Agent</div>
+          <span class="stars">★★★★</span>
+        </td>
+        <td>同 A</td>
+        <td>XClaw 天然</td>
+        <td>85%</td>
+        <td>⭐⭐⭐⭐</td>
+        <td><span class="w-pill">34 人月</span></td>
+        <td><span class="badge mid">🟡 中</span></td>
+        <td><strong>二期升级首选</strong> · XClaw 差异化护城河</td>
+      </tr>
+      <tr>
+        <td><span class="idx">D</span></td>
+        <td>
+          <div class="name-main">P-Tuning</div>
+          <span class="stars">★★</span>
+        </td>
+        <td>每人 200-500</td>
+        <td>微调平台</td>
+        <td>75%</td>
+        <td>⭐⭐</td>
+        <td><span class="w-pill">35 人月</span></td>
+        <td><span class="badge mid">🟡 中</span></td>
+        <td>国内生态弱 · 星火是否开放未知</td>
+      </tr>
+      <tr class="rec">
+        <td><span class="idx">I</span></td>
+        <td>
+          <div class="name-main">Hybrid A+B</div>
+          <span class="stars">★★★★</span>
+        </td>
+        <td>A + 样板</td>
+        <td>A + 微调</td>
+        <td>85% / 75%</td>
+        <td>⭐⭐⭐⭐</td>
+        <td><span class="w-pill">36.5 人月</span></td>
+        <td><span class="badge mid">🟡 中</span></td>
+        <td><strong>三期选装</strong> · 务实折衷 · Demo 镇店之宝</td>
+      </tr>
+      <tr>
+        <td><span class="idx">H</span></td>
+        <td>
+          <div class="name-main">DSPy</div>
+          <span class="stars">★★</span>
+        </td>
+        <td>A + 纠偏数据</td>
+        <td>新栈</td>
+        <td>85%</td>
+        <td>⭐⭐⭐</td>
+        <td><span class="w-pill">37 人月</span></td>
+        <td><span class="badge high">🔴 高</span></td>
+        <td>前沿但赌博 · 国内 B 端几乎无案例</td>
+      </tr>
+      <tr>
+        <td><span class="idx">B</span></td>
+        <td>
+          <div class="name-main">LoRA（纯）</div>
+          <span class="stars">★★</span>
+        </td>
+        <td>每人 500-1000</td>
+        <td>微调平台</td>
+        <td>85-90%</td>
+        <td>⭐⭐</td>
+        <td><span class="w-pill">42 人月</span></td>
+        <td><span class="badge high">🔴 高</span></td>
+        <td>数据稀缺 + 基建缺 + 扩展崩溃</td>
+      </tr>
+      <tr>
+        <td><span class="idx">G</span></td>
+        <td>
+          <div class="name-main">KG-Centric</div>
+          <span class="stars">★★</span>
+        </td>
+        <td>图谱极难</td>
+        <td>图数据库</td>
+        <td>60%</td>
+        <td>⭐⭐</td>
+        <td><span class="w-pill">45+ 人月</span></td>
+        <td><span class="badge high">🔴 高</span></td>
+        <td>学科覆盖窄 · 人文学科无解</td>
+      </tr>
+      <tr>
+        <td><span class="idx">C</span></td>
+        <td>
+          <div class="name-main">Full FT</div>
+          <span class="stars">—</span>
+        </td>
+        <td>每人万级</td>
+        <td>大 GPU 集群</td>
+        <td>95%</td>
+        <td>⭐</td>
+        <td><span class="w-pill">100+ 人月</span></td>
+        <td><span class="badge no">❌</span></td>
+        <td>完全不现实 · 只为堵领导提问用</td>
+      </tr>
+    </tbody>
+  </table>
+
+</section>
+
+
+<!-- ============ 03 · 4 大范式 ============ -->
+<section class="wrap">
+  <div class="section-head">
+    <span class="num">03 · PARADIGM</span>
+    <h2>技术实现差异的本质 · 4 大范式</h2>
+    <div class="lead">9 个方案看似很多，其实分成 4 大范式。理解范式差异比记住 9 个名字更重要。</div>
+  </div>
+
+  <div class="paradigms">
+    <div class="paradigm">
+      <span class="p-num">01</span>
+      <h4>知识检索 + 提示工程</h4>
+      <div class="p-methods">方案 A / E / H</div>
+      <p>模型不变，改"喂给模型什么"。教师的个性来自 Prompt 上下文和检索到的材料。<strong>迭代快、数据门槛低</strong>，是 B 端首选。</p>
+    </div>
+    <div class="paradigm">
+      <span class="p-num">02</span>
+      <h4>多智能体编排</h4>
+      <div class="p-methods">方案 F</div>
+      <p>模型不变，改"怎么调度多个模型实例"。把单个 Prompt 拆成多个 sub-agent 协作。<strong>XClaw 作为 Agent Runtime 最擅长</strong>。</p>
+    </div>
+    <div class="paradigm">
+      <span class="p-num">03</span>
+      <h4>参数级个性化</h4>
+      <div class="p-methods">方案 B / C / D</div>
+      <p>改模型本身的参数。技术最深、效果最到位，但<strong>数据门槛高、扩展性差、基建缺</strong>。B 端不适合走这条路。</p>
+    </div>
+    <div class="paradigm">
+      <span class="p-num">04</span>
+      <h4>图谱符号推理 / 混合</h4>
+      <div class="p-methods">方案 G / I</div>
+      <p>绕开 LLM 用确定性推理（G），或范式 1 兜底叠加范式 3 加 buff（I）。<strong>适合特定场景</strong>，不是主路径。</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ 04 · 推荐路径 ============ -->
+<section class="wrap">
+  <div class="section-head">
+    <span class="num">04 · ROADMAP</span>
+    <h2>三期渐进推荐路径</h2>
+    <div class="lead">不是一次性选定一个方案，而是随项目阶段演化。</div>
+  </div>
+
+  <div class="roadmap">
+    <div class="roadmap-timeline">
+
+      <div class="rm-node n1">
+        <div class="rm-dot">01</div>
+        <div class="rm-phase">PHASE · ONE</div>
+        <h4>一期 · 8 月底</h4>
+        <span class="rm-tag">方案 A · RAG + Prompt</span>
+        <ul>
+          <li><strong>29 人月 / 7 人团队</strong>交付完整数字分身系统</li>
+          <li><strong>3 位样板教师</strong>的知识库 + 个性化 Prompt</li>
+          <li>所有教师走统一 Prompt 框架，只在内容差异化</li>
+          <li>覆盖 3 门样板课程 · 教师个人空间 · 纠偏闭环</li>
+          <li>Canvas 最小融合（门户切换 + SSO，不做数据同步）</li>
+        </ul>
+      </div>
+
+      <div class="rm-node n2">
+        <div class="rm-dot">02</div>
+        <div class="rm-phase">PHASE · TWO</div>
+        <h4>二期 · 12 月</h4>
+        <span class="rm-tag">+ 方案 F · Multi-Agent</span>
+        <ul>
+          <li><strong>+5-6 人月</strong>升级为多 Agent 协作架构</li>
+          <li>新增 5 个 sub-agent：<strong>风格 / 知识 / 苏格拉底 / 溯源 / 纠偏</strong></li>
+          <li>对外宣讲："竞对是单个 AI 装教师，我们是团队协同装教师"</li>
+          <li>样板教师扩展到 20-30 位</li>
+          <li>Canvas 双向数据同步 · 任务驱动学习 + 知识图谱深化</li>
+        </ul>
+      </div>
+
+      <div class="rm-node n3">
+        <div class="rm-dot">03</div>
+        <div class="rm-phase">PHASE · THREE</div>
+        <h4>三期 · 明年</h4>
+        <span class="rm-tag">+ 方案 I · Hybrid LoRA</span>
+        <ul>
+          <li><strong>+8 人月</strong>对 3-5 位顶尖教师做 LoRA 精调</li>
+          <li>效果从 85% 提升到 <strong>92%</strong></li>
+          <li>做一个对比视频：<strong>Prompt 版 vs LoRA 版</strong>——镇店之宝</li>
+          <li>全校教师推广 · 跨学科替代 · 科研助手完整版</li>
+          <li>对标分析驾驶舱 · 建立国标共建</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ 05 · 三个必须避开的坑 ============ -->
+<section class="wrap">
+  <div class="section-head">
+    <span class="num">05 · PITFALLS</span>
+    <h2>三个必须避开的坑</h2>
+    <div class="lead">不是小瑕疵，是会让项目直接塌方的硬伤。</div>
+  </div>
+
+  <div class="pitfalls">
+    <div class="pitfall">
+      <div class="p-num">PITFALL · 01</div>
+      <h4>把数字分身等同于"模型个性化"</h4>
+      <p>最容易踩的<strong>认知陷阱</strong>。领导听到"数字分身"会联想"训练专属模型"——但那条路（B/C/D）在数据稀缺 + 基建缺失 + 扩展性差三方面都不通。<strong>数字分身 = 知识库个性化 + Prompt 个性化</strong>，不是模型个性化。</p>
+    </div>
+    <div class="pitfall">
+      <div class="p-num">PITFALL · 02</div>
+      <h4>为 1% 的效果增益付 50% 的工期代价</h4>
+      <p>LoRA 比 RAG 的效果从 80% 升到 90%，但工期从 29 增到 42。<strong>每 1% 效果提升要 1.3 人月</strong>——对于 8 月底必须交付的标杆项目，这个代价不划算。要追求效果，走二期的多 Agent 升级（+5 人月 +5% 效果）性价比高得多。</p>
+    </div>
+    <div class="pitfall">
+      <div class="p-num">PITFALL · 03</div>
+      <h4>盲目追求"技术最先进"</h4>
+      <p>DSPy（方案 H）是最前沿的，但<strong>团队没用过、国内没生态</strong>。在标杆项目里用前沿技术是赌博——万一卡壳郑书记不会听解释。<strong>标杆项目的第一要义是不能翻车</strong>，技术深度让位于交付确定性。</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ Footer ============ -->
+<footer class="footer">
+  <div class="brand">同济数字分身 · 技术方案选型 V1</div>
+  <div class="meta">讯飞 AI 教学产品部 · 2026-04-13 · 基于 XClaw Agent Runtime · 为同济大学教学平台标杆项目定制</div>
+</footer>
+
+</body>
+</html>
