@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>同济数字分身 · 系统架构图 V1 · XClaw 能力映射</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   同济数字分身 · 系统架构图 V1
+   7 层架构 × XClaw 能力映射 × 三态状态标注
+   ============================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg:         #F1F4FB;
+  --bg-deep:    #E6EEF8;
+  --paper:      #FFFFFF;
+  --ink:        #0A1628;
+  --ink-soft:   #334155;
+  --ink-mute:   #64748B;
+  --ink-light:  #94A3B8;
+  --hairline:   #E2E8F0;
+  --hairline-bold: #CBD5E1;
+
+  /* 同济学术蓝 + 院徽金 */
+  --tj-blue:      #0057B8;
+  --tj-blue-deep: #003F86;
+  --tj-blue-soft: #E6EEF8;
+  --tj-gold:      #C89B3C;
+  --tj-gold-soft: #FBF4E3;
+  --tj-gold-deep: #92400E;
+
+  /* 层色（每一层一套） */
+  --l1-deep: #64748B; --l1-soft: #F1F5F9;    /* 数据源 */
+  --l2-deep: #0E7490; --l2-soft: #CFFAFE;    /* 采集 */
+  --l3-deep: #059669; --l3-soft: #D1FAE5;    /* 知识资产 */
+  --l4-deep: #7C3AED; --l4-soft: #EDE9FE;    /* AI 模型 */
+  --l5-deep: #0057B8; --l5-soft: #E6EEF8;    /* XClaw · 主角 */
+  --l6-deep: #C89B3C; --l6-soft: #FBF4E3;    /* 应用 */
+  --l7-deep: #B91C1C; --l7-soft: #FEE2E2;    /* 用户 */
+
+  /* 三态状态色 */
+  --st-reuse: #059669;
+  --st-reuse-bg: #D1FAE5;
+  --st-ext:   #C2410C;
+  --st-ext-bg:#FFEDD5;
+  --st-new:   #B91C1C;
+  --st-new-bg:#FEE2E2;
+}
+
+body {
+  font-family: "Noto Sans SC", -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  padding: 0 0 80px;
+  min-width: 1440px;
+}
+
+.mono { font-family: "JetBrains Mono", monospace; }
+
+/* ============ 返回导航 ============ */
+.nav-bar {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hairline);
+  padding: 14px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 12px;
+}
+.nav-bar a { color: var(--tj-blue); font-weight: 700; text-decoration: none; }
+.nav-bar a:hover { opacity: 0.7; }
+.nav-bar .sep { color: var(--ink-light); }
+.nav-bar .current { color: var(--ink-mute); }
+.nav-bar .level {
+  font-size: 9px; font-weight: 800; color: #fff;
+  padding: 3px 8px; border-radius: 4px;
+  letter-spacing: 1.5px; background: var(--tj-gold);
+}
+.nav-bar .right {
+  margin-left: auto; font-size: 10px;
+  color: var(--ink-light); letter-spacing: 2px;
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* ============ Wrap ============ */
+.wrap { max-width: 1440px; margin: 0 auto; padding: 0 40px; }
+
+/* ============ Hero ============ */
+.hero {
+  padding: 56px 40px 40px;
+  background:
+    radial-gradient(1000px 400px at 70% -30%, rgba(0,87,184,0.10), transparent 60%),
+    radial-gradient(800px 300px at 10% 50%, rgba(200,155,60,0.08), transparent 60%),
+    var(--paper);
+  border-bottom: 2px solid var(--tj-blue);
+}
+.hero-grid {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 48px;
+  align-items: flex-end;
+}
+.hero .kicker {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: var(--tj-gold-deep);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-left: 32px;
+  position: relative;
+}
+.hero .kicker::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 50%;
+  width: 22px; height: 1px;
+  background: var(--tj-gold);
+}
+.hero h1 {
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1.1;
+  margin-bottom: 18px;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--tj-blue);
+}
+.hero .lead {
+  font-size: 14px;
+  color: var(--ink-mute);
+  line-height: 1.9;
+  max-width: 780px;
+}
+.hero .lead strong { color: var(--ink); font-weight: 700; }
+
+.hero-legend {
+  background: #fff;
+  border: 1.5px solid var(--hairline);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+.hero-legend .ll-title {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--ink-light);
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+.hero-legend .ll-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--hairline);
+}
+.hero-legend .ll-row:last-child { border-bottom: none; }
+.hero-legend .ll-row .badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.5px;
+}
+.hero-legend .ll-row.reuse .badge { background: var(--st-reuse-bg); color: var(--st-reuse); }
+.hero-legend .ll-row.ext .badge   { background: var(--st-ext-bg);   color: var(--st-ext); }
+.hero-legend .ll-row.new .badge   { background: var(--st-new-bg);   color: var(--st-new); }
+
+/* ============ Layer · 层架构 ============ */
+.arch {
+  padding: 56px 0 24px;
+}
+.layer {
+  margin-bottom: 14px;
+  position: relative;
+}
+.layer-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+  padding: 0 6px;
+}
+.layer-head .num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #fff;
+  padding: 5px 11px;
+  border-radius: 4px;
+  background: var(--l1-deep);
+}
+.layer-head h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.3px;
+}
+.layer-head .desc {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+
+.layer-body {
+  background: var(--paper);
+  border: 1.5px solid var(--hairline);
+  border-radius: 12px;
+  padding: 20px 22px;
+  position: relative;
+  overflow: hidden;
+}
+.layer-body::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--l1-deep);
+}
+
+/* 各层配色 */
+.layer.l1 .layer-head .num { background: var(--l1-deep); }
+.layer.l1 .layer-body::before { background: var(--l1-deep); }
+.layer.l2 .layer-head .num { background: var(--l2-deep); }
+.layer.l2 .layer-body::before { background: var(--l2-deep); }
+.layer.l3 .layer-head .num { background: var(--l3-deep); }
+.layer.l3 .layer-body::before { background: var(--l3-deep); }
+.layer.l4 .layer-head .num { background: var(--l4-deep); }
+.layer.l4 .layer-body::before { background: var(--l4-deep); }
+.layer.l5 .layer-head .num { background: var(--l5-deep); }
+.layer.l5 .layer-body::before { background: var(--l5-deep); }
+.layer.l6 .layer-head .num { background: var(--l6-deep); }
+.layer.l6 .layer-body::before { background: var(--l6-deep); }
+.layer.l7 .layer-head .num { background: var(--l7-deep); }
+.layer.l7 .layer-body::before { background: var(--l7-deep); }
+
+/* XClaw 主角层高亮 */
+.layer.l5 .layer-body {
+  background: linear-gradient(180deg, #FFFFFF 0%, var(--tj-blue-soft) 100%);
+  border: 2.5px solid var(--tj-blue);
+  box-shadow: 0 12px 40px -12px rgba(0,87,184,0.25);
+  padding: 26px 28px 28px;
+}
+.layer.l5 .layer-head h3 {
+  color: var(--tj-blue-deep);
+  font-size: 18px;
+}
+.layer.l5 .layer-head h3 .star {
+  color: var(--tj-gold);
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+/* ============ Module Grid ============ */
+.mod-grid {
+  display: grid;
+  gap: 12px;
+}
+.mg-5 { grid-template-columns: repeat(5, 1fr); }
+.mg-4 { grid-template-columns: repeat(4, 1fr); }
+.mg-6 { grid-template-columns: repeat(6, 1fr); }
+.mg-3 { grid-template-columns: repeat(3, 1fr); }
+
+.mod {
+  background: var(--paper);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  padding: 12px 14px;
+  position: relative;
+  transition: all 0.2s;
+}
+.mod:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -6px rgba(15,23,42,0.12);
+  border-color: var(--hairline-bold);
+}
+.mod .mod-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.4;
+  margin-bottom: 6px;
+  padding-right: 40px;
+}
+.mod .mod-desc {
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  line-height: 1.6;
+}
+.mod .mod-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.5px;
+}
+.mod .mod-badge.reuse { background: var(--st-reuse-bg); color: var(--st-reuse); }
+.mod .mod-badge.ext   { background: var(--st-ext-bg);   color: var(--st-ext); }
+.mod .mod-badge.new   { background: var(--st-new-bg);   color: var(--st-new); }
+
+/* XClaw 层的模块卡有更强视觉 */
+.layer.l5 .mod {
+  background: #fff;
+  border: 1.5px solid var(--tj-blue);
+  padding: 14px 16px;
+}
+.layer.l5 .mod .mod-name {
+  color: var(--tj-blue-deep);
+  font-size: 13px;
+}
+.layer.l5 .mod::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--tj-blue), var(--tj-gold));
+  border-radius: 0 0 7px 7px;
+}
+
+/* 连接箭头 */
+.layer::after {
+  content: "↓";
+  position: absolute;
+  left: 50%;
+  bottom: -18px;
+  transform: translateX(-50%);
+  font-size: 16px;
+  color: var(--ink-light);
+  z-index: 2;
+  background: var(--bg);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+.layer:last-child::after { display: none; }
+
+/* ============ 核心数据流 section ============ */
+.flow-section {
+  padding: 56px 40px;
+  background: #fff;
+  margin: 48px 0 0;
+  border-top: 2px solid var(--hairline);
+  border-bottom: 2px solid var(--hairline);
+}
+.flow-section .section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 28px;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 0 24px;
+  border-bottom: 1px solid var(--hairline);
+}
+.flow-section .section-head .num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  background: var(--tj-gold);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  letter-spacing: 1.5px;
+}
+.flow-section .section-head h2 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+}
+.flow-section .section-head .lead {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--ink-mute);
+  max-width: 480px;
+  line-height: 1.7;
+}
+
+.flow-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+.flow-card {
+  background: linear-gradient(180deg, var(--bg) 0%, #fff 100%);
+  border: 1.5px solid var(--hairline);
+  border-radius: 12px;
+  padding: 22px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.flow-card::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 3px;
+}
+.flow-card.f1::before { background: linear-gradient(90deg, var(--l2-deep), var(--l3-deep)); }
+.flow-card.f2::before { background: linear-gradient(90deg, var(--l5-deep), var(--l6-deep)); }
+.flow-card.f3::before { background: linear-gradient(90deg, var(--l7-deep), var(--l5-deep)); }
+
+.flow-card .fc-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--ink-light);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.flow-card h4 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 14px;
+  letter-spacing: -0.2px;
+}
+.flow-card ol {
+  list-style: none;
+  padding: 0;
+  counter-reset: flowstep;
+}
+.flow-card ol li {
+  counter-increment: flowstep;
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  padding: 8px 0 8px 32px;
+  border-bottom: 1px dashed var(--hairline);
+  position: relative;
+}
+.flow-card ol li::before {
+  content: counter(flowstep);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 22px;
+  height: 22px;
+  background: var(--tj-blue-soft);
+  color: var(--tj-blue);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  font-family: "JetBrains Mono", monospace;
+}
+.flow-card ol li:last-child { border-bottom: none; }
+.flow-card ol li strong { color: var(--tj-blue-deep); font-weight: 700; }
+.flow-card ol li em {
+  font-style: normal;
+  font-size: 9.5px;
+  color: var(--tj-gold-deep);
+  background: var(--tj-gold-soft);
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 4px;
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* ============ XClaw 能力清单表 ============ */
+.capability-section {
+  padding: 56px 40px 24px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+.capability-section h2 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.capability-section h2 .tag {
+  font-size: 10px;
+  background: var(--tj-blue);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-right: 12px;
+  vertical-align: middle;
+  letter-spacing: 1.5px;
+  font-family: "JetBrains Mono", monospace;
+}
+.capability-section .sub {
+  font-size: 13px;
+  color: var(--ink-mute);
+  margin-bottom: 28px;
+}
+
+.cap-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1.5px solid var(--hairline);
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 12px;
+}
+.cap-table th {
+  background: var(--tj-blue-soft);
+  color: var(--tj-blue-deep);
+  padding: 14px 16px;
+  font-weight: 800;
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid var(--tj-blue);
+}
+.cap-table td {
+  padding: 14px 16px;
+  border-bottom: 1px dashed var(--hairline);
+  color: var(--ink-soft);
+  line-height: 1.7;
+  vertical-align: top;
+}
+.cap-table tr:last-child td { border-bottom: none; }
+.cap-table tr:hover td { background: var(--bg); }
+
+.cap-table .cap-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--tj-blue);
+  font-weight: 800;
+}
+.cap-table .cap-name {
+  font-weight: 800;
+  color: var(--ink);
+  font-size: 13px;
+}
+.cap-table .cap-en {
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  color: var(--ink-light);
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+.cap-table .cap-status {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.5px;
+}
+.cap-status.reuse { background: var(--st-reuse-bg); color: var(--st-reuse); }
+.cap-status.ext   { background: var(--st-ext-bg);   color: var(--st-ext); }
+.cap-status.new   { background: var(--st-new-bg);   color: var(--st-new); }
+
+/* ============ Skill 清单 ============ */
+.skill-section {
+  padding: 40px 40px 24px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+.skill-section h2 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.skill-section h2 .tag {
+  font-size: 10px;
+  background: var(--tj-gold);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-right: 12px;
+  vertical-align: middle;
+  letter-spacing: 1.5px;
+  font-family: "JetBrains Mono", monospace;
+}
+.skill-section .sub {
+  font-size: 13px;
+  color: var(--ink-mute);
+  margin-bottom: 28px;
+}
+
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.skill-card {
+  background: #fff;
+  border: 1.5px solid var(--hairline);
+  border-radius: 10px;
+  padding: 18px 20px;
+  position: relative;
+}
+.skill-card.reuse { border-left: 4px solid var(--st-reuse); }
+.skill-card.new   { border-left: 4px solid var(--st-new); }
+
+.skill-card .sk-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.skill-card .sk-slash {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--tj-blue);
+  background: var(--tj-blue-soft);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.skill-card .sk-status {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.5px;
+}
+.skill-card.reuse .sk-status { background: var(--st-reuse-bg); color: var(--st-reuse); }
+.skill-card.new .sk-status   { background: var(--st-new-bg);   color: var(--st-new); }
+
+.skill-card h4 {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.skill-card p {
+  font-size: 11px;
+  color: var(--ink-mute);
+  line-height: 1.7;
+}
+.skill-card p strong { color: var(--ink-soft); font-weight: 700; }
+
+/* ============ 底部工期 summary ============ */
+.summary {
+  padding: 48px 40px 24px;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.summary-card {
+  background: #fff;
+  border: 1.5px solid var(--hairline);
+  border-radius: 12px;
+  padding: 22px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.summary-card::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--tj-blue), var(--tj-gold));
+}
+.summary-card .sc-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--ink-light);
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.summary-card .sc-val {
+  font-size: 36px;
+  font-weight: 900;
+  color: var(--tj-blue-deep);
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 6px;
+  font-family: "Inter", sans-serif;
+}
+.summary-card .sc-val small {
+  font-size: 14px;
+  color: var(--ink-mute);
+  margin-left: 4px;
+  font-weight: 600;
+}
+.summary-card .sc-desc {
+  font-size: 11px;
+  color: var(--ink-mute);
+  line-height: 1.7;
+}
+
+/* ============ Footer ============ */
+.footer {
+  padding: 48px 40px 24px;
+  max-width: 1440px;
+  margin: 0 auto;
+  border-top: 2px solid var(--hairline);
+  margin-top: 56px;
+  text-align: center;
+}
+.footer .brand {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.footer .meta {
+  font-size: 11px;
+  color: var(--ink-light);
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* ============ 入场动画 ============ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.layer { animation: rise 0.6s ease-out backwards; }
+.layer.l1 { animation-delay: 0.05s; }
+.layer.l2 { animation-delay: 0.10s; }
+.layer.l3 { animation-delay: 0.15s; }
+.layer.l4 { animation-delay: 0.20s; }
+.layer.l5 { animation-delay: 0.25s; }
+.layer.l6 { animation-delay: 0.30s; }
+.layer.l7 { animation-delay: 0.35s; }
+
+</style>
+</head>
+<body>
+
+<!-- 返回导航 -->
+<div class="nav-bar">
+  <a href="index.html">📚 学科大模型 · 文档中心</a>
+  <span class="sep">›</span>
+  <span class="level">XCLAW · 案例</span>
+  <span class="current">同济数字分身 · 系统架构 · XClaw 能力映射 V1</span>
+  <span class="right">2026-04-13 · V1</span>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="kicker">DIGITAL TWIN ARCHITECTURE · XCLAW CAPABILITY MAPPING</div>
+      <h1>同济教师数字分身<br><em>系统架构与能力映射</em></h1>
+      <p class="lead">
+        本图呈现<strong>同济数字分身方案</strong>的端到端系统架构——从最底层的教师原始数据（论文/视频/讲义），
+        经由 Coral 知识资产层、<strong>XClaw 智能体运行时</strong>（核心调度层）、AI 模型层，
+        最终在教师/学生/管理者的应用空间产生价值。方案采用 <strong>RAG + Prompt Engineering + 多租户隔离</strong>
+        （非模型微调），在 8 月底一期交付 <strong>3 位样板教师</strong>的完整数字分身能力。
+      </p>
+    </div>
+    <div class="hero-legend">
+      <div class="ll-title">STATUS · 三态说明</div>
+      <div class="ll-row reuse">
+        <span class="badge">REUSE</span>
+        <span><strong>现有直接复用</strong>——Coral/XClaw 已具备</span>
+      </div>
+      <div class="ll-row ext">
+        <span class="badge">EXT</span>
+        <span><strong>现有扩展改造</strong>——基础能力有，需增强</span>
+      </div>
+      <div class="ll-row new">
+        <span class="badge">NEW</span>
+        <span><strong>全新建设</strong>——本项目新增</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ 7 层架构 ============ -->
+<section class="arch wrap">
+
+  <!-- Layer 1 · 数据源 -->
+  <div class="layer l1">
+    <div class="layer-head">
+      <span class="num">L1</span>
+      <h3>📚 数据源层 · Data Source</h3>
+      <span class="desc">教师真实的原始语料来源</span>
+    </div>
+    <div class="layer-body">
+      <div class="mod-grid mg-5">
+        <div class="mod">
+          <div class="mod-name">学术履历</div>
+          <div class="mod-desc">职称 / 学科 / 项目 / 研究方向</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">发表论文</div>
+          <div class="mod-desc">PDF/Word · 学报 · 会议论文 · 期刊</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">授课视频</div>
+          <div class="mod-desc">历年课堂录播 · 慕课 · 公开课</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">讲义 PPT</div>
+          <div class="mod-desc">历年教案 · 课件 · 教材手稿</div>
+          <span class="mod-badge ext">扩展</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">教务档案</div>
+          <div class="mod-desc">课程表 · 班级 · 学生画像（小雅）</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 2 · 采集 -->
+  <div class="layer l2">
+    <div class="layer-head">
+      <span class="num">L2</span>
+      <h3>🔧 数据采集与解析层 · Ingestion</h3>
+      <span class="desc">把原始素材变成结构化资产</span>
+    </div>
+    <div class="layer-body">
+      <div class="mod-grid mg-5">
+        <div class="mod">
+          <div class="mod-name">T1 · 多模态采集</div>
+          <div class="mod-desc">Coral 工具：音视频/图片 · 批量上传</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">T2 · 文档解析</div>
+          <div class="mod-desc">PDF/Word OK · <strong>PPT 需优化</strong></div>
+          <span class="mod-badge ext">扩展</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">ASR 视频转写</div>
+          <div class="mod-desc">授课视频 → 带时间戳文本</div>
+          <span class="mod-badge ext">扩展</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">OCR 公式识别</div>
+          <div class="mod-desc">扫描件 / 手写讲义结构化</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">教务档案对接</div>
+          <div class="mod-desc">小雅 API · 教师信息同步</div>
+          <span class="mod-badge new">新建</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 3 · Coral 知识资产 -->
+  <div class="layer l3">
+    <div class="layer-head">
+      <span class="num">L3</span>
+      <h3>🪸 Coral 教师个人知识资产层 · Personal Knowledge Assets</h3>
+      <span class="desc">每位教师一份独立的学科资产</span>
+    </div>
+    <div class="layer-body">
+      <div class="mod-grid mg-5">
+        <div class="mod">
+          <div class="mod-name">M1 · 教师语料库</div>
+          <div class="mod-desc">教师的论文/视频/讲义切片库</div>
+          <span class="mod-badge ext">扩展</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">M2 · 知识图谱</div>
+          <div class="mod-desc">学科概念 · 关系 · 由学院决定</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">M3 · 问答标准库</div>
+          <div class="mod-desc">教师审核过的 FAQ · 首选命中</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">向量库（按教师隔离）</div>
+          <div class="mod-desc">每教师一个 namespace · 多租户</div>
+          <span class="mod-badge ext">扩展</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">源溯源索引</div>
+          <div class="mod-desc">切片 → 视频位置/页码/DOI 映射</div>
+          <span class="mod-badge ext">扩展</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 4 · AI 模型层 -->
+  <div class="layer l4">
+    <div class="layer-head">
+      <span class="num">L4</span>
+      <h3>🤖 AI 模型层 · AI Models</h3>
+      <span class="desc">底层算力支撑 · 讯飞自主可控</span>
+    </div>
+    <div class="layer-body">
+      <div class="mod-grid mg-4">
+        <div class="mod">
+          <div class="mod-name">⚡ 星火 X2 大模型</div>
+          <div class="mod-desc">问答生成 · 苏格拉底式引导能力</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">🔡 Embedding 模型</div>
+          <div class="mod-desc">多模型可选 · 学科向量化</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">🎙 ASR 语音转写</div>
+          <div class="mod-desc">讯飞语音底座 · 长音频支持</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">📐 Reranker 精排</div>
+          <div class="mod-desc">检索召回后的重排序</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 5 · XClaw 核心层（主角） -->
+  <div class="layer l5">
+    <div class="layer-head">
+      <span class="num">L5</span>
+      <h3>🧠 XClaw 智能体运行时 · Agent Runtime <span class="star">★ 核心调度层</span></h3>
+      <span class="desc">所有 Skill 的编排与运行中枢</span>
+    </div>
+    <div class="layer-body">
+      <div class="mod-grid mg-3">
+        <div class="mod">
+          <div class="mod-name">⚡ Agent 运行时调度引擎</div>
+          <div class="mod-desc">意图识别 → Skill 选择 → 任务编排 → 响应合成。学生提问的首站。</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">🎭 教师数字分身 Agent（每师一份）</div>
+          <div class="mod-desc">每位教师一份 agent meta：身份 / Prompt / 风格 / 知识库命名空间 / 纠偏版本</div>
+          <span class="mod-badge new">新建</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">🎯 教师画像引擎</div>
+          <div class="mod-desc">从论文+讲义抽取教学风格标签、常用口头禅、解题路径，驱动 Prompt 个性化</div>
+          <span class="mod-badge new">新建</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">🔍 RAG 检索路由</div>
+          <div class="mod-desc">按教师命名空间召回 · 三路（向量+关键词+图谱）基础检索</div>
+          <span class="mod-badge ext">扩展</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">🧩 Skill 库与编排</div>
+          <div class="mod-desc">10 个 Skill · 6 新建 + 4 复用 · 详见下方 Skill 清单</div>
+          <span class="mod-badge ext">扩展</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">💭 上下文管理</div>
+          <div class="mod-desc">会话级 / 学生级 / 课程级多层上下文 · 跨 Skill 传递</div>
+          <span class="mod-badge new">新建</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">🔗 溯源链路追踪</div>
+          <div class="mod-desc">记录召回切片 → 引用位置 → 生成句子的完整链路，供前端源卡片渲染</div>
+          <span class="mod-badge ext">扩展</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">✏️ 纠偏反馈回路</div>
+          <div class="mod-desc">教师纠偏动作落库 · 反向注入 Prompt 或 M3 问答库 · 版本管理</div>
+          <span class="mod-badge new">新建</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">🔌 MCP 集成接口</div>
+          <div class="mod-desc">对接 Canvas / 小雅教务 / 星火 X2 / Embedding 的标准化协议</div>
+          <span class="mod-badge ext">扩展</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 6 · 应用层 -->
+  <div class="layer l6">
+    <div class="layer-head">
+      <span class="num">L6</span>
+      <h3>🎨 应用层 · Application Space</h3>
+      <span class="desc">学生/教师/管理者看得见的产品形态</span>
+    </div>
+    <div class="layer-body">
+      <div class="mod-grid mg-6">
+        <div class="mod">
+          <div class="mod-name">学生答疑界面</div>
+          <div class="mod-desc">对话框 + 源溯源卡片 + 真人求助</div>
+          <span class="mod-badge new">新建</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">教师个人空间</div>
+          <div class="mod-desc">知识库管理 / 分身配置 / 答疑统计</div>
+          <span class="mod-badge new">新建</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">教师纠偏面板</div>
+          <div class="mod-desc">👍 / ✏️ / 📚 / 🔍 四按钮 + 版本</div>
+          <span class="mod-badge new">新建</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">源溯源卡片</div>
+          <div class="mod-desc">视频 03:42 / 论文 DOI / 教材 P47</div>
+          <span class="mod-badge new">新建</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">答疑热力看板</div>
+          <div class="mod-desc">推送给教师的高频问题 · 线下指导依据</div>
+          <span class="mod-badge new">新建</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">课程报告</div>
+          <div class="mod-desc">每节课后 · 内容/互动/知识点覆盖</div>
+          <span class="mod-badge new">新建</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layer 7 · 用户层 -->
+  <div class="layer l7">
+    <div class="layer-head">
+      <span class="num">L7</span>
+      <h3>👥 用户层 · Users</h3>
+      <span class="desc">谁在用 · 谁负责</span>
+    </div>
+    <div class="layer-body">
+      <div class="mod-grid mg-3">
+        <div class="mod">
+          <div class="mod-name">👨‍🏫 教师</div>
+          <div class="mod-desc">对自己数字分身的回答质量<strong>负责</strong>；纠偏、补充材料；查看答疑热力看板做线下指导</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">🎓 学生</div>
+          <div class="mod-desc">随时向教师数字分身提问 · 每句回答可溯源 · 对 AI 不满意时<strong>一键联系真人</strong></div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+        <div class="mod">
+          <div class="mod-name">📊 管理者</div>
+          <div class="mod-desc">院系 / 教务处长 · 查看驾驶舱 · 对标清华交大 · 做招生就业决策</div>
+          <span class="mod-badge reuse">复用</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ============ 核心数据流 · 三路 ============ -->
+<section class="flow-section">
+  <div class="section-head">
+    <span class="num">DATA FLOW</span>
+    <h2>核心数据流 · 三路</h2>
+    <div class="lead">
+      数字分身不是单向的"调用 API 返回答案"，而是三路数据流的长期协同：教师数据沉淀流 / 学生提问响应流 / 教师纠偏反向流。
+      <strong>三路都由 XClaw 统一调度</strong>。
+    </div>
+  </div>
+
+  <div class="flow-grid">
+
+    <!-- Flow 1 · 教师数据沉淀流 -->
+    <div class="flow-card f1">
+      <div class="fc-num">FLOW · 01 · 一次性 + 增量</div>
+      <h4>🔻 教师数据沉淀流</h4>
+      <p style="font-size:11px;color:var(--ink-mute);margin-bottom:12px;line-height:1.6">从数据源 → Coral 知识资产 → 向量索引，由 XClaw 触发并跟踪状态。</p>
+      <ol>
+        <li>教师上传<strong>论文 / 讲义 / 视频</strong> 到个人空间 <em>L1→L6</em></li>
+        <li>XClaw 调度 <strong>T1 多模态采集</strong>入库 <em>Skill</em></li>
+        <li>调度 <strong>T2 文档解析</strong> + <strong>ASR 转写</strong>（并行）<em>Skill</em></li>
+        <li>调用<strong>切片 + 向量化</strong>，写入教师命名空间 <em>L3</em></li>
+        <li><strong>教师画像引擎</strong>提取风格标签和常用表达 <em>L5 新建</em></li>
+        <li>生成<strong>数字分身 Agent Meta</strong>并注册到 Skill 库 <em>L5 新建</em></li>
+      </ol>
+    </div>
+
+    <!-- Flow 2 · 学生提问响应流 -->
+    <div class="flow-card f2">
+      <div class="fc-num">FLOW · 02 · 高频 · 毫秒级</div>
+      <h4>🔄 学生提问响应流</h4>
+      <p style="font-size:11px;color:var(--ink-mute);margin-bottom:12px;line-height:1.6">学生提问 → XClaw 调度 → 数字分身回答 → 源溯源 → 学生看到。</p>
+      <ol>
+        <li>学生在答疑界面向"王教授数字分身"<strong>提问</strong> <em>L6→L5</em></li>
+        <li>XClaw <strong>意图识别</strong>：判断是否要直接答还是苏格拉底引导 <em>Skill</em></li>
+        <li>调用 <strong>/teacher-kb-retrieve</strong>：按王教授 namespace 检索 <em>Skill</em></li>
+        <li>加载王教授的<strong>画像 Prompt + 上下文</strong>注入星火 X2 <em>L4</em></li>
+        <li>调用 <strong>/socratic-dialogue</strong>：生成反问或引导答案 <em>Skill</em></li>
+        <li>调用 <strong>/source-trace</strong>：逐句标注原始切片 <em>Skill</em></li>
+        <li>响应流式回传给学生 · 同步渲染<strong>溯源卡片</strong> <em>L5→L6</em></li>
+      </ol>
+    </div>
+
+    <!-- Flow 3 · 教师纠偏反向流 -->
+    <div class="flow-card f3">
+      <div class="fc-num">FLOW · 03 · 低频 · 高价值</div>
+      <h4>🔺 教师纠偏反向流</h4>
+      <p style="font-size:11px;color:var(--ink-mute);margin-bottom:12px;line-height:1.6">教师发现回答问题 → 纠偏 → 更新 Prompt 或知识库 → 下次回答改进。</p>
+      <ol>
+        <li>教师在纠偏面板点<strong>✏️ 我来修正</strong> <em>L6→L5</em></li>
+        <li>XClaw 调用 <strong>/correction-feedback</strong> Skill <em>新建</em></li>
+        <li>判断纠偏类型：<strong>Prompt 级</strong>（风格偏差）<br>/ <strong>知识库级</strong>（事实错误）</li>
+        <li>Prompt 级 → 更新 <strong>教师画像 Prompt 模板</strong> <em>L5</em></li>
+        <li>知识库级 → 写入 <strong>M3 问答标准库</strong> 供首选命中 <em>L3</em></li>
+        <li>创建<strong>新版本号</strong>，打包纠偏记录 <em>L5</em></li>
+        <li>下次学生提同类问题时，<strong>直接返回教师纠偏后的答案</strong> · 闭环完成</li>
+      </ol>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============ XClaw 能力清单 ============ -->
+<section class="capability-section">
+  <h2><span class="tag">CORE</span>XClaw 能力清单 · 10 项核心能力</h2>
+  <p class="sub">本方案对 XClaw 的依赖点 · 哪些是现有复用、哪些需要扩展、哪些需要新建</p>
+
+  <table class="cap-table">
+    <thead>
+      <tr>
+        <th style="width:5%">#</th>
+        <th style="width:20%">XClaw 能力</th>
+        <th style="width:10%">状态</th>
+        <th style="width:35%">在本方案中的作用</th>
+        <th style="width:30%">改造点</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="cap-num">01</td>
+        <td>
+          <div class="cap-name">Agent 运行时调度引擎</div>
+          <div class="cap-en">Agent Runtime Scheduler</div>
+        </td>
+        <td><span class="cap-status reuse">REUSE</span></td>
+        <td>学生每次提问的<strong>首站</strong>。负责意图识别、Skill 选择、任务编排、响应合成。</td>
+        <td>直接复用 XClaw v1.0 已有能力</td>
+      </tr>
+      <tr>
+        <td class="cap-num">02</td>
+        <td>
+          <div class="cap-name">多智能体 & Agent Meta 管理</div>
+          <div class="cap-en">Multi-Agent Registry</div>
+        </td>
+        <td><span class="cap-status new">NEW</span></td>
+        <td>每位教师注册为一个<strong>独立 Agent 实例</strong>，持有专属 Prompt、命名空间、风格元数据、纠偏版本。</td>
+        <td>XClaw 当前 Agent 概念需要扩展为"按用户多实例 + Meta 隔离"</td>
+      </tr>
+      <tr>
+        <td class="cap-num">03</td>
+        <td>
+          <div class="cap-name">教师画像引擎</div>
+          <div class="cap-en">Profile Extraction Engine</div>
+        </td>
+        <td><span class="cap-status new">NEW</span></td>
+        <td>从论文 / 讲义 / 视频转写中<strong>自动抽取</strong>教学风格标签、常用表达、解题路径，作为 Prompt 个性化的元数据来源。</td>
+        <td>新建 Skill + 数据管道</td>
+      </tr>
+      <tr>
+        <td class="cap-num">04</td>
+        <td>
+          <div class="cap-name">Skill 库与编排</div>
+          <div class="cap-en">Skill Library & Orchestration</div>
+        </td>
+        <td><span class="cap-status ext">EXT</span></td>
+        <td>本方案新增 6 个 Skill、复用 4 个，全部挂载到 XClaw Skill 库统一管理。</td>
+        <td>XClaw Skill 注册机制已有，本方案扩展 10 个具体 Skill</td>
+      </tr>
+      <tr>
+        <td class="cap-num">05</td>
+        <td>
+          <div class="cap-name">RAG 检索路由</div>
+          <div class="cap-en">RAG Retrieval Router</div>
+        </td>
+        <td><span class="cap-status ext">EXT</span></td>
+        <td>按<strong>教师命名空间</strong>向 Coral 发起检索，融合三路召回（向量 + 关键词 + 图谱）。</td>
+        <td>Coral E1 基础检索有，需增加多租户隔离和 namespace 路由</td>
+      </tr>
+      <tr>
+        <td class="cap-num">06</td>
+        <td>
+          <div class="cap-name">上下文管理</div>
+          <div class="cap-en">Multi-level Context Management</div>
+        </td>
+        <td><span class="cap-status new">NEW</span></td>
+        <td><strong>会话级</strong>（当前对话）/ <strong>学生级</strong>（这个学生的历史）/ <strong>课程级</strong>（这门课的公共上下文）三层上下文传递。</td>
+        <td>全新建设</td>
+      </tr>
+      <tr>
+        <td class="cap-num">07</td>
+        <td>
+          <div class="cap-name">溯源链路追踪</div>
+          <div class="cap-en">Provenance Trace</div>
+        </td>
+        <td><span class="cap-status ext">EXT</span></td>
+        <td>记录每次回答的"召回切片 → 重排位次 → LLM 引用 → 渲染句子"完整链路，供源溯源卡片使用。</td>
+        <td>Coral E3 底层能力有，需封装为 XClaw 可用 API</td>
+      </tr>
+      <tr>
+        <td class="cap-num">08</td>
+        <td>
+          <div class="cap-name">纠偏反馈回路</div>
+          <div class="cap-en">Correction Feedback Loop</div>
+        </td>
+        <td><span class="cap-status new">NEW</span></td>
+        <td>教师纠偏动作落库 · 区分 Prompt 级 vs 知识库级 · 反向注入 · 版本管理 · 下次同类问题直接返回修正答案。</td>
+        <td>全新建设 · 是"教师负责制"的技术体现</td>
+      </tr>
+      <tr>
+        <td class="cap-num">09</td>
+        <td>
+          <div class="cap-name">多租户隔离</div>
+          <div class="cap-en">Multi-Tenant Isolation</div>
+        </td>
+        <td><span class="cap-status ext">EXT</span></td>
+        <td>每位教师的知识库、Prompt、纠偏版本、上下文彼此隔离，互不干扰。是"一人一空间"的技术底座。</td>
+        <td>XClaw 已有简单隔离，本方案深化为教师级 namespace</td>
+      </tr>
+      <tr>
+        <td class="cap-num">10</td>
+        <td>
+          <div class="cap-name">MCP 集成接口</div>
+          <div class="cap-en">MCP Integration Layer</div>
+        </td>
+        <td><span class="cap-status ext">EXT</span></td>
+        <td>对接 <strong>Canvas / 小雅教务 / 星火 X2 / ASR / Embedding</strong> 的标准化协议，实现"融合共生"。</td>
+        <td>XClaw 已有 MCP 骨架，需实现 Canvas + 小雅的具体 connector</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
+<!-- ============ Skill 清单 ============ -->
+<section class="skill-section">
+  <h2><span class="tag">SKILLS</span>本方案调用的 10 个 Skill</h2>
+  <p class="sub">6 个新建 · 4 个现有复用 · 全部挂载到 XClaw 统一 Skill 库</p>
+
+  <div class="skill-grid">
+
+    <div class="skill-card new">
+      <div class="sk-head">
+        <span class="sk-slash">/teacher-profile-build</span>
+        <span class="sk-status">NEW</span>
+      </div>
+      <h4>教师画像构建</h4>
+      <p>从论文 / 讲义 / 视频转写中提取教学风格、常用表达、学科术语，生成个性化 Prompt 元数据。<strong>一次性 Skill</strong>，教师入驻时运行一次。</p>
+    </div>
+
+    <div class="skill-card new">
+      <div class="sk-head">
+        <span class="sk-slash">/teacher-kb-retrieve</span>
+        <span class="sk-status">NEW</span>
+      </div>
+      <h4>教师私有知识库检索</h4>
+      <p>按教师命名空间发起 RAG 召回，融合向量 + 关键词 + 图谱三路检索。<strong>高频 Skill</strong>，每次学生提问调用一次。</p>
+    </div>
+
+    <div class="skill-card new">
+      <div class="sk-head">
+        <span class="sk-slash">/socratic-dialogue</span>
+        <span class="sk-status">NEW</span>
+      </div>
+      <h4>苏格拉底式对话</h4>
+      <p>判断问题类型 · 决定是直接给答案还是反问引导 · 生成反问 · 控制轮次。本方案<strong>最有技术含量</strong>的 Skill。</p>
+    </div>
+
+    <div class="skill-card new">
+      <div class="sk-head">
+        <span class="sk-slash">/source-trace</span>
+        <span class="sk-status">NEW</span>
+      </div>
+      <h4>逐句源溯源</h4>
+      <p>在 LLM 生成后，对答案中每一句做"原始切片反向定位"，生成可渲染的溯源卡片数据（视频位置 / 论文 DOI / 教材页码）。</p>
+    </div>
+
+    <div class="skill-card new">
+      <div class="sk-head">
+        <span class="sk-slash">/correction-feedback</span>
+        <span class="sk-status">NEW</span>
+      </div>
+      <h4>教师纠偏反馈</h4>
+      <p>接收教师的👍/✏️/📚 动作，自动分类为 Prompt 级或知识库级纠偏，写入对应存储，生成新版本号。</p>
+    </div>
+
+    <div class="skill-card new">
+      <div class="sk-head">
+        <span class="sk-slash">/answer-hotmap</span>
+        <span class="sk-status">NEW</span>
+      </div>
+      <h4>答疑热力分析</h4>
+      <p>统计一段时间内"哪些问题被重复提问"、"哪些学生答疑最多"，推送给教师做线下指导——减负而非监控。</p>
+    </div>
+
+    <div class="skill-card reuse">
+      <div class="sk-head">
+        <span class="sk-slash">/multimodal-ingest</span>
+        <span class="sk-status">REUSE</span>
+      </div>
+      <h4>多模态采集（Coral T1）</h4>
+      <p>直接复用 Coral 的 T1 多模态采集工具——支持音视频图片解析、小程序拍照上传、微信公众号导入。</p>
+    </div>
+
+    <div class="skill-card reuse">
+      <div class="sk-head">
+        <span class="sk-slash">/doc-parse</span>
+        <span class="sk-status">REUSE</span>
+      </div>
+      <h4>文档解析（Coral T2）</h4>
+      <p>复用 Coral T2 文档解析。PDF/Word 效果 OK，PPT 解析本项目专项优化（见 A4 风险）。</p>
+    </div>
+
+    <div class="skill-card reuse">
+      <div class="sk-head">
+        <span class="sk-slash">/course-report</span>
+        <span class="sk-status">REUSE</span>
+      </div>
+      <h4>课程报告生成</h4>
+      <p>基于 XClaw 已有的"/course-summary" Skill 扩展：每节课后生成内容覆盖 / 互动参与 / 知识点分布报告。</p>
+    </div>
+
+    <div class="skill-card reuse">
+      <div class="sk-head">
+        <span class="sk-slash">/faq-match</span>
+        <span class="sk-status">REUSE</span>
+      </div>
+      <h4>FAQ 首选命中（Coral M3）</h4>
+      <p>学生问题先在教师审核过的问答标准库中匹配，命中则直接返回——这是回答质量的"安全垫"。</p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============ 工期 Summary ============ -->
+<section class="summary">
+  <h2 style="font-size:22px;font-weight:800;margin-bottom:8px;letter-spacing:-0.5px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;background:#B91C1C;color:#fff;padding:4px 10px;border-radius:4px;margin-right:12px;vertical-align:middle;letter-spacing:1.5px">ESTIMATE</span>工期与团队估算 · 一期 8 月底交付</h2>
+  <p style="font-size:13px;color:var(--ink-mute);margin-bottom:28px">完整估算详见技术可行性评估文档。此处为关键数字</p>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="sc-label">NET DEV</div>
+      <div class="sc-val">22<small>人月</small></div>
+      <div class="sc-desc">8 层 · 27 组件 · 10 Skill 的<strong>净开发</strong>工作量</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">TOTAL</div>
+      <div class="sc-val">29<small>人月</small></div>
+      <div class="sc-desc">含测试、联调、修复（+30% buffer）</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">TEAM</div>
+      <div class="sc-val">7<small>人峰值</small></div>
+      <div class="sc-desc">PM 1 · 架构 1 · 后端 2 · 算法 1 · 前端 2 · 测试 0.5</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">SAMPLE</div>
+      <div class="sc-val">3<small>位教师</small></div>
+      <div class="sc-desc">一期样板教师数量 · 二期扩至 20-30 · 三期全校</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ Footer ============ -->
+<footer class="footer">
+  <div class="brand">同济教师数字分身 · 系统架构图 V1</div>
+  <div class="meta">讯飞 AI 教学产品部 · 2026-04-13 · 基于 XClaw Agent Runtime · 为同济大学教学平台标杆项目定制</div>
+</footer>
+
+</body>
+</html>
