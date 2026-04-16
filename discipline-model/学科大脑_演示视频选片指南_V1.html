@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>学科大脑 · 演示视频选片指南 · 哪些 Demo 值得做视频</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=Noto+Serif+SC:wght@400;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#23B283;--brand-dark:#158C68;--brand-bg:#EBF7F1;
+  --text-1:#12151A;--text-2:#4B535C;--text-3:#7B838C;--text-4:#A9B0B8;
+  --bg:#F7F9FB;--white:#FFFFFF;
+  --border:#E8ECF0;--border-soft:#F0F2F5;
+  --blue:#0077FF;--blue-bg:#EBF5FF;
+  --orange:#FC7819;--orange-bg:#FFF4E6;
+  --purple:#7C5CFC;--purple-bg:#F3EEFF;
+  --gold:#F0A742;--gold-bg:#FFF5E5;
+  --pink:#EC4899;--pink-bg:#FDF2F8;
+  --cyan:#06B6D4;--cyan-bg:#ECFEFF;
+  --red:#F53B3B;--red-bg:#FEF0F0;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Noto Sans SC','PingFang SC',sans-serif;
+  background:var(--bg);color:var(--text-1);font-size:15px;line-height:1.8;
+  -webkit-font-smoothing:antialiased;
+}
+.page{max-width:960px;margin:0 auto;padding:60px 40px 100px;}
+
+/* ============ 通用组件 ============ */
+.section{margin-bottom:52px;}
+.section-title{
+  font-family:'Noto Serif SC',serif;
+  font-size:24px;font-weight:900;margin-bottom:8px;
+  display:flex;align-items:center;gap:12px;
+  letter-spacing:-0.01em;
+}
+.section-title::before{content:'';width:5px;height:22px;background:var(--brand);border-radius:3px;}
+.section-sub{font-size:14px;color:var(--text-3);margin-bottom:24px;line-height:1.7;}
+
+.card{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:16px;padding:28px 32px;margin-bottom:18px;
+  box-shadow:0 2px 8px rgba(18,21,26,0.03);
+}
+
+/* ============ Cover ============ */
+.cover{
+  text-align:center;padding:72px 40px 56px;margin-bottom:52px;
+  background:linear-gradient(135deg,#E8F5EF 0%,#F0F9F5 50%,var(--bg) 100%);
+  border-radius:24px;border:1px solid var(--border);position:relative;overflow:hidden;
+}
+.cover::before{content:'';position:absolute;right:-80px;top:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(35,178,131,0.15),transparent 70%);}
+.cover-label{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--white);padding:6px 18px;border-radius:999px;
+  font-size:12px;color:var(--brand);font-weight:600;
+  border:1px solid rgba(35,178,131,0.2);margin-bottom:24px;
+  font-family:'JetBrains Mono',monospace;letter-spacing:0.08em;
+}
+.cover h1{
+  font-family:'Noto Serif SC',serif;
+  font-size:38px;font-weight:900;letter-spacing:-0.02em;
+  line-height:1.2;margin-bottom:16px;
+}
+.cover h1 .accent{background:linear-gradient(90deg,var(--brand),var(--brand-dark));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.cover-desc{font-size:15px;color:var(--text-2);max-width:640px;margin:0 auto 28px;line-height:1.85;}
+.cover-stats{display:flex;justify-content:center;gap:40px;font-size:13px;color:var(--text-3);}
+.cover-stats strong{color:var(--text-1);font-weight:700;}
+
+/* ============ 评判标准 ============ */
+.criteria-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.criteria{
+  padding:22px 24px;background:var(--white);border:1px solid var(--border);
+  border-radius:14px;border-top:3px solid var(--brand);
+}
+.criteria .icon{font-size:28px;margin-bottom:12px;}
+.criteria h3{font-size:15px;font-weight:800;margin-bottom:6px;color:var(--text-1);}
+.criteria .what{font-size:13px;color:var(--text-2);margin-bottom:8px;line-height:1.7;}
+.criteria .fail{
+  font-size:12px;color:var(--red);
+  padding:8px 12px;background:var(--red-bg);border-radius:8px;line-height:1.6;
+}
+
+/* ============ 评级卡片 ============ */
+.tier-label{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;font-weight:700;letter-spacing:0.12em;
+  padding:6px 16px;border-radius:8px;margin-bottom:16px;
+}
+.tier-label.s{background:linear-gradient(135deg,#FEF3C7,#FFF7ED);color:#92400E;border:1px solid #FCD34D;}
+.tier-label.a{background:var(--blue-bg);color:var(--blue);border:1px solid #93C5FD;}
+.tier-label.b{background:var(--bg);color:var(--text-3);border:1px solid var(--border);}
+.tier-desc{font-size:13px;color:var(--text-3);margin-bottom:18px;}
+
+.demo-row{
+  display:grid;grid-template-columns:60px 1fr;gap:18px;
+  padding:20px 24px;background:var(--white);border:1px solid var(--border);
+  border-radius:14px;margin-bottom:12px;
+  transition:all .2s;position:relative;overflow:hidden;
+}
+.demo-row::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:var(--dc);
+}
+.demo-row:hover{box-shadow:0 4px 16px rgba(18,21,26,0.06);transform:translateX(3px);}
+
+.demo-icon{
+  width:56px;height:56px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;font-weight:900;
+  font-family:'Noto Serif SC',serif;
+  color:var(--dc);background:var(--dc-bg);
+}
+.demo-body{display:flex;flex-direction:column;gap:8px;}
+.demo-head{display:flex;align-items:center;gap:12px;}
+.demo-name{font-size:16px;font-weight:800;color:var(--text-1);}
+.demo-badge{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:600;letter-spacing:0.08em;
+  padding:3px 9px;border-radius:5px;
+}
+.demo-badge.scene{background:var(--brand-bg);color:var(--brand);}
+.demo-badge.tool{background:var(--orange-bg);color:var(--orange);}
+.demo-badge.engine{background:var(--gold-bg);color:var(--gold);}
+.demo-badge.backend{background:var(--purple-bg);color:var(--purple);}
+.demo-badge.frontend{background:var(--blue-bg);color:var(--blue);}
+
+.demo-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;}
+.demo-field{}
+.demo-field-label{
+  font-size:10px;color:var(--text-4);font-weight:600;
+  letter-spacing:0.08em;margin-bottom:3px;
+  font-family:'JetBrains Mono',monospace;
+}
+.demo-field-value{font-size:13px;color:var(--text-1);line-height:1.65;}
+.demo-field-value strong{color:var(--dc);}
+.demo-field.full{grid-column:span 2;}
+
+.demo-sales{
+  margin-top:6px;padding:10px 14px;
+  background:#FAFBFC;border-radius:8px;border:1px solid var(--border-soft);
+  font-size:12px;color:var(--text-2);line-height:1.7;
+  display:flex;align-items:flex-start;gap:8px;
+}
+.demo-sales::before{content:'💬';font-size:14px;flex-shrink:0;margin-top:1px;}
+.demo-sales em{font-style:normal;color:var(--brand);font-weight:700;}
+
+/* B 级简化行 */
+.b-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;background:var(--white);border:1px solid var(--border);
+  border-radius:10px;margin-bottom:8px;
+  font-size:13px;
+}
+.b-name{font-weight:600;color:var(--text-1);min-width:160px;}
+.b-reason{color:var(--text-3);flex:1;}
+.b-use{
+  font-size:11px;color:var(--text-2);
+  padding:4px 10px;background:var(--bg);border-radius:6px;
+  flex-shrink:0;
+}
+
+/* ============ 推荐片单 ============ */
+.pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.pick{
+  padding:20px 22px;background:var(--white);border:1px solid var(--border);
+  border-radius:14px;display:flex;align-items:flex-start;gap:16px;
+  transition:all .2s;
+}
+.pick:hover{box-shadow:0 4px 16px rgba(18,21,26,0.06);}
+.pick-num{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:16px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.pick-info{flex:1;}
+.pick-title{font-size:14px;font-weight:700;color:var(--text-1);margin-bottom:3px;}
+.pick-question{font-size:12px;color:var(--text-3);line-height:1.6;}
+.pick-question strong{color:var(--text-2);}
+.pick-dur{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--text-3);flex-shrink:0;
+  padding:4px 10px;background:var(--bg);border-radius:6px;
+  align-self:center;
+}
+
+/* ============ 决策链 ============ */
+.chain{display:flex;flex-direction:column;gap:0;}
+.chain-step{
+  display:grid;grid-template-columns:240px 1fr;gap:24px;
+  padding:24px 28px;background:var(--white);border:1px solid var(--border);
+  border-radius:14px;margin-bottom:4px;
+  position:relative;
+}
+.chain-step:not(:last-child)::after{
+  content:'↓';position:absolute;bottom:-14px;left:120px;
+  width:24px;height:24px;background:var(--bg);border:1px solid var(--border);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--text-4);z-index:1;
+}
+.chain-gate{display:flex;flex-direction:column;gap:4px;}
+.chain-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:var(--text-4);letter-spacing:0.1em;
+}
+.chain-question{font-size:15px;font-weight:800;color:var(--text-1);line-height:1.3;}
+.chain-answer{
+  font-size:13px;color:var(--text-2);line-height:1.7;
+}
+.chain-videos{
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;
+}
+.chain-chip{
+  padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;
+  border:1px solid var(--border);background:var(--bg);color:var(--text-2);
+  display:flex;align-items:center;gap:6px;
+}
+.chain-chip .dot{width:6px;height:6px;border-radius:50%;}
+.chain-result{
+  font-size:12px;color:var(--brand);font-weight:600;
+  margin-top:8px;padding:6px 12px;background:var(--brand-bg);
+  border-radius:6px;display:inline-block;
+}
+
+/* ============ 销售用法 ============ */
+.use-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.use-card{
+  padding:20px 22px;background:var(--white);border:1px solid var(--border);
+  border-radius:14px;
+}
+.use-scene{
+  font-size:11px;font-weight:700;color:var(--brand);
+  letter-spacing:0.05em;margin-bottom:8px;
+  font-family:'JetBrains Mono',monospace;
+}
+.use-title{font-size:15px;font-weight:800;color:var(--text-1);margin-bottom:8px;}
+.use-videos{
+  display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;
+}
+.use-chip{
+  padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;
+  background:var(--brand-bg);color:var(--brand);
+}
+.use-text{
+  font-size:12px;color:var(--text-2);line-height:1.7;
+  padding:10px 14px;background:#FAFBFC;border-radius:8px;
+  border-left:3px solid var(--brand);
+}
+
+/* ============ Footer ============ */
+footer{
+  margin-top:60px;padding-top:24px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;color:var(--text-3);
+}
+footer .name{color:var(--brand);font-weight:700;}
+
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ============ COVER ============ -->
+  <div class="cover">
+    <div class="cover-label">VIDEO SELECTION GUIDE · V1</div>
+    <h1>哪些 Demo <span class="accent">值得做成视频</span></h1>
+    <p class="cover-desc">
+      从 35+ 个演示页面中精选 · 每一条视频解决客户的一个具体疑问<br>
+      客户看完想买 · 销售看完知道怎么用 · 每条独立分发
+    </p>
+    <div class="cover-stats">
+      <span>全量 <strong>35+ 页面</strong></span>
+      <span>精选 <strong>8 条视频</strong></span>
+      <span>总时长 <strong>~7 分钟</strong></span>
+      <span>单条 <strong>≤ 1 分钟</strong></span>
+    </div>
+  </div>
+
+  <!-- ============ 评判标准 ============ -->
+  <div class="section">
+    <h2 class="section-title">一个 Demo 值得做视频的三个条件</h2>
+    <p class="section-sub">三个条件必须同时满足。缺任何一个，做了视频也没人看。</p>
+    <div class="criteria-grid">
+      <div class="criteria">
+        <div class="icon">🎬</div>
+        <h3>有画面</h3>
+        <div class="what">60 秒内能出现一个"让人停下来看"的视觉动作——动画、数据跳动、界面切换</div>
+        <div class="fail">✕ 不满足 → 没人点开 / 3 秒划走</div>
+      </div>
+      <div class="criteria">
+        <div class="icon">❓</div>
+        <h3>解决一个具体疑问</h3>
+        <div class="what">客户脑子里有一个问题，看完这条视频后这个问题直接消除</div>
+        <div class="fail">✕ 不满足 → 看完觉得"跟我有什么关系"</div>
+      </div>
+      <div class="criteria">
+        <div class="icon">💬</div>
+        <h3>销售能一句话转发</h3>
+        <div class="what">发给客户时能配一句话说清楚"你看这个"——不需要解释上下文</div>
+        <div class="fail">✕ 不满足 → 销售自己都不知道什么场合用</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ S 级 ============ -->
+  <div class="section">
+    <h2 class="section-title">全量评估 · 35+ 页面逐一过筛</h2>
+    <p class="section-sub">S 级必做、A 级针对特定角色做、B 级不做独立视频但在其他视频中一笔带过。</p>
+
+    <div class="tier-label s">S 级 · 必做 · 看完想买</div>
+    <p class="tier-desc">这 4 个 demo 同时满足"有画面 + 解决痛点 + 销售能转发"三个条件，是整个产品最有说服力的 4 张牌。</p>
+
+    <!-- S1: AI 备课 -->
+    <div class="demo-row" style="--dc:var(--blue);--dc-bg:var(--blue-bg);">
+      <div class="demo-icon">备</div>
+      <div class="demo-body">
+        <div class="demo-head">
+          <span class="demo-name">Demo 02 · AI 备课</span>
+          <span class="demo-badge scene">场景 · 教师</span>
+        </div>
+        <div class="demo-fields">
+          <div class="demo-field">
+            <div class="demo-field-label">有画面</div>
+            <div class="demo-field-value">XClaw 气泡<strong>主动弹出</strong> → 侧栏对话 → 调度链 7 步变绿 → 资源自动回流到课程结构图</div>
+          </div>
+          <div class="demo-field">
+            <div class="demo-field-label">解决什么疑问</div>
+            <div class="demo-field-value">"AI 能帮老师做什么？" → <strong>备课从 2 小时变 2 分钟</strong></div>
+          </div>
+          <div class="demo-field full">
+            <div class="demo-field-label">为什么客户看完想买</div>
+            <div class="demo-field-value">每个老师每天都在备课，<strong>痛点 100% 共鸣</strong>。看到"AI 主动来找老师"这一幕，客户会从"这跟我有什么关系"变成"这个我明天就想用"。核心差异：不是老师找 AI，是 AI 找老师。</div>
+          </div>
+        </div>
+        <div class="demo-sales">
+          销售转发话术：<em>"王总你看，老师点一个'好啊'备课就做完了"</em>
+        </div>
+      </div>
+    </div>
+
+    <!-- S2: 建课图谱 -->
+    <div class="demo-row" style="--dc:var(--orange);--dc-bg:var(--orange-bg);">
+      <div class="demo-icon">建</div>
+      <div class="demo-body">
+        <div class="demo-head">
+          <span class="demo-name">Demo 01 · 建课图谱</span>
+          <span class="demo-badge scene">场景 · 技术</span>
+        </div>
+        <div class="demo-fields">
+          <div class="demo-field">
+            <div class="demo-field-label">有画面</div>
+            <div class="demo-field-value"><strong>SVG 图谱从 0 生长到 86 个节点</strong>的 6 秒动画 · 全部 demo 里最"出片"的画面</div>
+          </div>
+          <div class="demo-field">
+            <div class="demo-field-label">解决什么疑问</div>
+            <div class="demo-field-value">"知识图谱到底是什么？" → <strong>不是 PPT 概念图，是自动从教材里长出来的</strong></div>
+          </div>
+          <div class="demo-field full">
+            <div class="demo-field-label">为什么客户看完想买</div>
+            <div class="demo-field-value">以前教研团队手动标注知识图谱要 <strong>3 周</strong>，现在上传教材 <strong>4 秒</strong>完成。效率对比 100 倍。SVG 生长动画是客户<strong>转发朋友圈概率最高</strong>的画面。技术人看了会认定"这不是 PPT 产品"。</div>
+          </div>
+        </div>
+        <div class="demo-sales">
+          销售转发话术：<em>"你看这个动画，4 秒钟一本教材变成知识图谱"</em>
+        </div>
+      </div>
+    </div>
+
+    <!-- S3: 拍照答疑 -->
+    <div class="demo-row" style="--dc:var(--purple);--dc-bg:var(--purple-bg);">
+      <div class="demo-icon">学</div>
+      <div class="demo-body">
+        <div class="demo-head">
+          <span class="demo-name">Demo 04 · 拍照答疑</span>
+          <span class="demo-badge scene">场景 · 学生</span>
+        </div>
+        <div class="demo-fields">
+          <div class="demo-field">
+            <div class="demo-field-label">有画面</div>
+            <div class="demo-field-value">iPhone 模拟器 + <strong>三轮苏格拉底追问</strong> + 学生自己推出答案 + 错题本自动同步</div>
+          </div>
+          <div class="demo-field">
+            <div class="demo-field-label">解决什么疑问</div>
+            <div class="demo-field-value">"AI 会不会让学生变懒抄答案？" → <strong>我们不给答案，帮学生自己推出来</strong></div>
+          </div>
+          <div class="demo-field full">
+            <div class="demo-field-label">为什么客户看完想买</div>
+            <div class="demo-field-value">直接回应教研界最大的恐惧。教务处长看完会从 <strong>"AI 进校园我反对"变成"这个可以试试"</strong>。这不是功能演示，是教育理念演示——唯一能通过教研评审的答疑方式。</div>
+          </div>
+        </div>
+        <div class="demo-sales">
+          销售转发话术：<em>"教研处最担心学生抄答案，你让他看这个"</em>
+        </div>
+      </div>
+    </div>
+
+    <!-- S4: 引擎总览 -->
+    <div class="demo-row" style="--dc:var(--gold);--dc-bg:var(--gold-bg);">
+      <div class="demo-icon">⚙</div>
+      <div class="demo-body">
+        <div class="demo-head">
+          <span class="demo-name">引擎 Dashboard</span>
+          <span class="demo-badge engine">引擎层</span>
+        </div>
+        <div class="demo-fields">
+          <div class="demo-field">
+            <div class="demo-field-label">有画面</div>
+            <div class="demo-field-value"><strong>8 个引擎同时亮绿灯</strong>的仪表盘 · 实时调用量/成功率/延时指标</div>
+          </div>
+          <div class="demo-field">
+            <div class="demo-field-label">解决什么疑问</div>
+            <div class="demo-field-value">"你们不就是套壳 ChatGPT？" → <strong>有 8 层引擎叠加，答对是体系不是运气</strong></div>
+          </div>
+          <div class="demo-field full">
+            <div class="demo-field-label">为什么客户看完想买</div>
+            <div class="demo-field-value">一张图干掉<strong>"套壳"质疑</strong>。打开引擎 Dashboard 的一瞬间，客户会意识到"这背后有 8 个独立引擎在跑，检索、溯源、兜底、改写……这不是聊天框"。CTO / 技术评审看完会建立技术信任。</div>
+          </div>
+        </div>
+        <div class="demo-sales">
+          销售转发话术：<em>"客户说你们就是 ChatGPT 套壳，你把这个甩给他"</em>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ A 级 ============ -->
+  <div class="section">
+    <div class="tier-label a">A 级 · 值得做 · 针对特定角色有杀伤力</div>
+    <p class="tier-desc">不是群发朋友圈，是精准推送。销售判断客户卡在哪个疑问上，发对应的那一条。</p>
+
+    <div class="demo-row" style="--dc:var(--pink);--dc-bg:var(--pink-bg);">
+      <div class="demo-icon">🏛</div>
+      <div class="demo-body">
+        <div class="demo-head">
+          <span class="demo-name">Demo 07 · 校管驾驶舱</span>
+          <span class="demo-badge scene">场景 · 校管</span>
+        </div>
+        <div class="demo-fields">
+          <div class="demo-field">
+            <div class="demo-field-label">解决什么疑问</div>
+            <div class="demo-field-value">"我花了这笔钱，<strong>怎么证明值</strong>？" → 8462 知识点、18 万次答疑、预算执行 67%</div>
+          </div>
+          <div class="demo-field">
+            <div class="demo-field-label">谁最该看</div>
+            <div class="demo-field-value"><strong>教务处长 / 副校长 / 预算审批人</strong> · 是"批钱的人"不是"用产品的人"</div>
+          </div>
+        </div>
+        <div class="demo-sales">销售转发话术：<em>"校长看这张图就知道钱花在哪了"</em></div>
+      </div>
+    </div>
+
+    <div class="demo-row" style="--dc:var(--cyan);--dc-bg:var(--cyan-bg);">
+      <div class="demo-icon">📄</div>
+      <div class="demo-body">
+        <div class="demo-head">
+          <span class="demo-name">T01 · 文档解析工作台</span>
+          <span class="demo-badge tool">工具层</span>
+        </div>
+        <div class="demo-fields">
+          <div class="demo-field">
+            <div class="demo-field-label">解决什么疑问</div>
+            <div class="demo-field-value">"教材扔进去之后<strong>到底发生了什么</strong>？" → 看得见的拆分 · 识别 · 标注过程</div>
+          </div>
+          <div class="demo-field">
+            <div class="demo-field-label">谁最该看</div>
+            <div class="demo-field-value"><strong>实施团队 / 技术评审</strong> · 证明"不是黑箱"的信任构建</div>
+          </div>
+        </div>
+        <div class="demo-sales">销售转发话术：<em>"看看教材变成知识的全过程，每一步可审可控"</em></div>
+      </div>
+    </div>
+
+    <div class="demo-row" style="--dc:var(--purple);--dc-bg:var(--purple-bg);">
+      <div class="demo-icon">🎛</div>
+      <div class="demo-body">
+        <div class="demo-head">
+          <span class="demo-name">管理后台首页</span>
+          <span class="demo-badge backend">管理后台</span>
+        </div>
+        <div class="demo-fields">
+          <div class="demo-field">
+            <div class="demo-field-label">解决什么疑问</div>
+            <div class="demo-field-value">"买了之后<strong>谁来管、会不会烂尾</strong>？" → 有完整的运营管理后台</div>
+          </div>
+          <div class="demo-field">
+            <div class="demo-field-label">谁最该看</div>
+            <div class="demo-field-value"><strong>运营负责人 / 项目经理</strong> · 消除"买了没人维护"的临门一脚</div>
+          </div>
+        </div>
+        <div class="demo-sales">销售转发话术：<em>"不会烂尾，有完整运营后台，你看一下"</em></div>
+      </div>
+    </div>
+
+    <div class="demo-row" style="--dc:var(--blue);--dc-bg:var(--blue-bg);">
+      <div class="demo-icon">🪸</div>
+      <div class="demo-body">
+        <div class="demo-head">
+          <span class="demo-name">知识库前台 Demo V3</span>
+          <span class="demo-badge frontend">知识库前台</span>
+        </div>
+        <div class="demo-fields">
+          <div class="demo-field">
+            <div class="demo-field-label">解决什么疑问</div>
+            <div class="demo-field-value">"老师<strong>实际看到的界面长什么样</strong>？" → 已感兴趣的人来确认产品形态</div>
+          </div>
+          <div class="demo-field">
+            <div class="demo-field-label">谁最该看</div>
+            <div class="demo-field-value"><strong>一线教师 / 教研主任</strong> · 是"确认型"而非"说服型"</div>
+          </div>
+        </div>
+        <div class="demo-sales">销售转发话术：<em>"这是老师实际用的界面，你看看是不是你想要的"</em></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ B 级 ============ -->
+  <div class="section">
+    <div class="tier-label b">B 级 · 不做独立视频 · 在其他视频中一笔带过</div>
+    <p class="tier-desc">这些 demo 有价值但不够出彩——太静态、太细节、太窄众，不适合独立成片。在 S/A 级视频里用 3 秒一带而过就够了。</p>
+
+    <div class="b-row"><span class="b-name">Demo 03 · 课堂讲授</span><span class="b-reason">画面静态（等学生提问）· 开头 10 秒无动作</span><span class="b-use">全景速览中 3 秒带过</span></div>
+    <div class="b-row"><span class="b-name">Demo 05 · 图谱组卷</span><span class="b-reason">交互是"点选节点"不够戏剧性</span><span class="b-use">备课视频里提一句"组卷也能做"</span></div>
+    <div class="b-row"><span class="b-name">Demo 06 · 督导驾驶舱</span><span class="b-reason">太内部管理 · 客户第一眼不关心</span><span class="b-use">合并到管理后台视频里</span></div>
+    <div class="b-row"><span class="b-name">Demo 08 · 教研运营台</span><span class="b-reason">教研场景太窄 · 非通用痛点</span><span class="b-use">留在文档/方案里</span></div>
+    <div class="b-row"><span class="b-name">T02-T10 各工具子页</span><span class="b-reason">太细节 · 单看一个工具没有故事性</span><span class="b-use">工具视频里用 dashboard 一扫而过</span></div>
+    <div class="b-row"><span class="b-name">引擎子页面 ×4</span><span class="b-reason">太技术 · 非目标受众理解范围</span><span class="b-use">引擎总览视频里一句话带过</span></div>
+    <div class="b-row"><span class="b-name">后台子页面 ×5</span><span class="b-reason">太细节 · 单看一个模块没有完整感</span><span class="b-use">后台视频里快速点入 2 秒</span></div>
+    <div class="b-row"><span class="b-name">模型训练平台</span><span class="b-reason">功能偏未来态 · 截图不够成熟</span><span class="b-use">全景速览里一句"还有微调能力"</span></div>
+  </div>
+
+  <!-- ============ 最终片单 ============ -->
+  <div class="section">
+    <h2 class="section-title">最终片单 · 8 条独立短视频</h2>
+    <p class="section-sub">S 级全做 + A 级挑 4 个最有杀伤力的 · 每条独立分发、不依赖前后文。</p>
+    <div class="pick-grid">
+      <div class="pick">
+        <div class="pick-num" style="background:var(--brand);">01</div>
+        <div class="pick-info">
+          <div class="pick-title">全景价值</div>
+          <div class="pick-question"><strong>疑问</strong>：学科大脑到底是什么？</div>
+        </div>
+        <div class="pick-dur">2:30</div>
+      </div>
+      <div class="pick">
+        <div class="pick-num" style="background:var(--blue);">02</div>
+        <div class="pick-info">
+          <div class="pick-title">AI 备课</div>
+          <div class="pick-question"><strong>疑问</strong>：AI 能帮老师做什么？</div>
+        </div>
+        <div class="pick-dur">1:00</div>
+      </div>
+      <div class="pick">
+        <div class="pick-num" style="background:var(--orange);">03</div>
+        <div class="pick-info">
+          <div class="pick-title">建课图谱</div>
+          <div class="pick-question"><strong>疑问</strong>：知识图谱怎么来的？</div>
+        </div>
+        <div class="pick-dur">0:50</div>
+      </div>
+      <div class="pick">
+        <div class="pick-num" style="background:var(--purple);">04</div>
+        <div class="pick-info">
+          <div class="pick-title">学生答疑</div>
+          <div class="pick-question"><strong>疑问</strong>：AI 会让学生抄答案吗？</div>
+        </div>
+        <div class="pick-dur">0:50</div>
+      </div>
+      <div class="pick">
+        <div class="pick-num" style="background:var(--gold);">05</div>
+        <div class="pick-info">
+          <div class="pick-title">引擎总览</div>
+          <div class="pick-question"><strong>疑问</strong>：你们不就是套壳 ChatGPT？</div>
+        </div>
+        <div class="pick-dur">0:50</div>
+      </div>
+      <div class="pick">
+        <div class="pick-num" style="background:var(--cyan);">06</div>
+        <div class="pick-info">
+          <div class="pick-title">文档解析</div>
+          <div class="pick-question"><strong>疑问</strong>：知识怎么进去的？</div>
+        </div>
+        <div class="pick-dur">1:00</div>
+      </div>
+      <div class="pick">
+        <div class="pick-num" style="background:var(--pink);">07</div>
+        <div class="pick-info">
+          <div class="pick-title">校管驾驶舱</div>
+          <div class="pick-question"><strong>疑问</strong>：花了钱怎么证明值？</div>
+        </div>
+        <div class="pick-dur">0:45</div>
+      </div>
+      <div class="pick">
+        <div class="pick-num" style="background:var(--purple);">08</div>
+        <div class="pick-info">
+          <div class="pick-title">管理后台</div>
+          <div class="pick-question"><strong>疑问</strong>：买了之后谁来管？</div>
+        </div>
+        <div class="pick-dur">0:50</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 决策链 ============ -->
+  <div class="section">
+    <h2 class="section-title">客户购买决策链 × 视频精准卡位</h2>
+    <p class="section-sub">客户从"不知道"到"签合同"要过 6 关。每一关用哪条视频打。</p>
+
+    <div class="chain">
+      <div class="chain-step">
+        <div class="chain-gate">
+          <div class="chain-num">GATE 01</div>
+          <div class="chain-question">"这是什么东西？"</div>
+        </div>
+        <div class="chain-answer">
+          <div class="chain-videos">
+            <span class="chain-chip"><span class="dot" style="background:var(--brand);"></span>视频 1 · 全景价值</span>
+          </div>
+          <div class="chain-result">→ 从"没听过"变成"有点意思"</div>
+        </div>
+      </div>
+
+      <div class="chain-step">
+        <div class="chain-gate">
+          <div class="chain-num">GATE 02</div>
+          <div class="chain-question">"跟我有什么关系？"</div>
+        </div>
+        <div class="chain-answer">
+          <div class="chain-videos">
+            <span class="chain-chip"><span class="dot" style="background:var(--blue);"></span>视频 2 · AI 备课</span>
+          </div>
+          <div class="chain-result">→ 从"跟我无关"变成"我明天就想用"</div>
+        </div>
+      </div>
+
+      <div class="chain-step">
+        <div class="chain-gate">
+          <div class="chain-num">GATE 03</div>
+          <div class="chain-question">"底下靠谱吗？不是 PPT 产品吧？"</div>
+        </div>
+        <div class="chain-answer">
+          <div class="chain-videos">
+            <span class="chain-chip"><span class="dot" style="background:var(--orange);"></span>视频 3 · 建课图谱</span>
+            <span class="chain-chip"><span class="dot" style="background:var(--gold);"></span>视频 5 · 引擎总览</span>
+          </div>
+          <div class="chain-result">→ 从"怀疑"变成"技术是真的"</div>
+        </div>
+      </div>
+
+      <div class="chain-step">
+        <div class="chain-gate">
+          <div class="chain-num">GATE 04</div>
+          <div class="chain-question">"教研处会不会反对？"</div>
+        </div>
+        <div class="chain-answer">
+          <div class="chain-videos">
+            <span class="chain-chip"><span class="dot" style="background:var(--purple);"></span>视频 4 · 学生答疑</span>
+          </div>
+          <div class="chain-result">→ 从"担心伦理风险"变成"这个方式可以接受"</div>
+        </div>
+      </div>
+
+      <div class="chain-step">
+        <div class="chain-gate">
+          <div class="chain-num">GATE 05</div>
+          <div class="chain-question">"花这笔钱值不值？"</div>
+        </div>
+        <div class="chain-answer">
+          <div class="chain-videos">
+            <span class="chain-chip"><span class="dot" style="background:var(--pink);"></span>视频 7 · 校管驾驶舱</span>
+          </div>
+          <div class="chain-result">→ 从"预算犹豫"变成"可以量化 ROI"</div>
+        </div>
+      </div>
+
+      <div class="chain-step">
+        <div class="chain-gate">
+          <div class="chain-num">GATE 06</div>
+          <div class="chain-question">"买了不会烂尾吧？"</div>
+        </div>
+        <div class="chain-answer">
+          <div class="chain-videos">
+            <span class="chain-chip"><span class="dot" style="background:var(--cyan);"></span>视频 6 · 文档解析</span>
+            <span class="chain-chip"><span class="dot" style="background:var(--purple);"></span>视频 8 · 管理后台</span>
+          </div>
+          <div class="chain-result">→ 从"怕没人维护"变成"有体系、可运营" → ✅ 签合同</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 销售使用场景 ============ -->
+  <div class="section">
+    <h2 class="section-title">销售怎么用这 8 条视频</h2>
+    <p class="section-sub">不是 8 条一起发。是判断客户卡在哪一关，精准推对应的那一条。</p>
+
+    <div class="use-grid">
+      <div class="use-card">
+        <div class="use-scene">场景 1 · 初次接触</div>
+        <div class="use-title">微信加了客户 / 朋友圈种草</div>
+        <div class="use-videos">
+          <span class="use-chip">视频 1 全景</span>
+          <span class="use-chip">视频 2 备课</span>
+        </div>
+        <div class="use-text">"2 分钟了解学科大脑。老师点一个按钮备课就做完了。"</div>
+      </div>
+
+      <div class="use-card">
+        <div class="use-scene">场景 2 · 被质疑"套壳"</div>
+        <div class="use-title">客户说"你们就是 ChatGPT 加个壳"</div>
+        <div class="use-videos">
+          <span class="use-chip">视频 5 引擎总览</span>
+        </div>
+        <div class="use-text">"8 个引擎同时跑，检索、溯源、兜底、改写……哪个套壳产品有这个？"</div>
+      </div>
+
+      <div class="use-card">
+        <div class="use-scene">场景 3 · 教研处犹豫</div>
+        <div class="use-title">教务处长担心"AI 让学生变懒"</div>
+        <div class="use-videos">
+          <span class="use-chip">视频 4 学生答疑</span>
+        </div>
+        <div class="use-text">"我们不给学生答案，帮学生自己推出来。您看一下这个 50 秒的演示。"</div>
+      </div>
+
+      <div class="use-card">
+        <div class="use-scene">场景 4 · 领导要看 ROI</div>
+        <div class="use-title">预算审批卡在校领导那里</div>
+        <div class="use-videos">
+          <span class="use-chip">视频 7 校管驾驶舱</span>
+        </div>
+        <div class="use-text">"8462 个知识点、18 万次答疑、预算执行 67%——一张图给校长看。"</div>
+      </div>
+
+      <div class="use-card">
+        <div class="use-scene">场景 5 · 技术评审 / 招投标</div>
+        <div class="use-title">CTO 要求看底层技术和交付体系</div>
+        <div class="use-videos">
+          <span class="use-chip">视频 3 图谱</span>
+          <span class="use-chip">视频 5 引擎</span>
+          <span class="use-chip">视频 6 工具</span>
+        </div>
+        <div class="use-text">"底层技术和交付体系全透明，3 条视频 3 分钟。"</div>
+      </div>
+
+      <div class="use-card">
+        <div class="use-scene">场景 6 · 即将签约但犹豫</div>
+        <div class="use-title">客户说"再考虑考虑"</div>
+        <div class="use-videos">
+          <span class="use-chip">视频 8 管理后台</span>
+        </div>
+        <div class="use-text">"买了不会烂尾。有完整的运营管理后台，术语审核、权限配置、Agent 管理都在里面。"</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>
+      <div style="font-weight:600;color:var(--text-2);margin-bottom:4px;">学科大脑 · 演示视频选片指南 · V1</div>
+      <div>作者 · <span class="name">婷婷</span> · 2026-04-16 · 内部使用</div>
+    </div>
+    <div style="text-align:right;">
+      <div>AI 教学产品部</div>
+      <div>35+ 页面过筛 → 8 条精选</div>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

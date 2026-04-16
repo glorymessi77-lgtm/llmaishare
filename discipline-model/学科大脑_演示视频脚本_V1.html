@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>学科大脑 · 演示视频脚本 · 7 条独立短视频</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=Noto+Serif+SC:wght@400;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#23B283;--brand-dark:#158C68;--brand-bg:#EBF7F1;
+  --text-1:#12151A;--text-2:#4B535C;--text-3:#7B838C;--text-4:#A9B0B8;
+  --bg:#F7F9FB;--white:#FFFFFF;
+  --border:#E8ECF0;--border-soft:#F0F2F5;
+  --blue:#0077FF;--orange:#FC7819;--purple:#7C5CFC;--gold:#F0A742;--pink:#EC4899;--cyan:#06B6D4;--red:#F53B3B;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Noto Sans SC','PingFang SC',sans-serif;
+  background:var(--bg);color:var(--text-1);font-size:15px;line-height:1.8;
+  -webkit-font-smoothing:antialiased;
+}
+@media print{
+  body{background:#fff;font-size:12px;line-height:1.65;}
+  .no-print{display:none!important;}
+  .script-card{break-inside:avoid;box-shadow:none!important;border:1px solid #ddd!important;}
+}
+
+/* ============ Layout ============ */
+.page{max-width:960px;margin:0 auto;padding:60px 40px 100px;}
+
+/* ============ Cover ============ */
+.cover{
+  text-align:center;
+  padding:80px 40px 60px;
+  margin-bottom:56px;
+  background:linear-gradient(135deg,#E8F5EF 0%,#F0F9F5 50%,var(--bg) 100%);
+  border-radius:24px;
+  border:1px solid var(--border);
+  position:relative;
+  overflow:hidden;
+}
+.cover::before{
+  content:'';position:absolute;right:-80px;top:-60px;
+  width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(35,178,131,0.15),transparent 70%);
+}
+.cover-label{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--white);padding:6px 18px;border-radius:999px;
+  font-size:12px;color:var(--brand);font-weight:600;
+  border:1px solid rgba(35,178,131,0.2);
+  margin-bottom:24px;letter-spacing:0.08em;
+  font-family:'JetBrains Mono',monospace;
+}
+.cover h1{
+  font-family:'Noto Serif SC',serif;
+  font-size:42px;font-weight:900;letter-spacing:-0.02em;
+  line-height:1.2;margin-bottom:16px;color:var(--text-1);
+}
+.cover h1 .accent{
+  background:linear-gradient(90deg,var(--brand),var(--brand-dark));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.cover-desc{
+  font-size:16px;color:var(--text-2);max-width:620px;
+  margin:0 auto 32px;line-height:1.85;
+}
+.cover-meta{
+  display:flex;justify-content:center;gap:32px;
+  font-size:13px;color:var(--text-3);
+}
+.cover-meta strong{color:var(--text-1);font-weight:600;}
+
+/* ============ TOC ============ */
+.toc{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:16px;padding:32px 36px;margin-bottom:48px;
+}
+.toc h2{
+  font-family:'Noto Serif SC',serif;
+  font-size:20px;font-weight:900;margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+  color:var(--text-1);
+}
+.toc h2::before{content:'';width:4px;height:18px;background:var(--brand);border-radius:2px;}
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.toc-item{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;
+  background:var(--bg);border-radius:12px;
+  cursor:pointer;transition:all .2s;
+  text-decoration:none;color:inherit;
+}
+.toc-item:hover{background:var(--brand-bg);transform:translateX(4px);}
+.toc-num{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;font-weight:700;color:#fff;flex-shrink:0;
+}
+.toc-item .info{flex:1;}
+.toc-item .title{font-size:14px;font-weight:700;color:var(--text-1);margin-bottom:2px;}
+.toc-item .meta{font-size:11px;color:var(--text-3);font-family:'JetBrains Mono',monospace;letter-spacing:0.05em;}
+.toc-item .dur{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;color:var(--text-3);font-weight:600;
+  padding:4px 10px;background:var(--white);border-radius:6px;
+  border:1px solid var(--border-soft);flex-shrink:0;
+}
+
+/* ============ Script Card ============ */
+.script-card{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:20px;
+  margin-bottom:40px;
+  overflow:hidden;
+  box-shadow:0 4px 20px rgba(18,21,26,0.04);
+}
+.sc-header{
+  padding:32px 36px 28px;
+  border-bottom:1px solid var(--border-soft);
+  position:relative;
+}
+.sc-header::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:var(--sc-color);
+}
+.sc-header-top{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:16px;
+}
+.sc-number{
+  font-family:'JetBrains Mono',monospace;
+  font-size:48px;font-weight:900;color:var(--sc-color);
+  line-height:1;letter-spacing:-0.03em;opacity:0.85;
+}
+.sc-badges{display:flex;gap:8px;align-items:center;}
+.sc-badge{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:600;
+  padding:5px 12px;border-radius:6px;letter-spacing:0.05em;
+}
+.sc-badge.dur{background:rgba(0,0,0,0.04);color:var(--text-2);}
+.sc-badge.type{background:var(--sc-bg);color:var(--sc-color);}
+.sc-title{
+  font-family:'Noto Serif SC',serif;
+  font-size:28px;font-weight:900;line-height:1.2;
+  letter-spacing:-0.01em;color:var(--text-1);margin-bottom:6px;
+}
+.sc-subtitle{font-size:14px;color:var(--text-3);line-height:1.6;}
+.sc-subtitle strong{color:var(--text-2);}
+
+.sc-purpose{
+  margin:20px 36px 0;
+  padding:18px 22px;
+  background:var(--sc-bg);
+  border-left:4px solid var(--sc-color);
+  border-radius:0 12px 12px 0;
+  font-size:13px;color:var(--text-2);line-height:1.75;
+}
+.sc-purpose strong{color:var(--sc-color);font-weight:700;}
+
+/* Timeline */
+.sc-body{padding:28px 36px 36px;}
+
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{
+  display:grid;
+  grid-template-columns:90px 1fr;
+  gap:24px;
+  padding:20px 0;
+  border-bottom:1px solid var(--border-soft);
+  position:relative;
+}
+.tl-item:last-child{border-bottom:none;}
+.tl-item::before{
+  content:'';position:absolute;left:82px;top:0;bottom:0;
+  width:1px;background:var(--border);
+}
+.tl-item:first-child::before{top:28px;}
+.tl-item:last-child::before{bottom:calc(100% - 28px);}
+.tl-time{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;color:var(--text-3);
+  padding-top:4px;text-align:right;
+  letter-spacing:0.03em;
+  position:relative;
+}
+.tl-time::after{
+  content:'';position:absolute;right:-21px;top:8px;
+  width:9px;height:9px;border-radius:50%;
+  background:var(--sc-color);
+  border:3px solid var(--white);
+  box-shadow:0 0 0 1px var(--border);
+  z-index:1;
+}
+.tl-content{}
+.tl-screen{
+  font-size:11px;color:var(--text-3);
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:0.05em;margin-bottom:8px;
+  display:flex;align-items:center;gap:8px;
+}
+.tl-screen::before{
+  content:'🖥';font-size:12px;
+}
+.tl-narration{
+  font-size:14.5px;color:var(--text-1);line-height:1.85;
+  padding:14px 18px;
+  background:#FAFBFC;
+  border-radius:10px;
+  border:1px solid var(--border-soft);
+  margin-bottom:10px;
+  position:relative;
+}
+.tl-narration::before{
+  content:'🎙';position:absolute;top:14px;left:-28px;font-size:14px;
+}
+.tl-action{
+  font-size:12px;color:var(--text-3);
+  padding:8px 14px;
+  background:rgba(35,178,131,0.06);
+  border-radius:8px;
+  border-left:3px solid var(--brand);
+  margin-bottom:8px;
+  line-height:1.6;
+  font-family:'JetBrains Mono',monospace;
+}
+.tl-action::before{content:'👆 ';}
+.tl-keynote{
+  font-size:13px;
+  padding:12px 16px;
+  background:linear-gradient(135deg,#FFF7ED,#FEF3C7);
+  border:1px solid #FED7AA;
+  border-radius:10px;
+  color:#9A3412;
+  line-height:1.7;
+}
+.tl-keynote::before{content:'💡 关键话术：';font-weight:700;color:#EA580C;}
+
+/* ============ Tips section ============ */
+.tips{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:16px;padding:32px 36px;margin-top:48px;
+}
+.tips h2{
+  font-family:'Noto Serif SC',serif;
+  font-size:20px;font-weight:900;margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+}
+.tips h2::before{content:'';width:4px;height:18px;background:var(--brand);border-radius:2px;}
+.tips-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.tip{
+  padding:16px 18px;
+  background:var(--bg);border-radius:12px;
+  font-size:13px;color:var(--text-2);line-height:1.7;
+}
+.tip strong{color:var(--text-1);display:block;margin-bottom:4px;font-size:14px;}
+
+/* ============ Footer ============ */
+footer{
+  margin-top:60px;padding-top:24px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:12px;color:var(--text-3);
+}
+footer .name{color:var(--brand);font-weight:700;}
+
+/* Colors per script */
+.s1{--sc-color:var(--brand);--sc-bg:var(--brand-bg);}
+.s2{--sc-color:var(--blue);--sc-bg:#EBF5FF;}
+.s3{--sc-color:var(--purple);--sc-bg:#F3EEFF;}
+.s4{--sc-color:var(--orange);--sc-bg:#FFF4E6;}
+.s5{--sc-color:var(--cyan);--sc-bg:#ECFEFF;}
+.s6{--sc-color:var(--gold);--sc-bg:#FFF5E5;}
+.s7{--sc-color:var(--pink);--sc-bg:#FDF2F8;}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ============ COVER ============ -->
+  <div class="cover">
+    <div class="cover-label">DEMO VIDEO SCRIPTS · V1</div>
+    <h1>学科大脑<br><span class="accent">演示视频脚本</span></h1>
+    <p class="cover-desc">
+      7 条独立短视频 · 每条可单独发布 · 面向客户与销售市场侧<br>
+      展示产品核心优势、产品形态、功能与客户价值
+    </p>
+    <div class="cover-meta">
+      <span>总计 <strong>7 条视频</strong></span>
+      <span>总时长 <strong>~7 分钟</strong></span>
+      <span>单条最长 <strong>2 分 30 秒</strong></span>
+      <span>场景单条 <strong>≤ 1 分钟</strong></span>
+    </div>
+  </div>
+
+  <!-- ============ TOC ============ -->
+  <div class="toc">
+    <h2>目录 · 7 条视频一览</h2>
+    <div class="toc-grid">
+      <a href="#s1" class="toc-item">
+        <div class="toc-num" style="background:var(--brand);">01</div>
+        <div class="info">
+          <div class="title">学科大脑 · 全景速览</div>
+          <div class="meta">总览 · 价值定位 + 6 模块速览</div>
+        </div>
+        <div class="dur">2:30</div>
+      </a>
+      <a href="#s2" class="toc-item">
+        <div class="toc-num" style="background:var(--blue);">02</div>
+        <div class="info">
+          <div class="title">AI 备课 · 老师点了一个"好啊"</div>
+          <div class="meta">场景 · 教师侧最出彩</div>
+        </div>
+        <div class="dur">1:00</div>
+      </a>
+      <a href="#s3" class="toc-item">
+        <div class="toc-num" style="background:var(--purple);">03</div>
+        <div class="info">
+          <div class="title">AI 不给答案 · 苏格拉底式答疑</div>
+          <div class="meta">场景 · 学生侧最出彩</div>
+        </div>
+        <div class="dur">0:50</div>
+      </a>
+      <a href="#s4" class="toc-item">
+        <div class="toc-num" style="background:var(--orange);">04</div>
+        <div class="info">
+          <div class="title">一本教材 4 秒变成知识图谱</div>
+          <div class="meta">场景 · 视觉冲击最强</div>
+        </div>
+        <div class="dur">0:50</div>
+      </a>
+      <a href="#s5" class="toc-item">
+        <div class="toc-num" style="background:var(--cyan);">05</div>
+        <div class="info">
+          <div class="title">教材怎么变成知识 · 文档解析工作台</div>
+          <div class="meta">工具 · 看得见的加工过程</div>
+        </div>
+        <div class="dur">1:00</div>
+      </a>
+      <a href="#s6" class="toc-item">
+        <div class="toc-num" style="background:var(--gold);">06</div>
+        <div class="info">
+          <div class="title">8 大引擎 7×24 同时在跑</div>
+          <div class="meta">引擎 · 技术底座震撼</div>
+        </div>
+        <div class="dur">0:50</div>
+      </a>
+      <a href="#s7" class="toc-item">
+        <div class="toc-num" style="background:var(--pink);">07</div>
+        <div class="info">
+          <div class="title">买了之后谁来管 · 管理后台</div>
+          <div class="meta">后台 · 给运营/实施看</div>
+        </div>
+        <div class="dur">0:50</div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ============ SCRIPT 1 ============ -->
+  <div class="script-card s1" id="s1">
+    <div class="sc-header">
+      <div class="sc-header-top">
+        <div class="sc-number">01</div>
+        <div class="sc-badges">
+          <span class="sc-badge dur">2 min 30 sec</span>
+          <span class="sc-badge type">总览</span>
+        </div>
+      </div>
+      <div class="sc-title">学科大脑 · 2 分钟看清全景</div>
+      <div class="sc-subtitle">
+        <strong>发布标题</strong>：不是知识库，是学科知识体系的数字化重建<br>
+        <strong>适用场景</strong>：客户首次接触 · 销售首轮介绍 · 线上路演开场 · 朋友圈分发
+      </div>
+      <div class="sc-purpose">
+        <strong>选择理由：</strong>开场必备。先让客户知道"学科大脑和普通知识库有什么本质区别"，建立"这是一个牛逼的产品"的第一印象，然后再用 90 秒快速过 6 大模块给全景。
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="timeline">
+
+        <div class="tl-item">
+          <div class="tl-time">00:00</div>
+          <div class="tl-content">
+            <div class="tl-screen">黑屏 + 白色大字逐行出现</div>
+            <div class="tl-narration">
+              "你的学校可能已经有了知识库。<br>但你的知识库，能让 AI 每一句话都溯源到教材原文吗？<br><br>今天我要介绍的产品叫学科大脑。先花 1 分钟，说清楚它和普通知识库的本质区别。"
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:20</div>
+          <div class="tl-content">
+            <div class="tl-screen">两列对比表（静态画面）</div>
+            <div class="tl-narration">
+              "普通知识库 = 文档丢进向量库，大模型猜答案。教育场景里，这有三个致命问题：<br>答错一次老师不敢用——信任崩塌；<br>学生直接抄答案教研处叫停——教育伦理；<br>数据出校园等保不过——合规底线。<br><br>普通知识库，一条都过不了。"
+            </div>
+            <div class="tl-keynote">
+              教育场景的三条红线：信任 · 伦理 · 合规。这三条是打动教务领导的核心论据。
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:50</div>
+          <div class="tl-content">
+            <div class="tl-screen">三句话金句逐行出现</div>
+            <div class="tl-narration">
+              "三句话记住学科大脑的价值：<br>一，没有它，大模型只能给通用回答；<br>二，有了它，每句话溯源到教材原文；<br>三，大模型会过时，学科知识体系永远是学校自己的核心资产。"
+            </div>
+            <div class="tl-keynote">
+              第三句话是全片最重要的一句。语速放到最慢，给校领导批预算用的。
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">01:00</div>
+          <div class="tl-content">
+            <div class="tl-screen">全链路演示总览首页</div>
+            <div class="tl-narration">"接下来看它长什么样。6 大模块，一次速览。"</div>
+            <div class="tl-action">鼠标沿底部分层链路图从左到右缓慢划过</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">01:10</div>
+          <div class="tl-content">
+            <div class="tl-screen">点入场景演示 → 8 张场景卡</div>
+            <div class="tl-narration">"第一层，八大教学场景——建备教学考督管研，每个都是可交互的真实演示。"</div>
+            <div class="tl-action">点入 scenes.html → 鼠标扫过 8 张卡 → 返回总览</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">01:25</div>
+          <div class="tl-content">
+            <div class="tl-screen">知识库前台 + 管理后台</div>
+            <div class="tl-narration">"第二三层，知识库前台和管理后台。教师看前台用知识，运营看后台管质量。"</div>
+            <div class="tl-action">各点入 2 秒 → 返回</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">01:40</div>
+          <div class="tl-content">
+            <div class="tl-screen">工具 + 引擎 + 训练平台</div>
+            <div class="tl-narration">"底下三层——7 大工具给人操作，8 大引擎后台自动跑，训练平台做模型微调。这是水面下的冰山。"</div>
+            <div class="tl-action">各点入 1-2 秒 → 返回总览</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">02:00</div>
+          <div class="tl-content">
+            <div class="tl-screen">底部分层链路图</div>
+            <div class="tl-narration">"6 层从上到下贯通。老师点一个按钮，底下工具解析、引擎检索、安全审核全部自动跑完。老师看到的是一个按钮，学科大脑跑的是一条完整的能力链。"</div>
+            <div class="tl-action">鼠标沿链路图从左到右划过</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">02:15</div>
+          <div class="tl-content">
+            <div class="tl-screen">总览首页全景</div>
+            <div class="tl-narration">"这就是学科大脑——不是一个聊天机器人，是帮高校把学科知识变成永久数字资产的 AI 底座。接下来几条短视频，我们逐个深入演示。"</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCRIPT 2 ============ -->
+  <div class="script-card s2" id="s2">
+    <div class="sc-header">
+      <div class="sc-header-top">
+        <div class="sc-number">02</div>
+        <div class="sc-badges">
+          <span class="sc-badge dur">60 sec</span>
+          <span class="sc-badge type">场景 · 教师</span>
+        </div>
+      </div>
+      <div class="sc-title">老师点了一个"好啊"，备课就完成了</div>
+      <div class="sc-subtitle">
+        <strong>发布标题</strong>：AI 备课 · 60 秒完成教案课件习题<br>
+        <strong>适用场景</strong>：给教师看 · 售前武器 · 独立短视频分发
+      </div>
+      <div class="sc-purpose">
+        <strong>选择理由：</strong>教师侧最出彩。核心看点不是"AI 生成了内容"，而是"老师什么都没做，AI 主动来找他"——这是被动工具和主动智能体的根本区别。
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="timeline">
+
+        <div class="tl-item">
+          <div class="tl-time">00:00</div>
+          <div class="tl-content">
+            <div class="tl-screen">Demo02 页面加载 → XClaw 气泡弹出</div>
+            <div class="tl-narration">"老师打开小雅备课页。什么都没做——学科大脑先说话了。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:08</div>
+          <div class="tl-content">
+            <div class="tl-screen">气泡内容可见</div>
+            <div class="tl-narration">"它发现明天要讲第 3 章，主动问：需要帮你生成备课包吗？"</div>
+            <div class="tl-action">点"好啊，帮我一下"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:15</div>
+          <div class="tl-content">
+            <div class="tl-screen">侧栏打开 → 调度卡运行</div>
+            <div class="tl-narration">"侧栏打开，调度链自动跑——7 个组件、4 秒跑完。权限校验、知识库检索、学科约束、幻觉兜底、内容审核，全链路透明。"</div>
+            <div class="tl-keynote">
+              "这不是通用 ChatGPT 在答题。这是学科大脑调用了 3 个数据库、3 个引擎、2 层安全校验才产出的结果——每一句话都有据可查。"
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:30</div>
+          <div class="tl-content">
+            <div class="tl-screen">完成卡 + 知识来源声明</div>
+            <div class="tl-narration">"教案、课件、习题三件套生成完毕。昨天教研主任更新的反例，已经自动融入。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:42</div>
+          <div class="tl-content">
+            <div class="tl-screen">左侧课程目录 3 项高亮新增</div>
+            <div class="tl-narration">"资源自动同步到课程结构图——老师全程只点了一个'好啊'。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:52</div>
+          <div class="tl-content">
+            <div class="tl-screen">定格在同步完成画面</div>
+            <div class="tl-narration">"不是老师去找 AI，是 AI 主动来找老师。这是工具和智能体的根本区别。"</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCRIPT 3 ============ -->
+  <div class="script-card s3" id="s3">
+    <div class="sc-header">
+      <div class="sc-header-top">
+        <div class="sc-number">03</div>
+        <div class="sc-badges">
+          <span class="sc-badge dur">50 sec</span>
+          <span class="sc-badge type">场景 · 学生</span>
+        </div>
+      </div>
+      <div class="sc-title">AI 不给答案，帮学生自己推出来</div>
+      <div class="sc-subtitle">
+        <strong>发布标题</strong>：苏格拉底式答疑 · 学科大脑学生端<br>
+        <strong>适用场景</strong>：给教研处看 · 给教务领导看 · 给"担心 AI 让学生变懒"的人看
+      </div>
+      <div class="sc-purpose">
+        <strong>选择理由：</strong>教研界对 AI 最大的担忧是"学生抄答案"。这条视频直接回应：我们不喂答案，我们帮学生自己推出来。唯一能通过教研评审的答疑方式。
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="timeline">
+
+        <div class="tl-item">
+          <div class="tl-time">00:00</div>
+          <div class="tl-content">
+            <div class="tl-screen">Demo04 手机模拟器 → 拍照 → OCR 扫描</div>
+            <div class="tl-narration">"晚上 9 点，学生拍题求解。注意——学科大脑不会给答案。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:08</div>
+          <div class="tl-content">
+            <div class="tl-screen">三轮选择题自动播放</div>
+            <div class="tl-narration">"它反问：判断间断点类型的第一步是什么？学生选对了，再追问第二步。选对了，再问第三步。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:22</div>
+          <div class="tl-content">
+            <div class="tl-screen">最终答案 + 错题本卡片</div>
+            <div class="tl-narration">"三轮追问后，学生自己推出了正确答案——第二类间断点。对话自动记入错题本，掌握度同步更新。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:32</div>
+          <div class="tl-content">
+            <div class="tl-screen">定格在错题本</div>
+            <div class="tl-narration">"教研界最怕 AI 让学生变懒。学科大脑的回答是：我们不喂答案，我们帮学生自己推出答案。这是唯一能通过教研评审、也是唯一对学生真正有价值的方式。"</div>
+            <div class="tl-keynote">这段话语速放慢，停顿一下再说最后一句。这是教育理念的升华，不是功能介绍。</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCRIPT 4 ============ -->
+  <div class="script-card s4" id="s4">
+    <div class="sc-header">
+      <div class="sc-header-top">
+        <div class="sc-number">04</div>
+        <div class="sc-badges">
+          <span class="sc-badge dur">50 sec</span>
+          <span class="sc-badge type">场景 · 技术</span>
+        </div>
+      </div>
+      <div class="sc-title">一本教材，4 秒变成知识图谱</div>
+      <div class="sc-subtitle">
+        <strong>发布标题</strong>：86 节点 142 条关系 · SVG 实时构建<br>
+        <strong>适用场景</strong>：给 CTO / 技术评审看 · 展示核心技术能力
+      </div>
+      <div class="sc-purpose">
+        <strong>选择理由：</strong>视觉冲击最强。SVG 图谱从 0 生长到 86 个节点的 6 秒动画，是全部 demo 里最"出片"的画面。以前教研团队 3 周的工作量，现在 4 秒完成。
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="timeline">
+
+        <div class="tl-item">
+          <div class="tl-time">00:00</div>
+          <div class="tl-content">
+            <div class="tl-screen">Demo01 → 点"创建并生成图谱" → 进入图谱工作区</div>
+            <div class="tl-narration">"老师上传一本教材。接下来 6 秒发生的事，以前要花教研团队 3 周。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:08</div>
+          <div class="tl-content">
+            <div class="tl-screen">SVG 图谱生长动画全程（核心视觉 · 不打断）</div>
+            <div class="tl-narration">"478 页教材自动解析……9 个章节从中心发散……知识点从每个章节涌出……先修关系自动连接……86 个节点、142 条关系，4 秒完成。"</div>
+            <div class="tl-keynote">这段旁白语速要慢，让观众充分看到图谱生长的视觉效果。动画是主角，旁白是配角。</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:25</div>
+          <div class="tl-content">
+            <div class="tl-screen">右侧调度完成 + 计数器定格</div>
+            <div class="tl-narration">"右侧调度链显示调用了文档解析、图谱标注、冲突检测、内容审核——全自动。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:38</div>
+          <div class="tl-content">
+            <div class="tl-screen">完整图谱全景</div>
+            <div class="tl-narration">"一本教材变成一张知识图谱。这张图谱就是后面备课、组卷、答疑、学情分析的全部底座。没有它，AI 给学生的回答就是没有根基的。"</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCRIPT 5 ============ -->
+  <div class="script-card s5" id="s5">
+    <div class="sc-header">
+      <div class="sc-header-top">
+        <div class="sc-number">05</div>
+        <div class="sc-badges">
+          <span class="sc-badge dur">60 sec</span>
+          <span class="sc-badge type">工具层</span>
+        </div>
+      </div>
+      <div class="sc-title">教材怎么变成知识 · 文档解析工作台</div>
+      <div class="sc-subtitle">
+        <strong>发布标题</strong>：看得见的加工过程 · 学科大脑工具层<br>
+        <strong>适用场景</strong>：给实施团队看 · 给"想知道底层怎么跑"的客户看
+      </div>
+      <div class="sc-purpose">
+        <strong>选择理由：</strong>客户最常问"知识从哪来、怎么进去的"。文档解析是"教材 → 知识"的第一步，看得见摸得着，不抽象。展示的不只是工具，是"学科大脑不是黑箱"的信任感。
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="timeline">
+
+        <div class="tl-item">
+          <div class="tl-time">00:00</div>
+          <div class="tl-content">
+            <div class="tl-screen">打开 tools/index.html → 点击 T01 文档解析</div>
+            <div class="tl-narration">"老师上传一份教材 PDF，学科大脑是怎么把它变成知识的？答案就在这个工具——文档解析工作台。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:10</div>
+          <div class="tl-content">
+            <div class="tl-screen">解析结果列表 → 点开一个片段看详情</div>
+            <div class="tl-narration">"478 页教材被自动拆分成章节片段。每一段标注了所属章节、知识点、公式、图表。PDF 里的公式不是截图——是被识别成了可检索的 LaTeX。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:25</div>
+          <div class="tl-content">
+            <div class="tl-screen">质量面板 → 异常列表</div>
+            <div class="tl-narration">"右侧是解析质量看板——成功率、异常率、耗时。哪些页面有问题，一眼定位，运营可以手动修正。不是黑箱丢进去就完事，每一步都可审、可控、可回溯。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:42</div>
+          <div class="tl-content">
+            <div class="tl-screen">返回 tools dashboard 全景</div>
+            <div class="tl-narration">"文档解析只是 7 大工具之一。术语管理、图谱标注、问答构建、质量评测……每个都是给运营团队直接上手操作的专业工作台。"</div>
+            <div class="tl-action">鼠标扫过 dashboard 上的 7 个工具卡片</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCRIPT 6 ============ -->
+  <div class="script-card s6" id="s6">
+    <div class="sc-header">
+      <div class="sc-header-top">
+        <div class="sc-number">06</div>
+        <div class="sc-badges">
+          <span class="sc-badge dur">50 sec</span>
+          <span class="sc-badge type">引擎层</span>
+        </div>
+      </div>
+      <div class="sc-title">你以为只有一个聊天框？</div>
+      <div class="sc-subtitle">
+        <strong>发布标题</strong>：8 大引擎 7×24 同时在跑 · 学科大脑技术底座<br>
+        <strong>适用场景</strong>：给 CTO 看 · 给技术评审看 · 给"怀疑这不就是 ChatGPT 套壳"的人看
+      </div>
+      <div class="sc-purpose">
+        <strong>选择理由：</strong>打破"学科大脑 = 聊天框"的刻板印象。一张引擎仪表盘，8 个引擎同时亮绿灯，瞬间建立技术信任。回答了"你和通用大模型到底有什么区别"。
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="timeline">
+
+        <div class="tl-item">
+          <div class="tl-time">00:00</div>
+          <div class="tl-content">
+            <div class="tl-screen">打开 engines/engine_dashboard.html → 全屏仪表盘</div>
+            <div class="tl-narration">"你以为学科大脑只是一个对话框？这是它背后真正在跑的东西——8 大引擎，7×24 不停。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:10</div>
+          <div class="tl-content">
+            <div class="tl-screen">鼠标依次划过 4 个引擎卡片</div>
+            <div class="tl-narration">"混合检索——BM25 加向量加图谱，三路同时召回。<br>全链路溯源——每句回答追溯到教材具体页码。<br>幻觉兜底——低置信度自动拒答，不编造。<br>术语改写——学生说'狄利克雷'，自动归一到 Dirichlet。"</div>
+            <div class="tl-action">每个引擎卡片停留 2-3 秒</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:30</div>
+          <div class="tl-content">
+            <div class="tl-screen">指向某引擎的实时指标数字</div>
+            <div class="tl-narration">"每个引擎都有实时指标——调用量、成功率、平均延时。出了问题运维秒级发现，不会让老师在课堂上等超过 1 秒。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:40</div>
+          <div class="tl-content">
+            <div class="tl-screen">缩小到全景 → 8 个引擎同时亮绿灯</div>
+            <div class="tl-narration">"普通知识库只有一层检索。学科大脑有 8 层引擎叠加——检索、溯源、兜底、改写、约束、引导、冲突、审核。这就是'答对是运气'和'答对是体系'的区别。"</div>
+            <div class="tl-keynote">最后一句"答对是运气 vs 答对是体系"要重读。这是打动技术决策者的核心对比。</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCRIPT 7 ============ -->
+  <div class="script-card s7" id="s7">
+    <div class="sc-header">
+      <div class="sc-header-top">
+        <div class="sc-number">07</div>
+        <div class="sc-badges">
+          <span class="sc-badge dur">50 sec</span>
+          <span class="sc-badge type">管理后台</span>
+        </div>
+      </div>
+      <div class="sc-title">买了之后谁来管</div>
+      <div class="sc-subtitle">
+        <strong>发布标题</strong>：管理后台 · 交付的不是软件是运营体系<br>
+        <strong>适用场景</strong>：给运营 / 实施团队看 · 给"担心买了没人维护"的客户看
+      </div>
+      <div class="sc-purpose">
+        <strong>选择理由：</strong>售前做完 demo 客户会问"买了之后谁来管、怎么管"。这条视频直接回答这个问题，消除客户最后一层顾虑。
+      </div>
+    </div>
+    <div class="sc-body">
+      <div class="timeline">
+
+        <div class="tl-item">
+          <div class="tl-time">00:00</div>
+          <div class="tl-content">
+            <div class="tl-screen">打开 backend/index.html → 后台首页</div>
+            <div class="tl-narration">"产品买了之后，谁来运营？怎么管理？这就是学科大脑的管理后台——给运营管理员用的全景控制台。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:10</div>
+          <div class="tl-content">
+            <div class="tl-screen">首页全景 → 鼠标扫过模块卡片</div>
+            <div class="tl-narration">"首页四张数据卡——知识库总量、文档处理量、图谱节点数、活跃用户数，实时更新。下面是各模块运营入口——语料管理、术语审核、图谱编辑、问答库、权限配置、Agent 管理。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:25</div>
+          <div class="tl-content">
+            <div class="tl-screen">点入术语管理子页面 → 术语列表 → 审核按钮</div>
+            <div class="tl-narration">"比如术语管理——运营可以审核 AI 自动提取的术语，合并同义词、配置改写规则。操作完成后，全校的 AI 答疑立刻生效，无需重启。"</div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">00:40</div>
+          <div class="tl-content">
+            <div class="tl-screen">返回后台首页全景</div>
+            <div class="tl-narration">"学科大脑不是'装完就走'的软件。管理后台确保知识库有人看、有人管、出了问题有人改。这就是'交付一个产品'和'交付一个运营体系'的区别。"</div>
+            <div class="tl-keynote">"交付产品 vs 交付运营体系"是打动实施侧客户的核心句。</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TIPS ============ -->
+  <div class="tips no-print">
+    <h2>录制建议</h2>
+    <div class="tips-grid">
+      <div class="tip">
+        <strong>📐 分辨率</strong>
+        1440 × 900 · 浏览器全屏 · 隐藏书签栏和地址栏 · Retina 推荐 2x 录制
+      </div>
+      <div class="tip">
+        <strong>🖱 鼠标</strong>
+        每次点击前停 1 秒让观众看清位置 · 移动速度比平时慢 50%
+      </div>
+      <div class="tip">
+        <strong>🎙 旁白</strong>
+        每句话之间留 1-2 秒空白 · 标注"关键话术"的地方语速减半、语气加重
+      </div>
+      <div class="tip">
+        <strong>⏱ 节奏</strong>
+        10-40-10 结构：前 10 秒钩子 · 中间 40 秒演示 · 后 10 秒金句
+      </div>
+      <div class="tip">
+        <strong>🎬 剪辑</strong>
+        每条独立发布 · 不要加片头片尾（浪费时间） · 开头 3 秒决定观众看不看
+      </div>
+      <div class="tip">
+        <strong>📱 合辑</strong>
+        短版 3 min = ①+②+③ · 完整版 5 min = ①+④+②+③ · 给销售培训 = 全部 7 条
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>
+      <div style="font-weight:600;color:var(--text-2);margin-bottom:4px;">学科大脑 · 演示视频脚本 · V1</div>
+      <div>作者 · <span class="name">婷婷</span> · 2026-04-16 · 内部使用</div>
+    </div>
+    <div style="text-align:right;">
+      <div>AI 教学产品部</div>
+      <div>共 7 条脚本 · 总时长约 7 分钟</div>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
