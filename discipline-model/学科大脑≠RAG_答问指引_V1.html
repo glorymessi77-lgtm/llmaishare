@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>学科大脑 ≠ RAG · 答问指引 · 内部话术 V1</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=Noto+Serif+SC:wght@400;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#23B283;--brand-dark:#158C68;--brand-bg:#EBF7F1;
+  --text-1:#12151A;--text-2:#4B535C;--text-3:#7B838C;--text-4:#A9B0B8;
+  --bg:#F7F9FB;--white:#FFFFFF;
+  --border:#E8ECF0;--border-soft:#F0F2F5;
+  --blue:#0077FF;--orange:#FC7819;--purple:#7C5CFC;--gold:#F0A742;--red:#F53B3B;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Noto Sans SC','PingFang SC',sans-serif;
+  background:var(--bg);color:var(--text-1);font-size:15px;line-height:1.85;
+  -webkit-font-smoothing:antialiased;
+}
+.page{max-width:800px;margin:0 auto;padding:60px 40px 100px;}
+
+/* Source banner */
+.source-banner{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 20px;background:#FFF7ED;border:1px solid #FED7AA;
+  border-radius:12px;margin-bottom:32px;font-size:13px;color:#9A3412;
+}
+.source-banner .icon{font-size:20px;}
+.source-banner strong{color:#7C2D12;}
+.source-banner a{color:#EA580C;text-decoration:underline;}
+
+/* Header */
+.doc-header{margin-bottom:40px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+.doc-header h1{
+  font-family:'Noto Serif SC',serif;
+  font-size:36px;font-weight:900;letter-spacing:-0.02em;line-height:1.2;
+  margin-bottom:14px;
+}
+.doc-header h1 .ne{color:var(--red);font-size:42px;}
+.doc-meta{display:flex;gap:20px;font-size:13px;color:var(--text-3);}
+.doc-meta strong{color:var(--text-2);}
+
+/* Section */
+.section{margin-bottom:36px;}
+.section h2{
+  font-family:'Noto Serif SC',serif;
+  font-size:22px;font-weight:900;margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;
+}
+.section h2::before{content:'';width:4px;height:20px;background:var(--brand);border-radius:2px;}
+
+/* RAG box */
+.rag-box{
+  padding:24px 28px;background:#FEF2F2;border:1px solid #FECACA;
+  border-radius:14px;margin-bottom:28px;
+}
+.rag-box h3{font-size:16px;font-weight:800;color:var(--red);margin-bottom:12px;}
+.rag-flow{
+  display:flex;align-items:center;gap:0;justify-content:center;
+  margin:18px 0;
+}
+.rag-step{
+  padding:12px 20px;background:var(--white);border:2px solid #FECACA;
+  border-radius:10px;font-size:14px;font-weight:700;color:var(--red);
+  text-align:center;
+}
+.rag-arrow{font-size:20px;color:#FCA5A5;margin:0 8px;}
+.rag-note{font-size:13px;color:#991B1B;line-height:1.7;margin-top:14px;padding-top:14px;border-top:1px dashed #FECACA;}
+
+/* Nine modules */
+.nine-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;}
+.nine-item{
+  padding:18px 20px;background:var(--white);border:1px solid var(--border);
+  border-radius:12px;border-left:4px solid var(--brand);
+}
+.nine-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--text-4);letter-spacing:0.1em;margin-bottom:6px;
+}
+.nine-name{font-size:15px;font-weight:800;color:var(--text-1);margin-bottom:6px;}
+.nine-desc{font-size:12px;color:var(--text-3);line-height:1.6;}
+.nine-item.is-rag{border-left-color:var(--red);background:#FEF2F2;}
+.nine-item.is-rag .nine-name{color:var(--red);}
+.nine-item.is-rag .nine-desc{color:#991B1B;}
+
+/* Percentage highlight */
+.pct-box{
+  display:flex;align-items:center;gap:24px;
+  padding:28px 32px;background:linear-gradient(135deg,var(--brand-bg),#F0F9FF);
+  border:1px solid rgba(35,178,131,0.3);border-radius:16px;margin-bottom:28px;
+}
+.pct-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:56px;font-weight:900;color:var(--brand);line-height:1;
+  letter-spacing:-0.03em;flex-shrink:0;
+}
+.pct-text{font-size:15px;color:var(--text-1);line-height:1.8;}
+.pct-text strong{color:var(--brand);}
+
+/* Three-part script */
+.script-steps{display:flex;flex-direction:column;gap:14px;}
+.script-step{
+  padding:20px 24px;background:var(--white);border:1px solid var(--border);
+  border-radius:14px;display:flex;gap:18px;align-items:flex-start;
+}
+.step-num{
+  width:40px;height:40px;border-radius:10px;background:var(--brand);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;flex-shrink:0;
+}
+.step-body{flex:1;}
+.step-title{font-size:15px;font-weight:800;color:var(--text-1);margin-bottom:6px;}
+.step-content{font-size:13px;color:var(--text-2);line-height:1.75;}
+.step-example{
+  margin-top:10px;padding:12px 16px;background:#FAFBFC;
+  border-radius:8px;border-left:3px solid var(--brand);
+  font-size:13px;color:var(--text-1);line-height:1.7;font-style:italic;
+}
+
+/* Analogy */
+.analogy{
+  padding:24px 28px;background:linear-gradient(135deg,#FFF7ED,#FEF3C7);
+  border:1px solid #FED7AA;border-radius:14px;margin-top:28px;
+  display:flex;align-items:center;gap:20px;
+}
+.analogy .icon{font-size:40px;flex-shrink:0;}
+.analogy .text{font-size:15px;color:#9A3412;line-height:1.8;}
+.analogy .text strong{color:#7C2D12;}
+
+/* Footer */
+footer{
+  margin-top:48px;padding-top:20px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;font-size:12px;color:var(--text-3);
+}
+footer .name{color:var(--brand);font-weight:700;}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Source attribution -->
+  <div class="source-banner">
+    <span class="icon">📎</span>
+    <div>
+      <strong>引用文档</strong> · 本文档由 <strong>孙玉欣</strong> 创作发布 · 非本人产出 · 归档至学科大模型产品文档中心<br>
+      原始链接：<a href="https://www.pushplus.plus/shortMessage/d48737d26585470ca459757e26c10f67" target="_blank">pushplus.plus/shortMessage/d48737...</a> · 发布于 2026-04-15
+    </div>
+  </div>
+
+  <!-- Header -->
+  <div class="doc-header">
+    <h1>学科大脑 <span class="ne">≠</span> RAG<br>答问指引</h1>
+    <div class="doc-meta">
+      <span>创作者 · <strong>孙玉欣</strong></span>
+      <span>版本 · <strong>内部话术 V1</strong></span>
+      <span>发布 · <strong>2026-04-15</strong></span>
+    </div>
+  </div>
+
+  <!-- Section 1: RAG 定义 -->
+  <div class="section">
+    <h2>RAG 的定义边界</h2>
+    <div class="rag-box">
+      <h3>RAG 只做三件事</h3>
+      <div class="rag-flow">
+        <div class="rag-step">向量检索</div>
+        <div class="rag-arrow">→</div>
+        <div class="rag-step">提示词拼接</div>
+        <div class="rag-arrow">→</div>
+        <div class="rag-step">大模型生成</div>
+      </div>
+      <div class="rag-note">
+        RAG 在此范围外<strong>不进行</strong>模型调整、数据管理、结构化处理、校验或评估。它是一个技术模式，不是一套产品体系。
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: 九大工程 -->
+  <div class="section">
+    <h2>学科大脑的九大工程体系</h2>
+    <div class="nine-grid">
+      <div class="nine-item">
+        <div class="nine-num">01</div>
+        <div class="nine-name">语料工程</div>
+        <div class="nine-desc">清洗 / 分段 / 标注 / 去重</div>
+      </div>
+      <div class="nine-item">
+        <div class="nine-num">02</div>
+        <div class="nine-name">知识图谱</div>
+        <div class="nine-desc">多跳推理与实体关系</div>
+      </div>
+      <div class="nine-item is-rag">
+        <div class="nine-num">03 · RAG 在这</div>
+        <div class="nine-name">多路检索</div>
+        <div class="nine-desc">RAG 只是其中一路（向量检索）</div>
+      </div>
+      <div class="nine-item">
+        <div class="nine-num">04</div>
+        <div class="nine-name">领域微调</div>
+        <div class="nine-desc">SFT 与针对性微调</div>
+      </div>
+      <div class="nine-item">
+        <div class="nine-num">05</div>
+        <div class="nine-name">领域原子工具</div>
+        <div class="nine-desc">化学 / 法条 / 公式计算等</div>
+      </div>
+      <div class="nine-item">
+        <div class="nine-num">06</div>
+        <div class="nine-name">Hook 校验层</div>
+        <div class="nine-desc">越界 / 引用 / 数值 / 溯源校验</div>
+      </div>
+      <div class="nine-item">
+        <div class="nine-num">07</div>
+        <div class="nine-name">上下文与记忆</div>
+        <div class="nine-desc">对话 / 会话快照 / 权限</div>
+      </div>
+      <div class="nine-item">
+        <div class="nine-num">08</div>
+        <div class="nine-name">评估体系</div>
+        <div class="nine-desc">准确率 / 覆盖率 / 溯源率</div>
+      </div>
+      <div class="nine-item">
+        <div class="nine-num">09</div>
+        <div class="nine-name">Harness 编排</div>
+        <div class="nine-desc">整合前八层的调度引擎</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Percentage -->
+  <div class="pct-box">
+    <div class="pct-num">85%</div>
+    <div class="pct-text">
+      RAG 大约只占学科大脑整体工程量的 <strong>10-15%</strong>。<br>
+      另外 <strong>85%</strong> 是 RAG 不覆盖的学科化工程——语料工程、知识图谱、领域微调、校验层、评估体系、编排引擎。
+    </div>
+  </div>
+
+  <!-- Section 3: 三段式话术 -->
+  <div class="section">
+    <h2>推荐应答话术 · 三段式</h2>
+    <p style="font-size:14px;color:var(--text-3);margin-bottom:18px;">客户问"你们和 RAG 有什么区别"时，按以下三段回答：</p>
+
+    <div class="script-steps">
+      <div class="script-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">承认 RAG 是系统组件</div>
+          <div class="step-content">不否认、不回避。先认可 RAG 的价值，表明我们的系统中确实包含 RAG 能力。</div>
+          <div class="step-example">"对，学科大脑里确实有 RAG——向量检索是我们多路检索中的一路。"</div>
+        </div>
+      </div>
+      <div class="script-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">划清 RAG 的技术边界</div>
+          <div class="step-content">明确 RAG 只做"检索+拼接+生成"三步，不覆盖数据加工、模型调优、校验评估、调度编排。</div>
+          <div class="step-example">"但 RAG 只管'检索到相关片段 → 塞给大模型'这一步，它不管数据怎么清洗、图谱怎么建、答案怎么校验。"</div>
+        </div>
+      </div>
+      <div class="script-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">列举其他八项差异化工程</div>
+          <div class="step-content">逐项说明 RAG 之外学科大脑做了什么——语料工程、知识图谱、领域微调、原子工具、Hook 校验、记忆系统、评估体系、Harness 编排。</div>
+          <div class="step-example">"学科大脑还有语料工程、知识图谱、领域微调、溯源校验、评估体系、编排引擎……RAG 只占整体的 10-15%，剩下 85% 才是我们的核心壁垒。"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analogy -->
+  <div class="analogy">
+    <div class="icon">🚗</div>
+    <div class="text">
+      <strong>一句话类比</strong><br>
+      "说学科大脑是 RAG，就像说汽车是发动机。发动机很重要，但汽车还需要底盘、变速箱、刹车系统、安全气囊、车载电脑……RAG 是发动机，学科大脑是整台车。"
+    </div>
+  </div>
+
+  <footer>
+    <div>
+      <div style="font-weight:600;color:var(--text-2);margin-bottom:4px;">学科大脑 ≠ RAG · 答问指引</div>
+      <div>原创 · <strong>孙玉欣</strong> · 归档 · <span class="name">婷婷</span> · 2026-04-16</div>
+    </div>
+    <div style="text-align:right;">
+      <div>引用文档 · AI 教学产品部</div>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>
