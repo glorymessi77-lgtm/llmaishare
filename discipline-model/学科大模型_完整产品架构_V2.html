@@ -97,12 +97,12 @@ body{font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;backgr
   <h1>学科大模型 · 完整产品架构</h1>
   <div class="sub">自上而下六层架构 · 场景 → 中枢 → 底座 → 引擎 → 安全 → 基础设施</div>
   <div class="stats">
-    <span>总计 <strong>81</strong> 个组件</span>
+    <span>总计 <strong>75</strong> 个组件</span>
     <span><strong>10</strong> 大模块</span>
-    <span><strong>10</strong> 大工具</span>
+    <span><strong>7</strong> 大工具</span>
     <span><strong>8</strong> 大引擎</span>
     <span><strong>7</strong> 大看板</span>
-    <span><strong>9</strong> 层安全</span>
+    <span><strong>8</strong> 层安全</span>
   </div>
 </div>
 
@@ -192,7 +192,7 @@ body{font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;backgr
   <div class="layer-hd">
     <span class="level">L4</span>
     <span class="title">Coral 小雅学科大脑 · 知识底座（Knowledge Harness）</span>
-    <span class="count">十大模块 + 十大工具 + 八大引擎 + 七大看板 = 35 组件</span>
+    <span class="count">十大模块 + 七大工具 + 八大引擎 + 七大看板 = 32 组件</span>
   </div>
   <div class="layer-bd">
 
@@ -210,17 +210,14 @@ body{font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;backgr
       <div class="chip chip-brain"><span class="id">M10</span><span class="nm">Agent 生态与开放平台</span><span class="desc">API 开放·技能市场·插件生态</span></div>
     </div>
 
-    <div class="group-title t-brain">十大工具（T01 - T10）</div>
+    <div class="group-title t-brain">七大工具（T05/T07/T09 已归属产品模块）</div>
     <div class="grid">
       <div class="chip chip-tool"><span class="id">T01</span><span class="nm">文档解析</span><span class="desc">PDF·PPT·Word 精准解析</span></div>
       <div class="chip chip-tool"><span class="id">T02</span><span class="nm">多模态采集</span><span class="desc">图片·音视频·网页·录音</span></div>
       <div class="chip chip-tool"><span class="id">T03</span><span class="nm">知识图谱标注</span><span class="desc">先修关系·可视化·一键转换</span></div>
       <div class="chip chip-tool"><span class="id">T04</span><span class="nm">术语管理</span><span class="desc">提取·审核·查询改写</span></div>
-      <div class="chip chip-tool"><span class="id">T05</span><span class="nm">知识库管理</span><span class="desc">后台增删改查·版本·权限·审批</span></div>
       <div class="chip chip-tool"><span class="id">T06</span><span class="nm">质量评测</span><span class="desc">测试集·A/B 对比·质量看板</span></div>
-      <div class="chip chip-tool"><span class="id">T07</span><span class="nm">师生共建平台</span><span class="desc">上传·研读·审核·运营看板</span></div>
       <div class="chip chip-tool"><span class="id">T08</span><span class="nm">问答库构建</span><span class="desc">AI 候选·教师审核·冲突检测</span></div>
-      <div class="chip chip-tool"><span class="id">T09</span><span class="nm">笔记与协作</span><span class="desc">双向联动·问答保存·白板</span></div>
       <div class="chip chip-tool"><span class="id">T10</span><span class="nm">智能体与 Agent 平台</span><span class="desc">矩阵配置·AIGC·技能市场</span></div>
     </div>
 
@@ -231,7 +228,7 @@ body{font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;backgr
       <div class="chip chip-brain"><span class="id">E03</span><span class="nm">幻觉兜底引擎</span><span class="desc">低置信度拒答·风险标识</span></div>
       <div class="chip chip-brain"><span class="id">E04</span><span class="nm">术语改写引擎</span><span class="desc">术语扩展·上下文消歧</span></div>
       <div class="chip chip-brain"><span class="id">E05</span><span class="nm">学科提示词引擎</span><span class="desc">学科约束·术语注入·格式控制</span></div>
-      <div class="chip chip-brain"><span class="id">E06</span><span class="nm">向量微调引擎</span><span class="desc">学科检索精度提升·模型切换</span></div>
+      <div class="chip chip-brain"><span class="id">E06</span><span class="nm">模型微调平台</span><span class="desc">学科检索精度提升·模型切换</span></div>
       <div class="chip chip-brain"><span class="id">E07</span><span class="nm">多轮引导教学引擎</span><span class="desc">苏格拉底追问·断点定位·图谱引导</span></div>
       <div class="chip chip-brain"><span class="id">E08</span><span class="nm">冲突检测引擎</span><span class="desc">同库文档冲突·相似度排序</span></div>
     </div>
@@ -242,7 +239,7 @@ body{font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;backgr
       <div class="chip chip-dash"><span class="id">D02</span><span class="nm">知识缺口看板</span><span class="desc">答不了的问题按频次推送</span></div>
       <div class="chip chip-dash"><span class="id">D03</span><span class="nm">贡献度仪表盘</span><span class="desc">排行·增长·调用统计</span></div>
       <div class="chip chip-dash"><span class="id">D04</span><span class="nm">学期更新工具</span><span class="desc">教材换版·跨学期继承</span></div>
-      <div class="chip chip-dash"><span class="id">D05</span><span class="nm">运营统计看板</span><span class="desc">指标·趋势·院系·导出</span></div>
+      <div class="chip chip-dash"><span class="id">D05</span><span class="nm">数据统计与运营</span><span class="desc">指标·趋势·院系·导出</span></div>
       <div class="chip chip-dash"><span class="id">D06</span><span class="nm">答疑质量看板</span><span class="desc">满意度·命中率·溯源覆盖</span></div>
       <div class="chip chip-dash"><span class="id">D07</span><span class="nm">知识库质检看板</span><span class="desc">覆盖度·质量·重复度</span></div>
     </div>
@@ -303,20 +300,19 @@ body{font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;backgr
 <div class="layer layer-safe">
   <div class="layer-hd">
     <span class="level">L2</span>
-    <span class="title">安全防护层 · 九层安全体系</span>
-    <span class="count">学科大脑 6 层 + XClaw 3 层 = 全覆盖</span>
+    <span class="title">安全防护层 · 八层安全体系</span>
+    <span class="count">学科大脑 5 层 + XClaw 3 层 = 全覆盖</span>
   </div>
   <div class="layer-bd">
 
     <div class="sub-layer">
-      <div class="sl-title">学科大脑六层安全（保护数据与基础设施）</div>
+      <div class="sl-title">学科大脑五层安全（保护数据与基础设施）</div>
       <div class="sec-row">
-        <div class="sec-cell"><div class="sc-n">第 1 层</div><div class="sc-d">物理与部署安全<br>全私有化·内网隔离</div></div>
-        <div class="sec-cell"><div class="sc-n">第 2 层</div><div class="sc-d">网络与传输安全<br>加密传输·防火墙·限流</div></div>
-        <div class="sec-cell"><div class="sc-n">第 3 层</div><div class="sc-d">数据存储安全<br>加密存储·备份加密</div></div>
-        <div class="sec-cell"><div class="sc-n">第 4 层</div><div class="sc-d">访问控制<br>四级权限·双因子认证</div></div>
-        <div class="sec-cell"><div class="sc-n">第 5 层</div><div class="sc-d">知识产权保护<br>确权·水印·脱敏</div></div>
-        <div class="sec-cell"><div class="sc-n">第 6 层</div><div class="sc-d">AI 输出安全<br>注入检测·内容过滤·幻觉兜底</div></div>
+        <div class="sec-cell"><div class="sc-n">第 1 层</div><div class="sc-d">物理部署安全<br>全私有化·内网隔离·⌂ 学校负责</div></div>
+        <div class="sec-cell"><div class="sc-n">第 2 层</div><div class="sc-d">身份认证层<br>OAuth2·JWT·API 网关·CSRF</div></div>
+        <div class="sec-cell"><div class="sc-n">第 3 层</div><div class="sc-d">权限控制层<br>三级角色·三层权限·租户隔离</div></div>
+        <div class="sec-cell"><div class="sc-n">第 4 层</div><div class="sc-d">数据安全层<br>HTTPS 全链路·HMAC 签名·OSS</div></div>
+        <div class="sec-cell"><div class="sc-n">第 5 层</div><div class="sc-d">内容安全层(AIGC)<br>敏感词·分角色策略·双向过滤</div></div>
       </div>
     </div>
 
