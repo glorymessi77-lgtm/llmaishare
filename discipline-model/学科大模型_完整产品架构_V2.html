@@ -2,463 +2,360 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=1440">
-<title>学科大模型 · 完整产品架构 · 六层81组件 · V2</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&family=Noto+Serif+SC:wght@400;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学科大模型 · 完整产品架构</title>
 <style>
 :root{
-  --brand:#23B283;--brand-dk:#158C68;--brand-bg:#EBF7F1;
-  --text-1:#12151A;--text-2:#4B535C;--text-3:#7B838C;--text-4:#A9B0B8;
-  --bg:#F2F5F7;--white:#FFFFFF;
-  --border:#E8ECF0;--border-soft:#F0F2F5;
-  --blue:#0077FF;--blue-bg:#EBF5FF;
-  --orange:#FC7819;--orange-bg:#FFF4E6;
-  --purple:#7C5CFC;--purple-bg:#F3EEFF;
-  --gold:#F0A742;--gold-bg:#FFF5E5;
-  --pink:#EC4899;--pink-bg:#FDF2F8;
-  --cyan:#06B6D4;--cyan-bg:#ECFEFF;
-  --red:#F53B3B;--red-bg:#FEF0F0;
-  --gray:#64748B;--gray-bg:#F1F5F9;
+  --n:#0A2540;--g:#C8A45C;--ink:#1b2433;--ink2:#555;--line:#D8D8D8;
+  --brain:#2D6A4F;--brain-bg:#E8F5EE;
+  --xclaw:#4A3F8A;--xclaw-bg:#EEEDFA;
+  --engine:#B8650A;--engine-bg:#FDF3E6;
+  --scene:#1A5276;--scene-bg:#E8F0F8;
+  --safe:#8B2E2E;--safe-bg:#FDECEC;
+  --infra:#555;--infra-bg:#F5F5F5;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Noto Sans SC','PingFang SC',sans-serif;background:var(--bg);color:var(--text-1);font-size:14px;line-height:1.7;-webkit-font-smoothing:antialiased;}
-.page{max-width:1280px;margin:0 auto;padding:40px 32px 80px;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;background:#fff;color:var(--ink);padding:30px;}
+.page{max-width:1300px;margin:0 auto;}
 
-/* Header */
-.header{text-align:center;padding:48px 0 40px;border-bottom:1px solid var(--border);margin-bottom:40px;}
-.header h1{font-family:'Noto Serif SC',serif;font-size:36px;font-weight:900;letter-spacing:-0.02em;margin-bottom:10px;}
-.header h1 .accent{color:var(--brand);}
-.header .sub{font-size:14px;color:var(--text-3);margin-bottom:20px;}
-.header .stats{display:flex;justify-content:center;gap:28px;font-size:13px;color:var(--text-3);}
-.header .stats strong{color:var(--text-1);font-weight:700;font-size:15px;}
+.header{text-align:center;margin-bottom:30px;padding-bottom:20px;border-bottom:3px solid var(--g);}
+.header h1{font-size:32px;color:var(--n);letter-spacing:3px;}
+.header .sub{font-size:14px;color:var(--ink2);margin-top:8px;}
+.header .stats{display:flex;justify-content:center;gap:24px;margin-top:12px;font-size:13px;color:var(--ink2);}
+.header .stats strong{color:var(--n);font-size:16px;}
 
-/* Layer */
-.layer{margin-bottom:36px;background:var(--white);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
-.layer-head{
-  padding:24px 32px;display:flex;align-items:center;gap:18px;
-  border-bottom:1px solid var(--border-soft);position:relative;
+.layer{margin-bottom:12px;border:2px solid var(--line);overflow:hidden;}
+.layer-hd{padding:12px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.layer-hd .level{font-size:12px;letter-spacing:2px;font-weight:700;color:#fff;min-width:36px;}
+.layer-hd .title{font-size:18px;font-weight:700;color:#fff;flex:1;}
+.layer-hd .count{font-size:12px;color:rgba(255,255,255,0.7);}
+.layer-bd{padding:16px 18px;background:#fff;}
+
+.layer-scene .layer-hd{background:var(--scene);}.layer-scene{border-color:var(--scene);}
+.layer-xclaw .layer-hd{background:var(--xclaw);}.layer-xclaw{border-color:var(--xclaw);}
+.layer-brain .layer-hd{background:var(--brain);}.layer-brain{border-color:var(--brain);}
+.layer-engine .layer-hd{background:var(--engine);}.layer-engine{border-color:var(--engine);}
+.layer-safe .layer-hd{background:var(--safe);}.layer-safe{border-color:var(--safe);}
+.layer-infra .layer-hd{background:var(--infra);}.layer-infra{border-color:var(--infra);}
+
+.grid{display:flex;flex-wrap:wrap;gap:8px;}
+
+.chip{padding:8px 12px;font-size:12px;font-weight:600;border:1px solid var(--line);background:#fff;line-height:1.4;text-align:center;min-width:100px;}
+.chip .id{font-size:10px;letter-spacing:1px;display:block;margin-bottom:2px;}
+.chip .nm{font-size:13px;font-weight:700;color:var(--ink);}
+.chip .desc{font-size:10.5px;color:var(--ink2);margin-top:2px;font-weight:400;}
+
+.chip-scene{background:var(--scene-bg);border-color:#B0C8DB;}.chip-scene .id{color:var(--scene);}
+.chip-xclaw{background:var(--xclaw-bg);border-color:#B8B3D8;}.chip-xclaw .id{color:var(--xclaw);}
+.chip-brain{background:var(--brain-bg);border-color:#A0D4B0;}.chip-brain .id{color:var(--brain);}
+.chip-tool{background:#F0F7F2;border-color:#A0D4B0;}.chip-tool .id{color:var(--brain);}
+.chip-engine{background:var(--engine-bg);border-color:#E0C9A0;}.chip-engine .id{color:var(--engine);}
+.chip-safe{background:var(--safe-bg);border-color:#D4A0A0;}.chip-safe .id{color:var(--safe);}
+.chip-infra{background:var(--infra-bg);border-color:#C0C0C0;}.chip-infra .id{color:var(--infra);}
+.chip-dash{background:#F0F4F8;border-color:#B0C0D0;}.chip-dash .id{color:#2C5F7C;}
+
+.group-title{font-size:13px;font-weight:700;margin:12px 0 6px;padding:4px 10px;display:inline-block;border-left:3px solid var(--line);}
+.group-title.first{margin-top:0;}
+.group-title.t-scene{border-color:var(--scene);color:var(--scene);}
+.group-title.t-xclaw{border-color:var(--xclaw);color:var(--xclaw);}
+.group-title.t-brain{border-color:var(--brain);color:var(--brain);}
+.group-title.t-engine{border-color:var(--engine);color:var(--engine);}
+.group-title.t-safe{border-color:var(--safe);color:var(--safe);}
+
+.sub-layer{margin:8px 0;padding:12px 14px;border-left:3px solid var(--line);background:#FAFAFA;}
+.sub-layer .sl-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+
+.conn{text-align:center;padding:4px 0;font-size:16px;color:var(--g);font-weight:700;letter-spacing:6px;}
+
+.prompt-chain{display:flex;gap:0;margin:8px 0;}
+.pc-step{flex:1;padding:10px 8px;border:1px solid var(--line);text-align:center;background:#FAFAFA;position:relative;}
+.pc-step:not(:last-child)::after{content:'→';position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:var(--xclaw);font-size:14px;z-index:1;background:#fff;width:14px;}
+.pc-step .ps-n{font-size:9px;color:var(--ink2);letter-spacing:1px;}
+.pc-step .ps-t{font-size:12px;font-weight:700;color:var(--ink);}
+.pc-step .ps-d{font-size:10px;color:var(--ink2);}
+
+.sec-row{display:flex;gap:0;margin:6px 0;}
+.sec-cell{flex:1;padding:8px 10px;border:1px solid var(--line);font-size:11px;text-align:center;background:#FAFAFA;}
+.sec-cell .sc-n{font-weight:700;color:var(--ink);font-size:12px;}
+.sec-cell .sc-d{color:var(--ink2);font-size:10.5px;margin-top:2px;}
+
+.note{margin-top:10px;padding:10px 14px;border-left:3px solid var(--g);background:#FFFBF0;font-size:11px;color:#7A6530;line-height:1.65;}
+.note strong{color:#5A4A20;}
+
+@media(max-width:900px){
+  .chip{min-width:80px;font-size:11px;}
+  .chip .nm{font-size:12px;}
+  .header h1{font-size:24px;}
 }
-.layer-head::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--lc);}
-.layer-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--lc);font-weight:700;letter-spacing:0.15em;padding:5px 12px;background:var(--lc-bg);border-radius:6px;}
-.layer-title{font-family:'Noto Serif SC',serif;font-size:22px;font-weight:900;color:var(--text-1);}
-.layer-desc{font-size:12px;color:var(--text-3);margin-left:auto;max-width:420px;text-align:right;line-height:1.6;}
-.layer-body{padding:28px 32px;}
-
-.l6{--lc:var(--brand);--lc-bg:var(--brand-bg);}
-.l5{--lc:var(--purple);--lc-bg:var(--purple-bg);}
-.l4{--lc:var(--orange);--lc-bg:var(--orange-bg);}
-.l3{--lc:var(--blue);--lc-bg:var(--blue-bg);}
-.l2{--lc:var(--red);--lc-bg:var(--red-bg);}
-.l1{--lc:var(--gray);--lc-bg:var(--gray-bg);}
-
-/* Section inside layer */
-.sec{margin-bottom:24px;}
-.sec:last-child{margin-bottom:0;}
-.sec-title{font-size:15px;font-weight:800;color:var(--text-1);margin-bottom:14px;display:flex;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--border-soft);}
-.sec-title::before{content:'';width:3px;height:14px;background:var(--lc);border-radius:2px;}
-
-/* Grid cards */
-.grid{display:grid;gap:10px;}
-.grid.g4{grid-template-columns:repeat(4,1fr);}
-.grid.g5{grid-template-columns:repeat(5,1fr);}
-.grid.g3{grid-template-columns:repeat(3,1fr);}
-.grid.g2{grid-template-columns:repeat(2,1fr);}
-.grid.g8{grid-template-columns:repeat(8,1fr);}
-.grid.g6{grid-template-columns:repeat(6,1fr);}
-.grid.g7{grid-template-columns:repeat(7,1fr);}
-
-.card{
-  padding:14px 16px;background:var(--bg);border:1px solid var(--border-soft);
-  border-radius:10px;font-size:12px;
-}
-.card .num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-4);letter-spacing:0.08em;margin-bottom:4px;}
-.card .name{font-size:13px;font-weight:700;color:var(--text-1);margin-bottom:4px;}
-.card .desc{font-size:11px;color:var(--text-3);line-height:1.55;}
-
-.card.highlight{border-color:var(--lc);background:var(--lc-bg);}
-.card.highlight .name{color:var(--lc);}
-
-/* Scene tags */
-.scene-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
-.scene-tag{
-  padding:12px 18px;background:var(--brand-bg);border:1px solid rgba(35,178,131,0.3);
-  border-radius:10px;text-align:center;flex:1;min-width:120px;
-}
-.scene-tag .char{font-family:'Noto Serif SC',serif;font-size:28px;font-weight:900;color:var(--brand);display:block;margin-bottom:4px;}
-.scene-tag .label{font-size:11px;color:var(--text-2);}
-
-/* Prompt chain */
-.chain{display:flex;gap:0;align-items:stretch;}
-.chain-step{
-  flex:1;padding:14px 12px;background:var(--bg);border:1px solid var(--border-soft);
-  text-align:center;position:relative;font-size:11px;
-}
-.chain-step:first-child{border-radius:10px 0 0 10px;}
-.chain-step:last-child{border-radius:0 10px 10px 0;}
-.chain-step:not(:last-child)::after{
-  content:'→';position:absolute;right:-8px;top:50%;transform:translateY(-50%);
-  color:var(--text-4);font-size:14px;z-index:1;background:var(--white);width:16px;text-align:center;
-}
-.chain-step .sn{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-4);letter-spacing:0.1em;margin-bottom:3px;}
-.chain-step .st{font-weight:700;color:var(--text-1);font-size:12px;margin-bottom:2px;}
-.chain-step .sd{font-size:10px;color:var(--text-3);}
-
-/* Security layers */
-.sec-layers{display:flex;flex-direction:column;gap:6px;}
-.sec-layer{
-  display:grid;grid-template-columns:40px 160px 1fr;gap:14px;
-  padding:12px 16px;background:var(--bg);border:1px solid var(--border-soft);
-  border-radius:8px;align-items:center;font-size:12px;
-}
-.sec-layer .ln{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--lc);font-weight:700;}
-.sec-layer .lname{font-weight:700;color:var(--text-1);}
-.sec-layer .ldesc{color:var(--text-3);font-size:11px;}
-
-/* Divider */
-.divider{
-  text-align:center;padding:8px 0;margin:10px 0;
-  font-size:10px;color:var(--text-4);font-family:'JetBrains Mono',monospace;letter-spacing:0.15em;
-}
-
-/* Note callout */
-.note{
-  padding:14px 18px;background:#FFF7ED;border:1px solid #FED7AA;border-left:4px solid var(--orange);
-  border-radius:0 10px 10px 0;font-size:12px;color:#9A3412;line-height:1.7;margin-top:14px;
-}
-.note strong{color:#7C2D12;}
-.note.green{background:var(--brand-bg);border-color:rgba(35,178,131,0.3);border-left-color:var(--brand);color:var(--brand-dk);}
-.note.green strong{color:#065F46;}
-
-/* Footer */
-footer{
-  margin-top:48px;padding-top:20px;border-top:1px solid var(--border);
-  display:flex;justify-content:space-between;font-size:12px;color:var(--text-3);
-}
-footer .name{color:var(--brand);font-weight:700;}
 </style>
 </head>
 <body>
-
 <div class="page">
 
-  <div class="header">
-    <h1>学科大模型 · <span class="accent">完整产品架构</span></h1>
-    <div class="sub">六层架构 · 81 个组件 · 自上而下全覆盖 · 对齐领导发布版本 V2</div>
-    <div class="stats">
-      <span><strong>6</strong> 层架构</span>
-      <span><strong>81</strong> 个组件</span>
-      <span><strong>10</strong> 大模块</span>
-      <span><strong>10</strong> 大工具</span>
-      <span><strong>8</strong> 大引擎</span>
-      <span><strong>7</strong> 大看板</span>
-      <span><strong>9</strong> 层安全</span>
-    </div>
+<!-- Header -->
+<div class="header">
+  <h1>学科大模型 · 完整产品架构</h1>
+  <div class="sub">自上而下六层架构 · 场景 → 中枢 → 底座 → 引擎 → 安全 → 基础设施</div>
+  <div class="stats">
+    <span>总计 <strong>81</strong> 个组件</span>
+    <span><strong>10</strong> 大模块</span>
+    <span><strong>10</strong> 大工具</span>
+    <span><strong>8</strong> 大引擎</span>
+    <span><strong>7</strong> 大看板</span>
+    <span><strong>9</strong> 层安全</span>
   </div>
-
-  <!-- ============ L6 应用场景层 ============ -->
-  <div class="layer l6">
-    <div class="layer-head">
-      <span class="layer-num">L6</span>
-      <span class="layer-title">应用场景层 · 八大教学全场景</span>
-      <span class="layer-desc">覆盖教学全流程 + 科研全链路 + 成果全周期</span>
-    </div>
-    <div class="layer-body">
-      <div class="scene-row">
-        <div class="scene-tag"><span class="char">建</span><span class="label">专业·课程·资源建设</span></div>
-        <div class="scene-tag"><span class="char">备</span><span class="label">备课·教案·教学设计</span></div>
-        <div class="scene-tag"><span class="char">教</span><span class="label">课堂教学·互动·直播</span></div>
-        <div class="scene-tag"><span class="char">学</span><span class="label">自主学习·图谱·自适应</span></div>
-        <div class="scene-tag"><span class="char">考</span><span class="label">出题·批改·考评</span></div>
-        <div class="scene-tag"><span class="char">督</span><span class="label">教学督导·质量监控</span></div>
-        <div class="scene-tag"><span class="char">管</span><span class="label">画像·看板·驾驶舱</span></div>
-        <div class="scene-tag"><span class="char">研</span><span class="label">科研·文献·论文</span></div>
-      </div>
-      <div class="sec-title">三大场景解决方案</div>
-      <div class="grid g3">
-        <div class="card highlight"><div class="name">全教学场景</div><div class="desc">建备教学考督管 · 覆盖教学全流程</div></div>
-        <div class="card highlight"><div class="name">全论文提效场景</div><div class="desc">选题·文献·写作·投稿·修改</div></div>
-        <div class="card highlight"><div class="name">全成果打造提效场景</div><div class="desc">教改·课题·教材·竞赛</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ L5 XClaw 智能中枢 ============ -->
-  <div class="layer l5">
-    <div class="layer-head">
-      <span class="layer-num">L5</span>
-      <span class="layer-title">XClaw 智能中枢 · 编排层（Orchestration Harness）</span>
-      <span class="layer-desc">意图识别 · 任务拆解 · Skill 编排 · 知识接入 · 模型管理 · 安全审计 · 运营进化</span>
-    </div>
-    <div class="layer-body">
-
-      <div class="sec">
-        <div class="sec-title">六大工程层</div>
-        <div class="grid g3">
-          <div class="card"><div class="num">① 调度引擎</div><div class="name">意图识别 · 任务拆解</div><div class="desc">七大场景路由 · 四维上下文</div></div>
-          <div class="card"><div class="num">② 智能技能编排 Skill</div><div class="name">五层提示词链 · 零编程创建</div><div class="desc">共享复用 · 版本管理</div></div>
-          <div class="card"><div class="num">③ 知识接入 RAG</div><div class="name">三路召回 · 溯源 · 幻觉兜底</div><div class="desc">对接学科大脑知识底座</div></div>
-          <div class="card"><div class="num">④ 模型管理</div><div class="name">多模型混合路由</div><div class="desc">任务分类 · 成本控制</div></div>
-          <div class="card"><div class="num">⑤ 安全与审计</div><div class="name">三层防线 · 幻觉约束</div><div class="desc">全链路溯源</div></div>
-          <div class="card"><div class="num">⑥ 运营与进化</div><div class="name">质量监控 · 错误回流</div><div class="desc">知识飞轮 · 成果包装</div></div>
-        </div>
-      </div>
-
-      <div class="sec">
-        <div class="sec-title">五层提示词链（Prompt Chain）</div>
-        <div class="chain">
-          <div class="chain-step"><div class="sn">第 1 层</div><div class="st">意图解析</div><div class="sd">解析输入→提取参数→结构化任务</div></div>
-          <div class="chain-step"><div class="sn">第 2 层</div><div class="st">知识库调用</div><div class="sd">术语改写→检索→排序→注入</div></div>
-          <div class="chain-step"><div class="sn">第 3 层</div><div class="st">任务执行</div><div class="sd">系统指令+知识+输入→生成</div></div>
-          <div class="chain-step"><div class="sn">第 4 层</div><div class="st">输出格式化</div><div class="sd">结构化→溯源标注→质量自检</div></div>
-          <div class="chain-step"><div class="sn">第 5 层</div><div class="st">安全过滤</div><div class="sd">注入防护+内容过滤+权限管控</div></div>
-        </div>
-      </div>
-
-      <div class="sec">
-        <div class="sec-title">八大智能技能（Smart Skills）</div>
-        <div class="grid g4">
-          <div class="card"><div class="num">Skill 1</div><div class="name">教学设计</div><div class="desc">一句话生成教案</div></div>
-          <div class="card"><div class="num">Skill 2</div><div class="name">自主学习</div><div class="desc">图谱路径 · 掌握度</div></div>
-          <div class="card"><div class="num">Skill 3</div><div class="name">智能出题</div><div class="desc">自动组卷 · 知识点标注</div></div>
-          <div class="card"><div class="num">Skill 4</div><div class="name">智能批改</div><div class="desc">三维评价 · 逐题评语</div></div>
-          <div class="card"><div class="num">Skill 5</div><div class="name">学情分析</div><div class="desc">薄弱点 · 进步趋势</div></div>
-          <div class="card"><div class="num">Skill 6</div><div class="name">教学督导</div><div class="desc">AI 巡课 · 三级预警</div></div>
-          <div class="card"><div class="num">Skill 7</div><div class="name">科研辅助</div><div class="desc">全流程六大子任务</div></div>
-          <div class="card"><div class="num">Skill 8</div><div class="name">创作工具</div><div class="desc">报告 · PPT · 翻译 · 润色</div></div>
-        </div>
-      </div>
-
-      <div class="sec">
-        <div class="sec-title">教师自创工具（Vibecoding）</div>
-        <div class="grid g4">
-          <div class="card"><div class="name">零编程创建</div><div class="desc">教师自然语言描述需求</div></div>
-          <div class="card"><div class="name">学科知识生成</div><div class="desc">产出有学科依据</div></div>
-          <div class="card"><div class="name">技能共享市场</div><div class="desc">可复用 · 可跨校传播</div></div>
-          <div class="card"><div class="name">版本与灰度管理</div><div class="desc">发布 · 回滚 · 权限</div></div>
-        </div>
-      </div>
-
-      <div class="note green">
-        <strong>专业度建议（XClaw 层）：</strong>① 六大工程层中"知识接入 RAG"建议明确标注 RAG 只占整体 10-15%，避免客户误解"你们就是 RAG" ② 五层提示词链建议补充"第 2.5 层 · 术语归一化"——术语改写应在检索之前独立执行，否则影响召回率 ③ Vibecoding 是亮点，但建议补充"教师创建的 Skill 必须经过 Hook 校验层审核后才能发布"的安全闭环说明
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ L4 Coral 知识底座 ============ -->
-  <div class="layer l4">
-    <div class="layer-head">
-      <span class="layer-num">L4</span>
-      <span class="layer-title">Coral 小雅学科大脑 · 知识底座（Knowledge Harness）</span>
-      <span class="layer-desc">十大模块 + 十大工具 + 八大引擎 + 七大看板 = 35 组件</span>
-    </div>
-    <div class="layer-body">
-
-      <div class="sec">
-        <div class="sec-title">十大核心产品模块（M1 - M10）</div>
-        <div class="grid g5">
-          <div class="card"><div class="num">M1</div><div class="name">学科语料库</div><div class="desc">教材 · 论文 · 多模态 · 数据飞轮</div></div>
-          <div class="card"><div class="num">M2</div><div class="name">术语与知识图谱</div><div class="desc">术语体系 · 先修关系 · 图谱问答</div></div>
-          <div class="card"><div class="num">M3</div><div class="name">问答标准库</div><div class="desc">高频 FAQ · AI 生成 + 教师审核</div></div>
-          <div class="card"><div class="num">M4</div><div class="name">智能检索与溯源</div><div class="desc">混合检索 · 溯源到页段 · 幻觉防护</div></div>
-          <div class="card"><div class="num">M5</div><div class="name">管理与安全平台</div><div class="desc">四级权限 · 加密 · 审计 · 确权</div></div>
-          <div class="card"><div class="num">M6</div><div class="name">师生共建运营</div><div class="desc">三级审核 · 知识缺口 · 贡献度</div></div>
-          <div class="card"><div class="num">M7</div><div class="name">社区与知识共享</div><div class="desc">校级管理 · 跨校引用 · 共建激励</div></div>
-          <div class="card"><div class="num">M8</div><div class="name">笔记系统</div><div class="desc">双向联动知识库 · 一键保存</div></div>
-          <div class="card"><div class="num">M9</div><div class="name">智能体应用矩阵</div><div class="desc">配置下发 · AIGC 生成 · 成果管理</div></div>
-          <div class="card"><div class="num">M10</div><div class="name">Agent 生态与开放平台</div><div class="desc">API 开放 · 技能市场 · 插件生态</div></div>
-        </div>
-      </div>
-
-      <div class="sec">
-        <div class="sec-title">十大工具（T01 - T10）</div>
-        <div class="grid g5">
-          <div class="card"><div class="num">T01</div><div class="name">文档解析</div><div class="desc">PDF · PPT · Word 精准解析</div></div>
-          <div class="card"><div class="num">T02</div><div class="name">多模态采集</div><div class="desc">图片 · 音视频 · 网页 · 录音</div></div>
-          <div class="card"><div class="num">T03</div><div class="name">知识图谱标注</div><div class="desc">先修关系 · 可视化 · 一键转换</div></div>
-          <div class="card"><div class="num">T04</div><div class="name">术语管理</div><div class="desc">提取 · 审核 · 查询改写</div></div>
-          <div class="card"><div class="num">T05</div><div class="name">知识库管理</div><div class="desc">后台增删改查 · 版本 · 权限 · 审批</div></div>
-          <div class="card"><div class="num">T06</div><div class="name">质量评测</div><div class="desc">测试集 · A/B 对比 · 质量看板</div></div>
-          <div class="card"><div class="num">T07</div><div class="name">师生共建平台</div><div class="desc">上传 · 研读 · 审核 · 运营看板</div></div>
-          <div class="card"><div class="num">T08</div><div class="name">问答库构建</div><div class="desc">AI 候选 · 教师审核 · 冲突检测</div></div>
-          <div class="card"><div class="num">T09</div><div class="name">笔记与协作</div><div class="desc">双向联动 · 问答保存 · 白板</div></div>
-          <div class="card"><div class="num">T10</div><div class="name">智能体与 Agent 平台</div><div class="desc">矩阵配置 · AIGC · 技能市场</div></div>
-        </div>
-      </div>
-
-      <div class="sec">
-        <div class="sec-title">八大引擎（E01 - E08）</div>
-        <div class="grid g4">
-          <div class="card"><div class="num">E01</div><div class="name">混合检索引擎</div><div class="desc">三路召回 · 融合排序 · 重排序</div></div>
-          <div class="card"><div class="num">E02</div><div class="name">全链路溯源引擎</div><div class="desc">文档 · 章节 · 页码 · 段落级</div></div>
-          <div class="card"><div class="num">E03</div><div class="name">幻觉兜底引擎</div><div class="desc">低置信度拒答 · 风险标识</div></div>
-          <div class="card"><div class="num">E04</div><div class="name">术语改写引擎</div><div class="desc">术语扩展 · 上下文消歧</div></div>
-          <div class="card"><div class="num">E05</div><div class="name">学科提示词引擎</div><div class="desc">学科约束 · 术语注入 · 格式控制</div></div>
-          <div class="card"><div class="num">E06</div><div class="name">向量微调引擎</div><div class="desc">学科检索精度提升 · 模型切换</div></div>
-          <div class="card"><div class="num">E07</div><div class="name">多轮引导教学引擎</div><div class="desc">苏格拉底追问 · 断点定位 · 图谱引导</div></div>
-          <div class="card"><div class="num">E08</div><div class="name">冲突检测引擎</div><div class="desc">同库文档冲突 · 相似度排序</div></div>
-        </div>
-      </div>
-
-      <div class="sec">
-        <div class="sec-title">七大看板（D01 - D07）</div>
-        <div class="grid g4">
-          <div class="card"><div class="num">D01</div><div class="name">错误案例分析</div><div class="desc">Bad Case · 答错分类 · 根因定位</div></div>
-          <div class="card"><div class="num">D02</div><div class="name">知识缺口看板</div><div class="desc">答不了的问题按频次推送</div></div>
-          <div class="card"><div class="num">D03</div><div class="name">贡献度仪表盘</div><div class="desc">排行 · 增长 · 调用统计</div></div>
-          <div class="card"><div class="num">D04</div><div class="name">学期更新工具</div><div class="desc">教材换版 · 跨学期继承</div></div>
-          <div class="card"><div class="num">D05</div><div class="name">运营统计看板</div><div class="desc">指标 · 趋势 · 院系 · 导出</div></div>
-          <div class="card"><div class="num">D06</div><div class="name">答疑质量看板</div><div class="desc">满意度 · 命中率 · 溯源覆盖</div></div>
-          <div class="card"><div class="num">D07</div><div class="name">知识库质检看板</div><div class="desc">覆盖度 · 质量 · 重复度</div></div>
-        </div>
-      </div>
-
-      <div class="sec">
-        <div class="sec-title">数据存储层</div>
-        <div class="grid g5">
-          <div class="card"><div class="name">向量数据库</div><div class="desc">语义检索存储</div></div>
-          <div class="card"><div class="name">图数据库</div><div class="desc">知识图谱 · 术语关系</div></div>
-          <div class="card"><div class="name">对象存储</div><div class="desc">文档 · 图片 · 音视频</div></div>
-          <div class="card"><div class="name">关系数据库</div><div class="desc">用户 · 权限 · 配置</div></div>
-          <div class="card"><div class="name">缓存层</div><div class="desc">热点数据 · 会话状态</div></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ============ L3 引擎层 · 大模型混合路由 ============ -->
-  <div class="layer l3">
-    <div class="layer-head">
-      <span class="layer-num">L3</span>
-      <span class="layer-title">引擎层 · 大模型混合路由</span>
-      <span class="layer-desc">按任务智能调度 · 不绑定任何一家 · 模型中立</span>
-    </div>
-    <div class="layer-body">
-
-      <div class="sec">
-        <div class="sec-title">通用大模型（日常教学 · 高性价比）</div>
-        <div class="grid g4">
-          <div class="card"><div class="name">中文理解增强模型</div><div class="desc">中文学科问答 · 多模态理解</div></div>
-          <div class="card"><div class="name">长上下文推理模型</div><div class="desc">128K+ 上下文 · 复杂推理</div></div>
-          <div class="card"><div class="name">轻量高速模型</div><div class="desc">快速响应 · 低成本日常</div></div>
-          <div class="card"><div class="name">多模态理解模型</div><div class="desc">图文 · 音视频 · 公式识别</div></div>
-        </div>
-      </div>
-
-      <div class="sec">
-        <div class="sec-title">学科专属模型（特定学科 · 高准确率）</div>
-        <div class="grid g3">
-          <div class="card highlight"><div class="name">中医药专属模型</div><div class="desc">方剂 · 药材 · 证候</div></div>
-          <div class="card highlight"><div class="name">食品科学专属模型</div><div class="desc">食品安全 · 营养 · 检测</div></div>
-          <div class="card highlight"><div class="name">地球科学专属模型</div><div class="desc">地质 · 古生物 · 矿物</div></div>
-          <div class="card highlight"><div class="name">社会科学专属模型</div><div class="desc">社科 · 哲学 · 经济</div></div>
-          <div class="card highlight"><div class="name">科技史专属模型</div><div class="desc">科技发展 · 学术溯源</div></div>
-          <div class="card highlight"><div class="name">更多学科扩展</div><div class="desc">按项目需求持续接入</div></div>
-        </div>
-      </div>
-
-      <div class="sec">
-        <div class="sec-title">路由调度策略</div>
-        <div class="grid g4">
-          <div class="card"><div class="name">按任务类型</div><div class="desc">问答 / 出题 / 批改 / 创作 / 分析</div></div>
-          <div class="card"><div class="name">按成本分级</div><div class="desc">日常低成本 · 疑难自动升级</div></div>
-          <div class="card"><div class="name">按延迟要求</div><div class="desc">实时 ≤3 秒 · 批量异步</div></div>
-          <div class="card"><div class="name">按学科路由</div><div class="desc">学科问题优先匹配专属模型</div></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ============ L2 安全防护层 ============ -->
-  <div class="layer l2">
-    <div class="layer-head">
-      <span class="layer-num">L2</span>
-      <span class="layer-title">安全防护层 · 九层安全体系</span>
-      <span class="layer-desc">学科大脑 6 层 + XClaw 3 层 = 全覆盖</span>
-    </div>
-    <div class="layer-body">
-
-      <div class="sec">
-        <div class="sec-title">学科大脑六层安全（保护数据与基础设施）</div>
-        <div class="sec-layers">
-          <div class="sec-layer"><div class="ln">L-1</div><div class="lname">物理与部署安全</div><div class="ldesc">全私有化 · 内网隔离</div></div>
-          <div class="sec-layer"><div class="ln">L-2</div><div class="lname">网络与传输安全</div><div class="ldesc">加密传输 · 防火墙 · 限流</div></div>
-          <div class="sec-layer"><div class="ln">L-3</div><div class="lname">数据存储安全</div><div class="ldesc">加密存储 · 备份加密</div></div>
-          <div class="sec-layer"><div class="ln">L-4</div><div class="lname">访问控制</div><div class="ldesc">四级权限 · 双因子认证</div></div>
-          <div class="sec-layer"><div class="ln">L-5</div><div class="lname">知识产权保护</div><div class="ldesc">确权 · 水印 · 脱敏</div></div>
-          <div class="sec-layer"><div class="ln">L-6</div><div class="lname">AI 输出安全</div><div class="ldesc">注入检测 · 内容过滤 · 幻觉兜底</div></div>
-        </div>
-      </div>
-
-      <div class="divider">— — — — — — — — — — — — — — —</div>
-
-      <div class="sec">
-        <div class="sec-title">XClaw 三层安全（保护 AI 交互过程）</div>
-        <div class="sec-layers">
-          <div class="sec-layer"><div class="ln">输入</div><div class="lname">输入安全防护</div><div class="ldesc">注入检测 · 恶意识别 · 敏感词</div></div>
-          <div class="sec-layer"><div class="ln">处理</div><div class="lname">处理过程安全</div><div class="ldesc">权限验证 · 行为边界 · 即时销毁</div></div>
-          <div class="sec-layer"><div class="ln">输出</div><div class="lname">输出安全过滤</div><div class="ldesc">内容分级 · 学术诚信 · 置信度门控</div></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ============ L1 基础设施层 ============ -->
-  <div class="layer l1">
-    <div class="layer-head">
-      <span class="layer-num">L1</span>
-      <span class="layer-title">基础设施层 · 全私有化部署</span>
-      <span class="layer-desc">"数据一个字节不出校园"</span>
-    </div>
-    <div class="layer-body">
-      <div class="grid g5">
-        <div class="card"><div class="name">校内私有化部署</div><div class="desc">服务器在校园内网</div></div>
-        <div class="card"><div class="name">内网隔离运行</div><div class="desc">外网不可访问核心服务</div></div>
-        <div class="card"><div class="name">数据主权保护</div><div class="desc">学校全权拥有所有数据</div></div>
-        <div class="card"><div class="name">合规认证</div><div class="desc">支持等保二级 / 三级</div></div>
-        <div class="card"><div class="name">部署模式</div><div class="desc">SaaS · 私有化 · 混合云</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ 统计汇总 ============ -->
-  <div class="layer" style="--lc:var(--brand);--lc-bg:var(--brand-bg);">
-    <div class="layer-head">
-      <span class="layer-num">TOTAL</span>
-      <span class="layer-title">完整统计汇总 · 81 个组件</span>
-    </div>
-    <div class="layer-body">
-      <div class="grid g5">
-        <div class="card highlight"><div class="num">M1-M10</div><div class="name">十大模块</div><div class="desc">10 个组件</div></div>
-        <div class="card highlight"><div class="num">T01-T10</div><div class="name">十大工具</div><div class="desc">10 个组件</div></div>
-        <div class="card highlight"><div class="num">E01-E08</div><div class="name">八大引擎</div><div class="desc">8 个组件</div></div>
-        <div class="card highlight"><div class="num">D01-D07</div><div class="name">七大看板</div><div class="desc">7 个组件</div></div>
-        <div class="card highlight"><div class="num">Skill 1-8</div><div class="name">八大智能技能</div><div class="desc">8 个组件</div></div>
-      </div>
-      <div class="grid g5" style="margin-top:10px;">
-        <div class="card"><div class="name">六大工程层</div><div class="desc">6 个组件</div></div>
-        <div class="card"><div class="name">八大教学场景</div><div class="desc">8 个组件</div></div>
-        <div class="card"><div class="name">五层提示词链</div><div class="desc">5 个组件</div></div>
-        <div class="card"><div class="name">九层安全体系</div><div class="desc">9 个组件</div></div>
-        <div class="card"><div class="name">多模型混合路由</div><div class="desc">10+ 模型</div></div>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    <div>
-      <div style="font-weight:600;color:var(--text-2);margin-bottom:4px;">学科大模型 · 完整产品架构 · V2</div>
-      <div>作者 · <span class="name">婷婷</span> · 2026-04-16 · 对齐领导发布版本</div>
-    </div>
-    <div style="text-align:right;">
-      <div>AI 教学产品部</div>
-      <div>六层架构 · 81 个组件</div>
-    </div>
-  </footer>
-
 </div>
 
+<!-- ============ L6 应用场景层 ============ -->
+<div class="layer layer-scene">
+  <div class="layer-hd">
+    <span class="level">L6</span>
+    <span class="title">应用场景层 · 八大教学全场景</span>
+    <span class="count">8 个场景 + 3 大解决方案</span>
+  </div>
+  <div class="layer-bd">
+    <div class="grid">
+      <div class="chip chip-scene"><span class="nm">建</span><span class="desc">专业·课程·资源建设</span></div>
+      <div class="chip chip-scene"><span class="nm">备</span><span class="desc">备课·教案·教学设计</span></div>
+      <div class="chip chip-scene"><span class="nm">教</span><span class="desc">课堂教学·互动·直播</span></div>
+      <div class="chip chip-scene"><span class="nm">学</span><span class="desc">自主学习·图谱·自适应</span></div>
+      <div class="chip chip-scene"><span class="nm">考</span><span class="desc">出题·批改·考评</span></div>
+      <div class="chip chip-scene"><span class="nm">督</span><span class="desc">教学督导·质量监控</span></div>
+      <div class="chip chip-scene"><span class="nm">管</span><span class="desc">画像·看板·驾驶舱</span></div>
+      <div class="chip chip-scene"><span class="nm">研</span><span class="desc">科研·文献·论文</span></div>
+    </div>
+    <div class="group-title t-scene">三大场景解决方案</div>
+    <div class="grid">
+      <div class="chip chip-scene"><span class="nm">全教学场景</span><span class="desc">建备教学考督管</span></div>
+      <div class="chip chip-scene"><span class="nm">全论文提效场景</span><span class="desc">选题·文献·写作·投稿</span></div>
+      <div class="chip chip-scene"><span class="nm">全成果打造提效场景</span><span class="desc">教改·课题·教材·竞赛</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="conn">▼ ▼ ▼</div>
+
+<!-- ============ L5 XClaw 智能中枢 ============ -->
+<div class="layer layer-xclaw">
+  <div class="layer-hd">
+    <span class="level">L5</span>
+    <span class="title">XClaw 智能中枢 · 编排层（Orchestration Harness）</span>
+    <span class="count">6 工程层 + 5 层提示词链 + 8 大 Skill</span>
+  </div>
+  <div class="layer-bd">
+
+    <div class="group-title first t-xclaw">六大工程层</div>
+    <div class="grid">
+      <div class="chip chip-xclaw"><span class="id">①</span><span class="nm">调度引擎</span><span class="desc">意图识别·任务拆解·七大场景路由·四维上下文</span></div>
+      <div class="chip chip-xclaw"><span class="id">②</span><span class="nm">智能技能编排 Skill</span><span class="desc">五层提示词链·零编程创建·共享复用</span></div>
+      <div class="chip chip-xclaw"><span class="id">③</span><span class="nm">知识接入 RAG</span><span class="desc">三路召回·溯源·幻觉兜底·对接学科大脑</span></div>
+      <div class="chip chip-xclaw"><span class="id">④</span><span class="nm">模型管理</span><span class="desc">多模型混合路由·任务分类·成本控制</span></div>
+      <div class="chip chip-xclaw"><span class="id">⑤</span><span class="nm">安全与审计</span><span class="desc">三层防线·幻觉约束·全链路溯源</span></div>
+      <div class="chip chip-xclaw"><span class="id">⑥</span><span class="nm">运营与进化</span><span class="desc">质量监控·错误回流·知识飞轮·成果包装</span></div>
+    </div>
+
+    <div class="group-title t-xclaw">五层提示词链（Prompt Chain）</div>
+    <div class="prompt-chain">
+      <div class="pc-step"><div class="ps-n">第 1 层</div><div class="ps-t">意图解析</div><div class="ps-d">解析输入→提取参数→结构化任务</div></div>
+      <div class="pc-step"><div class="ps-n">第 2 层</div><div class="ps-t">知识库调用</div><div class="ps-d">术语改写→检索→排序→注入上下文</div></div>
+      <div class="pc-step"><div class="ps-n">第 3 层</div><div class="ps-t">任务执行</div><div class="ps-d">系统指令+知识+输入→模型生成</div></div>
+      <div class="pc-step"><div class="ps-n">第 4 层</div><div class="ps-t">输出格式化</div><div class="ps-d">结构化→溯源标注→质量自检</div></div>
+      <div class="pc-step"><div class="ps-n">第 5 层</div><div class="ps-t">安全过滤</div><div class="ps-d">注入防护+内容过滤+权限管控</div></div>
+    </div>
+
+    <div class="group-title t-xclaw">八大智能技能（Smart Skills）</div>
+    <div class="grid">
+      <div class="chip chip-xclaw"><span class="id">Skill 1</span><span class="nm">教学设计</span><span class="desc">一句话生成教案</span></div>
+      <div class="chip chip-xclaw"><span class="id">Skill 2</span><span class="nm">自主学习</span><span class="desc">图谱路径·掌握度</span></div>
+      <div class="chip chip-xclaw"><span class="id">Skill 3</span><span class="nm">智能出题</span><span class="desc">自动组卷·知识点标注</span></div>
+      <div class="chip chip-xclaw"><span class="id">Skill 4</span><span class="nm">智能批改</span><span class="desc">三维评价·逐题评语</span></div>
+      <div class="chip chip-xclaw"><span class="id">Skill 5</span><span class="nm">学情分析</span><span class="desc">薄弱点·进步趋势</span></div>
+      <div class="chip chip-xclaw"><span class="id">Skill 6</span><span class="nm">教学督导</span><span class="desc">AI 巡课·三级预警</span></div>
+      <div class="chip chip-xclaw"><span class="id">Skill 7</span><span class="nm">科研辅助</span><span class="desc">全流程六大子任务</span></div>
+      <div class="chip chip-xclaw"><span class="id">Skill 8</span><span class="nm">创作工具</span><span class="desc">报告·PPT·翻译·润色</span></div>
+    </div>
+
+    <div class="group-title t-xclaw">教师自创工具（Vibecoding）</div>
+    <div class="grid">
+      <div class="chip chip-xclaw"><span class="nm">零编程创建</span><span class="desc">教师自然语言描述需求</span></div>
+      <div class="chip chip-xclaw"><span class="nm">学科知识生成</span><span class="desc">产出有学科依据</span></div>
+      <div class="chip chip-xclaw"><span class="nm">技能共享市场</span><span class="desc">可复用·可跨校传播</span></div>
+      <div class="chip chip-xclaw"><span class="nm">版本与灰度管理</span><span class="desc">发布·回滚·权限</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="conn">▼ ▼ ▼</div>
+
+<!-- ============ L4 Coral 知识底座 ============ -->
+<div class="layer layer-brain">
+  <div class="layer-hd">
+    <span class="level">L4</span>
+    <span class="title">Coral 小雅学科大脑 · 知识底座（Knowledge Harness）</span>
+    <span class="count">十大模块 + 十大工具 + 八大引擎 + 七大看板 = 35 组件</span>
+  </div>
+  <div class="layer-bd">
+
+    <div class="group-title first t-brain">十大核心产品模块（M1 - M10）</div>
+    <div class="grid">
+      <div class="chip chip-brain"><span class="id">M1</span><span class="nm">学科语料库</span><span class="desc">教材·论文·多模态·数据飞轮</span></div>
+      <div class="chip chip-brain"><span class="id">M2</span><span class="nm">术语与知识图谱</span><span class="desc">术语体系·先修关系·图谱问答</span></div>
+      <div class="chip chip-brain"><span class="id">M3</span><span class="nm">问答标准库</span><span class="desc">高频 FAQ·AI 生成+教师审核</span></div>
+      <div class="chip chip-brain"><span class="id">M4</span><span class="nm">智能检索与溯源</span><span class="desc">混合检索·溯源到页段·幻觉防护</span></div>
+      <div class="chip chip-brain"><span class="id">M5</span><span class="nm">管理与安全平台</span><span class="desc">四级权限·加密·审计·确权</span></div>
+      <div class="chip chip-brain"><span class="id">M6</span><span class="nm">师生共建运营</span><span class="desc">三级审核·知识缺口·贡献度</span></div>
+      <div class="chip chip-brain"><span class="id">M7</span><span class="nm">社区与知识共享</span><span class="desc">校级管理·跨校引用·共建激励</span></div>
+      <div class="chip chip-brain"><span class="id">M8</span><span class="nm">笔记系统</span><span class="desc">双向联动知识库·一键保存</span></div>
+      <div class="chip chip-brain"><span class="id">M9</span><span class="nm">智能体应用矩阵</span><span class="desc">配置下发·AIGC 生成·成果管理</span></div>
+      <div class="chip chip-brain"><span class="id">M10</span><span class="nm">Agent 生态与开放平台</span><span class="desc">API 开放·技能市场·插件生态</span></div>
+    </div>
+
+    <div class="group-title t-brain">十大工具（T01 - T10）</div>
+    <div class="grid">
+      <div class="chip chip-tool"><span class="id">T01</span><span class="nm">文档解析</span><span class="desc">PDF·PPT·Word 精准解析</span></div>
+      <div class="chip chip-tool"><span class="id">T02</span><span class="nm">多模态采集</span><span class="desc">图片·音视频·网页·录音</span></div>
+      <div class="chip chip-tool"><span class="id">T03</span><span class="nm">知识图谱标注</span><span class="desc">先修关系·可视化·一键转换</span></div>
+      <div class="chip chip-tool"><span class="id">T04</span><span class="nm">术语管理</span><span class="desc">提取·审核·查询改写</span></div>
+      <div class="chip chip-tool"><span class="id">T05</span><span class="nm">知识库管理</span><span class="desc">后台增删改查·版本·权限·审批</span></div>
+      <div class="chip chip-tool"><span class="id">T06</span><span class="nm">质量评测</span><span class="desc">测试集·A/B 对比·质量看板</span></div>
+      <div class="chip chip-tool"><span class="id">T07</span><span class="nm">师生共建平台</span><span class="desc">上传·研读·审核·运营看板</span></div>
+      <div class="chip chip-tool"><span class="id">T08</span><span class="nm">问答库构建</span><span class="desc">AI 候选·教师审核·冲突检测</span></div>
+      <div class="chip chip-tool"><span class="id">T09</span><span class="nm">笔记与协作</span><span class="desc">双向联动·问答保存·白板</span></div>
+      <div class="chip chip-tool"><span class="id">T10</span><span class="nm">智能体与 Agent 平台</span><span class="desc">矩阵配置·AIGC·技能市场</span></div>
+    </div>
+
+    <div class="group-title t-brain">八大引擎（E01 - E08）</div>
+    <div class="grid">
+      <div class="chip chip-brain"><span class="id">E01</span><span class="nm">混合检索引擎</span><span class="desc">三路召回·融合排序·重排序</span></div>
+      <div class="chip chip-brain"><span class="id">E02</span><span class="nm">全链路溯源引擎</span><span class="desc">文档·章节·页码·段落级</span></div>
+      <div class="chip chip-brain"><span class="id">E03</span><span class="nm">幻觉兜底引擎</span><span class="desc">低置信度拒答·风险标识</span></div>
+      <div class="chip chip-brain"><span class="id">E04</span><span class="nm">术语改写引擎</span><span class="desc">术语扩展·上下文消歧</span></div>
+      <div class="chip chip-brain"><span class="id">E05</span><span class="nm">学科提示词引擎</span><span class="desc">学科约束·术语注入·格式控制</span></div>
+      <div class="chip chip-brain"><span class="id">E06</span><span class="nm">向量微调引擎</span><span class="desc">学科检索精度提升·模型切换</span></div>
+      <div class="chip chip-brain"><span class="id">E07</span><span class="nm">多轮引导教学引擎</span><span class="desc">苏格拉底追问·断点定位·图谱引导</span></div>
+      <div class="chip chip-brain"><span class="id">E08</span><span class="nm">冲突检测引擎</span><span class="desc">同库文档冲突·相似度排序</span></div>
+    </div>
+
+    <div class="group-title t-brain">七大看板（D01 - D07）</div>
+    <div class="grid">
+      <div class="chip chip-dash"><span class="id">D01</span><span class="nm">错误案例分析</span><span class="desc">Bad Case·答错分类·根因定位</span></div>
+      <div class="chip chip-dash"><span class="id">D02</span><span class="nm">知识缺口看板</span><span class="desc">答不了的问题按频次推送</span></div>
+      <div class="chip chip-dash"><span class="id">D03</span><span class="nm">贡献度仪表盘</span><span class="desc">排行·增长·调用统计</span></div>
+      <div class="chip chip-dash"><span class="id">D04</span><span class="nm">学期更新工具</span><span class="desc">教材换版·跨学期继承</span></div>
+      <div class="chip chip-dash"><span class="id">D05</span><span class="nm">运营统计看板</span><span class="desc">指标·趋势·院系·导出</span></div>
+      <div class="chip chip-dash"><span class="id">D06</span><span class="nm">答疑质量看板</span><span class="desc">满意度·命中率·溯源覆盖</span></div>
+      <div class="chip chip-dash"><span class="id">D07</span><span class="nm">知识库质检看板</span><span class="desc">覆盖度·质量·重复度</span></div>
+    </div>
+
+    <div class="group-title t-brain">数据存储层</div>
+    <div class="grid">
+      <div class="chip chip-tool"><span class="nm">向量数据库</span><span class="desc">语义检索存储</span></div>
+      <div class="chip chip-tool"><span class="nm">图数据库</span><span class="desc">知识图谱·术语关系</span></div>
+      <div class="chip chip-tool"><span class="nm">对象存储</span><span class="desc">文档·图片·音视频</span></div>
+      <div class="chip chip-tool"><span class="nm">关系数据库</span><span class="desc">用户·权限·配置</span></div>
+      <div class="chip chip-tool"><span class="nm">缓存层</span><span class="desc">热点数据·会话状态</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="conn">▼ ▼ ▼</div>
+
+<!-- ============ L3 引擎层 · 大模型混合路由 ============ -->
+<div class="layer layer-engine">
+  <div class="layer-hd">
+    <span class="level">L3</span>
+    <span class="title">引擎层 · 大模型混合路由</span>
+    <span class="count">按任务智能调度 · 不绑定任何一家</span>
+  </div>
+  <div class="layer-bd">
+
+    <div class="group-title first t-engine">通用大模型（日常教学 · 高性价比）</div>
+    <div class="grid">
+      <div class="chip chip-engine"><span class="nm">中文理解增强模型</span><span class="desc">中文学科问答·多模态理解</span></div>
+      <div class="chip chip-engine"><span class="nm">长上下文推理模型</span><span class="desc">128K+ 上下文·复杂推理</span></div>
+      <div class="chip chip-engine"><span class="nm">轻量高速模型</span><span class="desc">快速响应·低成本日常</span></div>
+      <div class="chip chip-engine"><span class="nm">多模态理解模型</span><span class="desc">图文·音视频·公式识别</span></div>
+    </div>
+
+    <div class="group-title t-engine">学科专属模型（特定学科 · 高准确率）</div>
+    <div class="grid">
+      <div class="chip chip-engine"><span class="nm">中医药专属模型</span><span class="desc">方剂·药材·证候</span></div>
+      <div class="chip chip-engine"><span class="nm">食品科学专属模型</span><span class="desc">食品安全·营养·检测</span></div>
+      <div class="chip chip-engine"><span class="nm">地球科学专属模型</span><span class="desc">地质·古生物·矿物</span></div>
+      <div class="chip chip-engine"><span class="nm">社会科学专属模型</span><span class="desc">社科·哲学·经济</span></div>
+      <div class="chip chip-engine"><span class="nm">科技史专属模型</span><span class="desc">科技发展·学术溯源</span></div>
+      <div class="chip chip-engine"><span class="nm">更多学科扩展</span><span class="desc">按项目需求持续接入</span></div>
+    </div>
+
+    <div class="group-title t-engine">路由调度策略</div>
+    <div class="grid">
+      <div class="chip chip-engine"><span class="nm">按任务类型</span><span class="desc">问答/出题/批改/创作/分析</span></div>
+      <div class="chip chip-engine"><span class="nm">按成本分级</span><span class="desc">日常低成本·疑难自动升级</span></div>
+      <div class="chip chip-engine"><span class="nm">按延迟要求</span><span class="desc">实时 ≤3 秒·批量异步</span></div>
+      <div class="chip chip-engine"><span class="nm">按学科路由</span><span class="desc">学科问题优先匹配专属模型</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="conn">▼ ▼ ▼</div>
+
+<!-- ============ L2 安全防护层 ============ -->
+<div class="layer layer-safe">
+  <div class="layer-hd">
+    <span class="level">L2</span>
+    <span class="title">安全防护层 · 九层安全体系</span>
+    <span class="count">学科大脑 6 层 + XClaw 3 层 = 全覆盖</span>
+  </div>
+  <div class="layer-bd">
+
+    <div class="sub-layer">
+      <div class="sl-title">学科大脑六层安全（保护数据与基础设施）</div>
+      <div class="sec-row">
+        <div class="sec-cell"><div class="sc-n">第 1 层</div><div class="sc-d">物理与部署安全<br>全私有化·内网隔离</div></div>
+        <div class="sec-cell"><div class="sc-n">第 2 层</div><div class="sc-d">网络与传输安全<br>加密传输·防火墙·限流</div></div>
+        <div class="sec-cell"><div class="sc-n">第 3 层</div><div class="sc-d">数据存储安全<br>加密存储·备份加密</div></div>
+        <div class="sec-cell"><div class="sc-n">第 4 层</div><div class="sc-d">访问控制<br>四级权限·双因子认证</div></div>
+        <div class="sec-cell"><div class="sc-n">第 5 层</div><div class="sc-d">知识产权保护<br>确权·水印·脱敏</div></div>
+        <div class="sec-cell"><div class="sc-n">第 6 层</div><div class="sc-d">AI 输出安全<br>注入检测·内容过滤·幻觉兜底</div></div>
+      </div>
+    </div>
+
+    <div class="sub-layer">
+      <div class="sl-title">XClaw 三层安全（保护 AI 交互过程）</div>
+      <div class="sec-row">
+        <div class="sec-cell"><div class="sc-n">输入层</div><div class="sc-d">输入安全防护<br>注入检测·恶意识别·敏感词</div></div>
+        <div class="sec-cell"><div class="sc-n">处理层</div><div class="sc-d">处理过程安全<br>权限验证·行为边界·即时销毁</div></div>
+        <div class="sec-cell"><div class="sc-n">输出层</div><div class="sc-d">输出安全过滤<br>内容分级·学术诚信·置信度门控</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="conn">▼ ▼ ▼</div>
+
+<!-- ============ L1 基础设施层 ============ -->
+<div class="layer layer-infra">
+  <div class="layer-hd">
+    <span class="level">L1</span>
+    <span class="title">基础设施层 · 全私有化部署</span>
+    <span class="count">"数据一个字节不出校园"</span>
+  </div>
+  <div class="layer-bd">
+    <div class="grid">
+      <div class="chip chip-infra"><span class="nm">校内私有化部署</span><span class="desc">服务器在校园内网</span></div>
+      <div class="chip chip-infra"><span class="nm">内网隔离运行</span><span class="desc">外网不可访问核心服务</span></div>
+      <div class="chip chip-infra"><span class="nm">数据主权保护</span><span class="desc">学校全权拥有所有数据</span></div>
+      <div class="chip chip-infra"><span class="nm">合规认证</span><span class="desc">支持等保二级 / 三级</span></div>
+      <div class="chip chip-infra"><span class="nm">部署模式</span><span class="desc">SaaS · 私有化 · 混合云</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Note -->
+<div class="note">
+  <strong>版本说明：</strong>本架构图对齐学科大模型顶层设计，六层 81 组件完整覆盖。含 XClaw 专业度优化建议：① RAG 占比仅 10-15%，建议在知识接入层明确标注避免客户误解 ② 五层提示词链中术语归一化建议独立为检索前置步骤 ③ Vibecoding 教师自创 Skill 建议经 Hook 校验后才允许发布。
+</div>
+
+</div>
 </body>
 </html>
