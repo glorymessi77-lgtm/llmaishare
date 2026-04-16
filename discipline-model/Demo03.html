@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Demo 03 · 教 · 课堂讲授助手 · 学科大脑</title>
+<style>
+:root{
+  --xy:#00B89C;--xy-dk:#00856F;--xy-sf:#E6F7F3;--xy-sf2:#D1F7EF;
+  --bg:#0F1624;--canvas:#1A2234;--panel:#131B2A;
+  --ink-1:#F1F5F9;--ink-2:#94A3B8;--ink-3:#64748B;--ink-4:#475569;
+  --divider:rgba(255,255,255,0.08);
+  --coral:#FF7849;--blue:#3B82F6;--purple:#A78BFA;--green:#10B981;--orange:#F59E0B;
+  --ff:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ff);background:var(--bg);color:var(--ink-1);font-size:14px;min-width:1440px;min-height:100vh;overflow:hidden;height:100vh;-webkit-font-smoothing:antialiased}
+
+/* Top Bar · 授课模式 */
+.top{
+  height:52px;background:var(--canvas);border-bottom:1px solid var(--divider);
+  display:flex;align-items:center;padding:0 24px;gap:20px;z-index:10;position:relative;
+}
+.top .brand{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700;color:var(--xy);}
+.top .brand b{width:28px;height:28px;background:linear-gradient(135deg,var(--xy),#1ABC9C);color:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;}
+.top .mode{
+  padding:5px 12px;
+  background:rgba(239,68,68,0.15);
+  border:1px solid rgba(239,68,68,0.4);
+  border-radius:5px;
+  font-size:11px;
+  color:#FCA5A5;
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:0.08em;
+  display:flex;align-items:center;gap:6px;
+}
+.top .mode::before{content:'';width:6px;height:6px;border-radius:50%;background:#EF4444;animation:pulse 1.5s infinite;}
+@keyframes pulse{50%{opacity:0.3;}}
+.top .crumb{color:var(--ink-2);font-size:13px;display:flex;gap:8px;align-items:center;}
+.top .crumb strong{color:var(--ink-1);font-weight:500;}
+.top .right{margin-left:auto;display:flex;gap:14px;align-items:center;color:var(--ink-2);font-size:12px;}
+.top .back{padding:5px 12px;border:1px solid var(--divider);border-radius:999px;color:var(--ink-2);text-decoration:none;font-size:11px;}
+.top .back:hover{color:var(--xy);border-color:var(--xy);}
+.top .timer{font-family:'JetBrains Mono',monospace;padding:4px 10px;background:rgba(0,184,156,0.1);color:var(--xy);border-radius:4px;font-size:11px;}
+.top .av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#EF4444);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;}
+
+/* Stage */
+.stage{
+  display:grid;
+  grid-template-columns:1fr 400px;
+  height:calc(100vh - 52px);
+}
+
+/* Slide area */
+.slide-area{
+  padding:30px 40px 80px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  position:relative;
+}
+.slide-head{
+  display:flex;
+  align-items:center;
+  margin-bottom:16px;
+  gap:16px;
+}
+.slide-pos{
+  font-size:12px;
+  color:var(--ink-3);
+  font-family:'JetBrains Mono',monospace;
+}
+.slide-title{
+  font-size:18px;
+  font-weight:700;
+  color:var(--ink-1);
+}
+.slide-ctrl{margin-left:auto;display:flex;gap:6px;}
+.slide-ctrl button{
+  padding:6px 12px;
+  background:var(--canvas);
+  border:1px solid var(--divider);
+  color:var(--ink-2);
+  border-radius:6px;
+  cursor:pointer;
+  font-size:12px;
+}
+.slide-ctrl button:hover{border-color:var(--xy);color:var(--xy);}
+
+.slide{
+  flex:1;
+  background:#fff;
+  border-radius:14px;
+  padding:60px 80px;
+  color:#1A2234;
+  position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3),0 0 0 1px var(--divider);
+  overflow:hidden;
+}
+.slide::before{
+  content:'';
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:6px;
+  background:linear-gradient(180deg,var(--xy),var(--xy-dk));
+}
+.slide h1{
+  font-size:36px;
+  font-weight:900;
+  margin-bottom:8px;
+  letter-spacing:-0.02em;
+  color:#0F5D3A;
+}
+.slide .sub{font-size:14px;color:#6B7B8F;margin-bottom:32px;font-family:'JetBrains Mono',monospace;}
+.slide h2{font-size:20px;color:#0F5D3A;margin:24px 0 14px;font-weight:800;border-bottom:2px solid #E6F7F3;padding-bottom:8px;}
+.slide ul{padding-left:24px;color:#334155;}
+.slide li{margin:8px 0;font-size:15px;line-height:1.8;}
+.slide .formula{
+  background:#F9FAFB;
+  border:1px solid #E5E7EB;
+  padding:18px 24px;
+  border-radius:10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:15px;
+  color:#0F5D3A;
+  margin:16px 0;
+  display:inline-block;
+}
+.slide .page-no{position:absolute;right:30px;bottom:20px;font-size:12px;color:#B0BEC5;font-family:'JetBrains Mono',monospace;}
+
+/* Student raise hand */
+.raise-hand{
+  position:absolute;
+  left:40px;bottom:16px;
+  background:var(--canvas);
+  border:1px solid var(--orange);
+  border-radius:10px;
+  padding:12px 16px 12px 50px;
+  max-width:400px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+  transform:translateY(80px);
+  opacity:0;
+  transition:all 0.5s cubic-bezier(0.22,1,0.36,1);
+  z-index:5;
+}
+.raise-hand.show{transform:translateY(0);opacity:1;}
+.raise-hand .ico{
+  position:absolute;left:10px;top:10px;
+  width:32px;height:32px;
+  background:linear-gradient(135deg,var(--orange),#EA580C);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+  animation:handWave 1.5s ease-in-out infinite;
+}
+@keyframes handWave{0%,100%{transform:rotate(-10deg);}50%{transform:rotate(10deg);}}
+.raise-hand .lbl{font-size:10px;color:var(--orange);font-weight:600;letter-spacing:0.05em;}
+.raise-hand .q{font-size:13px;color:var(--ink-1);margin-top:2px;line-height:1.5;}
+.raise-hand .st-name{font-size:10px;color:var(--ink-3);margin-top:3px;}
+
+/* ============ 讲授助手侧栏 ============ */
+.assist{
+  background:var(--canvas);
+  border-left:1px solid var(--divider);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.assist-head{
+  padding:16px 20px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  border-bottom:1px solid var(--divider);
+}
+.assist-head .logo{
+  width:36px;height:36px;
+  border-radius:9px;
+  background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  padding:2px;
+  overflow:hidden;
+}
+.assist-head .logo img{width:100%;height:100%;object-fit:contain;}
+.assist-head .tt{font-size:14px;font-weight:700;}
+.assist-head .sub{font-size:10px;color:var(--ink-3);font-family:'JetBrains Mono',monospace;margin-top:2px;}
+.assist-head .status{
+  margin-left:auto;
+  padding:4px 8px;
+  background:rgba(0,184,156,0.15);
+  border:1px solid rgba(0,184,156,0.3);
+  border-radius:4px;
+  font-size:10px;
+  color:var(--xy);
+  font-family:'JetBrains Mono',monospace;
+  display:flex;align-items:center;gap:5px;
+}
+.assist-head .status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--xy);box-shadow:0 0 6px var(--xy);}
+
+.assist-body{
+  flex:1;
+  overflow-y:auto;
+  padding:18px 20px;
+  display:flex;flex-direction:column;gap:14px;
+}
+
+.ab-empty{
+  padding:40px 20px;
+  text-align:center;
+  color:var(--ink-3);
+  font-size:12px;
+  border:1px dashed var(--divider);
+  border-radius:10px;
+  margin-top:10px;
+}
+.ab-empty .ic{font-size:32px;margin-bottom:8px;opacity:0.5;}
+.ab-empty .tt{font-size:13px;color:var(--ink-2);margin-bottom:4px;}
+
+.a-msg{animation:msgIn 0.4s ease;}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.a-msg.u{display:flex;justify-content:flex-end;}
+.a-msg.u .b{
+  max-width:85%;
+  background:rgba(167,139,250,0.15);
+  border:1px solid rgba(167,139,250,0.3);
+  padding:9px 13px;
+  border-radius:10px;
+  font-size:13px;
+  line-height:1.6;
+  color:#DDD6FE;
+}
+.a-msg.a{font-size:13px;line-height:1.75;color:var(--ink-1);}
+
+.answer-card{
+  background:var(--panel);
+  border:1px solid var(--divider);
+  border-radius:12px;
+  padding:16px;
+  margin-top:6px;
+}
+.ac-hd{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding-bottom:10px;
+  border-bottom:1px solid var(--divider);
+  margin-bottom:12px;
+}
+.ac-hd .ic{
+  width:26px;height:26px;
+  border-radius:7px;
+  background:linear-gradient(135deg,var(--xy),var(--xy-dk));
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;
+}
+.ac-hd .tt{font-size:13px;font-weight:700;color:var(--xy);}
+.ac-hd .meta{margin-left:auto;font-size:10px;color:var(--ink-3);font-family:'JetBrains Mono',monospace;}
+.ac-body{font-size:13px;line-height:1.75;color:var(--ink-1);}
+.ac-body strong{color:var(--xy);}
+.ac-body .formula{
+  display:block;
+  background:rgba(0,184,156,0.08);
+  border:1px solid rgba(0,184,156,0.2);
+  padding:10px 14px;
+  border-radius:7px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  margin:8px 0;
+  color:var(--xy);
+}
+
+.source-card{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px dashed var(--divider);
+}
+.src-tt{
+  font-size:10px;
+  color:var(--orange);
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:0.08em;
+  margin-bottom:8px;
+}
+.src-item{
+  padding:10px 12px;
+  background:rgba(245,158,11,0.06);
+  border:1px solid rgba(245,158,11,0.2);
+  border-radius:8px;
+  margin-bottom:7px;
+  font-size:11px;
+  line-height:1.6;
+  cursor:pointer;
+  transition:.15s;
+}
+.src-item:hover{background:rgba(245,158,11,0.12);}
+.src-item .file{color:var(--orange);font-weight:600;display:flex;align-items:center;gap:5px;margin-bottom:3px;}
+.src-item .file .pg{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;opacity:0.7;}
+.src-item .snip{color:var(--ink-2);}
+
+.related{
+  display:flex;
+  gap:6px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+.rel-chip{
+  padding:5px 10px;
+  background:rgba(59,130,246,0.1);
+  border:1px solid rgba(59,130,246,0.3);
+  color:#93C5FD;
+  border-radius:4px;
+  font-size:10px;
+  cursor:pointer;
+}
+.rel-chip:hover{background:rgba(59,130,246,0.2);}
+
+.ac-actions{
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid var(--divider);
+  display:flex;
+  gap:8px;
+}
+.ac-btn{
+  flex:1;
+  padding:9px;
+  border-radius:7px;
+  font-size:12px;
+  font-weight:600;
+  border:1px solid var(--divider);
+  background:transparent;
+  color:var(--ink-2);
+  cursor:pointer;
+  font-family:var(--ff);
+}
+.ac-btn:hover{border-color:var(--xy);color:var(--xy);}
+.ac-btn.pri{background:linear-gradient(135deg,var(--xy),var(--xy-dk));color:#fff;border-color:var(--xy-dk);}
+.ac-btn.pri:hover{box-shadow:0 6px 16px rgba(0,184,156,0.3);color:#fff;}
+
+/* Trace */
+.trace{
+  background:#0A1220;
+  border-radius:8px;
+  padding:10px 12px;
+  margin-top:8px;
+}
+.trace-hd{
+  font-size:9px;
+  color:var(--orange);
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:0.1em;
+  margin-bottom:6px;
+}
+.trace-line{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--ink-2);
+  padding:3px 0;
+  display:flex;align-items:center;gap:7px;
+  opacity:0;
+  animation:tlIn 0.3s forwards;
+}
+@keyframes tlIn{to{opacity:1;}}
+.trace-line .t-dot{width:5px;height:5px;border-radius:50%;background:var(--ink-3);}
+.trace-line.done .t-dot{background:var(--green);box-shadow:0 0 5px var(--green);}
+.trace-line.done{color:var(--ink-1);}
+
+.assist-input{
+  padding:14px 18px;
+  border-top:1px solid var(--divider);
+}
+.voice-box{
+  background:var(--panel);
+  border:1px solid var(--divider);
+  border-radius:10px;
+  padding:10px 14px 10px 46px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  min-height:44px;
+}
+.voice-box .mic{
+  position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--xy),var(--xy-dk));
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+  cursor:pointer;
+  animation:micGlow 2s ease-in-out infinite;
+}
+@keyframes micGlow{50%{box-shadow:0 0 0 6px rgba(0,184,156,0.2);}}
+.voice-box .hint{color:var(--ink-3);font-size:12px;flex:1;}
+.voice-box .send{
+  margin-left:auto;
+  width:28px;height:28px;
+  background:var(--panel);
+  border:1px solid var(--divider);
+  border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink-3);font-size:13px;
+  cursor:pointer;
+}
+
+/* Demo tag */
+.demo-ctrl{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(10,14,26,0.92);backdrop-filter:blur(12px);color:#fff;padding:10px 8px 10px 22px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:11px;display:flex;align-items:center;gap:14px;border:1px solid rgba(255,255,255,0.15);z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,0.3);}
+.demo-ctrl .status{display:flex;align-items:center;gap:8px;}
+.demo-ctrl .status::before{content:'';width:7px;height:7px;border-radius:50%;background:#FFB86B;box-shadow:0 0 8px #FFB86B;animation:statusPulse 1.5s infinite;}
+.demo-ctrl .status.done::before{background:#00D4B4;}
+.demo-ctrl .status.idle::before{background:#64748B;box-shadow:none;animation:none;}
+@keyframes statusPulse{50%{opacity:0.3;}}
+.demo-ctrl button{background:rgba(255,120,73,0.15);color:#FF7849;border:1px solid rgba(255,120,73,0.4);padding:6px 14px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;cursor:pointer;letter-spacing:0.05em;}
+.demo-ctrl button:hover{background:#FF7849;color:#fff;}
+
+</style>
+
+<style id="unified-nav-style">
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+body{padding-top:60px !important;}
+body > .topnav,
+body > .shell-top,
+body > .top,
+body > .topbar,
+body > nav.top-quick-nav,
+body > header.slim-header{display:none !important;}
+
+.unified-topbar{
+  position:fixed;top:0;left:0;right:0;z-index:99998;
+  height:60px;background:#FFFFFF;border-bottom:1px solid #E8ECF0;
+  padding:0 32px;display:flex;align-items:center;justify-content:space-between;
+  font-family:'Noto Sans SC','PingFang SC',sans-serif;
+  box-shadow:0 1px 3px rgba(18,21,26,0.04);
+}
+.unified-topbar *{box-sizing:border-box;}
+.unified-topbar .u-left{display:flex;align-items:center;gap:32px;}
+.unified-topbar .u-logo{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:#23B283;text-decoration:none;}
+.unified-topbar .u-mark{
+  width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(135deg,#23B283 0%,#158C68 100%);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-weight:800;font-size:13px;box-shadow:0 4px 10px rgba(35,178,131,0.3);
+}
+.unified-topbar .u-sub{
+  font-size:10px;color:#7B838C;font-weight:500;
+  padding-left:10px;border-left:1px solid #E8ECF0;margin-left:4px;letter-spacing:0.02em;
+}
+.unified-topbar .u-nav{display:flex;gap:2px;}
+.unified-topbar .u-nav a{
+  padding:7px 13px;border-radius:7px;font-size:12.5px;color:#4B535C;
+  text-decoration:none;transition:all .2s;font-weight:500;
+}
+.unified-topbar .u-nav a:hover{background:rgba(35,178,131,0.1);color:#23B283;}
+.unified-topbar .u-nav a.u-on{background:#23B283;color:#fff;font-weight:600;}
+.unified-topbar .u-right{display:flex;align-items:center;gap:12px;}
+.unified-topbar .u-back{
+  font-size:12px;color:#7B838C;padding:7px 13px;
+  border:1px solid #E8ECF0;border-radius:999px;transition:.2s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:5px;
+}
+.unified-topbar .u-back:hover{color:#23B283;border-color:#23B283;background:#EBF7F1;}
+.unified-topbar .u-av{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(35,178,131,0.2);color:#23B283;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="unified-topbar">
+  <div class="u-left">
+    <a href="./index.html" class="u-logo">
+      <div class="u-mark">雅</div>
+      讯飞小雅
+      <span class="u-sub">学科大脑 · 场景演示</span>
+    </a>
+    <nav class="u-nav"><a href="./index.html">演示总览</a><a href="./scenes.html" class="u-on">场景演示</a><a href="./frontend.html">知识库前台</a><a href="./backend/index.html">管理后台</a><a href="./tools/index.html">学科大脑工具层</a><a href="./engines/engine_dashboard.html">模型引擎</a><a href="./training.html">训练平台</a></nav>
+  </div>
+  <div class="u-right">
+    <a href="./scenes.html" class="u-back">← 返回场景列表</a>
+    <div class="u-av">婷</div>
+  </div>
+</div>
+
+<div class="top">
+  <div class="brand"><b>iN</b>讯飞小雅</div>
+  <div class="mode">● LIVE · 讲授中</div>
+  <div class="crumb">
+    <strong>高等数学 A</strong> · 第 3 章 · 函数的连续性
+  </div>
+  <div class="right">
+    <div class="timer">⏱ 00:23:41 / 45:00</div>
+    <a href="./scenes.html" class="back">← 返回</a>
+    <div class="av">王</div>
+  </div>
+</div>
+
+<div class="stage">
+
+  <!-- Slide area -->
+  <div class="slide-area">
+    <div class="slide-head">
+      <div class="slide-pos">SLIDE 14 / 32</div>
+      <div class="slide-title">间断点的分类</div>
+      <div class="slide-ctrl">
+        <button>◀ 上一页</button>
+        <button>下一页 ▶</button>
+        <button>🖥 投屏</button>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>3.2.1 · 间断点的分类</h1>
+      <div class="sub">Section 3.2.1 · Classification of Discontinuities</div>
+
+      <h2>一、三类间断点的定义</h2>
+      <ul>
+        <li><strong>可去间断点</strong>：左右极限存在且相等，但不等于函数值</li>
+        <li><strong>跳跃间断点</strong>：左右极限都存在，但不相等</li>
+        <li><strong>第二类间断点</strong>：至少一侧极限不存在（无穷型 / 振荡型）</li>
+      </ul>
+
+      <h2>二、判定条件</h2>
+      <div class="formula">f(x₀⁻) = f(x₀⁺) ≠ f(x₀) &nbsp;⇒&nbsp; 可去间断点</div>
+      <br>
+      <div class="formula">f(x₀⁻) ≠ f(x₀⁺) &nbsp;⇒&nbsp; 跳跃间断点</div>
+
+      <div class="page-no">14 / 32</div>
+    </div>
+
+    <!-- Student raise hand -->
+    <div class="raise-hand" id="raiseHand">
+      <div class="ico">🙋</div>
+      <div>
+        <div class="lbl">学生提问 · 机械 2301</div>
+        <div class="q">老师，sin(1/x) 在 x=0 处到底算跳跃间断点还是第二类间断点？</div>
+        <div class="st-name">—— 陈同学</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assist sidebar -->
+  <aside class="assist">
+    <div class="assist-head">
+      <div class="logo"><img src="./assets/xclaw-octopus.png" alt="XClaw"></div>
+      <div>
+        <div class="tt">XClaw · 讲授助手</div>
+        <div class="sub">IN-CLASS · REAL TIME</div>
+      </div>
+      <div class="status">待命</div>
+    </div>
+    <div class="assist-body" id="abody">
+      <div class="ab-empty" id="abEmpty">
+        <div class="ic">🎙</div>
+        <div class="tt">讲授助手待命中</div>
+        <div>遇到学生提问时，点麦克风语音输入<br>或使用学生举手提问即可触发</div>
+      </div>
+    </div>
+    <div class="assist-input">
+      <div class="voice-box">
+        <div class="mic" id="mic">🎙</div>
+        <div class="hint" id="voiceHint">点击麦克风语音输入问题...</div>
+        <div class="send">↑</div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="demo-ctrl">
+  <span class="status" id="demoStatus">等待学生提问...</span>
+  <button id="rp">↺ 重播演示</button>
+</div>
+
+<script>
+const raiseHand=document.getElementById('raiseHand');
+const mic=document.getElementById('mic');
+const abody=document.getElementById('abody');
+const abEmpty=document.getElementById('abEmpty');
+const voiceHint=document.getElementById('voiceHint');
+const status=document.querySelector('.assist-head .status');
+const rp=document.getElementById('rp');
+
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+
+const demoStatus=document.getElementById('demoStatus');
+
+async function startDemo(){
+  demoStatus.textContent='等待学生提问...';
+  demoStatus.classList.remove('done');
+  await wait(1500);
+  raiseHand.classList.add('show');
+  demoStatus.textContent='学生举手提问 · 点击或等待';
+  // Auto-trigger after 2.5s if user doesn't click
+  autoTriggerTimer=setTimeout(()=>{
+    if(abEmpty.parentNode)runQA();
+  },2500);
+}
+
+let autoTriggerTimer;
+
+function addUserMsg(text){
+  if(abEmpty){abEmpty.remove();}
+  const d=document.createElement('div');
+  d.className='a-msg u';
+  d.innerHTML=`<div class="b">${text}</div>`;
+  abody.appendChild(d);
+  abody.scrollTop=abody.scrollHeight;
+}
+
+function addAiMsg(html){
+  const d=document.createElement('div');
+  d.className='a-msg a';
+  d.innerHTML=html;
+  abody.appendChild(d);
+  abody.scrollTop=abody.scrollHeight;
+  return d;
+}
+
+async function runQA(){
+  if(!abEmpty.parentNode)return; // already running
+  if(autoTriggerTimer)clearTimeout(autoTriggerTimer);
+  demoStatus.textContent='AI 正在溯源回答...';
+  status.textContent='处理中';
+  voiceHint.textContent='正在接收语音输入...';
+  mic.style.animation='none';
+  mic.style.background='linear-gradient(135deg,#EF4444,#DC2626)';
+  await wait(600);
+  addUserMsg('sin(1/x) 在 x=0 处到底算跳跃间断点还是第二类间断点？');
+  voiceHint.textContent='识别中...';
+  await wait(800);
+  voiceHint.textContent='点击麦克风语音输入问题...';
+  mic.style.animation='micGlow 2s ease-in-out infinite';
+  mic.style.background='linear-gradient(135deg,var(--xy),var(--xy-dk))';
+
+  const thinking=addAiMsg(`
+    <div style="color:var(--ink-3);font-size:12px;">🪸 学科大脑调用中...</div>
+    <div class="trace">
+      <div class="trace-hd">RUNTIME TRACE · 0.8s 目标</div>
+      <div class="trace-line" id="tl1"><span class="t-dot"></span><span>E01 混合检索 · 召回教材 3.2.1 节</span></div>
+      <div class="trace-line" id="tl2"><span class="t-dot"></span><span>M1 语料库 · 定位 P.124-125</span></div>
+      <div class="trace-line" id="tl3"><span class="t-dot"></span><span>E02 全链路溯源 · 生成引用链</span></div>
+      <div class="trace-line" id="tl4"><span class="t-dot"></span><span>E03 幻觉兜底 · 置信度校验</span></div>
+      <div class="trace-line" id="tl5"><span class="t-dot"></span><span>L5 内容安全 · 课堂合规</span></div>
+    </div>
+  `);
+  const lines=['tl1','tl2','tl3','tl4','tl5'];
+  for(let i=0;i<lines.length;i++){
+    await wait(180);
+    document.getElementById(lines[i]).classList.add('done');
+  }
+  await wait(300);
+
+  // Answer card
+  const answer=document.createElement('div');
+  answer.className='a-msg a';
+  answer.innerHTML=`
+    <div class="answer-card">
+      <div class="ac-hd">
+        <div class="ic">✓</div>
+        <div class="tt">权威答案 · 已溯源</div>
+        <div class="meta">0.8s · 置信度 98%</div>
+      </div>
+      <div class="ac-body">
+        sin(1/x) 在 x=0 处属于 <strong>第二类间断点</strong>（振荡型）。因为当 x → 0 时，函数值在 [-1, 1] 之间无限振荡，<strong>左极限 lim(x→0⁻)</strong> 和<strong> 右极限 lim(x→0⁺) </strong>都不存在。
+        <div class="formula">lim(x→0) sin(1/x) 不存在（振荡）</div>
+        它既不是跳跃间断点（需要两侧极限都存在），也不是可去间断点。
+      </div>
+      <div class="source-card">
+        <div class="src-tt">📚 答案溯源 · 3 条引用</div>
+        <div class="src-item">
+          <div class="file">📖 《高等数学》同济第七版<span class="pg">P.124</span></div>
+          <div class="snip">"...第二类间断点是指函数在该点至少有一侧的极限不存在的情形，又可分为无穷型和振荡型..."</div>
+        </div>
+        <div class="src-item">
+          <div class="file">📖 《高等数学》同济第七版<span class="pg">P.125</span></div>
+          <div class="snip">"例 3.17：证明 f(x)=sin(1/x) 在 x=0 处为第二类（振荡型）间断点..."</div>
+        </div>
+        <div class="src-item">
+          <div class="file">📄 教研补充资料 · 反例集<span class="pg">§2</span></div>
+          <div class="snip">"振荡型间断点的核心特征：函数值在某邻域内无限次地振荡..."</div>
+        </div>
+      </div>
+      <div class="related">
+        <div class="rel-chip">🔗 第二类间断点</div>
+        <div class="rel-chip">🔗 振荡函数</div>
+        <div class="rel-chip">🔗 Dirichlet 函数</div>
+      </div>
+      <div class="ac-actions">
+        <button class="ac-btn">📋 复制</button>
+        <button class="ac-btn">📝 加入备注</button>
+        <button class="ac-btn pri">🖥 投屏给学生</button>
+      </div>
+    </div>
+  `;
+  abody.appendChild(answer);
+  abody.scrollTop=abody.scrollHeight;
+
+  status.textContent='已响应';
+  raiseHand.classList.remove('show');
+  demoStatus.textContent='演示完成 · 答案已溯源并可投屏 ✓';
+  demoStatus.classList.add('done');
+}
+
+mic.addEventListener('click',runQA);
+raiseHand.addEventListener('click',runQA);
+
+rp.addEventListener('click',()=>{
+  abody.innerHTML='';
+  const e=document.createElement('div');
+  e.className='ab-empty';e.id='abEmpty';
+  e.innerHTML='<div class="ic">🎙</div><div class="tt">讲授助手待命中</div><div>遇到学生提问时，点麦克风语音输入<br>或使用学生举手提问即可触发</div>';
+  abody.appendChild(e);
+  raiseHand.classList.remove('show');
+  status.textContent='待命';
+  setTimeout(startDemo,500);
+});
+
+startDemo();
+</script>
+</body>
+</html>

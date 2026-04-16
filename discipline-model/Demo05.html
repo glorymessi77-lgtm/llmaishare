@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Demo 05 · 考 · 图谱组卷 · 小雅 × 学科大脑</title>
+<style>
+:root{
+  --xy:#00B89C;--xy-dk:#00856F;--xy-sf:#E6F7F3;--xy-sf2:#D1F7EF;
+  --bg:#F5F7FA;--white:#fff;
+  --t1:#1A1A1A;--t2:#4B4B4B;--t3:#8C8C8C;--t4:#BFBFBF;
+  --bd:#EAEAEA;--bd-soft:#F0F0F0;
+  --coral:#FF7849;--blue:#3B82F6;--purple:#A78BFA;--green:#10B981;--orange:#F59E0B;
+  --r:10px;
+  --ff:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ff);background:var(--bg);color:var(--t1);font-size:14px;min-width:1440px;height:100vh;overflow:hidden;-webkit-font-smoothing:antialiased}
+
+.shell-top{
+  height:52px;background:#fff;border-bottom:1px solid #E8EDF3;
+  display:flex;align-items:center;padding:0 24px;gap:20px;z-index:50;position:sticky;top:0;
+}
+.shell-brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:var(--xy);}
+.shell-brand b{width:30px;height:30px;background:linear-gradient(135deg,var(--xy),#1ABC9C);color:#fff;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;}
+.shell-nav{display:flex;gap:4px;margin-left:24px;}
+.shell-nav a{padding:8px 14px;font-size:13px;color:#6B7B8F;cursor:pointer;border-radius:6px;text-decoration:none;}
+.shell-nav a.on{color:var(--xy);font-weight:600;}
+.shell-right{margin-left:auto;display:flex;align-items:center;gap:14px;}
+.shell-back{font-size:12px;color:var(--t3);text-decoration:none;padding:6px 14px;border:1px solid var(--bd);border-radius:999px;}
+.shell-back:hover{color:var(--xy);border-color:var(--xy);}
+.shell-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#EF4444);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;}
+
+.crumb-row{
+  height:42px;background:#fff;border-bottom:1px solid #F0F0F0;
+  display:flex;align-items:center;padding:0 28px;font-size:13px;color:var(--t3);gap:8px;
+}
+.crumb-row a{color:var(--t3);cursor:pointer;}
+.crumb-row .sep{color:#D1D5DB;}
+.crumb-row strong{color:var(--xy);font-weight:500;}
+
+/* Stage */
+.stage{
+  display:grid;
+  grid-template-columns:240px 1fr 360px;
+  height:calc(100vh - 52px - 42px);
+}
+
+/* Left: graph list */
+.gl{
+  background:#fff;
+  border-right:1px solid var(--bd-soft);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.gl-head{
+  padding:16px;
+  border-bottom:1px solid var(--bd-soft);
+}
+.gl-head .search{
+  padding:8px 12px;background:#F5F7FA;border-radius:7px;
+  font-size:12px;color:var(--t4);display:flex;align-items:center;gap:7px;
+}
+.gl-list{flex:1;overflow-y:auto;padding:8px;}
+.gl-item{
+  padding:10px 12px;border-radius:8px;cursor:pointer;
+  font-size:12.5px;color:var(--t2);transition:.15s;margin-bottom:3px;
+}
+.gl-item:hover{background:#F5F7FA;}
+.gl-item.on{background:var(--xy-sf);color:var(--xy-dk);font-weight:600;position:relative;}
+.gl-item.on::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:3px;background:var(--xy);border-radius:0 2px 2px 0;}
+.gl-item .meta{display:block;font-size:10px;color:var(--t4);font-weight:400;margin-top:2px;}
+.gl-item.on .meta{color:var(--xy);}
+
+.gl-foot{padding:14px;border-top:1px solid var(--bd-soft);}
+.gl-new{
+  width:100%;padding:9px;background:#fff;border:1px dashed var(--bd);
+  color:var(--t3);border-radius:7px;cursor:pointer;font-size:12px;
+  font-family:var(--ff);
+}
+
+/* Center: graph canvas + composer */
+.main{
+  display:flex;flex-direction:column;overflow:hidden;
+  background:#FAFBFC;
+}
+.main-head{
+  padding:14px 28px;background:#fff;border-bottom:1px solid var(--bd-soft);
+  display:flex;align-items:center;gap:16px;
+}
+.main-head h2{font-size:15px;font-weight:700;}
+.main-head .count{font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace;margin-left:4px;}
+.main-head .actions{margin-left:auto;display:flex;gap:8px;align-items:center;}
+.main-head .ai-btn{
+  padding:8px 16px;border:none;
+  background:linear-gradient(135deg,#A78BFA,#8B5CF6);
+  color:#fff;border-radius:7px;font-size:12px;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;gap:6px;
+  font-family:var(--ff);
+  box-shadow:0 2px 8px rgba(139,92,246,0.25);
+  transition:.15s;
+}
+.ai-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(139,92,246,0.35);}
+.ai-btn.glow{animation:aiGlow 2s infinite;}
+@keyframes aiGlow{50%{box-shadow:0 2px 8px rgba(139,92,246,0.25),0 0 0 6px rgba(139,92,246,0.15);}}
+
+.graph-area{
+  flex:1;
+  position:relative;
+  overflow:hidden;
+  background-image:radial-gradient(circle,#E4E8F0 1px,transparent 1px);
+  background-size:22px 22px;
+}
+.graph-svg{width:100%;height:100%;}
+
+.node{
+  position:absolute;
+  padding:8px 14px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+  user-select:none;
+  transform:translate(-50%,-50%);
+  white-space:nowrap;
+}
+.node.center{
+  background:linear-gradient(135deg,#EF4444,#F87171);
+  color:#fff;
+  padding:14px 22px;
+  font-size:13px;
+  border-radius:10px;
+  box-shadow:0 4px 14px rgba(239,68,68,0.35);
+}
+.node.chapter{
+  background:#fff;
+  border:2px solid var(--purple);
+  color:#5B21B6;
+}
+.node.kp{
+  background:#fff;
+  border:2px solid var(--xy);
+  color:var(--xy-dk);
+  font-size:11px;
+  padding:6px 10px;
+}
+.node.kp:hover{transform:translate(-50%,-50%) scale(1.08);box-shadow:0 4px 12px rgba(0,184,156,0.3);}
+.node.kp.picked{
+  background:var(--xy);
+  color:#fff;
+  box-shadow:0 4px 14px rgba(0,184,156,0.4),0 0 0 3px rgba(0,184,156,0.2);
+}
+.node.kp.picked::after{
+  content:'✓';
+  position:absolute;
+  top:-6px;right:-6px;
+  width:16px;height:16px;
+  background:var(--orange);
+  color:#fff;
+  border-radius:50%;
+  font-size:10px;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid #fff;
+}
+
+.legend{
+  position:absolute;left:20px;bottom:20px;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(8px);
+  border:1px solid var(--bd);
+  border-radius:10px;
+  padding:12px 16px;
+  font-size:11px;
+  color:var(--t3);
+}
+.legend h5{font-size:10px;color:var(--t3);font-family:'JetBrains Mono',monospace;margin-bottom:6px;letter-spacing:0.08em;}
+.legend .row{display:flex;align-items:center;gap:7px;margin-bottom:4px;}
+.legend .dot{width:10px;height:10px;border-radius:50%;}
+.legend .d-c{background:#EF4444;}
+.legend .d-h{background:var(--purple);}
+.legend .d-k{background:var(--xy);}
+
+/* Right: composer panel */
+.composer{
+  background:#fff;
+  border-left:1px solid var(--bd-soft);
+  display:flex;
+  flex-direction:column;
+}
+.cp-head{
+  padding:16px 20px;
+  border-bottom:1px solid var(--bd-soft);
+}
+.cp-head h3{font-size:15px;font-weight:700;margin-bottom:4px;}
+.cp-head p{font-size:11px;color:var(--t3);}
+
+.cp-body{
+  flex:1;
+  overflow-y:auto;
+  padding:18px 20px;
+}
+
+.cp-section{margin-bottom:22px;}
+.cp-label{
+  font-size:11px;
+  font-weight:700;
+  color:var(--t2);
+  margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;
+}
+.cp-label .cnt{
+  background:var(--xy-sf);color:var(--xy-dk);
+  padding:1px 8px;border-radius:10px;
+  font-size:10px;font-family:'JetBrains Mono',monospace;
+}
+.cp-pick-list{
+  min-height:60px;
+  padding:10px;
+  background:#FAFBFC;
+  border:1px dashed var(--bd);
+  border-radius:8px;
+  display:flex;flex-wrap:wrap;gap:6px;
+  font-size:11px;
+}
+.cp-pick-list:empty::before{
+  content:'请在图谱中点选知识点';
+  color:var(--t4);
+  padding:14px;
+  width:100%;
+  text-align:center;
+}
+.cp-pick{
+  padding:5px 10px;
+  background:var(--xy);color:#fff;
+  border-radius:4px;
+  font-weight:500;
+  animation:pickIn 0.3s ease;
+}
+@keyframes pickIn{from{opacity:0;transform:scale(0.8);}to{opacity:1;transform:scale(1);}}
+
+.diff-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.diff-box{
+  padding:14px 12px;
+  border:1px solid var(--bd);
+  border-radius:8px;
+  text-align:center;
+  cursor:pointer;
+  transition:.15s;
+}
+.diff-box .lbl{font-size:10px;color:var(--t3);font-family:'JetBrains Mono',monospace;margin-bottom:6px;}
+.diff-box .val{
+  font-size:22px;font-weight:800;
+  font-family:'JetBrains Mono',monospace;
+  color:var(--t1);
+}
+.diff-box.e{border-color:#10B981;}
+.diff-box.e .val{color:#10B981;}
+.diff-box.m{border-color:#F59E0B;}
+.diff-box.m .val{color:#F59E0B;}
+.diff-box.h{border-color:#EF4444;}
+.diff-box.h .val{color:#EF4444;}
+
+/* Donut chart */
+.donut{
+  margin:12px auto 0;
+  width:140px;height:140px;
+  position:relative;
+}
+.donut svg{transform:rotate(-90deg);}
+.donut .center-text{
+  position:absolute;
+  inset:0;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;
+}
+.donut .ct{font-size:24px;font-weight:800;color:var(--t1);font-family:'JetBrains Mono',monospace;}
+.donut .cs{font-size:10px;color:var(--t3);font-family:'JetBrains Mono',monospace;letter-spacing:0.1em;}
+
+.cp-generate{
+  margin-top:10px;
+  padding:13px;
+  width:100%;
+  background:var(--xy);color:#fff;
+  border:none;border-radius:8px;
+  font-size:13px;font-weight:700;
+  cursor:pointer;
+  font-family:var(--ff);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:.15s;
+}
+.cp-generate:hover{background:var(--xy-dk);transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,184,156,0.35);}
+.cp-generate:disabled{background:#D1D5DB;color:#9CA3AF;cursor:not-allowed;}
+
+/* Generated paper preview */
+.paper-preview{
+  margin-top:16px;
+  padding:14px;
+  background:linear-gradient(135deg,#F0FDFA 0%,#F0F9FF 100%);
+  border:1px solid #A7F3D0;
+  border-radius:10px;
+  font-size:12px;
+  display:none;
+}
+.paper-preview.show{display:block;animation:pickIn 0.5s ease;}
+.paper-preview h4{
+  font-size:13px;font-weight:700;color:#065F46;
+  display:flex;align-items:center;gap:8px;
+  padding-bottom:10px;border-bottom:1px solid rgba(16,185,129,0.2);
+  margin-bottom:10px;
+}
+.paper-preview h4 .tick{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--xy);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;
+}
+.p-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.p-meta-item{background:rgba(255,255,255,0.6);padding:8px 10px;border-radius:6px;}
+.p-meta-item .l{font-size:9px;color:var(--t3);font-family:'JetBrains Mono',monospace;}
+.p-meta-item .v{font-size:13px;font-weight:700;color:#065F46;}
+.p-questions{
+  background:rgba(255,255,255,0.6);
+  border-radius:7px;
+  padding:10px 12px;
+  margin-bottom:10px;
+}
+.p-q{
+  padding:6px 0;
+  border-bottom:1px dashed rgba(0,0,0,0.06);
+  display:flex;align-items:center;gap:8px;
+  font-size:11px;
+  color:var(--t2);
+}
+.p-q:last-child{border:none;}
+.p-q .no{font-family:'JetBrains Mono',monospace;color:var(--xy-dk);font-weight:600;}
+.p-q .d{margin-left:auto;font-size:9px;padding:1px 6px;border-radius:3px;font-weight:600;}
+.p-q .d.e{background:#D1FAE5;color:#065F46;}
+.p-q .d.m{background:#FEF3C7;color:#92400E;}
+.p-q .d.h{background:#FEE2E2;color:#991B1B;}
+
+.p-src{
+  background:rgba(255,255,255,0.6);
+  padding:8px 10px;
+  border-radius:6px;
+  font-size:10px;
+  color:var(--t3);
+  margin-bottom:10px;
+  display:flex;flex-wrap:wrap;gap:4px;
+}
+.p-src .chip{
+  padding:2px 6px;background:#fff;border:1px solid var(--bd);
+  border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:9px;
+}
+.p-src .chip.eng{background:#DBEAFE;color:#1D4ED8;border-color:#93C5FD;}
+.p-src .chip.data{background:#FEF3C7;color:#92400E;border-color:#FCD34D;}
+.p-src .chip.tool{background:#EDE9FE;color:#5B21B6;border-color:#C4B5FD;}
+
+.p-publish{
+  display:flex;gap:6px;
+}
+.p-btn{
+  flex:1;padding:8px;
+  border-radius:6px;font-size:11px;font-weight:600;
+  cursor:pointer;font-family:var(--ff);
+  border:1px solid var(--bd);background:#fff;color:var(--t2);
+}
+.p-btn.pri{background:var(--xy);color:#fff;border-color:var(--xy);}
+
+/* AI suggestion toast */
+.ai-toast{
+  position:fixed;
+  right:380px;top:140px;
+  background:#fff;
+  border:2px solid var(--purple);
+  border-radius:12px;
+  padding:14px 18px 14px 58px;
+  width:300px;
+  box-shadow:0 20px 40px -10px rgba(139,92,246,0.35);
+  z-index:100;
+  opacity:0;
+  transform:translateX(20px);
+  pointer-events:none;
+  transition:all 0.4s;
+}
+.ai-toast.show{opacity:1;transform:translateX(0);pointer-events:auto;}
+.ai-toast::before{
+  content:'';
+  position:absolute;
+  left:14px;top:14px;
+  width:30px;height:30px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#A78BFA,#8B5CF6);
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;
+  content:'✨';
+  font-weight:700;
+  box-shadow:0 0 0 3px rgba(139,92,246,0.2);
+}
+.ai-toast .ti{font-size:10px;color:var(--purple);font-weight:700;letter-spacing:0.08em;margin-bottom:4px;}
+.ai-toast .msg{font-size:12px;color:var(--t1);line-height:1.55;margin-bottom:10px;}
+.ai-toast .msg strong{color:var(--purple);}
+.ai-toast .actions{display:flex;gap:6px;}
+.ai-toast .btn{
+  padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;
+  border:1px solid var(--bd);background:#fff;color:var(--t3);cursor:pointer;
+  font-family:var(--ff);
+}
+.ai-toast .btn.pri{background:var(--purple);color:#fff;border-color:var(--purple);}
+
+.demo-ctrl{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(26,26,26,0.95);backdrop-filter:blur(12px);color:#fff;padding:10px 8px 10px 22px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:11px;display:flex;align-items:center;gap:14px;border:1px solid rgba(255,255,255,0.15);z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,0.3);}
+.demo-ctrl .status{display:flex;align-items:center;gap:8px;}
+.demo-ctrl .status::before{content:'';width:7px;height:7px;border-radius:50%;background:#FF7849;box-shadow:0 0 8px #FF7849;animation:ctrlPulse 1.5s infinite;}
+.demo-ctrl .status.done::before{background:#10B981;}
+@keyframes ctrlPulse{50%{opacity:0.3;}}
+.demo-ctrl button{background:rgba(167,139,250,0.2);color:#A78BFA;border:1px solid rgba(167,139,250,0.5);padding:6px 14px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;cursor:pointer;letter-spacing:0.05em;}
+.demo-ctrl button:hover{background:#A78BFA;color:#fff;}
+
+.p-q{opacity:0;transform:translateX(-8px);transition:all 0.4s;}
+.p-q.show{opacity:1;transform:translateX(0);}
+
+</style>
+
+<style id="unified-nav-style">
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+body{padding-top:60px !important;}
+body > .topnav,
+body > .shell-top,
+body > .top,
+body > .topbar,
+body > nav.top-quick-nav,
+body > header.slim-header{display:none !important;}
+
+.unified-topbar{
+  position:fixed;top:0;left:0;right:0;z-index:99998;
+  height:60px;background:#FFFFFF;border-bottom:1px solid #E8ECF0;
+  padding:0 32px;display:flex;align-items:center;justify-content:space-between;
+  font-family:'Noto Sans SC','PingFang SC',sans-serif;
+  box-shadow:0 1px 3px rgba(18,21,26,0.04);
+}
+.unified-topbar *{box-sizing:border-box;}
+.unified-topbar .u-left{display:flex;align-items:center;gap:32px;}
+.unified-topbar .u-logo{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:#23B283;text-decoration:none;}
+.unified-topbar .u-mark{
+  width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(135deg,#23B283 0%,#158C68 100%);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-weight:800;font-size:13px;box-shadow:0 4px 10px rgba(35,178,131,0.3);
+}
+.unified-topbar .u-sub{
+  font-size:10px;color:#7B838C;font-weight:500;
+  padding-left:10px;border-left:1px solid #E8ECF0;margin-left:4px;letter-spacing:0.02em;
+}
+.unified-topbar .u-nav{display:flex;gap:2px;}
+.unified-topbar .u-nav a{
+  padding:7px 13px;border-radius:7px;font-size:12.5px;color:#4B535C;
+  text-decoration:none;transition:all .2s;font-weight:500;
+}
+.unified-topbar .u-nav a:hover{background:rgba(35,178,131,0.1);color:#23B283;}
+.unified-topbar .u-nav a.u-on{background:#23B283;color:#fff;font-weight:600;}
+.unified-topbar .u-right{display:flex;align-items:center;gap:12px;}
+.unified-topbar .u-back{
+  font-size:12px;color:#7B838C;padding:7px 13px;
+  border:1px solid #E8ECF0;border-radius:999px;transition:.2s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:5px;
+}
+.unified-topbar .u-back:hover{color:#23B283;border-color:#23B283;background:#EBF7F1;}
+.unified-topbar .u-av{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(35,178,131,0.2);color:#23B283;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="unified-topbar">
+  <div class="u-left">
+    <a href="./index.html" class="u-logo">
+      <div class="u-mark">雅</div>
+      讯飞小雅
+      <span class="u-sub">学科大脑 · 场景演示</span>
+    </a>
+    <nav class="u-nav"><a href="./index.html">演示总览</a><a href="./scenes.html" class="u-on">场景演示</a><a href="./frontend.html">知识库前台</a><a href="./backend/index.html">管理后台</a><a href="./tools/index.html">学科大脑工具层</a><a href="./engines/engine_dashboard.html">模型引擎</a><a href="./training.html">训练平台</a></nav>
+  </div>
+  <div class="u-right">
+    <a href="./scenes.html" class="u-back">← 返回场景列表</a>
+    <div class="u-av">婷</div>
+  </div>
+</div>
+
+<div class="shell-top">
+  <div class="shell-brand"><b>iN</b>讯飞小雅</div>
+  <div class="shell-nav">
+    <a>我的课程</a><a>我的文档</a><a class="on">基础库 · 图谱库</a><a>发现</a>
+  </div>
+  <div class="shell-right">
+    <a href="./scenes.html" class="shell-back">← 返回演示导览</a>
+    <div class="shell-av">刘</div>
+  </div>
+</div>
+
+<div class="crumb-row">
+  <a>我的图谱库</a>
+  <span class="sep">/</span>
+  <strong>高等数学 A · 第 3 章 · 图谱组卷工作台</strong>
+</div>
+
+<div class="stage">
+
+  <!-- 左：图谱列表 -->
+  <aside class="gl">
+    <div class="gl-head">
+      <div class="search">🔍 搜索图谱</div>
+    </div>
+    <div class="gl-list">
+      <div class="gl-item on">高等数学 A · 第 3 章 <span class="meta">2026-04-14 · 已发布</span></div>
+      <div class="gl-item">高等数学 A · 第 2 章 <span class="meta">2026-04-08</span></div>
+      <div class="gl-item">线性代数 · 第 4 章 <span class="meta">2026-04-03</span></div>
+      <div class="gl-item">离散数学 · 第 5 章 <span class="meta">2026-03-28</span></div>
+      <div class="gl-item">概率论 · 第 3 章 <span class="meta">2026-03-20</span></div>
+      <div class="gl-item">数据结构 · 图论 <span class="meta">2026-03-15</span></div>
+    </div>
+    <div class="gl-foot">
+      <button class="gl-new">+ 创建图谱</button>
+    </div>
+  </aside>
+
+  <!-- 中：图谱画布 -->
+  <div class="main">
+    <div class="main-head">
+      <h2>第 3 章 · 函数的连续性</h2>
+      <span class="count">20 个知识点 · 3 级结构</span>
+      <div class="actions">
+        <button class="ai-btn glow" id="aiBtn">✨ AI 智能组卷建议</button>
+      </div>
+    </div>
+
+    <div class="graph-area" id="graphArea">
+      <svg class="graph-svg" viewBox="0 0 900 580" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0,0 L8,4 L0,8 z" fill="#CBD5E1"/>
+          </marker>
+        </defs>
+        <!-- Center to chapters -->
+        <line x1="450" y1="290" x2="250" y2="140" stroke="#CBD5E1" stroke-width="2"/>
+        <line x1="450" y1="290" x2="680" y2="140" stroke="#CBD5E1" stroke-width="2"/>
+        <line x1="450" y1="290" x2="250" y2="440" stroke="#CBD5E1" stroke-width="2"/>
+        <line x1="450" y1="290" x2="680" y2="440" stroke="#CBD5E1" stroke-width="2"/>
+        <!-- chapter to kp -->
+        <line x1="250" y1="140" x2="120" y2="80" stroke="#E5E7EB" stroke-width="1.5"/>
+        <line x1="250" y1="140" x2="120" y2="200" stroke="#E5E7EB" stroke-width="1.5"/>
+        <line x1="680" y1="140" x2="820" y2="80" stroke="#E5E7EB" stroke-width="1.5"/>
+        <line x1="680" y1="140" x2="820" y2="200" stroke="#E5E7EB" stroke-width="1.5"/>
+        <line x1="250" y1="440" x2="120" y2="380" stroke="#E5E7EB" stroke-width="1.5"/>
+        <line x1="250" y1="440" x2="120" y2="520" stroke="#E5E7EB" stroke-width="1.5"/>
+        <line x1="680" y1="440" x2="820" y2="380" stroke="#E5E7EB" stroke-width="1.5"/>
+        <line x1="680" y1="440" x2="820" y2="520" stroke="#E5E7EB" stroke-width="1.5"/>
+      </svg>
+      <div class="node center" style="left:50%;top:50%;">📐 第 3 章 · 连续性</div>
+
+      <div class="node chapter" style="left:28%;top:24%;">3.1 连续性定义</div>
+      <div class="node chapter" style="left:76%;top:24%;">3.2 间断点分类</div>
+      <div class="node chapter" style="left:28%;top:76%;">3.3 闭区间性质</div>
+      <div class="node chapter" style="left:76%;top:76%;">3.4 一致连续</div>
+
+      <div class="node kp" data-kp="连续性定义" style="left:13%;top:13%;">连续性定义</div>
+      <div class="node kp" data-kp="左右连续" style="left:13%;top:35%;">左右连续</div>
+      <div class="node kp" data-kp="可去间断点" style="left:91%;top:13%;">可去间断点</div>
+      <div class="node kp" data-kp="跳跃间断点" style="left:91%;top:35%;">跳跃间断点</div>
+      <div class="node kp" data-kp="介值定理" style="left:13%;top:65%;">介值定理</div>
+      <div class="node kp" data-kp="有界性定理" style="left:13%;top:88%;">有界性定理</div>
+      <div class="node kp" data-kp="一致连续性" style="left:91%;top:65%;">一致连续性</div>
+      <div class="node kp" data-kp="第二类间断点" style="left:91%;top:88%;">第二类间断点</div>
+    </div>
+
+    <div class="legend">
+      <h5>LEGEND</h5>
+      <div class="row"><span class="dot d-c"></span>章节中心</div>
+      <div class="row"><span class="dot d-h"></span>子章节</div>
+      <div class="row"><span class="dot d-k"></span>知识点</div>
+    </div>
+  </div>
+
+  <!-- 右：组卷面板 -->
+  <aside class="composer">
+    <div class="cp-head">
+      <h3>组卷工作台</h3>
+      <p>图谱选点 · 难度分配 · 一键组卷</p>
+    </div>
+    <div class="cp-body">
+
+      <div class="cp-section">
+        <div class="cp-label">已选知识点 <span class="cnt" id="pickCnt">0 项</span></div>
+        <div class="cp-pick-list" id="pickList"></div>
+      </div>
+
+      <div class="cp-section">
+        <div class="cp-label">题目数量分配</div>
+        <div class="diff-grid">
+          <div class="diff-box e">
+            <div class="lbl">EASY</div>
+            <div class="val">8</div>
+          </div>
+          <div class="diff-box m">
+            <div class="lbl">MEDIUM</div>
+            <div class="val">6</div>
+          </div>
+          <div class="diff-box h">
+            <div class="lbl">HARD</div>
+            <div class="val">4</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cp-section">
+        <div class="cp-label">难度分布预览</div>
+        <div class="donut">
+          <svg width="140" height="140">
+            <circle cx="70" cy="70" r="52" fill="none" stroke="#E5E7EB" stroke-width="14"/>
+            <circle cx="70" cy="70" r="52" fill="none" stroke="#10B981" stroke-width="14"
+                    stroke-dasharray="145 327" stroke-dashoffset="0"/>
+            <circle cx="70" cy="70" r="52" fill="none" stroke="#F59E0B" stroke-width="14"
+                    stroke-dasharray="109 327" stroke-dashoffset="-145"/>
+            <circle cx="70" cy="70" r="52" fill="none" stroke="#EF4444" stroke-width="14"
+                    stroke-dasharray="73 327" stroke-dashoffset="-254"/>
+          </svg>
+          <div class="center-text">
+            <div class="ct">18</div>
+            <div class="cs">TOTAL</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="cp-generate" id="generateBtn" disabled>✨ 生成考卷</button>
+
+      <div class="paper-preview" id="paperPreview">
+        <h4><span class="tick">✓</span> 考卷已生成</h4>
+        <div class="p-meta">
+          <div class="p-meta-item"><div class="l">TOTAL</div><div class="v">18 题</div></div>
+          <div class="p-meta-item"><div class="l">DURATION</div><div class="v">90 min</div></div>
+          <div class="p-meta-item"><div class="l">COVERAGE</div><div class="v">6 知识点</div></div>
+          <div class="p-meta-item"><div class="l">SCORE</div><div class="v">100 分</div></div>
+        </div>
+        <div class="p-questions">
+          <div class="p-q"><span class="no">Q01</span>连续性定义的三层判定<span class="d e">EASY</span></div>
+          <div class="p-q"><span class="no">Q02</span>判断 sin(x)/x 的连续性<span class="d e">EASY</span></div>
+          <div class="p-q"><span class="no">Q07</span>sin(1/x) 间断点分类<span class="d m">MED</span></div>
+          <div class="p-q"><span class="no">Q12</span>Dirichlet 函数连续点集<span class="d m">MED</span></div>
+          <div class="p-q"><span class="no">Q15</span>构造反例 · 有理连续<span class="d h">HARD</span></div>
+          <div class="p-q" style="color:var(--t4);"><span>… 共 18 题</span></div>
+        </div>
+        <div class="p-src">
+          <span>调用：</span>
+          <span class="chip data">M2 图谱</span>
+          <span class="chip data">M4 问答库</span>
+          <span class="chip tool">T04 问答库构建</span>
+          <span class="chip tool">T06 质量评测</span>
+          <span class="chip eng">E05 学科 Prompt</span>
+        </div>
+        <div class="p-publish">
+          <button class="p-btn">预览试卷</button>
+          <button class="p-btn">替换题目</button>
+          <button class="p-btn pri">发布到考试</button>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+</div>
+
+<!-- AI suggestion -->
+<div class="ai-toast" id="aiToast">
+  <div class="ti">AI 智能建议 · 学科大脑</div>
+  <div class="msg">
+    根据<strong>上届学情</strong>和<strong>本届练习数据</strong>，我推荐以下高价值考点：<br>
+    • 3.2.2 跳跃间断点（错题率 63%）<br>
+    • 3.2.3 第二类间断点（错题率 58%）<br>
+    • 3.3.1 介值定理（未考查）
+  </div>
+  <div class="actions">
+    <button class="btn" id="toastLater">稍后</button>
+    <button class="btn pri" id="toastApply">一键采纳 →</button>
+  </div>
+</div>
+
+<div class="demo-ctrl">
+  <span class="status" id="demoStatus">建议点"一键采纳"或手动在图谱上选点</span>
+  <button id="rp">↺ 重播</button>
+</div>
+
+<script>
+const graphArea=document.getElementById('graphArea');
+const pickList=document.getElementById('pickList');
+const pickCnt=document.getElementById('pickCnt');
+const generateBtn=document.getElementById('generateBtn');
+const paperPreview=document.getElementById('paperPreview');
+const aiBtn=document.getElementById('aiBtn');
+const aiToast=document.getElementById('aiToast');
+const toastApply=document.getElementById('toastApply');
+const toastLater=document.getElementById('toastLater');
+const rp=document.getElementById('rp');
+
+const picked=new Set();
+
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+
+function togglePick(kp){
+  if(picked.has(kp)){
+    picked.delete(kp);
+    document.querySelector(`[data-kp="${kp}"]`).classList.remove('picked');
+  }else{
+    picked.add(kp);
+    document.querySelector(`[data-kp="${kp}"]`).classList.add('picked');
+  }
+  renderPicks();
+}
+function renderPicks(){
+  pickCnt.textContent=picked.size+' 项';
+  pickList.innerHTML='';
+  [...picked].forEach(kp=>{
+    const c=document.createElement('div');
+    c.className='cp-pick';
+    c.textContent=kp;
+    pickList.appendChild(c);
+  });
+  generateBtn.disabled=picked.size<3;
+}
+
+document.querySelectorAll('.node.kp').forEach(n=>{
+  n.addEventListener('click',()=>togglePick(n.dataset.kp));
+});
+
+aiBtn.addEventListener('click',()=>{
+  aiToast.classList.add('show');
+  aiBtn.classList.remove('glow');
+});
+
+toastLater.addEventListener('click',()=>aiToast.classList.remove('show'));
+
+toastApply.addEventListener('click',async ()=>{
+  aiToast.classList.remove('show');
+  const picks=['连续性定义','跳跃间断点','第二类间断点','介值定理','一致连续性','可去间断点'];
+  for(const kp of picks){
+    await wait(220);
+    togglePick(kp);
+  }
+});
+
+const demoStatus=document.getElementById('demoStatus');
+
+generateBtn.addEventListener('click',async()=>{
+  generateBtn.disabled=true;
+  generateBtn.textContent='正在调用 T04 问答库构建...';
+  demoStatus.textContent='调用 M2 图谱 + M4 问答库 + T06 质量评测...';
+  demoStatus.classList.remove('done');
+  await wait(800);
+  paperPreview.classList.add('show');
+  generateBtn.textContent='试卷组装中 · 请稍候';
+  // Stagger-reveal questions
+  const qs=paperPreview.querySelectorAll('.p-q');
+  for(let i=0;i<qs.length;i++){
+    await wait(250);
+    qs[i].classList.add('show');
+  }
+  generateBtn.textContent='✓ 考卷已生成';
+  demoStatus.textContent='✓ 考卷已生成 · 18 题 · 可发布到学生端';
+  demoStatus.classList.add('done');
+});
+
+rp.addEventListener('click',()=>{
+  picked.clear();
+  document.querySelectorAll('.node.kp').forEach(n=>n.classList.remove('picked'));
+  renderPicks();
+  paperPreview.classList.remove('show');
+  generateBtn.disabled=true;
+  generateBtn.textContent='✨ 生成考卷';
+  aiBtn.classList.add('glow');
+});
+
+// Initial AI toast
+setTimeout(()=>{aiToast.classList.add('show');},1400);
+</script>
+</body>
+</html>

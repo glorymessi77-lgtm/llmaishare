@@ -1,0 +1,64 @@
+/* 设计 token */
+:root {
+  /* 背景 */
+  --bg: #F7F8FA;
+  --surface: #FFFFFF;
+  --sidebar: #FFFFFF;
+  --row-hover: #F9FAFB;
+
+  /* 主色（翠绿） */
+  --primary: #10B981;
+  --primary-bg: #ECFDF5;
+  --primary-hover: #059669;
+
+  /* 辅助色 */
+  --blue: #3B82F6;
+  --blue-bg: #EFF6FF;
+  --purple: #8B5CF6;
+  --purple-bg: #F3E8FF;
+  --orange: #F59E0B;
+  --orange-bg: #FEF3C7;
+  --red: #EF4444;
+  --red-bg: #FEE2E2;
+
+  /* 文本 */
+  --text-1: #111827;
+  --text-2: #374151;
+  --text-3: #6B7280;
+  --text-4: #9CA3AF;
+
+  /* 边框 */
+  --border: #EFF1F4;
+  --border-strong: #E5E7EB;
+
+  /* 状态 */
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --info: #3B82F6;
+
+  /* 气泡 */
+  --bubble-dark: #111827;
+
+  /* 圆角 */
+  --r-sm: 8px;
+  --r-md: 10px;
+  --r-lg: 12px;
+  --r-pill: 999px;
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 2px rgba(17,24,39,0.04), 0 1px 3px rgba(17,24,39,0.04);
+  --shadow-md: 0 4px 12px rgba(17,24,39,0.06), 0 2px 4px rgba(17,24,39,0.04);
+
+  /* 字号 */
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-base: 14px;
+  --fs-md: 15px;
+  --fs-lg: 18px;
+  --fs-xl: 22px;
+  --fs-2xl: 28px;
+
+  /* 字体 */
+  --ff: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}

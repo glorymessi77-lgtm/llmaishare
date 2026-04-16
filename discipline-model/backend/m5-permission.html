@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>权限与安全管理 · 学科大脑后台</title>
+<link rel="stylesheet" href="shared.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .role-list{display:flex;flex-direction:column;gap:6px;}
+  .role-card{padding:12px 14px;border-radius:10px;border:1px solid var(--border);cursor:pointer;transition:all .15s;}
+  .role-card:hover{border-color:var(--brand);}
+  .role-card.active{background:var(--brand-bg);border-color:var(--brand);}
+  .role-card .rn{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;}
+  .role-card .rd{font-size:12px;color:var(--text-3);margin-top:4px;}
+  .role-card .rm{font-size:11px;color:var(--text-3);margin-top:6px;display:flex;justify-content:space-between;}
+  .lock{color:var(--gold);}
+  .approval-flow{background:linear-gradient(135deg,#F8FBF9,#EBF7F1);border:1px solid var(--brand-20);border-radius:var(--r-md);padding:8px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo"><div class="logo-mark">雅</div>讯飞小雅<span class="logo-sub">学科大脑后台</span></div>
+    <div class="topbar-nav">
+      <a href="index.html"><i data-lucide="home" stroke-width="2" width="14" height="14"></i> 首页</a>
+      <a href="#" class="active">权限与安全</a>
+      <a href="m9-agent-config.html">智能体</a>
+      <a href="m6-knowledge-qc.html">知识质控</a>
+      <a href="m-dashboard.html">督导看板</a>
+      <a href="m2-terminology.html">术语管理</a>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-icon"><i data-lucide="bell" stroke-width="2" width="18" height="18"></i><span class="dot"></span></div>
+    <div class="avatar">王</div>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="side-section">
+      <div class="side-label">权限与安全</div>
+      <div class="side-item active" data-tab="roles"><i data-lucide="users" stroke-width="2" width="16" height="16" class="side-icon"></i> 角色与权限</div>
+      <div class="side-item" data-tab="approval"><i data-lucide="check-square" stroke-width="2" width="16" height="16" class="side-icon"></i> 校级审批 <span class="side-badge">12</span></div>
+      <div class="side-item" data-tab="audit"><i data-lucide="file-text" stroke-width="2" width="16" height="16" class="side-icon"></i> 操作日志</div>
+      <div class="side-item"><i data-lucide="settings-2" stroke-width="2" width="16" height="16" class="side-icon"></i> 安全策略</div>
+    </div>
+    <div class="side-section">
+      <div class="side-label">数据概览</div>
+      <div style="padding:10px 12px;background:var(--bg-soft);border-radius:9px;">
+        <div style="font-size:11px;color:var(--text-3);margin-bottom:6px;">本月审批通过率</div>
+        <div style="font-size:22px;font-weight:800;color:var(--brand);">94.2%</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:4px;">↑ 较上月 +2.1%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <div id="tab-roles">
+      <div class="page-header">
+        <div>
+          <div class="page-title">角色与权限矩阵 <span class="brain-tag">RBAC 模型</span></div>
+          <div class="page-desc">5 级内置角色 + 自定义角色，按模块勾选权限点</div>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost"><i data-lucide="rotate-ccw" stroke-width="2" width="14" height="14"></i> 重置</button>
+          <button class="btn btn-outline"><i data-lucide="plus" stroke-width="2" width="14" height="14"></i> 新建角色</button>
+          <button class="btn btn-primary" onclick="toast('权限变更已保存，已下发 1,892 个在线用户','success')"><i data-lucide="save" stroke-width="2" width="14" height="14"></i> 保存变更</button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:280px 1fr;gap:16px;">
+        <div class="card" style="margin:0;">
+          <div class="card-head"><div class="card-title">角色列表</div><span class="card-sub">6 个</span></div>
+          <div class="role-list">
+            <div class="role-card"><div class="rn"><i data-lucide="lock" stroke-width="2" width="14" height="14" class="lock"></i> 系统管理员</div><div class="rd">全平台最高权限</div><div class="rm"><span>2 人</span><span class="tag">系统内置</span></div></div>
+            <div class="role-card active"><div class="rn"><i data-lucide="lock" stroke-width="2" width="14" height="14" class="lock"></i> 校级管理员</div><div class="rd">校长 / 副校长</div><div class="rm"><span>5 人</span><span class="tag">系统内置</span></div></div>
+            <div class="role-card"><div class="rn"><i data-lucide="lock" stroke-width="2" width="14" height="14" class="lock"></i> 学科主任</div><div class="rd">本学科教师管理</div><div class="rm"><span>16 人</span><span class="tag">系统内置</span></div></div>
+            <div class="role-card"><div class="rn"><i data-lucide="lock" stroke-width="2" width="14" height="14" class="lock"></i> 授课教师</div><div class="rd">日常教学使用</div><div class="rm"><span>284 人</span><span class="tag">系统内置</span></div></div>
+            <div class="role-card"><div class="rn"><i data-lucide="lock" stroke-width="2" width="14" height="14" class="lock"></i> 学生</div><div class="rd">前台学习者</div><div class="rm"><span>1,602 人</span><span class="tag">系统内置</span></div></div>
+            <div class="role-card"><div class="rn">教研组长</div><div class="rd">继承自 授课教师</div><div class="rm"><span>23 人</span><span class="tag t-purple">自定义</span></div></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <div class="card-head">
+            <div class="card-title"><i data-lucide="grid-3x3" stroke-width="2" width="16" height="16" class="card-title-icon"></i> 权限矩阵 · 校级管理员</div>
+            <div style="display:flex;gap:10px;font-size:12px;color:var(--text-3);">
+              <span><span class="check" style="vertical-align:middle;"></span> 已授权</span>
+              <span><span class="check partial" style="vertical-align:middle;"></span> 部分</span>
+              <span><span class="check off" style="vertical-align:middle;"></span> 未授权</span>
+            </div>
+          </div>
+
+          <table class="matrix">
+            <thead><tr><th>模块 / 权限</th><th>查看</th><th>新增</th><th>编辑</th><th>删除</th><th>审核</th></tr></thead>
+            <tbody>
+              <tr><td>权限管理</td><td><span class="check"></span></td><td><span class="check"></span></td><td><span class="check"></span></td><td><span class="check off"></span></td><td><span class="check"></span></td></tr>
+              <tr><td>智能体配置</td><td><span class="check"></span></td><td><span class="check partial"></span></td><td><span class="check partial"></span></td><td><span class="check off"></span></td><td><span class="check"></span></td></tr>
+              <tr><td>知识共建质控</td><td><span class="check"></span></td><td><span class="check"></span></td><td><span class="check"></span></td><td><span class="check off"></span></td><td><span class="check"></span></td></tr>
+              <tr><td>术语管理</td><td><span class="check"></span></td><td><span class="check"></span></td><td><span class="check"></span></td><td><span class="check off"></span></td><td><span class="check"></span></td></tr>
+              <tr><td>督导看板</td><td><span class="check"></span></td><td><span class="check off"></span></td><td><span class="check off"></span></td><td><span class="check off"></span></td><td><span class="check off"></span></td></tr>
+              <tr><td>系统设置</td><td><span class="check"></span></td><td><span class="check off"></span></td><td><span class="check partial"></span></td><td><span class="check off"></span></td><td><span class="check off"></span></td></tr>
+            </tbody>
+          </table>
+
+          <div class="notice info" style="margin-top:16px;">
+            <i data-lucide="info" stroke-width="2" class="notice-icon"></i>
+            <div><div class="notice-title">变更预览</div><div class="notice-desc">本次将新增"系统设置 · 编辑"部分权限。保存后将影响 5 名校级管理员，并同步至所有在线会话。</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-approval" style="display:none;">
+      <div class="page-header">
+        <div><div class="page-title">校级审批工作台</div><div class="page-desc">支持最多 5 级流程节点，并签 / 或签可配置</div></div>
+        <div class="page-actions">
+          <button class="btn btn-outline"><i data-lucide="git-branch" stroke-width="2" width="14" height="14"></i> 流程配置</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:8px;"><i data-lucide="git-merge" stroke-width="2" width="16" height="16" class="card-title-icon"></i> 当前流程：教师权限申请 · 4 级审批</div>
+        <div class="approval-flow">
+          <div class="flow">
+            <div class="flow-node"><div class="flow-circle" style="background:#fff;"><i data-lucide="user-plus" stroke-width="2"></i><span class="num">1</span></div><div class="flow-name">教师发起</div><div class="flow-count">已完成</div></div>
+            <i data-lucide="chevron-right" stroke-width="2" class="flow-arrow"></i>
+            <div class="flow-node"><div class="flow-circle" style="background:#fff;"><i data-lucide="user-check" stroke-width="2"></i><span class="num">2</span></div><div class="flow-name">学科主任</div><div class="flow-count">已通过</div></div>
+            <i data-lucide="chevron-right" stroke-width="2" class="flow-arrow"></i>
+            <div class="flow-node"><div class="flow-circle" style="background:var(--brand);color:#fff;border-color:var(--brand);"><i data-lucide="shield-check" stroke-width="2"></i><span class="num">3</span></div><div class="flow-name">校级审批</div><div class="flow-count" style="color:var(--brand);font-weight:700;">当前节点 · 12</div></div>
+            <i data-lucide="chevron-right" stroke-width="2" class="flow-arrow"></i>
+            <div class="flow-node"><div class="flow-circle" style="background:var(--bg);color:var(--text-3);border-color:var(--border);"><i data-lucide="check-circle-2" stroke-width="2"></i><span class="num" style="background:var(--text-4);">4</span></div><div class="flow-name">系统下发</div><div class="flow-count">待执行</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="filters">
+          <div class="search-box"><i data-lucide="search" stroke-width="2" width="16" height="16"></i><input placeholder="搜索申请人、目标角色…"></div>
+          <div class="filter-pill active">全部 12</div>
+          <div class="filter-pill">紧急 3</div>
+          <div class="filter-pill">普通 9</div>
+          <div class="filter-pill">本周 8</div>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>申请编号</th><th>申请人</th><th>申请类型</th><th>目标角色 / 学科</th><th>提交时间</th><th>状态</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr><td class="strong">APR-20260415-021</td><td><span class="avatar-sm">李</span> 李雪松 · 计算机科学与技术</td><td>角色升级</td><td>计算机学院学科主任</td><td>04-15 09:32</td><td><span class="status status-pending">待校审</span></td>
+                <td class="row-actions">
+                  <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();toast('已通过申请 APR-20260415-021','success')">通过</button>
+                  <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();toast('已驳回','error')">驳回</button>
+                  <button class="btn btn-ghost btn-sm">打回</button>
+                </td>
+              </tr>
+              <tr><td class="strong">APR-20260415-019</td><td><span class="avatar-sm a-blue">陈</span> 陈宇航 · 高等数学</td><td>跨学科权限</td><td>高等数学+人工智能 授课教师</td><td>04-15 08:50</td><td><span class="status status-pending">待校审</span></td>
+                <td class="row-actions"><button class="btn btn-primary btn-sm">通过</button><button class="btn btn-ghost btn-sm">驳回</button><button class="btn btn-ghost btn-sm">打回</button></td>
+              </tr>
+              <tr><td class="strong">APR-20260414-018</td><td><span class="avatar-sm a-orange">王</span> 王晓蕾 · 软件工程</td><td>知识库管理权</td><td>软件工程 高级编辑</td><td>04-14 16:08</td><td><span class="status status-pending">待校审</span></td>
+                <td class="row-actions"><button class="btn btn-primary btn-sm">通过</button><button class="btn btn-ghost btn-sm">驳回</button><button class="btn btn-ghost btn-sm">打回</button></td>
+              </tr>
+              <tr><td class="strong">APR-20260414-017</td><td><span class="avatar-sm a-purple">孙</span> 孙铭浩 · 马克思主义理论</td><td>智能体下发权</td><td>马克思主义理论教研组长</td><td>04-14 14:32</td><td><span class="status status-success">已通过</span></td>
+                <td class="row-actions"><button class="btn btn-ghost btn-sm">查看</button></td>
+              </tr>
+              <tr><td class="strong">APR-20260413-016</td><td><span class="avatar-sm a-red">周</span> 周晴雯 · 法学</td><td>转岗</td><td>法学 → 马克思主义理论</td><td>04-13 17:18</td><td><span class="status status-danger">已驳回</span></td>
+                <td class="row-actions"><button class="btn btn-ghost btn-sm">查看</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="pagination">共 12 条 <button class="page-btn">‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">›</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-audit" style="display:none;">
+      <div class="page-header">
+        <div><div class="page-title">操作日志审计</div><div class="page-desc">所有写操作全量留痕，保留 3 年，支持 CSV 导出</div></div>
+        <div class="page-actions"><button class="btn btn-outline"><i data-lucide="download" stroke-width="2" width="14" height="14"></i> 导出 CSV</button></div>
+      </div>
+
+      <div class="card">
+        <div class="filters">
+          <div class="search-box"><i data-lucide="search" stroke-width="2" width="16" height="16"></i><input placeholder="搜索操作人、对象…"></div>
+          <select class="select" style="width:120px;"><option>全部模块</option><option>权限与安全</option><option>智能体配置</option><option>知识共建质控</option><option>术语管理</option></select>
+          <select class="select" style="width:120px;"><option>全部角色</option><option>系统管理员</option><option>校级管理员</option><option>学科主任</option></select>
+          <input class="input" type="date" style="width:160px;" value="2026-04-15">
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>时间</th><th>操作人</th><th>角色</th><th>模块</th><th>动作</th><th>对象</th><th>IP</th><th>结果</th></tr></thead>
+            <tbody>
+              <tr><td>14:32:18</td><td><span class="avatar-sm">王</span> 王校长</td><td><span class="tag">校级管理员</span></td><td>权限</td><td>审批通过</td><td class="strong">APR-20260415-019</td><td>10.12.4.32</td><td><span class="status status-success">成功</span></td></tr>
+              <tr><td>14:18:45</td><td><span class="avatar-sm a-blue">陈</span> 陈宇航</td><td><span class="tag t-blue">学科主任</span></td><td>智能体</td><td>发布版本</td><td class="strong">高等数学解题助手 v2.4.1</td><td>10.12.5.18</td><td><span class="status status-success">成功</span></td></tr>
+              <tr><td>13:52:01</td><td><span class="avatar-sm a-orange">李</span> 李雪松</td><td><span class="tag t-orange">授课教师</span></td><td>知识质控</td><td>提交知识</td><td>《数据结构·图的遍历》习题集</td><td>10.12.6.221</td><td><span class="status status-success">成功</span></td></tr>
+              <tr><td>13:40:22</td><td><span class="avatar-sm a-purple">孙</span> 孙铭浩</td><td><span class="tag t-purple">学科主任</span></td><td>术语</td><td>修改术语</td><td class="strong">"动量守恒定律"</td><td>10.12.4.88</td><td><span class="status status-success">成功</span></td></tr>
+              <tr><td>13:32:11</td><td>system</td><td><span class="tag t-gray">系统</span></td><td>智能体</td><td>下发智能体</td><td>学术写作辅导 → 2024级软件工程1班</td><td>—</td><td><span class="status status-success">成功</span></td></tr>
+              <tr><td>13:08:50</td><td><span class="avatar-sm a-red">周</span> 周晴雯</td><td><span class="tag t-red">授课教师</span></td><td>权限</td><td>登录</td><td>—</td><td>113.220.x.x</td><td><span class="status status-danger">失败</span></td></tr>
+              <tr><td>12:48:36</td><td><span class="avatar-sm">王</span> 王校长</td><td><span class="tag">校级管理员</span></td><td>权限</td><td>权限变更</td><td>"教研组长" 角色</td><td>10.12.4.32</td><td><span class="status status-success">成功</span></td></tr>
+            </tbody>
+          </table>
+          <div class="pagination">共 1,283 条 <button class="page-btn">‹</button><button class="page-btn active">1</button><button class="page-btn">2</button><button class="page-btn">3</button><button class="page-btn">…</button><button class="page-btn">26</button><button class="page-btn">›</button></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  lucide.createIcons();
+  function toast(msg,type){
+    const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'');
+    setTimeout(()=>t.className='toast',2200);
+  }
+  document.querySelectorAll('.sidebar .side-item[data-tab]').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const t=el.dataset.tab;
+      document.querySelectorAll('.sidebar .side-item').forEach(x=>x.classList.remove('active'));
+      el.classList.add('active');
+      ['roles','approval','audit'].forEach(x=>{
+        const node=document.getElementById('tab-'+x);
+        if(node) node.style.display=(x===t?'block':'none');
+      });
+    });
+  });
+  document.querySelectorAll('.role-card').forEach(c=>c.addEventListener('click',()=>{
+    document.querySelectorAll('.role-card').forEach(x=>x.classList.remove('active'));c.classList.add('active');
+  }));
+  document.querySelectorAll('.check').forEach(c=>c.addEventListener('click',e=>{
+    e.stopPropagation();
+    if(c.classList.contains('off')){c.classList.remove('off');}
+    else if(c.classList.contains('partial')){c.classList.remove('partial');}
+    else{c.classList.add('off');}
+  }));
+</script>
+</body>
+</html>

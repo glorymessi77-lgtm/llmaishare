@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>T10 Agent 平台 · 学科大脑</title>
+<link rel="stylesheet" href="assets/tokens.css" /><link rel="stylesheet" href="assets/style.css" />
+</head><body data-page="t10">
+<div class="layout">
+  <aside class="sidebar" id="sidebar-mount"></aside>
+  <main class="main">
+    <header class="topbar"><div><span class="title">Agent 平台</span><span class="crumbs">生态与应用 / T10 Agent 平台</span></div>
+      <div class="search"><i data-lucide="search" width="14" height="14"></i><input placeholder="搜索 Agent" /></div></header>
+    <div class="content">
+      <section class="page-header">
+        <div class="left"><span class="code-badge">T10</span><div><h1>智能体与 Agent 平台</h1><div class="subtitle">基于学科知识库构建课程助教、科研问答、选课推荐等智能体</div></div></div>
+        <div class="actions"><button class="btn"><i data-lucide="wrench" width="14" height="14"></i>插件市场</button>
+          <button class="btn btn-primary"><i data-lucide="plus" width="14" height="14"></i>新建 Agent</button></div>
+      </section>
+      <section class="kpi-row" id="kpi-row"></section>
+      <section class="filter-bar">
+        <select id="f-kind"><option value="">全部类型</option><option value="ta">课程助教</option><option value="research">科研问答</option><option value="recommend">选课推荐</option><option value="explain">题目讲解</option></select>
+        <select id="f-subject"><option value="">全部学科</option></select>
+        <select id="f-status"><option value="">全部状态</option><option value="online">运行中</option><option value="canary">灰度</option><option value="offline">停用</option></select>
+        <input id="f-search" class="search-input" type="text" placeholder="搜索 Agent 名称" />
+        <span class="spacer"></span><button class="btn btn-sm">API 文档</button>
+      </section>
+      <div class="card-grid" id="grid"></div>
+    </div>
+  </main>
+</div>
+<aside class="drawer" id="drawer"><div class="drawer-head"><span class="title">Agent 详情</span><button class="close"><i data-lucide="x" width="16" height="16"></i></button></div><div class="drawer-body"></div></aside>
+<div class="drawer-mask" id="drawer-mask"></div>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="assets/data.js"></script><script src="assets/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const S=window.MOCK.agentStats, list=window.MOCK.agents, meta=window.MOCK.agentStatusMeta, km=window.MOCK.agentKindMeta;
+  const kindIcon={ta:'graduation-cap',research:'microscope',recommend:'compass',explain:'help-circle'};
+  document.getElementById('kpi-row').innerHTML = `
+    <div class="kpi-card"><div class="label">Agent 数量</div><div class="value">${S.total}<span class="unit">个</span></div><div class="delta up">↑ 6 本月</div></div>
+    <div class="kpi-card"><div class="label">本月调用</div><div class="value">${window.fmtNum(S.callsMonth)}<span class="unit">次</span></div><div class="delta up">↑ 12.7%</div></div>
+    <div class="kpi-card"><div class="label">平均满意度</div><div class="value">${S.satisfaction}<span class="unit">%</span></div><div class="delta up">↑ 2.4%</div></div>
+    <div class="kpi-card"><div class="label">平均响应</div><div class="value">${S.latency}<span class="unit">s</span></div><div class="delta down">↓ 0.3s</div></div>`;
+  document.getElementById('f-subject').innerHTML += window.MOCK.subjects.map(s=>`<option value="${s}">${s}</option>`).join('');
+
+  function render(rows){
+    document.getElementById('grid').innerHTML = rows.map((a,i)=>`
+      <div class="item-card" data-idx="${i}">
+        <div class="card-head">
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:36px;height:36px;border-radius:var(--r-sm);background:var(--primary-bg);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i data-lucide="${kindIcon[a.kind]}" width="18" height="18"></i></div>
+            <div><div class="card-title" style="font-size:var(--fs-sm);">${a.name}</div><div class="card-sub">${a.id} · ${km[a.kind]}</div></div>
+          </div>
+          <span class="chip ${meta[a.status].tone}">${meta[a.status].text}</span>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px;"><span class="chip">${a.subject}</span><span class="chip info">KB ${a.kbCount}</span></div>
+        <div style="margin-top:10px;">${window.sparkline(a.trend7d)}</div>
+        <div class="card-meta">
+          <div>调用 <span class="v">${window.fmtNum(a.callsMonth)}</span></div>
+          <div>满意度 <span class="v">${a.satisfaction}%</span></div>
+          <div>响应 <span class="v">${a.latencySec}s</span></div>
+        </div>
+      </div>`).join('');
+    document.querySelectorAll('#grid .item-card').forEach(c=>c.addEventListener('click',()=>openAg(rows[+c.dataset.idx])));
+    lucide.createIcons();
+  }
+  render(list.slice(0,20));
+
+  function openAg(a){
+    window.__openDrawer(`
+      <div class="drawer-meta">
+        <div class="row"><span class="k">ID</span><span class="v">${a.id}</span></div>
+        <div class="row"><span class="k">类型</span><span class="v">${km[a.kind]}</span></div>
+        <div class="row"><span class="k">学科</span><span class="v">${a.subject}</span></div>
+        <div class="row"><span class="k">状态</span><span class="v">${meta[a.status].text}</span></div>
+        <div class="row"><span class="k">挂载 KB</span><span class="v num">${a.kbCount}</span></div>
+        <div class="row"><span class="k">本月调用</span><span class="v num">${window.fmtNum(a.callsMonth)}</span></div>
+        <div class="row"><span class="k">满意度 / 响应</span><span class="v num">${a.satisfaction}% / ${a.latencySec}s</span></div>
+        <div class="row"><span class="k">更新</span><span class="v num">${a.updatedAt}</span></div>
+      </div>
+      <div class="drawer-section"><h4>近 7 日调用趋势</h4><div style="padding:16px;background:var(--bg);border-radius:var(--r-md);">${window.sparkline(a.trend7d).replace('width="80"','').replace('height="24"','').replace('class="sparkline"','class="sparkline" style="height:80px;"')}</div></div>
+      <div class="drawer-section"><h4>启用工具</h4><div style="display:flex;flex-wrap:wrap;gap:6px;">${a.tools.map(t=>`<span class="chip info"><i data-lucide="puzzle" width="10" height="10" style="margin-right:4px;"></i>${t}</span>`).join('')}</div></div>
+      <div class="drawer-section"><h4>系统提示词</h4><p style="margin:0;padding:12px;background:var(--bg);border-radius:var(--r-md);color:var(--text-2);font-size:var(--fs-sm);line-height:1.7;">${a.systemPrompt}</p></div>`, a.name);
+  }
+
+  const filter=()=>{const sub=document.getElementById('f-subject').value,st=document.getElementById('f-status').value,kd=document.getElementById('f-kind').value,q=document.getElementById('f-search').value.toLowerCase();
+    render(list.filter(a=>(!sub||a.subject===sub)&&(!st||a.status===st)&&(!kd||a.kind===kd)&&(!q||a.name.toLowerCase().includes(q))).slice(0,30));};
+  ['f-subject','f-status','f-kind'].forEach(id=>document.getElementById(id).addEventListener('change',filter));
+  document.getElementById('f-search').addEventListener('input',filter);
+  lucide.createIcons();
+});
+</script>
+</body></html>

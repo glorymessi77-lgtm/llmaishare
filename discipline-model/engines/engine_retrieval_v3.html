@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>检索引擎可视化 · 管理后台</title>
+  <style>
+        :root {
+      --primary:#1C3A5E;
+      --accent:#3B82F6;
+      --success:#10B981;
+      --success-bg:#D1FAE5;
+      --warning:#F59E0B;
+      --warning-bg:#FEF3C7;
+      --danger:#EF4444;
+      --danger-bg:#FEE2E2;
+      --blue:#1677FF;
+      --blue-bg:#EFF4FF;
+      --bg-1:#FAFBFC;
+      --bg-2:#F3F4F6;
+      --text-1:#111827;
+      --text-2:#4B5563;
+      --text-3:#6B7280;
+      --text-4:#9CA3AF;
+      --border:#E5E7EB;
+      --shadow-sm:0 1px 3px rgba(0,0,0,.06);
+      --shadow-md:0 4px 12px rgba(0,0,0,.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+      background: var(--bg-1);
+      color: var(--text-1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59,130,246,.08) 0%, transparent 70%);
+      pointer-events: none;
+      transition: transform .15s ease-out;
+      z-index: 0;
+    }
+    .topnav {
+      height: 56px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 28px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 10;
+    }
+    .topnav::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--success));
+    }
+    .topnav-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px rgba(16,185,129,.2); }
+    .topnav-title { color: #fff; font-size: 16px; font-weight: 600; }
+    .topnav-sep { width: 1px; height: 18px; background: rgba(255,255,255,.15); }
+    .topnav-page { color: rgba(255,255,255,.7); font-size: 13px; }
+    .topnav-back { background: rgba(255,255,255,.12); color: rgba(255,255,255,.88); border: none; border-radius: 6px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-weight: 500; transition: .15s; }
+    .topnav-back:hover { background: rgba(255,255,255,.18); }
+    .topnav-right { margin-left: auto; display: flex; gap: 10px; }
+    .topnav-badge { background: rgba(255,255,255,.1); color: rgba(255,255,255,.85); border-radius: 6px; padding: 4px 12px; font-size: 12px; border: 1px solid rgba(255,255,255,.12); }
+    .quick-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+    .quick-stat { background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; display: flex; flex-direction: column; gap: 3px; }
+    .quick-stat-label { font-size: 10px; color: var(--text-3); }
+    .quick-stat-value { font-size: 18px; line-height: 18px; font-weight: 700; color: var(--text-1); }
+    .quick-stat-value small { font-size: 11px; color: var(--text-3); font-weight: 500; }
+    .quick-stat-trend { font-size: 10px; }
+    .quick-stat.alert { cursor: pointer; border-color: rgba(245,59,59,.2); background: linear-gradient(180deg, #fff 0%, #fff7f7 100%); }
+    .quick-stat.alert .quick-stat-value { color: var(--danger); }
+    .quick-stat.alert .quick-stat-label { color: var(--danger); }
+    .action-btns { display: flex; gap: 6px; margin-bottom: 10px; }
+    .action-btn { flex: 1; font-size: 11px; border-radius: 6px; padding: 6px 8px; border: 1px solid transparent; cursor: pointer; background: #fff; text-align: center; }
+    .action-btn.hotspot { background: var(--warning-bg); border-color: rgba(252,120,25,.2); color: var(--warning); }
+    .action-btn.coverage { background: var(--blue-bg); border-color: rgba(22,119,255,.2); color: var(--blue); }
+    .workspace { flex: 1; display: grid; grid-template-columns: 300px minmax(0,1fr) 280px; overflow: hidden; position: relative; z-index: 1; }
+    .panel { background: var(--bg-white); overflow: hidden; display: flex; flex-direction: column; }
+    .left-panel { border-right: 1px solid var(--border); }
+    .center-panel { background: var(--bg-gray); padding: 12px; gap: 10px; }
+    .right-panel { border-left: 1px solid var(--border); padding: 10px; gap: 10px; background: #FAFBFC; }
+    .left-head { padding: 12px 12px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .left-title { font-size: 13px; font-weight: 600; color: var(--text-1); display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .left-title span { font-size: 11px; color: var(--text-4); font-weight: 400; }
+    .search-box { background: var(--bg-gray); border: 1px solid var(--border); border-radius: 8px; height: 32px; display: flex; align-items: center; padding: 0 8px; margin-bottom: 8px; gap: 6px; }
+    .search-box input { flex: 1; border: none; background: transparent; outline: none; font-size: 12px; color: var(--text-1); }
+    .search-box input::placeholder { color: var(--text-4); }
+    .filter-row { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 7px; padding-bottom: 2px; }
+    .chip { border: 1px solid var(--border); background: #fff; color: var(--text-3); border-radius: 999px; font-size: 11px; padding: 3px 9px; cursor: pointer; white-space: nowrap; }
+    .chip.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .record-list { flex: 1; overflow-y: auto; }
+    .record-item { padding: 10px 12px; border-left: 3px solid transparent; cursor: pointer; transition: .15s; }
+    .record-item:hover { background: var(--bg-gray); }
+    .record-item.active { background: var(--blue-bg); border-left-color: var(--blue); }
+    .record-q { font-size: 13px; line-height: 18px; color: var(--text-1); font-weight: 500; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .record-meta { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; font-size: 11px; color: var(--text-4); }
+    .tag { background: var(--bg-gray); color: var(--text-3); border-radius: 3px; font-size: 10px; padding: 0 4px; }
+    .tag.warn { background: var(--warning-bg); color: var(--warning); }
+    .tag.err { background: var(--danger-bg); color: var(--danger); }
+    .left-bottom { border-top: 1px solid var(--border); padding: 10px 12px; flex-shrink: 0; }
+    .left-bottom-title { font-size: 11px; font-weight: 600; color: var(--text-3); margin-bottom: 8px; }
+    .hot-item { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-2); padding: 4px 0; border-bottom: 1px solid var(--border); gap: 8px; }
+    .hot-item:last-child { border-bottom: none; }
+    .hot-item span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hot-item b { background: var(--warning-bg); color: var(--warning); border-radius: 3px; padding: 1px 4px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+    .engine-topbar { background: var(--bg-white); border-radius: 10px; box-shadow: var(--shadow-sm); padding: 10px 12px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .engine-q { flex: 1; min-width: 0; }
+    .engine-q-title { font-size: 14px; font-weight: 600; color: var(--text-1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+    .engine-q-meta { font-size: 11px; color: var(--text-3); }
+    .overall-badge { font-size: 11px; border-radius: 999px; padding: 3px 9px; font-weight: 600; background: var(--bg-gray); color: var(--text-4); white-space: nowrap; }
+    .timeline-wrap { flex: 1; overflow-y: auto; padding: 4px 2px; display: flex; flex-direction: column; gap: 10px; }
+    .step { position: relative; background: var(--bg-white); border-radius: 10px; box-shadow: var(--shadow-sm); border: 1px solid transparent; }
+    .step.open { border-color: rgba(22,119,255,.2); }
+    .step-head { padding: 10px 12px; display: flex; align-items: center; cursor: pointer; gap: 10px; }
+    .step-node { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; background: var(--bg-gray); color: var(--text-4); }
+    .step-node.running { background: var(--blue-bg); color: var(--blue); animation: pulse 1.2s infinite; }
+    .step-node.done { background: var(--success-bg); color: var(--success); }
+    .step-node.warn { background: var(--warning-bg); color: var(--warning); }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+    .step-main { flex: 1; min-width: 0; }
+    .step-title { font-size: 13px; color: var(--text-1); font-weight: 600; margin-bottom: 2px; }
+    .step-summary { font-size: 11px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .step-badge { font-size: 11px; border-radius: 999px; padding: 2px 8px; font-weight: 500; background: var(--bg-gray); color: var(--text-4); white-space: nowrap; }
+    .step-badge.ok { background: var(--success-bg); color: var(--success); }
+    .step-badge.run { background: var(--blue-bg); color: var(--blue); }
+    .step-badge.warn { background: var(--warning-bg); color: var(--warning); }
+    .step-body { display: none; border-top: 1px solid var(--border); padding: 10px 12px; }
+    .step.open .step-body { display: block; }
+    .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+    .kw-chip { background: var(--blue-bg); color: var(--blue); border: 1px solid rgba(22,119,255,.2); border-radius: 4px; padding: 2px 8px; font-size: 12px; opacity: 0; transform: scale(.85); transition: .2s; }
+    .kw-chip.show { opacity: 1; transform: scale(1); }
+    .ctrl-row { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .ctrl-btn { border: 1px solid var(--border); background: #fff; color: var(--text-2); border-radius: 6px; font-size: 11px; padding: 4px 9px; cursor: pointer; }
+    .ctrl-btn.primary { background: var(--blue-bg); border-color: rgba(22,119,255,.22); color: var(--blue); }
+    .ctrl-btn.warn { background: var(--warning-bg); border-color: rgba(252,120,25,.24); color: var(--warning); }
+    .recall-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 8px; }
+    .recall-card { background: var(--bg-gray); border-radius: 8px; padding: 8px 9px; }
+    .rc-l { font-size: 11px; color: var(--text-3); margin-bottom: 3px; }
+    .rc-v { font-size: 24px; font-weight: 700; line-height: 27px; color: var(--text-1); }
+    .rc-v small { font-size: 11px; color: var(--text-3); font-weight: 500; }
+    .bar { height: 3px; background: rgba(0,0,0,.08); border-radius: 999px; overflow: hidden; margin-top: 4px; }
+    .bar > i { display: block; height: 100%; width: 0; border-radius: 999px; transition: width .8s; }
+    .merge-line { font-size: 12px; color: var(--text-3); background: var(--bg-gray); border-radius: 6px; padding: 6px 9px; }
+    .merge-line b { color: var(--text-2); }
+    .inline-ctrl { margin-top: 9px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .ctrl-box { border: 1px solid var(--border); border-radius: 8px; padding: 7px 8px; font-size: 11px; color: var(--text-2); background: #fff; }
+    .ctrl-box b { font-size: 11px; color: var(--text-3); display: block; margin-bottom: 5px; font-weight: 600; }
+    .ctrl-box input[type='range'] { width: 100%; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th { text-align: left; color: var(--text-3); font-weight: 500; padding: 3px 6px 6px; border-bottom: 1px solid var(--border); }
+    td { padding: 7px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    .tr-fade { opacity: 0; transition: .22s; }
+    .tr-fade.show { opacity: 1; }
+    .rk { width: 19px; height: 19px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; background: var(--bg-gray); color: var(--text-3); }
+    .rk.r1 { background: var(--warning-bg); color: var(--warning); }
+    .rk.r2 { background: #F0F0F0; color: #666; }
+    .rk.r3 { background: #FFF7E6; color: #D48806; }
+    .src-tag { font-size: 10px; color: var(--text-3); background: var(--bg-gray); border-radius: 3px; padding: 1px 4px; }
+    .rel { display: flex; align-items: center; gap: 4px; }
+    .rel-track { width: 42px; height: 3px; background: var(--bg-gray); border-radius: 999px; overflow: hidden; }
+    .rel-track i { display: block; height: 100%; background: var(--success); }
+    .rel span { color: var(--success); font-size: 11px; font-weight: 700; }
+    .nr-list { display: flex; flex-direction: column; gap: 8px; }
+    .nr-card { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; opacity: 0; transform: translateY(6px); transition: .24s; }
+    .nr-card.show { opacity: 1; transform: translateY(0); }
+    .nr-top { background: var(--warning-bg); padding: 8px 10px; display: flex; gap: 8px; align-items: flex-start; }
+    .nr-name { flex: 1; font-size: 12px; font-weight: 600; color: var(--text-1); line-height: 17px; }
+    .nr-pct { font-size: 11px; color: var(--danger); background: var(--danger-bg); border-radius: 4px; padding: 1px 6px; font-weight: 700; }
+    .nr-reason { padding: 8px 10px; font-size: 11px; color: var(--text-3); line-height: 16px; }
+    .nr-reason b { display: block; margin-bottom: 2px; }
+    .nr-actions { border-top: 1px solid var(--border); background: var(--bg-gray); padding: 7px 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+    .sug-box { border: 1.5px dashed rgba(22,119,255,.3); background: var(--blue-bg); border-radius: 8px; padding: 10px; font-size: 12px; color: var(--text-2); line-height: 18px; }
+    .sug-title { font-size: 11px; color: var(--blue); font-weight: 600; margin-bottom: 6px; }
+    .r-card { background: var(--bg-white); border: 1px solid var(--border); border-radius: 10px; padding: 10px; box-shadow: var(--shadow-sm); }
+    .r-card-title { font-size: 12px; font-weight: 600; color: var(--text-2); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .ov-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; text-align: center; }
+    .ov-item { background: var(--bg-gray); border-radius: 7px; padding: 7px 4px; }
+    .ov-item div { font-size: 18px; font-weight: 700; line-height: 18px; }
+    .ov-item small { font-size: 10px; color: var(--text-3); }
+    .ov-item .red { color: var(--danger); }
+    .ov-item .orange { color: var(--warning); }
+    .ov-item .green { color: var(--success); }
+    .root-row { margin-bottom: 7px; }
+    .root-row:last-child { margin-bottom: 0; }
+    .root-row .name { font-size: 11px; color: var(--text-3); margin-bottom: 3px; display: flex; justify-content: space-between; }
+    .root-bar { height: 6px; border-radius: 999px; background: var(--bg-gray); overflow: hidden; }
+    .root-bar i { display: block; height: 100%; border-radius: 999px; }
+    .top-list { display: flex; flex-direction: column; gap: 6px; }
+    .top-list .item { background: var(--bg-gray); border-radius: 7px; padding: 7px; display: flex; align-items: center; gap: 6px; cursor: pointer; border: 1px solid transparent; }
+    .top-list .item:hover { border-color: rgba(22,119,255,.25); background: var(--blue-bg); }
+    .top-list .idx { width: 18px; height: 18px; border-radius: 50%; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; background: #fff; color: var(--text-3); flex-shrink: 0; }
+    .top-list .txt { flex: 1; min-width: 0; font-size: 11px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .top-list .cnt { font-size: 10px; color: var(--warning); background: var(--warning-bg); border-radius: 999px; padding: 1px 5px; font-weight: 700; white-space: nowrap; }
+    .todo-row { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-2); padding: 5px 0; border-bottom: 1px solid var(--border); gap: 6px; }
+    .todo-row:last-child { border-bottom: none; }
+    .todo-row b { color: var(--warning); }
+    .todo-row button { border: 1px solid var(--border); background: #fff; color: var(--text-2); border-radius: 6px; font-size: 10px; padding: 2px 6px; cursor: pointer; white-space: nowrap; }
+    .overlay { position: fixed; inset: 0; background: rgba(18,21,26,.5); display: none; align-items: center; justify-content: center; z-index: 100; opacity: 0; transition: .18s; }
+    .overlay.show { opacity: 1; }
+    .overlay-card { width: 720px; max-height: 82vh; background: var(--bg-white); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transform: translateY(10px); transition: .2s; }
+    .overlay.show .overlay-card { transform: translateY(0); }
+    .overlay-hd { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+    .overlay-title { flex: 1; font-size: 15px; font-weight: 600; }
+    .overlay-close { border: none; background: none; color: var(--text-3); font-size: 18px; cursor: pointer; }
+    .overlay-body { padding: 16px; overflow-y: auto; }
+    .heatmap-legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px; color: var(--text-3); margin-bottom: 10px; }
+    .heatmap-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .heatmap-legend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+    .heatmap-grid { display: grid; grid-template-columns: 110px repeat(7,1fr); gap: 2px; }
+    .hm-h { font-size: 10px; color: var(--text-3); text-align: center; padding: 3px 2px; }
+    .hm-r { font-size: 11px; color: var(--text-2); display: flex; align-items: center; }
+    .hm-c { height: 30px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: rgba(255,255,255,.9); font-weight: 700; cursor: pointer; }
+    .cov-h { background: var(--success); }
+    .cov-m { background: var(--warning); }
+    .cov-l { background: var(--danger); }
+    .cov-n { background: #E0E0E0; color: var(--text-3); }
+    .overlay-note { margin-top: 12px; font-size: 12px; color: var(--text-3); }
+    .toast { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); background: rgba(18,21,26,.92); color: #fff; border-radius: 8px; padding: 7px 14px; font-size: 12px; z-index: 999; opacity: 0; pointer-events: none; transition: .2s; white-space: nowrap; }
+    .toast.show { opacity: 1; }
+    .empty { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; color: var(--text-4); font-size: 12px; text-align: center; gap: 8px; padding: 16px; }
+    ::-webkit-scrollbar { width: 3px; height: 3px; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  </style>
+</head>
+<body>
+    <div class="topnav">
+    <div class="topnav-dot"></div>
+    <div class="topnav-title">学科大脑</div>
+    <div class="topnav-sep"></div>
+    <button class="topnav-back" onclick="window.location='engine_dashboard.html'">返回总览</button>
+    <div class="topnav-sep"></div>
+    <div class="topnav-page">检索引擎可视化</div>
+    <div class="topnav-right">
+      <div class="topnav-badge">中医药大学 · 医学部</div>
+      <div class="topnav-badge">教研中心 · 管理视图</div>
+    </div>
+  </div>
+  </div>
+  <div class="workspace">
+    <section class="panel left-panel">
+      <div class="left-head">
+        <div class="left-title">问答记录仓库 <span id="listCount">今日 0 条</span></div>
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0"><circle cx="6" cy="6" r="4.5" stroke="var(--text-4)" stroke-width="1.2"/><path d="M9.5 9.5L12.5 12.5" stroke="var(--text-4)" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <input id="searchInput" placeholder="搜索问题、学号、姓名" oninput="onSearch(this.value)" />
+        </div>
+        <div class="filter-row" id="statusFilterRow"></div>
+        <div class="filter-row" id="subjectFilterRow"></div>
+      </div>
+      <div class="record-list" id="recordList"></div>
+      <div class="left-bottom">
+        <div class="left-bottom-title">本周反复未召回</div>
+        <div class="hot-item"><span>中药十八反临床配伍例外</span><b>4次</b></div>
+        <div class="hot-item"><span>温病与伤寒辨证分层</span><b>3次</b></div>
+        <div class="hot-item"><span>针灸配穴禁忌总表</span><b>3次</b></div>
+      </div>
+    </section>
+    <section class="panel center-panel" style="display:flex;">
+      <div class="engine-topbar">
+        <div class="engine-q" id="engineTop">
+          <div class="engine-q-title" id="topQ">-</div>
+          <div class="engine-q-meta" id="topMeta">-</div>
+        </div>
+        <div class="overall-badge" id="overallBadge">-</div>
+      </div>
+      <div class="timeline-wrap" id="timelineWrap">
+        <div class="empty" id="emptyState">
+          <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><rect x="5" y="5" width="32" height="32" rx="7" stroke="currentColor" stroke-width="1.5"/><path d="M13 21h16M13 14h16M13 28h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          从左侧选择一条记录，查看引擎调度过程
+        </div>
+      </div>
+    </section>
+    <section class="panel right-panel" style="overflow-y:auto;">
+      <div class="quick-stats">
+        <div class="quick-stat">
+          <div class="quick-stat-label">今日问答量</div>
+          <div class="quick-stat-value">126</div>
+          <div class="quick-stat-trend" style="color:var(--success)">较昨日 +23</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-label">平均召回率</div>
+          <div class="quick-stat-value">82<small>%</small></div>
+          <div class="quick-stat-trend" style="color:var(--success)">较上周 +4.6%</div>
+        </div>
+        <div class="quick-stat alert" onclick="setStatusFilter('warn')">
+          <div class="quick-stat-label">异常召回</div>
+          <div class="quick-stat-value">7</div>
+          <div class="quick-stat-trend" style="color:var(--danger)">点击筛选异常</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-label">知识库覆盖率</div>
+          <div class="quick-stat-value">68<small>%</small></div>
+          <div class="quick-stat-trend" style="color:var(--warning)">建议补充 9 专题</div>
+        </div>
+      </div>
+      <div class="action-btns">
+        <button class="action-btn hotspot" onclick="showHotspot()">热点分析</button>
+        <button class="action-btn coverage" onclick="showCoverage()">覆盖热力图</button>
+      </div>
+      <div class="r-card">
+        <div class="r-card-title">异常总览 <span style="font-size:10px;color:var(--text-4);font-weight:400;">今日</span></div>
+        <div class="ov-grid">
+          <div class="ov-item"><div class="red" id="ovTotal">7</div><small>异常总数</small></div>
+          <div class="ov-item"><div class="orange" id="ovSevere">3</div><small>严重异常</small></div>
+          <div class="ov-item"><div class="green" id="ovPending">4</div><small>待处理</small></div>
+        </div>
+      </div>
+      <div class="r-card">
+        <div class="r-card-title">根因分布</div>
+        <div class="root-row"><div class="name"><span>文档缺失</span><b>45%</b></div><div class="root-bar"><i style="width:45%;background:var(--danger)"></i></div></div>
+        <div class="root-row"><div class="name"><span>阈值过严</span><b>30%</b></div><div class="root-bar"><i style="width:30%;background:var(--warning)"></i></div></div>
+        <div class="root-row"><div class="name"><span>文档质量差</span><b>25%</b></div><div class="root-bar"><i style="width:25%;background:#F5A35C"></i></div></div>
+      </div>
+      <div class="r-card">
+        <div class="r-card-title">高频未召回 TOP</div>
+        <div class="top-list">
+          <div class="item" onclick="loadRecord(2)"><span class="idx">1</span><span class="txt">中药十八反临床配伍例外</span><span class="cnt">4次</span></div>
+          <div class="item" onclick="loadRecord(4)"><span class="idx">2</span><span class="txt">针灸配穴禁忌判断</span><span class="cnt">3次</span></div>
+          <div class="item" onclick="loadRecord(1)"><span class="idx">3</span><span class="txt">四诊合参与辨证论治关系</span><span class="cnt">3次</span></div>
+        </div>
+      </div>
+      <div class="r-card">
+        <div class="r-card-title">干预待办</div>
+        <div class="todo-row"><span>待补文档 <b>5</b></span><button onclick="toast('已跳转待补文档清单')">去补库</button></div>
+        <div class="todo-row"><span>待调阈值 <b>3</b></span><button onclick="toast('已打开阈值配置')">去调参</button></div>
+        <div class="todo-row"><span>待复检 <b>2</b></span><button onclick="toast('已加入复检队列')">去复检</button></div>
+      </div>
+    </section>
+  </div>
+  <div class="overlay" id="coverageOverlay" onclick="hideCoverage(event)">
+    <div class="overlay-card">
+      <div class="overlay-hd">
+        <div class="overlay-title">知识库覆盖热力图 · 中医药大学核心课程</div>
+        <button class="overlay-close" onclick="hideCoverage()">x</button>
+      </div>
+      <div class="overlay-body">
+        <div class="heatmap-legend">
+          <span><i style="background:var(--success)"></i>覆盖完整（>80%）</span>
+          <span><i style="background:var(--warning)"></i>覆盖不足（40-80%）</span>
+          <span><i style="background:var(--danger)"></i>严重缺失（<40%）</span>
+          <span><i style="background:#E0E0E0"></i>暂无文档</span>
+        </div>
+        <div class="heatmap-grid" id="heatmapGrid"></div>
+        <div class="overlay-note">红色单元格建议优先补充，点击格子可查看具体缺口。</div>
+      </div>
+    </div>
+  </div>
+  <div class="overlay" id="hotspotOverlay" onclick="hideHotspot(event)">
+    <div class="overlay-card" style="width:620px;">
+      <div class="overlay-hd">
+        <div class="overlay-title">反复未召回热点分析 · 本周</div>
+        <button class="overlay-close" onclick="hideHotspot()">x</button>
+      </div>
+      <div class="overlay-body">
+        <div class="top-list">
+          <div class="item" onclick="loadRecord(2);hideHotspot()"><span class="idx">1</span><span class="txt">中药十八反临床配伍例外（中药学）</span><span class="cnt">4次</span></div>
+          <div class="item" onclick="loadRecord(4);hideHotspot()"><span class="idx">2</span><span class="txt">针灸配穴禁忌判断（针灸学）</span><span class="cnt">3次</span></div>
+          <div class="item" onclick="loadRecord(1);hideHotspot()"><span class="idx">3</span><span class="txt">四诊合参与辨证论治关系（中医学）</span><span class="cnt">3次</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+const records=[{id:1,q:'四诊合参与辨证论治的关系是什么？',user:'李明',uid:'2021301234',time:'14:23',subject:'中医学',status:'ok',recall:85,kw:['四诊合参','辨证论治','中医诊断'],kwRecall:12,semRecall:8,graphRecall:3,rerank:23,final:8,notRecalled:[{name:'中医诊断学·第四章·四诊合参',pct:92,reason:'文档缺失',reasonType:'missing',sug:'建议补充《中医诊断学》第四章完整内容'}]},{id:2,q:'中药十八反中有哪些临床配伍例外？',user:'王芳',uid:'2021305678',time:'14:18',subject:'中药学',status:'warn',recall:42,kw:['十八反','配伍禁忌','临床例外'],kwRecall:8,semRecall:5,graphRecall:2,rerank:15,final:4,notRecalled:[{name:'中药学·十八反配伍例外表',pct:88,reason:'文档缺失',reasonType:'missing',sug:'建议补充《中药学》十八反配伍例外专题'},{name:'临床中药学·配伍禁忌案例',pct:76,reason:'阈值过严（相似度0.68<0.70）',reasonType:'threshold',sug:'建议将语义召回阈值从0.70降至0.65'}]},{id:3,q:'温病卫气营血辨证的核心要点？',user:'张伟',uid:'2021302345',time:'14:12',subject:'中医学',status:'ok',recall:91,kw:['温病','卫气营血','辨证'],kwRecall:15,semRecall:11,graphRecall:4,rerank:30,final:10},{id:4,q:'针灸配穴时如何判断禁忌？',user:'刘洋',uid:'2021306789',time:'14:05',subject:'针灸学',status:'warn',recall:38,kw:['针灸','配穴','禁忌'],kwRecall:6,semRecall:4,graphRecall:1,rerank:11,final:3,notRecalled:[{name:'针灸学·配穴禁忌总表',pct:94,reason:'文档缺失',reasonType:'missing',sug:'建议补充《针灸学》配穴禁忌专题'}]},{id:5,q:'方剂配伍中君臣佐使的作用？',user:'陈静',uid:'2021303456',time:'13:58',subject:'方剂学',status:'ok',recall:88,kw:['方剂','君臣佐使','配伍'],kwRecall:14,semRecall:10,graphRecall:5,rerank:29,final:9}];
+let currentRecord=null,statusFilter='all',subjectFilter='all',searchTerm='';
+function init(){renderStatusFilters();renderSubjectFilters();renderRecordList();updateListCount();}
+function renderStatusFilters(){const f=document.getElementById('statusFilterRow');f.innerHTML='<div class="chip '+(statusFilter==='all'?'active':'')+'" onclick="setStatusFilter(\'all\')">全部</div><div class="chip '+(statusFilter==='ok'?'active':'')+'" onclick="setStatusFilter(\'ok\')">检索正常</div><div class="chip '+(statusFilter==='warn'?'active':'')+'" onclick="setStatusFilter(\'warn\')">异常召回</div>';}
+function renderSubjectFilters(){const subs=[...new Set(records.map(r=>r.subject))];const f=document.getElementById('subjectFilterRow');f.innerHTML='<div class="chip '+(subjectFilter==='all'?'active':'')+'" onclick="setSubjectFilter(\'all\')">全部学科</div>'+subs.map(s=>'<div class="chip '+(subjectFilter===s?'active':'')+'" onclick="setSubjectFilter(\''+s+'\')">'+s+'</div>').join('');}
+function setStatusFilter(s){statusFilter=s;renderStatusFilters();renderRecordList();}
+function setSubjectFilter(s){subjectFilter=s;renderSubjectFilters();renderRecordList();}
+function onSearch(v){searchTerm=v.toLowerCase();renderRecordList();}
+function renderRecordList(){const filtered=records.filter(r=>{if(statusFilter!=='all'&&r.status!==statusFilter)return false;if(subjectFilter!=='all'&&r.subject!==subjectFilter)return false;if(searchTerm&&!r.q.toLowerCase().includes(searchTerm)&&!r.user.toLowerCase().includes(searchTerm)&&!r.uid.includes(searchTerm))return false;return true;});const list=document.getElementById('recordList');if(filtered.length===0){list.innerHTML='<div class="empty" style="padding:40px 16px;">无匹配记录</div>';return;}list.innerHTML=filtered.map(r=>'<div class="record-item '+(currentRecord&&currentRecord.id===r.id?'active':'')+'" onclick="loadRecord('+r.id+')"><div class="record-q">'+r.q+'</div><div class="record-meta"><span>'+r.user+'</span><span>'+r.uid+'</span><span>'+r.time+'</span><span class="tag">'+r.subject+'</span>'+(r.status==='warn'?'<span class="tag warn">异常召回</span>':'<span class="tag">检索正常</span>')+'<span>召回率 '+r.recall+'%</span></div></div>').join('');updateListCount();}
+function updateListCount(){const filtered=records.filter(r=>{if(statusFilter!=='all'&&r.status!==statusFilter)return false;if(subjectFilter!=='all'&&r.subject!==subjectFilter)return false;if(searchTerm&&!r.q.toLowerCase().includes(searchTerm)&&!r.user.toLowerCase().includes(searchTerm)&&!r.uid.includes(searchTerm))return false;return true;});document.getElementById('listCount').textContent='今日 '+filtered.length+' 条';}
+function loadRecord(id){currentRecord=records.find(r=>r.id===id);if(!currentRecord)return;renderRecordList();document.getElementById('emptyState').style.display='none';document.getElementById('topQ').textContent=currentRecord.q;document.getElementById('topMeta').textContent=currentRecord.user+' · '+currentRecord.uid+' · '+currentRecord.time+' · '+currentRecord.subject;document.getElementById('overallBadge').textContent='召回率 '+currentRecord.recall+'%';document.getElementById('overallBadge').style.background=currentRecord.status==='ok'?'var(--success-bg)':'var(--warning-bg)';document.getElementById('overallBadge').style.color=currentRecord.status==='ok'?'var(--success)':'var(--warning)';renderTimeline();}
+function renderTimeline(){const w=document.getElementById('timelineWrap');w.innerHTML='<div class="step" id="step1"><div class="step-head" onclick="toggleStep(1)"><div class="step-node done">1</div><div class="step-main"><div class="step-title">关键词提取</div><div class="step-summary">已提取 '+currentRecord.kw.length+' 个核心关键词</div></div><div class="step-badge ok">完成</div></div><div class="step-body"><div class="chips" id="kwChips"></div><div class="ctrl-row"><button class="ctrl-btn primary" onclick="toast(\'已打开关键词编辑器\')">编辑关键词</button><button class="ctrl-btn" onclick="toast(\'已重新提取\')">重新提取</button></div></div></div><div class="step" id="step2"><div class="step-head" onclick="toggleStep(2)"><div class="step-node done">2</div><div class="step-main"><div class="step-title">三路召回</div><div class="step-summary">关键词 '+currentRecord.kwRecall+' · 语义 '+currentRecord.semRecall+' · 图谱 '+currentRecord.graphRecall+'</div></div><div class="step-badge ok">完成</div></div><div class="step-body"><div class="recall-grid"><div class="recall-card"><div class="rc-l">关键词召回</div><div class="rc-v">'+currentRecord.kwRecall+'<small>/50</small></div><div class="bar"><i style="width:'+(currentRecord.kwRecall*2)+'%;background:var(--blue)"></i></div></div><div class="recall-card"><div class="rc-l">语义召回</div><div class="rc-v">'+currentRecord.semRecall+'<small>/30</small></div><div class="bar"><i style="width:'+(currentRecord.semRecall*3.33)+'%;background:var(--success)"></i></div></div><div class="recall-card"><div class="rc-l">图谱召回</div><div class="rc-v">'+currentRecord.graphRecall+'<small>/20</small></div><div class="bar"><i style="width:'+(currentRecord.graphRecall*5)+'%;background:var(--warning)"></i></div></div></div><div class="merge-line">三路合并去重后 <b>'+currentRecord.rerank+'</b> 条候选</div><div class="inline-ctrl"><div class="ctrl-box"><b>语义召回阈值</b><input type="range" min="50" max="90" value="70" oninput="toast(\'阈值已调整为 \'+this.value+\'%\')"/></div><div class="ctrl-box"><b>图谱召回深度</b><input type="range" min="1" max="3" value="2" oninput="toast(\'深度已调整为 \'+this.value+\' 跳\')"/></div></div></div></div><div class="step" id="step3"><div class="step-head" onclick="toggleStep(3)"><div class="step-node done">3</div><div class="step-main"><div class="step-title">Reranker 精排</div><div class="step-summary">从 '+currentRecord.rerank+' 条候选中精选 '+currentRecord.final+' 条</div></div><div class="step-badge ok">完成</div></div><div class="step-body"><table id="rerankTable"></table><div class="ctrl-row"><button class="ctrl-btn primary" onclick="toast(\'已标记为正例\')">标记正例</button><button class="ctrl-btn warn" onclick="toast(\'已标记为负例\')">标记负例</button></div></div></div>'+(currentRecord.notRecalled&&currentRecord.notRecalled.length>0?'<div class="step" id="step4"><div class="step-head" onclick="toggleStep(4)"><div class="step-node warn">!</div><div class="step-main"><div class="step-title">未召回根因分析</div><div class="step-summary">发现 '+currentRecord.notRecalled.length+' 条应召回但未召回的文档</div></div><div class="step-badge warn">异常</div></div><div class="step-body"><div class="nr-list" id="nrList"></div></div></div>':'');setTimeout(()=>{currentRecord.kw.forEach((k,i)=>{const c=document.createElement('div');c.className='kw-chip';c.textContent=k;document.getElementById('kwChips').appendChild(c);setTimeout(()=>c.classList.add('show'),i*60);});},50);setTimeout(()=>{const tb=document.getElementById('rerankTable');tb.innerHTML='<thead><tr><th style="width:32px">排名</th><th>文档</th><th style="width:60px">来源</th><th style="width:80px">相关度</th></tr></thead><tbody id="rerankBody"></tbody>';const docs=[{rank:1,name:'中医诊断学·第三章·辨证论治概论',src:'语义',rel:94},{rank:2,name:'中医基础理论·辨证论治方法',src:'关键词',rel:89},{rank:3,name:'中医学导论·四诊合参要点',src:'图谱',rel:87},{rank:4,name:'中医诊断学·四诊综合运用',src:'语义',rel:85},{rank:5,name:'临床中医学·辨证思维训练',src:'关键词',rel:82},{rank:6,name:'中医内科学·辨证论治实例',src:'图谱',rel:78},{rank:7,name:'中医诊断学·辨证方法分类',src:'语义',rel:76},{rank:8,name:'中医学概论·四诊八纲',src:'关键词',rel:72}];const body=document.getElementById('rerankBody');docs.forEach((d,i)=>{const tr=document.createElement('tr');tr.className='tr-fade';tr.innerHTML='<td><div class="rk '+(d.rank<=3?'r'+d.rank:'')+'">'+d.rank+'</div></td><td>'+d.name+'</td><td><span class="src-tag">'+d.src+'</span></td><td><div class="rel"><div class="rel-track"><i style="width:'+d.rel+'%"></i></div><span>'+d.rel+'%</span></div></td>';body.appendChild(tr);setTimeout(()=>tr.classList.add('show'),i*70);});},200);if(currentRecord.notRecalled&&currentRecord.notRecalled.length>0){setTimeout(()=>{const list=document.getElementById('nrList');currentRecord.notRecalled.forEach((n,i)=>{const card=document.createElement('div');card.className='nr-card';card.innerHTML='<div class="nr-top"><div class="nr-name">'+n.name+'</div><div class="nr-pct">'+n.pct+'%</div></div><div class="nr-reason"><b>'+(n.reasonType==='missing'?'文档缺失':n.reasonType==='threshold'?'阈值过严':'文档质量差')+'</b>'+n.reason+'</div><div class="nr-actions"><button class="ctrl-btn primary" onclick="toast(\'已加入待补文档清单\')">标记待补</button><button class="ctrl-btn" onclick="toast(\'已加入复检队列\')">加入复检</button></div>';list.appendChild(card);setTimeout(()=>card.classList.add('show'),i*100);});},300);}}
+function toggleStep(n){const s=document.getElementById('step'+n);const isOpen=s.classList.contains('open');document.querySelectorAll('.step').forEach(st=>st.classList.remove('open'));if(!isOpen)s.classList.add('open');}
+function showCoverage(){const o=document.getElementById('coverageOverlay');o.style.display='flex';setTimeout(()=>o.classList.add('show'),10);renderHeatmap();}
+function hideCoverage(e){if(e&&e.target.className!=='overlay')return;const o=document.getElementById('coverageOverlay');o.classList.remove('show');setTimeout(()=>o.style.display='none',200);}
+function renderHeatmap(){const chapters=['中医基础理论','中医诊断学','中药学','方剂学','针灸学','中医内科学','温病学'];const types=['教材','习题集','案例库','视频','论文','临床指南'];const grid=document.getElementById('heatmapGrid');grid.innerHTML='<div></div>'+chapters.map(c=>'<div class="hm-h">'+c+'</div>').join('');types.forEach(t=>{grid.innerHTML+='<div class="hm-r">'+t+'</div>'+chapters.map(()=>{const r=Math.random();const cls=r>0.7?'cov-h':r>0.4?'cov-m':r>0.15?'cov-l':'cov-n';const pct=r>0.15?Math.floor(r*100)+'%':'-';return'<div class="hm-c '+cls+'" onclick="toast(\'已打开该单元格详情\')">'+pct+'</div>';}).join('');});}
+function showHotspot(){const o=document.getElementById('hotspotOverlay');o.style.display='flex';setTimeout(()=>o.classList.add('show'),10);}
+function hideHotspot(e){if(e&&e.target.className!=='overlay')return;const o=document.getElementById('hotspotOverlay');o.classList.remove('show');setTimeout(()=>o.style.display='none',200);}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}
+init();
+  
+document.addEventListener('mousemove', function(e) {
+  var x = e.clientX - 300;
+  var y = e.clientY - 300;
+  document.body.style.setProperty('--mx', x + 'px');
+  document.body.style.setProperty('--my', y + 'px');
+});
+(function() {
+  var style = document.createElement('style');
+  style.textContent = 'body::before { transform: translate(var(--mx, 0px), var(--my, 0px)); }';
+  document.head.appendChild(style);
+})();
+  </script>

@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>学科大脑 V3.0 · 前台交互 Demo</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+/* ============ Design Tokens ============ */
+:root {
+  --gray-0:#FFFFFF;--gray-1:#F2F5F7;--gray-2:#C2C7CC;--gray-3:#A9B0B8;
+  --gray-4:#959DA6;--gray-5:#7B838C;--gray-6:#626A73;--gray-7:#4B535C;
+  --gray-8:#3D444D;--gray-9:#272C33;--gray-10:#12151A;
+  --green-1:#EBF7F1;--green-2:#C1E6D4;--green-3:#93D9BB;--green-5:#45BF92;--green-6:#23B283;--green-7:#158C68;
+  --red-1:#FFF2F0;--red-6:#F53B3B;
+  --orange-1:#FFF4E6;--orange-5:#FF9742;--orange-6:#FC7819;
+  --blue-1:#E6F6FF;--blue-5:#2994FF;--blue-6:#0077FF;
+  --geekblue-1:#F0F5FF;--geekblue-5:#5E7EFF;--geekblue-6:#3658FF;
+  --brand-primary:#272C33;--brand-hover:#3D444D;--brand-pressed:#12151A;
+  --brand-disabled:#A9B0B8;--brand-bg:#F2F5F7;
+  --success-primary:#23B283;--success-bg:#EBF7F1;
+  --danger-primary:#F53B3B;--danger-bg:#FFF2F0;
+  --warning-primary:#FC7819;--warning-bg:#FFF4E6;
+  --info-primary:#0077FF;--info-bg:#E6F6FF;
+  --bg-white:#FFFFFF;--bg-gray:#F2F5F7;
+  --text-1:#12151A;--text-2:#4B535C;--text-3:#7B838C;--text-4:#A9B0B8;
+  --border-primary:rgba(18,21,26,0.1);
+  --shadow-hover:0px 6px 8px 0px rgba(18,21,26,0.06);
+  --shadow-related:0px 6px 32px 4px rgba(18,21,26,0.08);
+  --shadow-independent:0px 12px 48px 8px rgba(18,21,26,0.10);
+  --font-family-base:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --font-title-emphasized:600 28px/42px var(--font-family-base);
+  --font-title-superior:600 22px/32px var(--font-family-base);
+  --font-title-primary:600 18px/28px var(--font-family-base);
+  --font-body-primary:400 16px/24px var(--font-family-base);
+  --font-body-sub:400 14px/20px var(--font-family-base);
+  --font-body-min:400 12px/18px var(--font-family-base);
+  --font-label-primary:400 12px/18px var(--font-family-base);
+  --spacing-1:4px;--spacing-2:8px;--spacing-3:12px;--spacing-4:16px;
+  --spacing-5:20px;--spacing-6:24px;--spacing-7:40px;
+  --radius-min:4px;--radius-smallmodule:8px;--radius-largemodule:10px;
+  --radius-page:12px;--radius-full:999px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{font-family:var(--font-family-base);background:var(--bg-gray);color:var(--text-1);height:100%;overflow:hidden;}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;border:none;background:none;font-family:inherit;}
+input,textarea,select{font-family:inherit;outline:none;}
+ul,ol,li{list-style:none;}
+
+/* ============ Layout ============ */
+.app{display:flex;height:100vh;overflow:hidden;}
+
+/* ---- Sidebar ---- */
+.sidebar{width:240px;min-width:240px;background:var(--bg-white);border-right:1px solid var(--border-primary);display:flex;flex-direction:column;overflow-y:auto;}
+.sidebar-logo{display:flex;align-items:center;gap:var(--spacing-3);padding:var(--spacing-5) var(--spacing-4);border-bottom:1px solid var(--border-primary);}
+.sidebar-logo .logo-icon{width:36px;height:36px;border-radius:var(--radius-smallmodule);background:linear-gradient(135deg,var(--success-primary),var(--info-primary));color:var(--bg-white);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;}
+.sidebar-logo .logo-text{font:var(--font-title-primary);color:var(--text-1);}
+.sidebar-logo .logo-ver{font:var(--font-body-min);color:var(--text-3);margin-top:2px;}
+.sidebar-nav{flex:1;padding:var(--spacing-2) 0;}
+.nav-group{margin-bottom:var(--spacing-2);}
+.nav-group-title{font:var(--font-body-min);color:var(--text-4);padding:var(--spacing-2) var(--spacing-4);text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;gap:var(--spacing-2);}
+.nav-item{display:flex;align-items:center;gap:var(--spacing-2);padding:var(--spacing-2) var(--spacing-4) var(--spacing-2) var(--spacing-6);font:var(--font-body-sub);color:var(--text-2);cursor:pointer;transition:all .15s;border-radius:0;position:relative;}
+.nav-item:hover{background:var(--brand-bg);color:var(--text-1);}
+.nav-item.active{background:var(--success-bg);color:var(--success-primary);font-weight:600;}
+.nav-item.active::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:0 2px 2px 0;background:var(--success-primary);}
+.nav-item i{width:18px;height:18px;flex-shrink:0;}
+.sidebar-user{padding:var(--spacing-4);border-top:1px solid var(--border-primary);display:flex;align-items:center;gap:var(--spacing-3);}
+.sidebar-user .avatar{width:32px;height:32px;border-radius:var(--radius-full);background:var(--success-primary);color:var(--bg-white);display:flex;align-items:center;justify-content:center;font:var(--font-body-min);font-weight:600;}
+.sidebar-user .user-info{font:var(--font-body-sub);color:var(--text-2);}
+.sidebar-user .user-role{font:var(--font-body-min);color:var(--text-3);}
+
+/* ---- Main ---- */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg-gray);}
+.page{display:none;flex:1;flex-direction:column;overflow:hidden;}
+.page.active{display:flex;}
+.page-header{padding:var(--spacing-4) var(--spacing-6);background:var(--bg-white);border-bottom:1px solid var(--border-primary);display:flex;align-items:center;justify-content:space-between;min-height:56px;}
+.page-title{font:var(--font-title-primary);color:var(--text-1);}
+.page-body{flex:1;overflow-y:auto;padding:var(--spacing-6);}
+
+/* ============ Components ============ */
+.btn{display:inline-flex;align-items:center;gap:var(--spacing-2);padding:var(--spacing-2) var(--spacing-4);border-radius:var(--radius-smallmodule);font:var(--font-body-sub);transition:all .15s;cursor:pointer;border:1px solid var(--border-primary);}
+.btn-primary{background:var(--brand-primary);color:var(--bg-white);border-color:var(--brand-primary);}
+.btn-primary:hover{background:var(--brand-hover);}
+.btn-success{background:var(--success-primary);color:var(--bg-white);border-color:var(--success-primary);}
+.btn-success:hover{background:var(--green-5);}
+.btn-ghost{background:transparent;color:var(--text-2);border-color:var(--border-primary);}
+.btn-ghost:hover{background:var(--brand-bg);color:var(--text-1);}
+.btn-sm{padding:var(--spacing-1) var(--spacing-3);font:var(--font-body-min);}
+.badge{display:inline-flex;align-items:center;padding:2px var(--spacing-2);border-radius:var(--radius-min);font:var(--font-label-primary);font-weight:500;}
+.badge-green{background:var(--success-bg);color:var(--success-primary);}
+.badge-orange{background:var(--warning-bg);color:var(--warning-primary);}
+.badge-red{background:var(--danger-bg);color:var(--danger-primary);}
+.badge-blue{background:var(--info-bg);color:var(--info-primary);}
+.badge-gray{background:var(--brand-bg);color:var(--text-3);}
+.tag{display:inline-flex;align-items:center;padding:2px var(--spacing-2);border-radius:var(--radius-min);font:var(--font-label-primary);background:var(--brand-bg);color:var(--text-2);margin-right:var(--spacing-1);}
+.input{padding:var(--spacing-2) var(--spacing-3);border:1px solid var(--border-primary);border-radius:var(--radius-smallmodule);font:var(--font-body-sub);color:var(--text-1);background:var(--bg-white);transition:border-color .15s;width:100%;}
+.input:focus{border-color:var(--success-primary);}
+.input::placeholder{color:var(--text-4);}
+.card{background:var(--bg-white);border:1px solid var(--border-primary);border-radius:var(--radius-largemodule);padding:var(--spacing-4);transition:all .2s;}
+.card:hover{box-shadow:var(--shadow-hover);transform:translateY(-1px);}
+.table-wrap{background:var(--bg-white);border-radius:var(--radius-largemodule);border:1px solid var(--border-primary);overflow:hidden;}
+.table{width:100%;border-collapse:collapse;}
+.table th{font:var(--font-body-sub);font-weight:600;color:var(--text-2);text-align:left;padding:var(--spacing-3) var(--spacing-4);background:var(--bg-gray);border-bottom:1px solid var(--border-primary);}
+.table td{font:var(--font-body-sub);color:var(--text-1);padding:var(--spacing-3) var(--spacing-4);border-bottom:1px solid var(--border-primary);}
+.table tr:last-child td{border-bottom:none;}
+.table tr:hover td{background:var(--brand-bg);}
+.tab-bar{display:flex;gap:var(--spacing-1);background:var(--bg-gray);border-radius:var(--radius-smallmodule);padding:2px;}
+.tab-item{padding:var(--spacing-2) var(--spacing-4);border-radius:var(--radius-smallmodule);font:var(--font-body-sub);color:var(--text-3);cursor:pointer;transition:all .15s;}
+.tab-item:hover{color:var(--text-1);}
+.tab-item.active{background:var(--bg-white);color:var(--text-1);font-weight:600;box-shadow:var(--shadow-hover);}
+.toggle{width:40px;height:22px;border-radius:var(--radius-full);background:var(--gray-3);position:relative;cursor:pointer;transition:background .2s;}
+.toggle.on{background:var(--success-primary);}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--bg-white);transition:transform .2s;box-shadow:var(--shadow-hover);}
+.toggle.on::after{transform:translateX(18px);}
+.stat-card{background:var(--bg-white);border:1px solid var(--border-primary);border-radius:var(--radius-largemodule);padding:var(--spacing-5);text-align:center;flex:1;}
+.stat-card .stat-num{font:600 28px/42px var(--font-family-base);color:var(--text-1);}
+.stat-card .stat-label{font:var(--font-body-min);color:var(--text-3);margin-top:var(--spacing-1);}
+
+/* ============ Page: 智能问答 ============ */
+.chat-area{flex:1;overflow-y:auto;padding:var(--spacing-6);display:flex;flex-direction:column;gap:var(--spacing-5);}
+.chat-msg{display:flex;gap:var(--spacing-3);max-width:85%;}
+.chat-msg.user{align-self:flex-end;flex-direction:row-reverse;}
+.chat-avatar{width:32px;height:32px;border-radius:var(--radius-full);flex-shrink:0;display:flex;align-items:center;justify-content:center;font:var(--font-body-min);font-weight:600;color:var(--bg-white);}
+.chat-msg.ai .chat-avatar{background:var(--success-primary);}
+.chat-msg.user .chat-avatar{background:var(--info-primary);}
+.chat-bubble{padding:var(--spacing-3) var(--spacing-4);border-radius:var(--radius-largemodule);font:var(--font-body-sub);line-height:1.7;position:relative;}
+.chat-msg.ai .chat-bubble{background:var(--bg-white);border:1px solid var(--border-primary);color:var(--text-1);}
+.chat-msg.user .chat-bubble{background:var(--brand-primary);color:var(--bg-white);}
+.chat-bubble .cite{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:var(--radius-min);background:var(--info-bg);color:var(--info-primary);font:var(--font-label-primary);font-weight:600;cursor:pointer;margin:0 2px;vertical-align:middle;position:relative;}
+.chat-bubble .cite:hover{background:var(--info-primary);color:var(--bg-white);}
+.cite-tooltip{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--gray-9);color:var(--bg-white);font:var(--font-body-min);padding:var(--spacing-3) var(--spacing-4);border-radius:var(--radius-smallmodule);white-space:normal;width:320px;z-index:10;box-shadow:var(--shadow-related);line-height:1.6;}
+.cite:hover .cite-tooltip{display:block;}
+.confidence{display:flex;align-items:center;gap:var(--spacing-1);font:var(--font-body-min);color:var(--text-3);margin-top:var(--spacing-2);}
+.confidence .dot{width:8px;height:8px;border-radius:50%;}
+.confidence .dot.green{background:var(--success-primary);}
+.confidence .dot.yellow{background:var(--warning-primary);}
+.confidence .dot.red{background:var(--danger-primary);}
+.chat-sources{margin-top:var(--spacing-3);padding:var(--spacing-3);background:var(--bg-gray);border-radius:var(--radius-smallmodule);font:var(--font-body-min);color:var(--text-3);}
+.chat-sources summary{cursor:pointer;font-weight:500;color:var(--text-2);}
+.chat-sources .src-item{padding:var(--spacing-1) 0;display:flex;align-items:center;gap:var(--spacing-2);}
+.chat-sources .src-item a{color:var(--info-primary);text-decoration:underline;cursor:pointer;}
+.chat-input-area{padding:var(--spacing-4) var(--spacing-6);border-top:1px solid var(--border-primary);background:var(--bg-white);display:flex;gap:var(--spacing-3);align-items:center;}
+.chat-input{flex:1;padding:var(--spacing-3) var(--spacing-4);border:1px solid var(--border-primary);border-radius:var(--radius-largemodule);font:var(--font-body-sub);resize:none;min-height:40px;}
+.chat-input:focus{border-color:var(--success-primary);}
+.chat-save-btn{position:absolute;top:var(--spacing-2);right:var(--spacing-2);opacity:0;transition:opacity .15s;}
+.chat-bubble:hover .chat-save-btn{opacity:1;}
+.web-search-active{background:var(--success-bg) !important;color:var(--success-primary) !important;border-color:var(--success-primary) !important;}
+
+/* ============ Page: 知识图谱 ============ */
+.graph-svg{width:100%;height:100%;}
+.graph-node{cursor:pointer;transition:transform .15s;}
+.graph-node:hover{filter:brightness(1.1);}
+.graph-node text{font:var(--font-body-min);fill:var(--text-1);text-anchor:middle;pointer-events:none;}
+.graph-link{stroke:var(--gray-2);stroke-width:1.5;}
+.graph-search{position:absolute;top:var(--spacing-4);left:var(--spacing-4);width:260px;}
+
+/* ============ Page: 引导对话 ============ */
+
+/* ============ Page: 笔记系统 ============ */
+.note-layout{display:flex;flex:1;overflow:hidden;}
+.note-sidebar{width:240px;background:var(--bg-white);border-right:1px solid var(--border-primary);overflow-y:auto;padding:var(--spacing-3);}
+.note-list-item{display:flex;align-items:center;gap:var(--spacing-2);padding:var(--spacing-2) var(--spacing-3);border-radius:var(--radius-smallmodule);font:var(--font-body-sub);color:var(--text-2);cursor:pointer;transition:all .15s;overflow:hidden;white-space:nowrap;}
+.note-list-item:hover{background:var(--brand-bg);}
+.note-list-item.active{background:var(--success-bg);color:var(--success-primary);font-weight:600;}
+.note-list-item .count{margin-left:auto;font:var(--font-body-min);color:var(--text-4);}
+.note-editor{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.note-toolbar{display:flex;align-items:center;gap:var(--spacing-2);padding:var(--spacing-2) var(--spacing-4);border-bottom:1px solid var(--border-primary);background:var(--bg-white);flex-wrap:wrap;}
+.note-toolbar .divider{width:1px;height:20px;background:var(--border-primary);margin:0 var(--spacing-2);}
+.note-content{flex:1;padding:var(--spacing-5);overflow-y:auto;background:var(--bg-white);}
+.note-source{display:flex;align-items:center;gap:var(--spacing-2);padding:var(--spacing-2) var(--spacing-3);background:var(--info-bg);border-radius:var(--radius-smallmodule);font:var(--font-body-min);color:var(--info-primary);margin-bottom:var(--spacing-4);}
+
+/* ============ Page: 智能备课 ============ */
+.gen-steps{display:flex;gap:var(--spacing-7);margin-bottom:var(--spacing-6);}
+.gen-step{display:flex;align-items:center;gap:var(--spacing-2);font:var(--font-body-sub);color:var(--text-3);}
+.gen-step.active{color:var(--success-primary);font-weight:600;}
+.gen-step .step-num{width:24px;height:24px;border-radius:50%;border:2px solid var(--gray-2);display:flex;align-items:center;justify-content:center;font:var(--font-body-min);font-weight:600;}
+.gen-step.active .step-num{border-color:var(--success-primary);background:var(--success-primary);color:var(--bg-white);}
+.gen-step.done .step-num{border-color:var(--success-primary);background:var(--success-primary);color:var(--bg-white);}
+.gen-step.done{color:var(--text-2);}
+.type-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--spacing-3);}
+.type-card{padding:var(--spacing-4);border:2px solid var(--border-primary);border-radius:var(--radius-smallmodule);cursor:pointer;text-align:center;transition:all .15s;}
+.type-card:hover{border-color:var(--success-primary);background:var(--success-bg);}
+.type-card.selected{border-color:var(--success-primary);background:var(--success-bg);}
+.type-card .tc-icon{font-size:24px;margin-bottom:var(--spacing-2);}
+.type-card .tc-name{font:var(--font-body-sub);font-weight:600;color:var(--text-1);}
+.gen-result{background:var(--bg-white);border:1px solid var(--border-primary);border-radius:var(--radius-largemodule);padding:var(--spacing-5);margin-top:var(--spacing-4);display:none;}
+.gen-result.show{display:block;}
+.gen-result h4{font:var(--font-title-primary);margin-bottom:var(--spacing-3);}
+.gen-result .question{padding:var(--spacing-3);border:1px solid var(--border-primary);border-radius:var(--radius-smallmodule);margin-bottom:var(--spacing-3);}
+.gen-result .question .q-num{font-weight:600;color:var(--success-primary);}
+
+/* ============ Page: 社区 ============ */
+.community-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--spacing-4);}
+.community-card{background:var(--bg-white);border:1px solid var(--border-primary);border-radius:var(--radius-largemodule);overflow:hidden;transition:all .2s;cursor:pointer;}
+.community-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px);}
+.community-card .cc-cover{height:120px;display:flex;align-items:center;justify-content:center;font-size:36px;}
+.community-card .cc-body{padding:var(--spacing-4);}
+.community-card .cc-title{font:var(--font-body-sub);font-weight:600;color:var(--text-1);margin-bottom:var(--spacing-2);}
+.community-card .cc-meta{font:var(--font-body-min);color:var(--text-3);display:flex;align-items:center;gap:var(--spacing-2);margin-bottom:var(--spacing-3);}
+.community-card .cc-desc{font:var(--font-body-min);color:var(--text-3);margin-bottom:var(--spacing-2);line-height:1.5;}
+.community-card .cc-actions{display:flex;justify-content:space-between;align-items:center;}
+.kb-icon{width:48px;height:48px;border-radius:var(--radius-largemodule);display:flex;align-items:center;justify-content:center;}
+.kb-agent-card{display:flex;gap:var(--spacing-3);padding:var(--spacing-3);border:1px solid var(--border-primary);border-radius:var(--radius-largemodule);margin-bottom:var(--spacing-2);cursor:pointer;transition:all .15s;}
+.kb-agent-card:hover{background:var(--brand-bg);box-shadow:var(--shadow-hover);}
+.kb-agent-icon{width:36px;height:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.kb-agent-info{flex:1;min-width:0;}
+.kb-agent-name{font:var(--font-body-sub);font-weight:600;color:var(--text-1);margin-bottom:2px;}
+.kb-agent-desc{font:var(--font-body-min);color:var(--text-3);line-height:1.4;}
+.kb-owned{position:relative;}
+.kb-hover-actions{display:none;position:absolute;bottom:0;left:0;right:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(4px);padding:var(--spacing-2) var(--spacing-3);border-top:1px solid var(--border-primary);border-radius:0 0 var(--radius-largemodule) var(--radius-largemodule);gap:var(--spacing-1);justify-content:center;}
+.kb-owned:hover .kb-hover-actions{display:flex;}
+.file-tag{flex-shrink:0;display:inline-block;width:30px;padding:1px 0;border-radius:3px;font:600 10px/16px var(--font-family-base);text-align:center;color:var(--bg-white);}
+.file-pdf{background:var(--danger-primary);}
+.file-doc{background:var(--info-primary);}
+.file-md{background:var(--text-3);}
+.file-xls{background:var(--success-primary);}
+.file-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:var(--font-body-min);}
+
+/* ============ Page: 积分 ============ */
+.points-top{display:flex;gap:var(--spacing-4);margin-bottom:var(--spacing-5);}
+.badges-row{display:flex;gap:var(--spacing-4);margin-bottom:var(--spacing-5);}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:var(--spacing-2);padding:var(--spacing-4);background:var(--bg-white);border:1px solid var(--border-primary);border-radius:var(--radius-largemodule);min-width:120px;}
+.badge-item .badge-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;}
+.badge-item .badge-name{font:var(--font-body-min);color:var(--text-2);font-weight:500;}
+
+/* ============ Page: 智能体 ============ */
+.agent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--spacing-4);}
+.agent-card{background:var(--bg-white);border:1px solid var(--border-primary);border-radius:var(--radius-largemodule);padding:var(--spacing-5);cursor:pointer;transition:all .2s;position:relative;}
+.agent-card:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px);}
+.agent-card .ac-icon{width:48px;height:48px;border-radius:var(--radius-largemodule);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:var(--spacing-3);}
+.agent-card .ac-name{font:var(--font-body-sub);font-weight:600;color:var(--text-1);margin-bottom:var(--spacing-2);}
+.agent-card .ac-desc{font:var(--font-body-min);color:var(--text-3);margin-bottom:var(--spacing-3);line-height:1.5;}
+.agent-card .ac-footer{display:flex;align-items:center;justify-content:space-between;}
+.agent-card .ac-count{font:var(--font-body-min);color:var(--text-4);}
+
+/* ============ Page: 贡献知识 / 术语 ============ */
+.form-group{margin-bottom:var(--spacing-5);}
+.form-label{display:block;font:var(--font-body-sub);font-weight:600;color:var(--text-1);margin-bottom:var(--spacing-2);}
+.form-label .required{color:var(--danger-primary);margin-right:var(--spacing-1);}
+.form-textarea{width:100%;min-height:100px;padding:var(--spacing-3);border:1px solid var(--border-primary);border-radius:var(--radius-smallmodule);font:var(--font-body-sub);resize:vertical;}
+.form-textarea:focus{border-color:var(--success-primary);outline:none;}
+.radio-group{display:flex;gap:var(--spacing-4);}
+.radio-item{display:flex;align-items:center;gap:var(--spacing-2);font:var(--font-body-sub);cursor:pointer;color:var(--text-2);}
+.radio-item input[type=radio]{accent-color:var(--success-primary);}
+.form-card{background:var(--bg-white);border-radius:var(--radius-largemodule);border:1px solid var(--border-primary);padding:var(--spacing-6);max-width:680px;}
+.success-msg{display:none;padding:var(--spacing-5);background:var(--success-bg);border-radius:var(--radius-largemodule);text-align:center;}
+.success-msg.show{display:block;}
+.success-msg .sm-icon{font-size:48px;margin-bottom:var(--spacing-3);}
+.success-msg .sm-title{font:var(--font-title-primary);color:var(--success-primary);margin-bottom:var(--spacing-2);}
+.success-msg .sm-desc{font:var(--font-body-sub);color:var(--text-3);}
+
+/* ============ Graph Edit Toolbar ============ */
+.graph-toolbar{display:flex;align-items:center;gap:var(--spacing-2);padding:var(--spacing-2) var(--spacing-4);background:var(--bg-white);border-bottom:1px solid var(--border-primary);}
+.graph-statusbar{display:flex;align-items:center;gap:var(--spacing-2);padding:var(--spacing-2) var(--spacing-4);background:var(--bg-gray);border-top:1px solid var(--border-primary);font:var(--font-body-min);color:var(--text-3);}
+
+/* ============ Modal ============ */
+.modal-mask{position:fixed;inset:0;background:rgba(18,21,26,0.6);z-index:1000;display:none;align-items:center;justify-content:center;}
+.modal-mask.open{display:flex;}
+.modal{background:var(--bg-white);border-radius:var(--radius-page);box-shadow:var(--shadow-independent);width:480px;max-height:80vh;overflow-y:auto;}
+.modal-header{padding:var(--spacing-4) var(--spacing-5);border-bottom:1px solid var(--border-primary);display:flex;align-items:center;justify-content:space-between;}
+.modal-header .modal-title{font:var(--font-title-primary);}
+.modal-body{padding:var(--spacing-5);}
+.modal-footer{padding:var(--spacing-3) var(--spacing-5);border-top:1px solid var(--border-primary);display:flex;justify-content:flex-end;gap:var(--spacing-3);}
+
+/* ============ Toast ============ */
+.toast{position:fixed;top:var(--spacing-5);left:50%;transform:translateX(-50%) translateY(-100px);background:var(--gray-9);color:var(--bg-white);padding:var(--spacing-3) var(--spacing-5);border-radius:var(--radius-smallmodule);font:var(--font-body-sub);z-index:2000;transition:transform .3s;box-shadow:var(--shadow-independent);}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ============ Difficulty radio ============ */
+.diff-group{display:flex;gap:var(--spacing-3);}
+.diff-item{padding:var(--spacing-2) var(--spacing-4);border:2px solid var(--border-primary);border-radius:var(--radius-full);font:var(--font-body-sub);cursor:pointer;transition:all .15s;color:var(--text-2);}
+.diff-item:hover{border-color:var(--success-primary);}
+.diff-item.selected{border-color:var(--success-primary);background:var(--success-bg);color:var(--success-primary);font-weight:600;}
+</style>
+
+<style id="unified-nav-style">
+body{padding-top:60px !important;}
+body > .topbar,body > .shell-top,body > .top,body > .xy-hd,body > header.xy-hd{display:none !important;}
+.unified-topbar{
+  position:fixed;top:0;left:0;right:0;z-index:99998;
+  height:60px;background:#FFFFFF;border-bottom:1px solid #E8ECF0;
+  padding:0 32px;display:flex;align-items:center;justify-content:space-between;
+  font-family:'Noto Sans SC','PingFang SC',sans-serif;
+  box-shadow:0 1px 3px rgba(18,21,26,0.04);
+}
+.unified-topbar *{box-sizing:border-box;}
+.unified-topbar .u-left{display:flex;align-items:center;gap:32px;}
+.unified-topbar .u-logo{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:#23B283;text-decoration:none;}
+.unified-topbar .u-mark{
+  width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(135deg,#23B283 0%,#158C68 100%);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-weight:800;font-size:13px;box-shadow:0 4px 10px rgba(35,178,131,0.3);
+}
+.unified-topbar .u-sub{
+  font-size:10px;color:#7B838C;font-weight:500;
+  padding-left:10px;border-left:1px solid #E8ECF0;margin-left:4px;letter-spacing:0.02em;
+}
+.unified-topbar .u-nav{display:flex;gap:2px;}
+.unified-topbar .u-nav a{
+  padding:7px 13px;border-radius:7px;font-size:12.5px;color:#4B535C;
+  text-decoration:none;transition:all .2s;font-weight:500;
+}
+.unified-topbar .u-nav a:hover{background:rgba(35,178,131,0.1);color:#23B283;}
+.unified-topbar .u-nav a.u-on{background:#23B283;color:#fff;font-weight:600;}
+.unified-topbar .u-right{display:flex;align-items:center;gap:12px;}
+.unified-topbar .u-back{
+  font-size:12px;color:#7B838C;padding:7px 13px;
+  border:1px solid #E8ECF0;border-radius:999px;transition:.2s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:5px;
+}
+.unified-topbar .u-back:hover{color:#23B283;border-color:#23B283;background:#EBF7F1;}
+.unified-topbar .u-av{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(35,178,131,0.2);color:#23B283;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="unified-topbar">
+  <div class="u-left">
+    <a href="./index.html" class="u-logo">
+      <div class="u-mark">雅</div>
+      讯飞小雅
+      <span class="u-sub">学科大脑 · 知识库前台</span>
+    </a>
+    <nav class="u-nav"><a href="./index.html">演示总览</a><a href="./scenes.html">场景演示</a><a href="./frontend.html" class="u-on">知识库前台</a><a href="./backend/index.html">管理后台</a><a href="./tools/index.html">学科大脑工具层</a><a href="./engines/engine_dashboard.html">模型引擎</a><a href="./training.html">训练平台</a></nav>
+  </div>
+  <div class="u-right">
+    <a href="./index.html" class="u-back">← 返回演示总览</a>
+    <div class="u-av">婷</div>
+  </div>
+</div>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><i data-lucide="brain" style="width:20px;height:20px"></i></div>
+      <div>
+        <div class="logo-text">学科大脑</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-group">
+        <div class="nav-group-title"><i data-lucide="book-open" style="width:14px;height:14px"></i>学习与问答核心</div>
+        <div class="nav-item active" data-page="chat"><i data-lucide="message-circle"></i>智能问答</div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title"><i data-lucide="wrench" style="width:14px;height:14px"></i>知识创作工作台</div>
+        <div class="nav-item" data-page="mylib"><i data-lucide="library"></i>我的知识库</div>
+        <div class="nav-item" data-page="notes"><i data-lucide="notebook-pen"></i>笔记系统</div>
+        <div class="nav-item" data-page="graph"><i data-lucide="share-2"></i>知识图谱</div>
+        <div class="nav-item" data-page="qa"><i data-lucide="file-question"></i>QA 标准库</div>
+        <div class="nav-item" data-page="lesson"><i data-lucide="sparkles"></i>智能备课</div>
+        <div class="nav-item" data-page="terms"><i data-lucide="text-cursor-input"></i>术语管理</div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title"><i data-lucide="flask-conical" style="width:14px;height:14px"></i>质量评测</div>
+        <div class="nav-item" data-page="eval"><i data-lucide="git-compare"></i>效果对比</div>
+        <div class="nav-item" data-page="testset"><i data-lucide="list-checks"></i>测试集管理</div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-title"><i data-lucide="globe" style="width:14px;height:14px"></i>社区</div>
+        <div class="nav-item" data-page="community"><i data-lucide="layout-grid"></i>知识广场</div>
+        <div class="nav-item" data-page="points"><i data-lucide="trophy"></i>积分体系</div>
+      </div>
+    </nav>
+    <div class="sidebar-user">
+      <div class="avatar">A</div>
+      <div>
+        <div class="user-info">Aeson</div>
+        <div class="user-role">教师 · 可编辑</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- ===== Page 1: 智能问答 ===== -->
+    <div class="page active" id="page-chat">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;gap:var(--spacing-3)">
+          <span class="page-title">探索知识的无限可能</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--spacing-3)">
+          <span style="font:var(--font-body-min);color:var(--text-3)">多轮引导</span>
+          <div class="toggle" id="guideToggle" onclick="toggleGuide()"></div>
+        </div>
+      </div>
+      <div class="chat-area" id="chatArea">
+        <div class="chat-msg user">
+          <div class="chat-avatar">A</div>
+          <div class="chat-bubble">请解释泰勒公式的核心思想</div>
+        </div>
+        <div class="chat-msg ai" id="aiMsg1">
+          <div class="chat-avatar">脑</div>
+          <div class="chat-bubble">
+            <button class="btn btn-sm btn-ghost chat-save-btn" onclick="showToast('已保存到笔记')">📌 保存到笔记</button>
+            <p><strong>泰勒公式的核心思想</strong>是用多项式来逼近复杂函数。<span class="cite">1<span class="cite-tooltip">《高等数学》第三章 P.89 — "泰勒公式的基本思想是用多项式函数近似代替一般函数，其核心在于利用某一点的局部信息推导全局近似。"</span></span></p>
+            <p style="margin-top:var(--spacing-2)">具体来说，对于一个在点 <em>x₀</em> 处足够光滑（即存在足够高阶导数）的函数 <em>f(x)</em>，我们可以将它展开为：</p>
+            <p style="margin:var(--spacing-2) 0;padding:var(--spacing-3);background:var(--bg-gray);border-radius:var(--radius-smallmodule);font-family:monospace;">f(x) = f(x₀) + f'(x₀)(x-x₀) + f''(x₀)/2!(x-x₀)² + ... + Rₙ(x)</p>
+            <p style="margin-top:var(--spacing-2)">其中 <em>Rₙ(x)</em> 是余项，衡量多项式逼近的误差。<span class="cite">2<span class="cite-tooltip">《数学分析》第五章 P.132 — "余项 Rₙ(x) 反映了用 n 次多项式逼近函数时的误差大小，不同形式的余项适用于不同的应用场景。"</span></span></p>
+            <p style="margin-top:var(--spacing-2)">泰勒公式的价值在于：将局部信息（某一点的各阶导数值）转化为全局近似，是微积分中连接"局部"与"整体"的关键桥梁。<span class="cite">1<span class="cite-tooltip">《高等数学》第三章 P.91 — "泰勒公式建立了函数局部性质与整体行为之间的桥梁。"</span></span></p>
+            <div class="confidence"><span class="dot green"></span>高置信度 · 基于知识库回答</div>
+            <details class="chat-sources">
+              <summary>📎 引用来源（2 篇）</summary>
+              <div class="src-item">📄 [1] <a>《高等数学》同济第七版 · 第三章 · P.89-91</a></div>
+              <div class="src-item">📄 [2] <a>《数学分析》华东师大 · 第五章 · P.132</a></div>
+            </details>
+          </div>
+        </div>
+        <div class="chat-msg user">
+          <div class="chat-avatar">A</div>
+          <div class="chat-bubble">余项 Rₙ(x) 有哪几种常见形式？</div>
+        </div>
+        <div class="chat-msg ai">
+          <div class="chat-avatar">脑</div>
+          <div class="chat-bubble">
+            <button class="btn btn-sm btn-ghost chat-save-btn" onclick="showToast('已保存到笔记')">📌 保存到笔记</button>
+            <p>常见的泰勒余项有以下三种形式：</p>
+            <p style="margin-top:var(--spacing-2)"><strong>1. 拉格朗日余项</strong>：Rₙ(x) = f⁽ⁿ⁺¹⁾(ξ)/(n+1)! · (x-x₀)ⁿ⁺¹，其中 ξ 介于 x₀ 与 x 之间。<span class="cite">1<span class="cite-tooltip">《高等数学》第三章 P.93 — "拉格朗日余项给出了泰勒多项式逼近的精确误差表达式，适用于误差估计。"</span></span></p>
+            <p style="margin-top:var(--spacing-2)"><strong>2. 皮亚诺余项</strong>：Rₙ(x) = o((x-x₀)ⁿ)，仅表示余项阶的渐进行为。<span class="cite">2<span class="cite-tooltip">《数学分析》第五章 P.135 — "皮亚诺余项仅描述余项的阶，不给出具体误差值，常用于理论证明。"</span></span></p>
+            <p style="margin-top:var(--spacing-2)"><strong>3. 柯西余项</strong>：另一种积分形式的余项表达。<span class="cite">3<span class="cite-tooltip">《高等数学》第三章 P.95 — "柯西余项采用积分形式，在某些条件下比拉格朗日余项更便于估计。"</span></span></p>
+            <details class="chat-sources" style="margin-top:var(--spacing-3)">
+              <summary>引用来源（2 篇）</summary>
+              <div class="src-item">[1] <a>《高等数学》同济第七版 · 第三章 · P.93-95</a></div>
+              <div class="src-item">[2] <a>《数学分析》华东师大 · 第五章 · P.135</a></div>
+            </details>
+            <div class="confidence"><span class="dot green"></span>高置信度 · 基于知识库回答</div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:0 var(--spacing-6);background:var(--bg-white);">
+        <div style="border:1px solid var(--border-primary);border-radius:var(--radius-largemodule);overflow:hidden;">
+          <textarea class="chat-input" style="border:none;border-radius:0;width:100%;min-height:60px;padding:var(--spacing-3) var(--spacing-4);resize:none;" placeholder="请输入您想要了解的问题"></textarea>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--spacing-2) var(--spacing-3);border-top:1px solid var(--border-primary);background:var(--bg-white);">
+            <div style="display:flex;gap:var(--spacing-2);align-items:center;">
+              <button class="btn btn-ghost btn-sm" id="webSearchBtn" onclick="toggleWebSearch()" style="border-radius:var(--radius-full)"><i data-lucide="globe" style="width:14px;height:14px"></i> 联网搜索</button>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('知识库选择面板')" style="border-radius:var(--radius-full)"><i data-lucide="monitor" style="width:14px;height:14px"></i> 知识库 <i data-lucide="chevron-down" style="width:12px;height:12px"></i></button>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('模型切换面板')" style="border-radius:var(--radius-full)"><i data-lucide="box" style="width:14px;height:14px"></i> DeepSeek-R1 <i data-lucide="chevron-down" style="width:12px;height:12px"></i></button>
+            </div>
+            <button style="width:36px;height:36px;border-radius:50%;background:var(--brand-primary);color:var(--bg-white);display:flex;align-items:center;justify-content:center;" onclick="showToast('消息已发送')"><i data-lucide="send" style="width:16px;height:16px"></i></button>
+          </div>
+        </div>
+      </div>
+      <div style="height:var(--spacing-3);background:var(--bg-white);"></div>
+    </div>
+
+    <!-- ===== Page: 知识图谱（浏览 + 编辑融合） ===== -->
+    <div class="page" id="page-graph">
+      <div class="page-header">
+        <span class="page-title">知识图谱</span>
+        <div style="display:flex;align-items:center;gap:var(--spacing-3)">
+          <button class="btn btn-sm btn-ghost"><i data-lucide="undo-2" style="width:14px;height:14px"></i>撤销</button>
+          <button class="btn btn-sm btn-ghost"><i data-lucide="redo-2" style="width:14px;height:14px"></i>重做</button>
+          <button class="btn btn-sm btn-ghost"><i data-lucide="layout-dashboard" style="width:14px;height:14px"></i>自动布局</button>
+          <button class="btn btn-sm btn-success" onclick="showToast('图谱已保存')"><i data-lucide="save" style="width:14px;height:14px"></i>保存</button>
+        </div>
+      </div>
+      <div class="note-layout" style="flex:1;">
+        <!-- 左侧：图谱列表 -->
+        <div class="note-sidebar">
+          <div style="font:var(--font-body-min);color:var(--text-4);padding:var(--spacing-2) var(--spacing-3);margin-bottom:var(--spacing-2)">课程图谱</div>
+          <div class="note-list-item active"><i data-lucide="share-2" style="width:16px;height:16px"></i>高等数学<span class="count">15</span></div>
+          <div class="note-list-item"><i data-lucide="share-2" style="width:16px;height:16px"></i>线性代数<span class="count">22</span></div>
+          <div class="note-list-item"><i data-lucide="share-2" style="width:16px;height:16px"></i>概率论<span class="count">18</span></div>
+          <div style="font:var(--font-body-min);color:var(--text-4);padding:var(--spacing-2) var(--spacing-3);margin:var(--spacing-3) 0 var(--spacing-2)">节点信息</div>
+          <div id="graphSidePanel" style="padding:0 var(--spacing-3);">
+            <div style="font:var(--font-body-sub);font-weight:600;margin-bottom:var(--spacing-2)" id="sidePanelTitle">泰勒展开</div>
+            <div style="font:var(--font-body-min);color:var(--text-3);margin-bottom:var(--spacing-2)">定义</div>
+            <p style="font:var(--font-body-min);color:var(--text-2);margin-bottom:var(--spacing-3)" id="sidePanelDef">将函数在某一点展开为无穷级数的方法，是用多项式逼近函数的核心工具。</p>
+            <div style="font:var(--font-body-min);color:var(--text-3);margin-bottom:var(--spacing-2)">来源文档</div>
+            <div style="font:var(--font-body-min);color:var(--info-primary);margin-bottom:var(--spacing-3)">《高等数学》第三章</div>
+            <div style="font:var(--font-body-min);color:var(--text-3);margin-bottom:var(--spacing-2)">关联节点</div>
+            <div style="display:flex;gap:var(--spacing-1);flex-wrap:wrap;margin-bottom:var(--spacing-3)" id="sidePanelRelated">
+              <span class="tag">极限</span><span class="tag">导数</span><span class="tag">级数</span>
+            </div>
+            <button class="btn btn-sm btn-ghost" style="width:100%;margin-bottom:var(--spacing-2)" onclick="showModal()"><i data-lucide="pencil" style="width:14px;height:14px"></i>编辑节点</button>
+            <button class="btn btn-sm btn-success" style="width:100%" onclick="switchPage('chat');showToast('已携带上下文')"><i data-lucide="message-circle" style="width:14px;height:14px"></i>发起提问</button>
+          </div>
+        </div>
+        <!-- 右侧：图谱画布 -->
+        <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+          <div style="flex:1;position:relative;overflow:hidden;background:var(--bg-white);">
+            <svg class="graph-svg" id="graphSvg"></svg>
+            <div class="graph-search"><input class="input" placeholder="搜索知识点..." oninput="searchGraph(this.value)"></div>
+            <div style="position:absolute;bottom:var(--spacing-4);right:var(--spacing-4);display:flex;gap:var(--spacing-2);">
+              <button class="btn btn-sm btn-ghost" style="background:var(--bg-white);box-shadow:var(--shadow-hover);" onclick="showToast('请在画布空白处点击以添加节点')"><i data-lucide="plus" style="width:14px;height:14px"></i>添加节点</button>
+            </div>
+          </div>
+          <div class="graph-statusbar">
+            <span style="color:var(--success-primary)">●</span> 已保存 · 最后编辑：10 分钟前 · 节点 15 · 关系 18
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Page: 我的知识库 ===== -->
+    <div class="page" id="page-mylib">
+      <div class="page-header">
+        <span class="page-title">我的知识库</span>
+        <button class="btn btn-success" onclick="showToast('创建知识库弹窗')"><i data-lucide="plus" style="width:16px;height:16px"></i>创建知识库</button>
+      </div>
+      <div class="page-body">
+        <div style="font:var(--font-body-sub);font-weight:600;color:var(--text-1);margin-bottom:var(--spacing-3)">我创建的</div>
+        <div class="community-grid" style="margin-bottom:var(--spacing-7)">
+          <div class="community-card kb-owned" onclick="switchPage('kbdetail')"><div class="cc-cover" style="background:linear-gradient(135deg,var(--warning-bg),var(--orange-1))"><div class="kb-icon" style="background:var(--warning-primary)"><i data-lucide="monitor" style="width:24px;height:24px;color:var(--bg-white)"></i></div></div><div class="cc-body"><div class="cc-title">AI 产品设计方法论</div><div class="cc-desc">AI交互范式、Prompt设计、生成式UI研究</div><div class="cc-meta">16 个文档 · 8 位成员 · 更新于 2小时前</div></div><div class="kb-hover-actions"><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();showConfirm('delete','AI 产品设计方法论')"><i data-lucide="trash-2" style="width:14px;height:14px"></i>删除</button><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();showEditKB('AI 产品设计方法论','AI交互范式、Prompt设计、生成式UI研究')"><i data-lucide="pencil" style="width:14px;height:14px"></i>编辑</button><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();showConfirm('share','AI 产品设计方法论')"><i data-lucide="share" style="width:14px;height:14px"></i>分享到社区</button></div></div>
+          <div class="community-card kb-owned" onclick="switchPage('kbdetail')"><div class="cc-cover" style="background:linear-gradient(135deg,var(--success-bg),var(--info-bg))"><div class="kb-icon" style="background:var(--success-primary)"><i data-lucide="monitor" style="width:24px;height:24px;color:var(--bg-white)"></i></div></div><div class="cc-body"><div class="cc-title">教育心理学</div><div class="cc-desc">教育心理学课程相关资料整理，涵盖各章节重点</div><div class="cc-meta">12 个文档 · 3 位成员 · 更新于 昨天</div></div><div class="kb-hover-actions"><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();showConfirm('delete','教育心理学')"><i data-lucide="trash-2" style="width:14px;height:14px"></i>删除</button><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();showEditKB('教育心理学','教育心理学课程相关资料整理，涵盖各章节重点')"><i data-lucide="pencil" style="width:14px;height:14px"></i>编辑</button><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();showConfirm('share','教育心理学')"><i data-lucide="share" style="width:14px;height:14px"></i>分享到社区</button></div></div>
+          <div class="community-card kb-owned" onclick="switchPage('kbdetail')"><div class="cc-cover" style="background:linear-gradient(135deg,var(--info-bg),var(--geekblue-1))"><div class="kb-icon" style="background:var(--info-primary)"><i data-lucide="monitor" style="width:24px;height:24px;color:var(--bg-white)"></i></div></div><div class="cc-body"><div class="cc-title">发展心理学</div><div class="cc-desc">儿童与青少年心理发展理论及实证研究</div><div class="cc-meta">8 个文档 · 5 位成员 · 更新于 3天前</div></div><div class="kb-hover-actions"><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();showConfirm('delete','发展心理学')"><i data-lucide="trash-2" style="width:14px;height:14px"></i>删除</button><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();showEditKB('发展心理学','儿童与青少年心理发展理论及实证研究')"><i data-lucide="pencil" style="width:14px;height:14px"></i>编辑</button><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();showConfirm('share','发展心理学')"><i data-lucide="share" style="width:14px;height:14px"></i>分享到社区</button></div></div>
+          <div class="community-card kb-owned" onclick="switchPage('kbdetail')"><div class="cc-cover" style="background:linear-gradient(135deg,var(--geekblue-1),var(--info-bg))"><div class="kb-icon" style="background:var(--geekblue-5)"><i data-lucide="monitor" style="width:24px;height:24px;color:var(--bg-white)"></i></div></div><div class="cc-body"><div class="cc-title">课程与教学论</div><div class="cc-desc">课程设计理论、教学策略与评价方法</div><div class="cc-meta">6 个文档 · 2 位成员 · 更新于 1周前</div></div><div class="kb-hover-actions"><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();showConfirm('delete','课程与教学论')"><i data-lucide="trash-2" style="width:14px;height:14px"></i>删除</button><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();showEditKB('课程与教学论','课程设计理论、教学策略与评价方法')"><i data-lucide="pencil" style="width:14px;height:14px"></i>编辑</button><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();showConfirm('share','课程与教学论')"><i data-lucide="share" style="width:14px;height:14px"></i>分享到社区</button></div></div>
+        </div>
+        <div style="font:var(--font-body-sub);font-weight:600;color:var(--text-1);margin-bottom:var(--spacing-3)">我加入的</div>
+        <div class="community-grid">
+          <div class="community-card" onclick="switchPage('kbdetail')"><div class="cc-cover" style="background:linear-gradient(135deg,var(--success-bg),var(--info-bg))"><div class="kb-icon" style="background:var(--success-primary)"><i data-lucide="monitor" style="width:24px;height:24px;color:var(--bg-white)"></i></div></div><div class="cc-body"><div class="cc-title">大学物理精选</div><div class="cc-desc">力学、热学、电磁学核心知识点，含习题详解</div><div class="cc-meta">42 个文档 · 156 位成员</div></div></div>
+          <div class="community-card" onclick="switchPage('kbdetail')"><div class="cc-cover" style="background:linear-gradient(135deg,var(--warning-bg),var(--danger-bg))"><div class="kb-icon" style="background:var(--warning-primary)"><i data-lucide="monitor" style="width:24px;height:24px;color:var(--bg-white)"></i></div></div><div class="cc-body"><div class="cc-title">数据结构与算法</div><div class="cc-desc">常见数据结构与经典算法分析，配合代码实现</div><div class="cc-meta">38 个文档 · 203 位成员</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Page: 知识库详情 ===== -->
+    <div class="page" id="page-kbdetail">
+      <div class="page-header" style="border-bottom:none;padding-bottom:0;">
+        <div style="display:flex;align-items:center;gap:var(--spacing-3)">
+          <button class="btn btn-sm btn-ghost" onclick="switchPage('mylib')"><i data-lucide="arrow-left" style="width:16px;height:16px"></i></button>
+          <span class="page-title">AI 产品设计方法论</span>
+          <span class="badge badge-green">8人加入</span>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;overflow:hidden;">
+        <!-- 左侧：资料来源 -->
+        <div class="note-sidebar" style="width:220px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--spacing-2) var(--spacing-3);margin-bottom:var(--spacing-2)">
+            <span style="font:var(--font-body-min);color:var(--text-4)">资料来源</span>
+            <div style="display:flex;gap:var(--spacing-1)">
+              <button class="btn btn-sm btn-ghost" style="padding:2px"><i data-lucide="search" style="width:14px;height:14px"></i></button>
+              <button class="btn btn-sm btn-ghost" style="padding:2px"><i data-lucide="plus" style="width:14px;height:14px"></i></button>
+            </div>
+          </div>
+          <div class="note-list-item" style="font-weight:600;gap:var(--spacing-1)"><i data-lucide="folder" style="width:14px;height:14px;color:var(--warning-primary)"></i>产品文档<span class="count">5项</span></div>
+          <div class="note-list-item" style="gap:var(--spacing-1);padding-left:var(--spacing-6)"><i data-lucide="folder" style="width:14px;height:14px;color:var(--warning-primary)"></i>会议记录<span class="count">0项</span></div>
+          <div class="note-list-item" style="gap:var(--spacing-1);padding-left:var(--spacing-6)"><i data-lucide="folder" style="width:14px;height:14px;color:var(--warning-primary)"></i>技术方案<span class="count">2项</span></div>
+          <div class="note-list-item" style="gap:var(--spacing-1);padding-left:var(--spacing-6)"><i data-lucide="folder" style="width:14px;height:14px;color:var(--warning-primary)"></i>设计资料<span class="count">3项</span></div>
+          <div style="border-top:1px solid var(--border-primary);margin:var(--spacing-2) var(--spacing-3);"></div>
+          <div class="note-list-item active" style="gap:var(--spacing-2)"><span class="file-tag file-pdf">PDF</span><span class="file-name">2026年度战略规划.pdf</span><span class="count">04/13</span></div>
+          <div class="note-list-item" style="gap:var(--spacing-2)"><span class="file-tag file-pdf">PDF</span><span class="file-name">Q3 市场趋势分析.pdf</span><span class="count">04/12</span></div>
+          <div class="note-list-item" style="gap:var(--spacing-2)"><span class="file-tag file-doc">DOC</span><span class="file-name">用户访谈记录.docx</span><span class="count">04/11</span></div>
+          <div class="note-list-item" style="gap:var(--spacing-2)"><span class="file-tag file-md">MD</span><span class="file-name">项目周报_W12.md</span><span class="count">04/07</span></div>
+          <div class="note-list-item" style="gap:var(--spacing-2)"><span class="file-tag file-xls">XLS</span><span class="file-name">用户反馈汇总_Q1.xlsx</span><span class="count">04/05</span></div>
+        </div>
+        <!-- 中间：问答窗口 -->
+        <div style="flex:1;display:flex;flex-direction:column;border-left:1px solid var(--border-primary);border-right:1px solid var(--border-primary);">
+          <div style="padding:var(--spacing-4) var(--spacing-5);border-bottom:1px solid var(--border-primary);background:var(--bg-white);">
+            <div style="font:var(--font-title-primary);margin-bottom:var(--spacing-1)">AI 产品设计方法论</div>
+            <div style="font:var(--font-body-min);color:var(--text-3)">AI交互范式、Prompt设计、生成式UI研究</div>
+          </div>
+          <div class="chat-area" style="flex:1;">
+            <div class="chat-msg ai">
+              <div class="chat-avatar">脑</div>
+              <div class="chat-bubble">
+                <p>你好！欢迎来到「AI 产品设计方法论」，有什么可以帮你的吗？</p>
+                <p style="margin-top:var(--spacing-2)">你好！我已经阅读了你上传的资料。你可以问我关于这些资料的任何问题，或者让我帮你总结核心观点。</p>
+                <div style="font:var(--font-body-min);color:var(--text-3);margin-top:var(--spacing-2)">本回答由大模型生成，内容仅供参考，请仔细甄别</div>
+              </div>
+            </div>
+            <div class="chat-msg user">
+              <div class="chat-avatar">A</div>
+              <div class="chat-bubble">请总结一下 Q3 市场趋势分析报告中的主要增长点。</div>
+            </div>
+            <div class="chat-msg ai">
+              <div class="chat-avatar">脑</div>
+              <div class="chat-bubble">
+                <p>根据《Q3 市场趋势分析.pdf》，主要增长点包括：</p>
+                <p style="margin-top:var(--spacing-2)"><strong>1. AI 原生产品渗透率提升</strong>：从 Q2 的 12% 增长至 Q3 的 23%。<span class="cite">1<span class="cite-tooltip">Q3 市场趋势分析.pdf P.8 — "AI 原生产品在企业端的渗透率持续攀升，季度环比增长近一倍。"</span></span></p>
+                <p style="margin-top:var(--spacing-2)"><strong>2. Prompt 工程工具市场爆发</strong>：相关工具 GMV 同比增长 340%。<span class="cite">2<span class="cite-tooltip">Q3 市场趋势分析.pdf P.15 — "Prompt 工程及调试工具成为增长最快的细分赛道。"</span></span></p>
+                <div class="confidence"><span class="dot green"></span>高置信度 · 基于知识库回答</div>
+              </div>
+            </div>
+          </div>
+          <div style="padding:0 var(--spacing-5);background:var(--bg-white);">
+            <div style="border:1px solid var(--border-primary);border-radius:var(--radius-largemodule);overflow:hidden;">
+              <textarea class="chat-input" style="border:none;border-radius:0;width:100%;min-height:50px;padding:var(--spacing-3) var(--spacing-4);resize:none;" placeholder="请输入您想要了解的问题"></textarea>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--spacing-2) var(--spacing-3);border-top:1px solid var(--border-primary);">
+                <div style="display:flex;gap:var(--spacing-2);align-items:center;">
+                  <button class="btn btn-ghost btn-sm" style="border-radius:var(--radius-full)"><i data-lucide="globe" style="width:14px;height:14px"></i> 联网搜索</button>
+                  <button class="btn btn-ghost btn-sm" style="border-radius:var(--radius-full)"><i data-lucide="box" style="width:14px;height:14px"></i> DeepSeek-R1 <i data-lucide="chevron-down" style="width:12px;height:12px"></i></button>
+                  <span style="font:var(--font-body-min);color:var(--text-4);margin-left:auto;">16个资源</span>
+                </div>
+                <button style="width:36px;height:36px;border-radius:50%;background:var(--brand-primary);color:var(--bg-white);display:flex;align-items:center;justify-content:center;" onclick="showToast('消息已发送')"><i data-lucide="send" style="width:16px;height:16px"></i></button>
+              </div>
+            </div>
+            <div style="text-align:center;font:var(--font-body-min);color:var(--text-4);padding:var(--spacing-2) 0;">AI 可能会犯错，请核实重要信息。</div>
+            <div style="text-align:center;padding-bottom:var(--spacing-2)"><button class="btn btn-sm btn-ghost" onclick="showToast('内容已导入笔记')"><i data-lucide="file-input" style="width:14px;height:14px"></i>导入笔记</button></div>
+          </div>
+        </div>
+        <!-- 右侧：智能体 -->
+        <div style="width:200px;background:var(--bg-white);overflow-y:auto;padding:var(--spacing-3);">
+          <div class="kb-agent-card" onclick="showToast('进入 AI 学伴对话')"><div class="kb-agent-icon"><i data-lucide="book-open" style="width:20px;height:20px;color:var(--text-2)"></i></div><div class="kb-agent-info"><div class="kb-agent-name">AI 学伴</div><div class="kb-agent-desc">辅助学习答疑、知识归纳与学习计划制定。</div></div></div>
+          <div class="kb-agent-card" onclick="showToast('进入智能批改')"><div class="kb-agent-icon"><i data-lucide="check-square" style="width:20px;height:20px;color:var(--text-2)"></i></div><div class="kb-agent-info"><div class="kb-agent-name">智能批改</div><div class="kb-agent-desc">自动批改作业与试卷，提供评分建议。</div></div></div>
+          <div class="kb-agent-card" onclick="showToast('进入知识图谱')"><div class="kb-agent-icon"><i data-lucide="git-branch" style="width:20px;height:20px;color:var(--text-2)"></i></div><div class="kb-agent-info"><div class="kb-agent-name">知识图谱</div><div class="kb-agent-desc">构建知识点关联图谱，梳理知识结构。</div></div></div>
+          <div class="kb-agent-card" onclick="showToast('进入智能出题')"><div class="kb-agent-icon"><i data-lucide="help-circle" style="width:20px;height:20px;color:var(--text-2)"></i></div><div class="kb-agent-info"><div class="kb-agent-name">智能出题</div><div class="kb-agent-desc">根据知识点自动生成多题型练习题。</div></div></div>
+          <div class="kb-agent-card" onclick="showToast('进入学情分析')"><div class="kb-agent-icon"><i data-lucide="bar-chart-3" style="width:20px;height:20px;color:var(--text-2)"></i></div><div class="kb-agent-info"><div class="kb-agent-name">学情分析</div><div class="kb-agent-desc">分析学习数据，精准定位薄弱环节。</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Page: 笔记系统 ===== -->
+    <div class="page" id="page-notes">
+      <div class="page-header">
+        <span class="page-title">我的笔记</span>
+        <button class="btn btn-ghost" onclick="showToast('笔记本已创建')"><i data-lucide="plus" style="width:16px;height:16px"></i>新建笔记本</button>
+      </div>
+      <div class="note-layout" style="flex:1;">
+        <div class="note-sidebar">
+          <div style="font:var(--font-body-min);color:var(--text-4);padding:var(--spacing-2) var(--spacing-3);margin-bottom:var(--spacing-2)">笔记本</div>
+          <div class="note-list-item active"><i data-lucide="notebook-pen" style="width:16px;height:16px"></i>高数复习<span class="count">12</span></div>
+          <div class="note-list-item"><i data-lucide="notebook-pen" style="width:16px;height:16px"></i>期末重点<span class="count">8</span></div>
+          <div class="note-list-item"><i data-lucide="notebook-pen" style="width:16px;height:16px"></i>论文参考<span class="count">5</span></div>
+          <div style="font:var(--font-body-min);color:var(--text-4);padding:var(--spacing-2) var(--spacing-3);margin:var(--spacing-3) 0 var(--spacing-2)">最近笔记</div>
+          <div class="note-list-item active"><i data-lucide="file-text" style="width:16px;height:16px"></i>泰勒公式笔记</div>
+          <div class="note-list-item"><i data-lucide="file-text" style="width:16px;height:16px"></i>极限与连续性</div>
+          <div class="note-list-item"><i data-lucide="file-text" style="width:16px;height:16px"></i>积分技巧汇总</div>
+        </div>
+        <div class="note-editor">
+          <div class="note-toolbar">
+            <button class="btn btn-sm btn-ghost" title="加粗"><i data-lucide="bold" style="width:16px;height:16px"></i></button>
+            <button class="btn btn-sm btn-ghost" title="斜体"><i data-lucide="italic" style="width:16px;height:16px"></i></button>
+            <button class="btn btn-sm btn-ghost" title="标题"><i data-lucide="heading" style="width:16px;height:16px"></i></button>
+            <button class="btn btn-sm btn-ghost" title="列表"><i data-lucide="list" style="width:16px;height:16px"></i></button>
+            <button class="btn btn-sm btn-ghost" title="高亮"><i data-lucide="highlighter" style="width:16px;height:16px"></i></button>
+            <div class="divider"></div>
+            <button class="btn btn-sm btn-ghost" onclick="showToast('AI 润色中...')"><i data-lucide="sparkles" style="width:16px;height:16px"></i>AI 润色</button>
+            <button class="btn btn-sm btn-ghost" onclick="showToast('已导出为 PDF')"><i data-lucide="download" style="width:16px;height:16px"></i>导出</button>
+            <button class="btn btn-sm btn-success" onclick="showToast('已跳转至贡献入口');switchPage('contribute')"><i data-lucide="share" style="width:16px;height:16px"></i>共享到社区</button>
+          </div>
+          <div class="note-content">
+            <div class="note-source">📎 来源：智能问答 · 高等数学知识库 · 2026-04-15 14:32</div>
+            <h2 style="font:var(--font-title-superior);margin-bottom:var(--spacing-4)">泰勒公式核心思想</h2>
+            <p style="font:var(--font-body-primary);line-height:1.8;margin-bottom:var(--spacing-4)"><strong>泰勒公式的核心思想</strong>是用多项式来逼近复杂函数。</p>
+            <p style="font:var(--font-body-primary);line-height:1.8;margin-bottom:var(--spacing-4)">对于一个在点 x₀ 处足够光滑的函数 f(x)，可以展开为：</p>
+            <div style="padding:var(--spacing-4);background:var(--bg-gray);border-radius:var(--radius-smallmodule);font-family:monospace;font-size:15px;margin-bottom:var(--spacing-4);">f(x) = f(x₀) + f'(x₀)(x-x₀) + f''(x₀)/2!(x-x₀)² + ... + Rₙ(x)</div>
+            <h3 style="font:var(--font-title-primary);margin-bottom:var(--spacing-3)">余项的三种形式</h3>
+            <ol style="font:var(--font-body-primary);line-height:2;padding-left:var(--spacing-5);list-style:decimal;">
+              <li><strong>拉格朗日余项</strong>：定量估计误差上界</li>
+              <li><strong>皮亚诺余项</strong>：定性描述误差阶</li>
+              <li><strong>柯西余项</strong>：积分形式表达</li>
+            </ol>
+            <p style="font:var(--font-body-primary);line-height:1.8;margin-top:var(--spacing-4);padding:var(--spacing-3);border-left:3px solid var(--success-primary);background:var(--success-bg);border-radius:0 var(--radius-smallmodule) var(--radius-smallmodule) 0;">💡 核心价值：将局部信息（某一点的各阶导数值）转化为全局近似。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Page 5: QA 标准库 ===== -->
+    <div class="page" id="page-qa">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;gap:var(--spacing-4)">
+          <span class="page-title">QA 标准库</span>
+          <div class="tab-bar">
+            <div class="tab-item active">全部</div>
+            <div class="tab-item">AI 候选</div>
+          </div>
+        </div>
+        <button class="btn btn-success" onclick="showModal()"><i data-lucide="plus" style="width:16px;height:16px"></i>新建 QA</button>
+      </div>
+      <div class="page-body">
+        <div style="display:flex;gap:var(--spacing-3);margin-bottom:var(--spacing-4)">
+          <input class="input" style="width:300px" placeholder="🔍 搜索问题...">
+          <select class="input" style="width:140px"><option>全部状态</option><option>已发布</option><option>待审核</option><option>已驳回</option></select>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th style="width:80px">状态</th><th>问题</th><th style="width:200px">知识点标签</th><th style="width:120px">操作</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge badge-green">已发布</span></td><td>什么是泰勒公式？它的核心思想是什么？</td><td><span class="tag">泰勒展开</span></td><td><button class="btn btn-sm btn-ghost">编辑</button><button class="btn btn-sm btn-ghost" style="color:var(--danger-primary)">删除</button></td></tr>
+              <tr><td><span class="badge badge-green">已发布</span></td><td>如何判断级数的收敛性？常用判别法有哪些？</td><td><span class="tag">级数</span><span class="tag">收敛</span></td><td><button class="btn btn-sm btn-ghost">编辑</button><button class="btn btn-sm btn-ghost" style="color:var(--danger-primary)">删除</button></td></tr>
+              <tr><td><span class="badge badge-orange">待审核</span></td><td>拉格朗日中值定理的几何意义是什么？</td><td><span class="tag">中值定理</span></td><td><button class="btn btn-sm btn-ghost">编辑</button><button class="btn btn-sm btn-success">通过</button></td></tr>
+              <tr><td><span class="badge badge-orange">待审核</span></td><td>不定积分和定积分的本质区别是什么？</td><td><span class="tag">积分</span></td><td><button class="btn btn-sm btn-ghost">编辑</button><button class="btn btn-sm btn-success">通过</button></td></tr>
+              <tr><td><span class="badge badge-red">已驳回</span></td><td>微积分是谁发明的？</td><td><span class="tag">数学史</span></td><td><button class="btn btn-sm btn-ghost">编辑</button><button class="btn btn-sm btn-ghost" style="color:var(--danger-primary)">删除</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:var(--spacing-3);font:var(--font-body-min);color:var(--text-3);text-align:right;">共 5 条 · 已发布 2 · 待审核 2 · 已驳回 1</div>
+      </div>
+    </div>
+
+    <!-- ===== Page 6: 智能备课 ===== -->
+    <div class="page" id="page-lesson">
+      <div class="page-header"><span class="page-title">智能备课 / AI 出题</span></div>
+      <div class="page-body">
+        <div class="gen-steps">
+          <div class="gen-step done"><span class="step-num">1</span>选择范围</div>
+          <div class="gen-step done"><span class="step-num">2</span>选择类型</div>
+          <div class="gen-step active"><span class="step-num">3</span>设置参数</div>
+        </div>
+        <div style="display:flex;gap:var(--spacing-6);">
+          <div style="flex:1;">
+            <div class="form-group">
+              <div class="form-label">已选课程</div>
+              <div style="font:var(--font-body-sub);color:var(--text-1);padding:var(--spacing-2) 0;">📚 高等数学 · 第三章 泰勒公式与级数</div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">生成类型</div>
+              <div class="type-cards" style="grid-template-columns:repeat(3,1fr);">
+                <div class="type-card"><div class="tc-icon">📝</div><div class="tc-name">教案</div></div>
+                <div class="type-card"><div class="tc-icon">📋</div><div class="tc-name">课件大纲</div></div>
+                <div class="type-card selected"><div class="tc-icon">✅</div><div class="tc-name">选择题</div></div>
+                <div class="type-card"><div class="tc-icon">✏️</div><div class="tc-name">填空题</div></div>
+                <div class="type-card"><div class="tc-icon">📖</div><div class="tc-name">简答题</div></div>
+                <div class="type-card"><div class="tc-icon">🧩</div><div class="tc-name">综合题</div></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">题目数量</div>
+              <div style="display:flex;align-items:center;gap:var(--spacing-3)">
+                <input type="range" min="1" max="50" value="10" id="qCount" oninput="document.getElementById('qCountVal').textContent=this.value" style="flex:1;accent-color:var(--success-primary)">
+                <span id="qCountVal" style="font:var(--font-body-sub);font-weight:600;color:var(--text-1);min-width:30px">10</span> 道
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-label">难度等级</div>
+              <div class="diff-group">
+                <div class="diff-item" onclick="selectDiff(this)">基础</div>
+                <div class="diff-item selected" onclick="selectDiff(this)">进阶</div>
+                <div class="diff-item" onclick="selectDiff(this)">挑战</div>
+              </div>
+            </div>
+            <button class="btn btn-success" style="width:100%;justify-content:center;padding:var(--spacing-3)" onclick="generateLesson()"><i data-lucide="sparkles" style="width:16px;height:16px"></i>生成</button>
+          </div>
+        </div>
+        <div class="gen-result" id="genResult">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--spacing-4)">
+            <h4>📄 生成结果 · 选择题 10 道（进阶）</h4>
+            <div style="display:flex;gap:var(--spacing-2)">
+              <button class="btn btn-sm btn-ghost" onclick="showToast('已保存到笔记')">📌 保存到笔记</button>
+              <button class="btn btn-sm btn-ghost" onclick="showToast('已导出为 Word')">📥 导出</button>
+            </div>
+          </div>
+          <div class="question"><p><span class="q-num">1.</span> 函数 f(x) = eˣ 在 x = 0 处的 3 阶泰勒多项式为：</p><p style="margin-top:var(--spacing-2);color:var(--text-2)">A. 1 + x + x² + x³ &nbsp; B. 1 + x + x²/2 + x³/6 &nbsp; <strong style="color:var(--success-primary)">C. 1 + x + x²/2 + x³/6 ✓</strong> &nbsp; D. 1 + x + x²/2 + x³/3</p></div>
+          <div class="question"><p><span class="q-num">2.</span> 若 f(x) 的麦克劳林展开收敛半径为 R，则下列说法正确的是：</p><p style="margin-top:var(--spacing-2);color:var(--text-2)">A. |x| < R 时级数必收敛 &nbsp; B. |x| = R 时级数必发散 &nbsp; C. R = ∞ 时对所有 x 收敛 &nbsp; <strong style="color:var(--success-primary)">D. A 和 C 都正确 ✓</strong></p></div>
+          <div class="question"><p><span class="q-num">3.</span> sin(x) 泰勒展开只包含奇数次幂项，这是因为 sin(x) 是：</p><p style="margin-top:var(--spacing-2);color:var(--text-2)"><strong style="color:var(--success-primary)">A. 奇函数 ✓</strong> &nbsp; B. 偶函数 &nbsp; C. 周期函数 &nbsp; D. 有界函数</p></div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ===== Page 8: 术语管理 ===== -->
+    <div class="page" id="page-terms">
+      <div class="page-header">
+        <span class="page-title">术语管理</span>
+        <button class="btn btn-success" onclick="showModal()"><i data-lucide="plus" style="width:16px;height:16px"></i>新建术语</button>
+      </div>
+      <div class="page-body">
+        <div style="display:flex;gap:var(--spacing-3);margin-bottom:var(--spacing-4)">
+          <input class="input" style="width:300px" placeholder="🔍 搜索术语...">
+          <select class="input" style="width:140px"><option>全部分类</option><option>微积分</option><option>级数</option><option>线性代数</option></select>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>术语名称</th><th>定义</th><th>同义词/别名</th><th style="width:80px">分类</th><th style="width:100px">操作</th></tr></thead>
+            <tbody>
+              <tr><td style="font-weight:600">泰勒展开</td><td style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">将函数在某一点展开为无穷级数的方法</td><td><span class="tag">Taylor展开</span><span class="tag">泰勒级数</span></td><td><span class="tag">微积分</span></td><td><button class="btn btn-sm btn-ghost">编辑</button><button class="btn btn-sm btn-ghost" style="color:var(--danger-primary)">删除</button></td></tr>
+              <tr><td style="font-weight:600">导数</td><td style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">函数在某一点的变化率，即切线斜率</td><td><span class="tag">微商</span><span class="tag">导函数</span></td><td><span class="tag">微积分</span></td><td><button class="btn btn-sm btn-ghost">编辑</button><button class="btn btn-sm btn-ghost" style="color:var(--danger-primary)">删除</button></td></tr>
+              <tr><td style="font-weight:600">极限</td><td style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">描述函数或数列在自变量趋近某值时的趋向行为</td><td><span class="tag">limit</span><span class="tag">趋近值</span></td><td><span class="tag">微积分</span></td><td><button class="btn btn-sm btn-ghost">编辑</button><button class="btn btn-sm btn-ghost" style="color:var(--danger-primary)">删除</button></td></tr>
+              <tr><td style="font-weight:600">收敛半径</td><td style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">幂级数收敛的最大范围半径</td><td><span class="tag">R</span></td><td><span class="tag">级数</span></td><td><button class="btn btn-sm btn-ghost">编辑</button><button class="btn btn-sm btn-ghost" style="color:var(--danger-primary)">删除</button></td></tr>
+              <tr><td style="font-weight:600">偏导数</td><td style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">多元函数对其中一个自变量的导数</td><td><span class="tag">偏微分</span></td><td><span class="tag">微积分</span></td><td><button class="btn btn-sm btn-ghost">编辑</button><button class="btn btn-sm btn-ghost" style="color:var(--danger-primary)">删除</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:var(--spacing-3);font:var(--font-body-min);color:var(--text-3);text-align:right;">共 5 条术语</div>
+      </div>
+    </div>
+
+    <!-- ===== Page: 效果对比（质量评测） ===== -->
+    <div class="page" id="page-eval">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;gap:var(--spacing-3)">
+          <span class="page-title">效果对比</span>
+          <select class="input" style="width:200px;padding:var(--spacing-1) var(--spacing-3);font:var(--font-body-sub);" id="evalKBSelect">
+            <option>AI 产品设计方法论</option>
+            <option>教育心理学</option>
+            <option>发展心理学</option>
+            <option>课程与教学论</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:var(--spacing-2)">
+          <button class="btn btn-ghost btn-sm" onclick="switchPage('testset')"><i data-lucide="list-checks" style="width:14px;height:14px"></i>测试集管理</button>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+        <!-- 输入区 -->
+        <div style="padding:var(--spacing-4) var(--spacing-6);background:var(--bg-white);border-bottom:1px solid var(--border-primary);">
+          <div style="display:flex;gap:var(--spacing-3);align-items:flex-end;">
+            <div style="flex:1"><div style="font:var(--font-body-min);color:var(--text-3);margin-bottom:var(--spacing-1)">输入问题，同时对比裸模型和知识库增强效果</div><input class="input" id="evalInput" placeholder="输入测试问题..." value="泰勒公式的核心思想是什么？"></div>
+            <button class="btn btn-success" onclick="runEvalCompare()"><i data-lucide="play" style="width:14px;height:14px"></i>对比测试</button>
+          </div>
+        </div>
+        <!-- 双栏对比 -->
+        <div style="flex:1;display:flex;gap:0;overflow:hidden;">
+          <div style="flex:1;display:flex;flex-direction:column;border-right:1px solid var(--border-primary);">
+            <div style="padding:var(--spacing-3) var(--spacing-4);background:var(--warning-bg);font:var(--font-body-sub);font-weight:600;color:var(--warning-primary);text-align:center;">裸模型回答</div>
+            <div style="flex:1;overflow-y:auto;padding:var(--spacing-5);background:var(--bg-white);">
+              <div id="evalRawResult">
+                <p style="font:var(--font-body-sub);line-height:1.8;color:var(--text-2)">泰勒公式是一种数学工具，它可以把一个函数用多项式来近似表示。简单来说就是用简单的多项式来代替复杂的函数。</p>
+                <p style="font:var(--font-body-sub);line-height:1.8;color:var(--text-2);margin-top:var(--spacing-3)">这个公式在计算机科学和物理学中非常有用，因为多项式更容易计算。泰勒公式以英国数学家布鲁克·泰勒命名。</p>
+                <div style="margin-top:var(--spacing-4);padding:var(--spacing-3);background:var(--bg-gray);border-radius:var(--radius-smallmodule);">
+                  <div style="font:var(--font-body-min);color:var(--text-3)">无引用来源 · 通用知识回答</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;">
+            <div style="padding:var(--spacing-3) var(--spacing-4);background:var(--success-bg);font:var(--font-body-sub);font-weight:600;color:var(--success-primary);text-align:center;">知识库增强回答</div>
+            <div style="flex:1;overflow-y:auto;padding:var(--spacing-5);background:var(--bg-white);">
+              <div id="evalKBResult">
+                <p style="font:var(--font-body-sub);line-height:1.8;color:var(--text-1)"><strong>泰勒公式的核心思想</strong>是用多项式来逼近复杂函数。<span class="cite">1<span class="cite-tooltip">《高等数学》第三章 P.89 — "泰勒公式的基本思想是用多项式函数近似代替一般函数。"</span></span></p>
+                <p style="font:var(--font-body-sub);line-height:1.8;color:var(--text-1);margin-top:var(--spacing-3)">对于在点 x₀ 处足够光滑的函数 f(x)，可展开为 f(x) = f(x₀) + f'(x₀)(x-x₀) + ... + Rₙ(x)，其中余项 Rₙ(x) 衡量逼近误差。<span class="cite">2<span class="cite-tooltip">《数学分析》第五章 P.132 — "余项反映了多项式逼近的误差大小。"</span></span></p>
+                <p style="font:var(--font-body-sub);line-height:1.8;color:var(--text-1);margin-top:var(--spacing-3)">核心价值：将局部信息（某一点的各阶导数值）转化为全局近似，是微积分中连接"局部"与"整体"的关键桥梁。<span class="cite">1<span class="cite-tooltip">《高等数学》第三章 P.91</span></span></p>
+                <div style="margin-top:var(--spacing-4);padding:var(--spacing-3);background:var(--bg-gray);border-radius:var(--radius-smallmodule);">
+                  <div style="font:var(--font-body-min);color:var(--text-3)">引用 2 篇文档 · 置信度 92% · 召回 3 个切片</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 评测指标 -->
+        <div style="display:flex;gap:var(--spacing-4);padding:var(--spacing-4) var(--spacing-6);background:var(--bg-white);border-top:1px solid var(--border-primary);">
+          <div class="stat-card" style="padding:var(--spacing-3);"><div class="stat-num" style="font-size:20px;color:var(--success-primary)">92%</div><div class="stat-label">知识库置信度</div></div>
+          <div class="stat-card" style="padding:var(--spacing-3);"><div class="stat-num" style="font-size:20px;color:var(--info-primary)">3</div><div class="stat-label">召回切片数</div></div>
+          <div class="stat-card" style="padding:var(--spacing-3);"><div class="stat-num" style="font-size:20px;color:var(--warning-primary)">1.2s</div><div class="stat-label">响应时间</div></div>
+          <div class="stat-card" style="padding:var(--spacing-3);"><div class="stat-num" style="font-size:20px;color:var(--success-primary)">A</div><div class="stat-label">综合评级</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Page: 测试集管理 ===== -->
+    <div class="page" id="page-testset">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;gap:var(--spacing-4)">
+          <span class="page-title">测试集管理</span>
+          <div class="tab-bar" id="testsetTabs">
+            <div class="tab-item active" onclick="switchTestTab(this,'testset-list')">测试集</div>
+            <div class="tab-item" onclick="switchTestTab(this,'testset-report')">测试报告</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:var(--spacing-2)">
+          <button class="btn btn-ghost" onclick="switchPage('eval')"><i data-lucide="git-compare" style="width:14px;height:14px"></i>效果对比</button>
+          <button class="btn btn-success" onclick="showModal()"><i data-lucide="plus" style="width:16px;height:16px"></i>新建测试集</button>
+        </div>
+      </div>
+      <div class="page-body">
+        <!-- 测试集列表 -->
+        <div id="testset-list">
+          <div style="display:flex;gap:var(--spacing-3);margin-bottom:var(--spacing-4)">
+            <input class="input" style="width:300px" placeholder="搜索测试集...">
+            <select class="input" style="width:160px"><option>全部知识库</option><option>AI 产品设计方法论</option><option>教育心理学</option></select>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>测试集名称</th><th style="width:140px">关联知识库</th><th style="width:80px">题目数</th><th style="width:100px">上次得分</th><th style="width:120px">更新时间</th><th style="width:160px">操作</th></tr></thead>
+              <tbody>
+                <tr><td style="font-weight:600">泰勒公式核心概念</td><td><span class="tag">高等数学</span></td><td>25</td><td><span class="badge badge-green">92 分</span></td><td>2026-04-15</td><td><button class="btn btn-sm btn-success" onclick="showToast('测试运行中...')"><i data-lucide="play" style="width:12px;height:12px"></i>运行</button><button class="btn btn-sm btn-ghost" onclick="showToast('编辑测试集')">编辑</button><button class="btn btn-sm btn-ghost" style="color:var(--danger-primary)" onclick="showConfirm('delete','泰勒公式核心概念')">删除</button></td></tr>
+                <tr><td style="font-weight:600">极限与连续性专题</td><td><span class="tag">高等数学</span></td><td>30</td><td><span class="badge badge-green">88 分</span></td><td>2026-04-14</td><td><button class="btn btn-sm btn-success" onclick="showToast('测试运行中...')"><i data-lucide="play" style="width:12px;height:12px"></i>运行</button><button class="btn btn-sm btn-ghost" onclick="showToast('编辑测试集')">编辑</button><button class="btn btn-sm btn-ghost" style="color:var(--danger-primary)" onclick="showConfirm('delete','极限与连续性专题')">删除</button></td></tr>
+                <tr><td style="font-weight:600">AI 交互范式基础</td><td><span class="tag">AI 产品设计</span></td><td>20</td><td><span class="badge badge-orange">74 分</span></td><td>2026-04-12</td><td><button class="btn btn-sm btn-success" onclick="showToast('测试运行中...')"><i data-lucide="play" style="width:12px;height:12px"></i>运行</button><button class="btn btn-sm btn-ghost" onclick="showToast('编辑测试集')">编辑</button><button class="btn btn-sm btn-ghost" style="color:var(--danger-primary)" onclick="showConfirm('delete','AI 交互范式基础')">删除</button></td></tr>
+                <tr><td style="font-weight:600">Prompt 设计原则</td><td><span class="tag">AI 产品设计</span></td><td>15</td><td><span class="badge badge-gray">未运行</span></td><td>2026-04-10</td><td><button class="btn btn-sm btn-success" onclick="showToast('测试运行中...')"><i data-lucide="play" style="width:12px;height:12px"></i>运行</button><button class="btn btn-sm btn-ghost" onclick="showToast('编辑测试集')">编辑</button><button class="btn btn-sm btn-ghost" style="color:var(--danger-primary)" onclick="showConfirm('delete','Prompt 设计原则')">删除</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-top:var(--spacing-3);font:var(--font-body-min);color:var(--text-3);text-align:right;">共 4 个测试集 · 90 道题目</div>
+        </div>
+        <!-- 测试报告 -->
+        <div id="testset-report" style="display:none;">
+          <div style="display:flex;gap:var(--spacing-4);margin-bottom:var(--spacing-5)">
+            <div class="stat-card"><div class="stat-num" style="color:var(--success-primary)">85</div><div class="stat-label">平均得分</div></div>
+            <div class="stat-card"><div class="stat-num" style="color:var(--info-primary)">90</div><div class="stat-label">总题目数</div></div>
+            <div class="stat-card"><div class="stat-num" style="color:var(--success-primary)">78</div><div class="stat-label">通过题数</div></div>
+            <div class="stat-card"><div class="stat-num" style="color:var(--danger-primary)">12</div><div class="stat-label">未通过</div></div>
+          </div>
+          <div style="font:var(--font-body-sub);font-weight:600;margin-bottom:var(--spacing-3)">最近测试报告</div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>测试集</th><th style="width:140px">知识库</th><th style="width:80px">得分</th><th style="width:80px">通过率</th><th style="width:100px">平均耗时</th><th style="width:120px">运行时间</th><th style="width:100px">操作</th></tr></thead>
+              <tbody>
+                <tr><td style="font-weight:600">泰勒公式核心概念</td><td><span class="tag">高等数学</span></td><td><span class="badge badge-green">92 分</span></td><td>23/25</td><td>1.8s</td><td>04-15 14:30</td><td><button class="btn btn-sm btn-ghost" onclick="showToast('查看详细报告')">详情</button></td></tr>
+                <tr><td style="font-weight:600">极限与连续性专题</td><td><span class="tag">高等数学</span></td><td><span class="badge badge-green">88 分</span></td><td>26/30</td><td>2.1s</td><td>04-14 16:20</td><td><button class="btn btn-sm btn-ghost" onclick="showToast('查看详细报告')">详情</button></td></tr>
+                <tr><td style="font-weight:600">AI 交互范式基础</td><td><span class="tag">AI 产品设计</span></td><td><span class="badge badge-orange">74 分</span></td><td>15/20</td><td>2.5s</td><td>04-12 10:15</td><td><button class="btn btn-sm btn-ghost" onclick="showToast('查看详细报告')">详情</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Page: 知识广场 ===== -->
+    <div class="page" id="page-community">
+      <div class="page-header">
+        <div>
+          <span class="page-title">知识广场</span>
+          <span style="font:var(--font-body-min);color:var(--text-3);margin-left:var(--spacing-3)">探索公开分享的优质知识库资源</span>
+        </div>
+        <input class="input" style="width:280px" placeholder="搜索知识库...">
+      </div>
+      <div class="page-body">
+        <div class="community-grid">
+          <div class="community-card"><div class="cc-cover" style="background:linear-gradient(135deg,var(--success-bg),var(--info-bg))"><div class="kb-icon" style="background:var(--success-primary)"><i data-lucide="monitor" style="width:24px;height:24px;color:var(--bg-white)"></i></div></div><div class="cc-body"><div class="cc-title">大学物理精选</div><div class="cc-desc">力学、热学、电磁学核心知识点，含习题详解</div><div class="cc-meta">42 个文档 · 156 位成员</div><div class="cc-actions"><button class="btn btn-sm btn-success" onclick="showToast('已加入「大学物理精选」')">加入</button></div></div></div>
+          <div class="community-card"><div class="cc-cover" style="background:linear-gradient(135deg,var(--warning-bg),var(--danger-bg))"><div class="kb-icon" style="background:var(--warning-primary)"><i data-lucide="monitor" style="width:24px;height:24px;color:var(--bg-white)"></i></div></div><div class="cc-body"><div class="cc-title">数据结构与算法</div><div class="cc-desc">常见数据结构与经典算法分析，配合代码实现</div><div class="cc-meta">38 个文档 · 203 位成员</div><div class="cc-actions"><button class="btn btn-sm btn-success" onclick="showToast('已加入')">加入</button></div></div></div>
+          <div class="community-card"><div class="cc-cover" style="background:linear-gradient(135deg,var(--info-bg),var(--geekblue-1))"><div class="kb-icon" style="background:var(--info-primary)"><i data-lucide="monitor" style="width:24px;height:24px;color:var(--bg-white)"></i></div></div><div class="cc-body"><div class="cc-title">英语四六级备考</div><div class="cc-desc">历年真题解析、高频词汇与写作模板</div><div class="cc-meta">55 个文档 · 312 位成员</div><div class="cc-actions"><button class="btn btn-sm btn-success" onclick="showToast('已加入')">加入</button></div></div></div>
+          <div class="community-card"><div class="cc-cover" style="background:linear-gradient(135deg,var(--success-bg),var(--green-2))"><div class="kb-icon" style="background:var(--green-6)"><i data-lucide="monitor" style="width:24px;height:24px;color:var(--bg-white)"></i></div></div><div class="cc-body"><div class="cc-title">人工智能导论</div><div class="cc-desc">机器学习、深度学习、NLP基础理论与实践</div><div class="cc-meta">29 个文档 · 98 位成员</div><div class="cc-actions"><button class="btn btn-sm btn-success" onclick="showToast('已加入')">加入</button></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Page: 积分体系 ===== -->
+    <div class="page" id="page-points">
+      <div class="page-header"><span class="page-title">积分体系</span></div>
+      <div class="page-body">
+        <div class="points-top">
+          <div class="stat-card"><div class="stat-num" style="color:var(--success-primary)">1,280</div><div class="stat-label">总积分</div></div>
+          <div class="stat-card"><div class="stat-num" style="color:var(--warning-primary)">+320</div><div class="stat-label">本月获得</div></div>
+          <div class="stat-card"><div class="stat-num" style="color:var(--info-primary)">#12</div><div class="stat-label">本校排名</div></div>
+          <div class="stat-card"><div class="stat-num">8</div><div class="stat-label">社区分享数</div></div>
+        </div>
+        <div style="font:var(--font-body-sub);font-weight:600;margin-bottom:var(--spacing-3)">我的徽章</div>
+        <div class="badges-row">
+          <div class="badge-item"><div class="badge-icon" style="background:var(--success-bg)">🌱</div><div class="badge-name">首次贡献者</div></div>
+          <div class="badge-item"><div class="badge-icon" style="background:var(--info-bg)">🏅</div><div class="badge-name">知识大使</div></div>
+          <div class="badge-item" style="opacity:0.4"><div class="badge-icon" style="background:var(--warning-bg)">⭐</div><div class="badge-name">月度之星（未解锁）</div></div>
+        </div>
+        <div class="tab-bar" style="display:inline-flex;margin-bottom:var(--spacing-4)">
+          <div class="tab-item active">积分明细</div>
+          <div class="tab-item" onclick="this.parentElement.querySelector('.active').classList.remove('active');this.classList.add('active')">排行榜</div>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>时间</th><th>行为</th><th style="width:100px;text-align:right">积分</th></tr></thead>
+            <tbody>
+              <tr><td>2026-04-15 14:30</td><td>知识库「AI 产品设计方法论」分享到社区审核通过</td><td style="text-align:right;color:var(--success-primary);font-weight:600">+50</td></tr>
+              <tr><td>2026-04-14 09:15</td><td>知识库「教育心理学」被 3 位用户加入</td><td style="text-align:right;color:var(--success-primary);font-weight:600">+30</td></tr>
+              <tr><td>2026-04-13 16:42</td><td>知识库「发展心理学」分享到社区审核通过</td><td style="text-align:right;color:var(--success-primary);font-weight:600">+50</td></tr>
+              <tr><td>2026-04-12 11:20</td><td>知识库「AI 产品设计方法论」被 8 位用户加入</td><td style="text-align:right;color:var(--success-primary);font-weight:600">+80</td></tr>
+              <tr><td>2026-04-10 08:30</td><td>知识库「课程与教学论」分享到社区审核通过</td><td style="text-align:right;color:var(--success-primary);font-weight:600">+50</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- Modal -->
+<div class="modal-mask" id="modalMask">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">新建 QA</span><button onclick="hideModal()" style="color:var(--text-3)"><i data-lucide="x" style="width:20px;height:20px"></i></button></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label"><span class="required">*</span>问题</div><input class="input" placeholder="输入学生可能提出的问题"></div>
+      <div class="form-group"><div class="form-label"><span class="required">*</span>标准答案</div><textarea class="form-textarea" placeholder="输入权威标准答案"></textarea></div>
+      <div class="form-group"><div class="form-label">关联知识点</div><input class="input" placeholder="输入知识点标签，回车添加"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="hideModal()">取消</button>
+      <button class="btn btn-success" onclick="hideModal();showToast('QA 已保存')">保存并发布</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modal-mask" id="confirmMask">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-header"><span class="modal-title" id="confirmTitle">确认操作</span><button onclick="hideConfirm()" style="color:var(--text-3)"><i data-lucide="x" style="width:20px;height:20px"></i></button></div>
+    <div class="modal-body"><p id="confirmMsg" style="font:var(--font-body-sub);color:var(--text-2);text-align:center;padding:var(--spacing-4) 0;"></p></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="hideConfirm()">取消</button>
+      <button class="btn btn-success" id="confirmBtn" onclick="doConfirm()">确认</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit KB Modal -->
+<div class="modal-mask" id="editKBMask">
+  <div class="modal">
+    <div class="modal-header"><span class="modal-title">编辑知识库</span><button onclick="hideEditKB()" style="color:var(--text-3)"><i data-lucide="x" style="width:20px;height:20px"></i></button></div>
+    <div class="modal-body">
+      <div class="form-group"><div class="form-label"><span class="required">*</span>知识库名称</div><input class="input" id="editKBName" placeholder="输入知识库名称"></div>
+      <div class="form-group"><div class="form-label">简介</div><textarea class="form-textarea" id="editKBDesc" placeholder="输入知识库简介"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="hideEditKB()">取消</button>
+      <button class="btn btn-success" onclick="hideEditKB();showToast('知识库已更新')">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== Navigation =====
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => switchPage(item.dataset.page));
+});
+function switchPage(page) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const target = document.querySelector(`.nav-item[data-page="${page}"]`);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const pg = document.getElementById('page-' + page);
+  if (pg) pg.classList.add('active');
+  // 知识库详情页隐藏侧边栏
+  document.querySelector('.sidebar').style.display = page === 'kbdetail' ? 'none' : '';
+}
+
+// ===== Toast =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ===== Modal =====
+function showModal() { document.getElementById('modalMask').classList.add('open'); }
+function hideModal() { document.getElementById('modalMask').classList.remove('open'); }
+
+// ===== Confirm Modal =====
+let confirmAction = '';
+function showConfirm(action, name) {
+  confirmAction = action;
+  const mask = document.getElementById('confirmMask');
+  if (action === 'delete') {
+    document.getElementById('confirmTitle').textContent = '删除知识库';
+    document.getElementById('confirmMsg').textContent = '确认删除知识库「' + name + '」？删除后不可恢复。';
+    document.getElementById('confirmBtn').className = 'btn btn-primary';
+    document.getElementById('confirmBtn').style.background = 'var(--danger-primary)';
+    document.getElementById('confirmBtn').style.borderColor = 'var(--danger-primary)';
+  } else if (action === 'share') {
+    document.getElementById('confirmTitle').textContent = '分享到社区';
+    document.getElementById('confirmMsg').textContent = '确认将知识库「' + name + '」分享到社区吗？提交后将进入审核流程。';
+    document.getElementById('confirmBtn').className = 'btn btn-success';
+    document.getElementById('confirmBtn').style.background = '';
+    document.getElementById('confirmBtn').style.borderColor = '';
+  }
+  mask.classList.add('open');
+}
+function hideConfirm() { document.getElementById('confirmMask').classList.remove('open'); }
+function doConfirm() {
+  hideConfirm();
+  if (confirmAction === 'delete') showToast('删除成功！');
+  else if (confirmAction === 'share') showToast('已提交审核');
+}
+
+// ===== Edit KB Modal =====
+function showEditKB(name, desc) {
+  document.getElementById('editKBName').value = name;
+  document.getElementById('editKBDesc').value = desc;
+  document.getElementById('editKBMask').classList.add('open');
+}
+function hideEditKB() { document.getElementById('editKBMask').classList.remove('open'); }
+
+// ===== Eval Compare =====
+function runEvalCompare() {
+  document.getElementById('evalRawResult').style.opacity = '0.3';
+  document.getElementById('evalKBResult').style.opacity = '0.3';
+  showToast('对比测试运行中...');
+  setTimeout(() => {
+    document.getElementById('evalRawResult').style.opacity = '1';
+    document.getElementById('evalKBResult').style.opacity = '1';
+  }, 1000);
+}
+
+// ===== Test Tab Switch =====
+function switchTestTab(el, id) {
+  el.parentElement.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('testset-list').style.display = id === 'testset-list' ? 'block' : 'none';
+  document.getElementById('testset-report').style.display = id === 'testset-report' ? 'block' : 'none';
+}
+
+// ===== Guide Toggle =====
+function toggleGuide() {
+  const tog = document.getElementById('guideToggle');
+  tog.classList.toggle('on');
+  const on = tog.classList.contains('on');
+  showToast(on ? '已开启多轮引导模式（苏格拉底式教学）' : '已关闭引导模式，AI 将直接回答');
+}
+
+// ===== Web Search Toggle =====
+function toggleWebSearch() {
+  const btn = document.getElementById('webSearchBtn');
+  btn.classList.toggle('web-search-active');
+  const on = btn.classList.contains('web-search-active');
+  showToast(on ? '已开启联网搜索' : '已关闭联网搜索');
+}
+
+// ===== Difficulty =====
+function selectDiff(el) {
+  el.parentElement.querySelectorAll('.diff-item').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ===== Generate Lesson =====
+function generateLesson() {
+  const btn = event.target.closest('button');
+  btn.innerHTML = '<span style="display:inline-flex;align-items:center;gap:8px"><span class="dot-loader"></span>生成中...</span>';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.innerHTML = '✅ 已生成';
+    document.getElementById('genResult').classList.add('show');
+    setTimeout(() => { btn.innerHTML = '<i data-lucide="sparkles" style="width:16px;height:16px"></i>重新生成'; btn.disabled = false; lucide.createIcons(); }, 500);
+  }, 1500);
+}
+
+// ===== Type Card Selection =====
+document.querySelectorAll('.type-cards').forEach(container => {
+  container.querySelectorAll('.type-card').forEach(card => {
+    card.addEventListener('click', () => {
+      container.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    });
+  });
+});
+
+// ===== Tab Bar Switching =====
+document.querySelectorAll('.tab-bar').forEach(bar => {
+  bar.querySelectorAll('.tab-item').forEach(tab => {
+    tab.addEventListener('click', () => {
+      bar.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+});
+
+// ===== Knowledge Graph (SVG) =====
+const graphNodes = [
+  {id:'root',name:'高等数学',x:450,y:300,r:30,color:'var(--success-primary)'},
+  {id:'n1',name:'极限',x:250,y:180,r:22,color:'var(--green-5)'},
+  {id:'n2',name:'导数',x:350,y:130,r:22,color:'var(--green-5)'},
+  {id:'n3',name:'积分',x:600,y:160,r:22,color:'var(--green-5)'},
+  {id:'n4',name:'微分方程',x:680,y:300,r:22,color:'var(--green-5)'},
+  {id:'n5',name:'泰勒展开',x:350,y:430,r:22,color:'var(--green-5)'},
+  {id:'n6',name:'连续性',x:180,y:320,r:22,color:'var(--green-5)'},
+  {id:'n7',name:'级数',x:500,y:460,r:22,color:'var(--green-5)'},
+  {id:'n8',name:'多元函数',x:650,y:430,r:22,color:'var(--green-5)'},
+  {id:'n9',name:'线代基础',x:750,y:200,r:18,color:'var(--gray-3)'},
+  {id:'n10',name:'拉格朗日',x:200,y:450,r:18,color:'var(--green-6)'},
+  {id:'n11',name:'牛莱公式',x:550,y:100,r:18,color:'var(--green-6)'},
+  {id:'n12',name:'偏导数',x:750,y:380,r:18,color:'var(--green-6)'},
+  {id:'n13',name:'重积分',x:700,y:500,r:18,color:'var(--green-6)'},
+  {id:'n14',name:'曲线积分',x:550,y:540,r:18,color:'var(--green-6)'},
+];
+const graphEdges = [
+  ['root','n1'],['root','n2'],['root','n3'],['root','n4'],['root','n5'],['root','n6'],['root','n7'],['root','n8'],
+  ['n1','n6'],['n2','n5'],['n3','n11'],['n3','n14'],['n5','n7'],['n8','n12'],['n8','n13'],['n4','n8'],['n1','n2'],['n7','n14']
+];
+const nodeDefs = {
+  '高等数学':'高等数学是研究函数、极限、微积分和无穷级数的数学分支',
+  '极限':'描述函数或数列在自变量趋近某值时的趋向行为',
+  '导数':'函数在某一点的变化率，即切线斜率',
+  '积分':'求函数在某区间上的面积/累积量',
+  '微分方程':'含有未知函数及其导数的方程',
+  '泰勒展开':'将函数在某一点展开为无穷级数的方法',
+  '连续性':'函数在某点的极限值等于函数值',
+  '级数':'无穷多个数或函数的求和',
+  '多元函数':'含有多个自变量的函数',
+  '线代基础':'向量空间、矩阵运算等线性代数基础概念',
+  '拉格朗日':'连接函数在两点间的平均变化率与某点导数的定理',
+  '牛莱公式':'连接定积分与不定积分的基本定理',
+  '偏导数':'多元函数对其中一个自变量的导数',
+  '重积分':'多元函数在多维区域上的积分',
+  '曲线积分':'沿曲线路径的积分'
+};
+
+function drawGraph(svgId, editable) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  const ns = 'http://www.w3.org/2000/svg';
+  svg.innerHTML = '';
+  // edges
+  graphEdges.forEach(([from, to]) => {
+    const a = graphNodes.find(n => n.id === from);
+    const b = graphNodes.find(n => n.id === to);
+    if (!a || !b) return;
+    const line = document.createElementNS(ns, 'line');
+    line.setAttribute('x1', a.x); line.setAttribute('y1', a.y);
+    line.setAttribute('x2', b.x); line.setAttribute('y2', b.y);
+    line.setAttribute('class', 'graph-link');
+    svg.appendChild(line);
+  });
+  // nodes
+  graphNodes.forEach(node => {
+    const g = document.createElementNS(ns, 'g');
+    g.setAttribute('class', 'graph-node');
+    g.setAttribute('transform', `translate(${node.x},${node.y})`);
+    g.style.cursor = 'pointer';
+    const circle = document.createElementNS(ns, 'circle');
+    circle.setAttribute('r', node.r);
+    circle.setAttribute('fill', node.color);
+    circle.setAttribute('opacity', '0.85');
+    g.appendChild(circle);
+    const text = document.createElementNS(ns, 'text');
+    text.setAttribute('dy', node.r + 16);
+    text.setAttribute('font-size', node.r > 24 ? '13' : '11');
+    text.textContent = node.name;
+    g.appendChild(text);
+    g.addEventListener('click', () => {
+      document.getElementById('sidePanelTitle').textContent = node.name;
+      document.getElementById('sidePanelDef').textContent = nodeDefs[node.name] || '暂无定义';
+    });
+    svg.appendChild(g);
+  });
+}
+
+function searchGraph(val) {
+  const lower = val.toLowerCase();
+  document.querySelectorAll('#graphSvg .graph-node').forEach((g, i) => {
+    const name = graphNodes[i]?.name || '';
+    g.style.opacity = !val || name.includes(val) ? '1' : '0.15';
+  });
+}
+
+// ===== Init =====
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons();
+  drawGraph('graphSvg', false);
+});
+</script>
+</body>
+</html>

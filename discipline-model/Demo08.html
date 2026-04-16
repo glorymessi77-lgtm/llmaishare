@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Demo 08 · 研 · 教研运营台 · Coral 工作台</title>
+<style>
+:root{
+  --coral:#FF7849;--coral-dk:#C2410C;--coral-sf:#FFF3ED;--coral-sf2:#FFEBE0;
+  --bg:#FAF7F5;--white:#fff;--panel:#FFFBFA;
+  --t1:#1A1A1A;--t2:#4B4B4B;--t3:#8C8C8C;--t4:#BFBFBF;
+  --bd:#F0E9E4;--bd-soft:#F7F1EE;
+  --red:#EF4444;--orange:#F59E0B;--green:#10B981;--blue:#3B82F6;--purple:#A78BFA;
+  --r:10px;
+  --ff:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;
+  --mono:'JetBrains Mono','SF Mono',Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ff);background:var(--bg);color:var(--t1);font-size:14px;min-width:1440px;min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* ============ 顶部 Coral 品牌壳 ============ */
+.shell-top{
+  height:56px;background:#fff;border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;padding:0 28px;gap:22px;z-index:50;position:sticky;top:0;
+}
+.shell-brand{display:flex;align-items:center;gap:12px;}
+.shell-brand .logo{
+  width:34px;height:34px;border-radius:10px;
+  background:linear-gradient(135deg,var(--coral),var(--coral-dk));
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:17px;
+}
+.shell-brand .t{font-size:15px;font-weight:800;color:var(--t1);letter-spacing:-0.01em;}
+.shell-brand .st{font-size:10px;color:var(--t3);font-family:var(--mono);letter-spacing:0.12em;margin-top:1px;}
+.shell-nav{display:flex;gap:4px;margin-left:20px;}
+.shell-nav a{padding:8px 14px;font-size:13px;color:var(--t3);cursor:pointer;border-radius:6px;text-decoration:none;}
+.shell-nav a.on{background:var(--coral-sf);color:var(--coral-dk);font-weight:600;}
+.shell-right{margin-left:auto;display:flex;align-items:center;gap:14px;}
+.back{font-size:12px;color:var(--t3);text-decoration:none;padding:6px 14px;border:1px solid var(--bd);border-radius:999px;}
+.back:hover{color:var(--coral);border-color:var(--coral);}
+.av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#FFB86B,#FF7849);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;}
+
+/* ============ 面包屑 ============ */
+.crumb-row{
+  height:42px;background:#fff;border-bottom:1px solid var(--bd-soft);
+  display:flex;align-items:center;padding:0 28px;font-size:13px;color:var(--t3);gap:8px;
+}
+.crumb-row strong{color:var(--coral-dk);font-weight:500;}
+
+/* ============ Stage ============ */
+.stage{
+  display:grid;grid-template-columns:260px 1fr 420px;
+  height:calc(100vh - 56px - 42px);
+}
+
+/* Left: 课程/学情来源 */
+.side{
+  background:#fff;border-right:1px solid var(--bd-soft);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.side-sec{padding:16px;border-bottom:1px solid var(--bd-soft);}
+.side-title{
+  font-family:var(--mono);font-size:10px;color:var(--t3);
+  letter-spacing:0.12em;margin-bottom:10px;
+}
+.side-item{
+  padding:10px 12px;border-radius:8px;font-size:12.5px;
+  color:var(--t2);cursor:pointer;transition:.15s;margin-bottom:3px;display:flex;align-items:center;gap:10px;
+}
+.side-item:hover{background:var(--coral-sf);}
+.side-item.on{background:var(--coral-sf);color:var(--coral-dk);font-weight:600;}
+.side-item .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+.side-item .meta{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--t4);}
+.side-item.on .meta{color:var(--coral);}
+
+/* Center: 主工作区 */
+.main{overflow-y:auto;padding:28px 32px 80px;}
+
+.work-head{margin-bottom:24px;}
+.wh-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:5px 12px;background:var(--coral-sf);border:1px solid var(--coral);
+  border-radius:5px;font-family:var(--mono);font-size:10px;color:var(--coral-dk);
+  letter-spacing:0.08em;margin-bottom:12px;font-weight:600;
+}
+.wh-title{font-size:28px;font-weight:900;line-height:1.15;letter-spacing:-0.02em;margin-bottom:6px;}
+.wh-sub{color:var(--t3);font-size:13px;}
+
+/* Insight Banner */
+.insight-banner{
+  background:linear-gradient(135deg,#FFF3ED 0%,#FEF3C7 100%);
+  border:1px solid #FED7AA;border-radius:14px;
+  padding:22px 28px;margin-bottom:28px;
+  display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:32px;align-items:center;
+}
+.ib-label{
+  writing-mode:vertical-rl;font-family:var(--mono);font-size:10px;
+  color:var(--coral-dk);letter-spacing:0.2em;border-right:1px solid #FED7AA;padding-right:16px;
+}
+.ib-stat{}
+.ib-num{font-family:var(--mono);font-size:30px;font-weight:900;color:var(--coral);line-height:1;letter-spacing:-0.02em;}
+.ib-num .u{font-size:14px;color:var(--coral-dk);margin-left:3px;}
+.ib-lbl{font-size:11px;color:#9A3412;margin-top:6px;line-height:1.5;}
+.ib-lbl strong{color:#7C2D12;}
+
+/* Heatmap */
+.panel{
+  background:#fff;border:1px solid var(--bd);border-radius:12px;
+  padding:22px 24px;margin-bottom:22px;
+}
+.panel-head{display:flex;align-items:center;margin-bottom:18px;gap:10px;}
+.panel-head h3{font-size:15px;font-weight:700;}
+.panel-head .sub{font-size:10px;color:var(--t3);font-family:var(--mono);letter-spacing:0.08em;}
+.panel-head .right{margin-left:auto;display:flex;gap:6px;}
+.panel-head .tab{
+  padding:5px 11px;background:#F9FAFB;border:1px solid var(--bd);border-radius:5px;
+  font-size:11px;color:var(--t3);font-family:var(--mono);cursor:pointer;
+}
+.panel-head .tab.on{background:var(--coral);color:#fff;border-color:var(--coral-dk);}
+
+/* Chapter heatmap */
+.chap-heat{display:flex;flex-direction:column;gap:14px;}
+.chap-row{display:grid;grid-template-columns:120px 1fr 80px;gap:16px;align-items:center;}
+.chap-name{font-size:12.5px;font-weight:600;color:var(--t1);}
+.chap-name small{display:block;font-size:10px;color:var(--t3);font-weight:400;margin-top:2px;}
+.chap-cells{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;}
+.chap-cells .cell{
+  aspect-ratio:1.4;border-radius:3px;cursor:pointer;
+}
+.chap-cells .c1{background:rgba(16,185,129,0.15);}
+.chap-cells .c2{background:rgba(16,185,129,0.35);}
+.chap-cells .c3{background:rgba(251,191,36,0.4);}
+.chap-cells .c4{background:rgba(251,146,60,0.55);}
+.chap-cells .c5{background:rgba(239,68,68,0.65);}
+.chap-cells .c6{background:rgba(239,68,68,0.85);}
+.chap-err{font-family:var(--mono);font-size:12px;font-weight:700;text-align:right;}
+.chap-err.e-good{color:var(--green);}
+.chap-err.e-warn{color:var(--orange);}
+.chap-err.e-bad{color:var(--red);}
+
+/* Cluster panel */
+.cluster-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.cluster{
+  padding:14px 16px;background:#FAFBFC;border:1px solid var(--bd-soft);
+  border-radius:10px;position:relative;
+}
+.cluster.hot{border-color:var(--red);background:#FEF2F2;}
+.cluster h4{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.cluster.hot h4 .tag{background:var(--red);color:#fff;font-size:9px;padding:2px 7px;border-radius:3px;font-weight:700;letter-spacing:0.05em;}
+.cluster .count{font-family:var(--mono);font-size:22px;font-weight:800;color:var(--red);margin-bottom:8px;}
+.cluster .count .u{font-size:12px;color:var(--t3);margin-left:3px;font-weight:400;}
+.cluster p{font-size:11px;color:var(--t2);line-height:1.6;}
+.cluster p strong{color:var(--t1);}
+.cluster.normal .count{color:var(--orange);}
+
+/* AI Suggestion */
+.ai-suggest{
+  background:linear-gradient(135deg,#F0F9FF 0%,#F5F3FF 100%);
+  border:2px solid var(--purple);
+  border-radius:14px;padding:22px 24px;margin-bottom:22px;
+  position:relative;
+}
+.ai-suggest::before{
+  content:'AI';
+  position:absolute;top:-10px;left:24px;
+  background:var(--purple);color:#fff;
+  font-family:var(--mono);font-size:10px;font-weight:800;
+  padding:4px 10px;border-radius:4px;letter-spacing:0.08em;
+}
+.ai-hd{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-top:4px;}
+.ai-hd h3{font-size:15px;font-weight:700;color:var(--purple);}
+.ai-hd .conf{margin-left:auto;font-size:11px;color:var(--purple);font-family:var(--mono);background:rgba(167,139,250,0.15);padding:4px 10px;border-radius:4px;}
+
+.ai-recom{
+  background:#fff;border-radius:10px;padding:16px 18px;margin-bottom:12px;
+  font-size:13px;line-height:1.75;color:var(--t1);
+}
+.ai-recom strong{color:var(--purple);}
+.ai-recom .hl{background:#FEF3C7;padding:0 4px;border-radius:2px;color:#92400E;}
+.ai-recom ul{margin:8px 0 0 16px;}
+.ai-recom li{margin:4px 0;font-size:12px;}
+
+.ai-actions{display:flex;gap:10px;}
+.ai-btn{
+  padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;
+  border:1px solid var(--bd);background:#fff;color:var(--t2);cursor:pointer;
+  font-family:var(--ff);transition:.15s;
+}
+.ai-btn:hover{border-color:var(--t3);}
+.ai-btn.pri{background:linear-gradient(135deg,var(--purple),#7C3AED);color:#fff;border-color:#7C3AED;}
+.ai-btn.pri:hover{box-shadow:0 6px 18px rgba(167,139,250,0.4);}
+
+/* Right: 操作面板 */
+.ops{
+  background:#fff;border-left:1px solid var(--bd-soft);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.ops-head{padding:18px 22px;border-bottom:1px solid var(--bd-soft);}
+.ops-head h3{font-size:14px;font-weight:700;}
+.ops-head p{font-size:11px;color:var(--t3);margin-top:2px;}
+
+.ops-body{flex:1;overflow-y:auto;padding:20px 22px;}
+
+.kp-detail{
+  padding:16px;background:var(--coral-sf);border:1px solid var(--coral);
+  border-radius:10px;margin-bottom:18px;
+}
+.kp-detail h4{font-size:13px;font-weight:700;color:var(--coral-dk);margin-bottom:6px;}
+.kp-detail .path{font-size:10px;color:var(--coral);font-family:var(--mono);margin-bottom:12px;}
+.kp-detail .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.kp-detail .stat{background:#fff;border-radius:6px;padding:8px 10px;}
+.kp-detail .stat .l{font-size:9px;color:var(--t3);font-family:var(--mono);}
+.kp-detail .stat .v{font-size:18px;font-weight:800;font-family:var(--mono);color:var(--coral-dk);}
+
+.textbook-card{
+  background:#F9FAFB;border:1px solid var(--bd-soft);border-radius:10px;
+  padding:14px;margin-bottom:14px;
+}
+.tb-head{
+  font-family:var(--mono);font-size:10px;color:var(--t3);
+  margin-bottom:8px;letter-spacing:0.08em;
+}
+.tb-quote{
+  font-size:12px;line-height:1.7;color:var(--t1);
+  padding:10px 12px;background:#fff;border-left:3px solid var(--bd);border-radius:4px;
+  font-family:Georgia,serif;
+}
+
+.action-list{display:flex;flex-direction:column;gap:10px;}
+.act-btn{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 16px;background:#fff;border:1px solid var(--bd);border-radius:10px;
+  cursor:pointer;transition:.15s;font-size:13px;
+}
+.act-btn:hover{border-color:var(--coral);background:var(--coral-sf);}
+.act-btn.pri{background:linear-gradient(135deg,var(--coral),var(--coral-dk));color:#fff;border-color:var(--coral-dk);}
+.act-btn.pri:hover{box-shadow:0 6px 18px rgba(255,120,73,0.35);}
+.act-btn .ic{font-size:20px;}
+.act-btn .tt{font-weight:600;}
+.act-btn .dt{font-size:11px;color:var(--t3);margin-top:1px;}
+.act-btn.pri .dt{color:rgba(255,255,255,0.85);}
+.act-btn .arr{margin-left:auto;font-size:14px;color:var(--t4);}
+.act-btn.pri .arr{color:rgba(255,255,255,0.9);}
+
+.affected{
+  margin-top:18px;padding-top:18px;border-top:1px dashed var(--bd);
+  font-size:11px;color:var(--t3);line-height:1.7;
+}
+.affected strong{color:var(--coral-dk);}
+
+.demo-ctrl{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(26,26,26,0.95);backdrop-filter:blur(12px);color:#fff;padding:10px 8px 10px 22px;border-radius:999px;font-family:var(--mono);font-size:11px;display:flex;align-items:center;gap:14px;border:1px solid rgba(255,255,255,0.15);z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,0.3);}
+.demo-ctrl .status{display:flex;align-items:center;gap:8px;}
+.demo-ctrl .status::before{content:'';width:7px;height:7px;border-radius:50%;background:#FF7849;box-shadow:0 0 8px #FF7849;animation:ctrlPulse 1.5s infinite;}
+.demo-ctrl .status.done::before{background:#10B981;}
+@keyframes ctrlPulse{50%{opacity:0.3;}}
+.demo-ctrl button{background:rgba(255,120,73,0.2);color:#FF7849;border:1px solid rgba(255,120,73,0.5);padding:6px 14px;border-radius:999px;font-family:var(--mono);font-size:10px;font-weight:600;cursor:pointer;letter-spacing:0.05em;}
+.demo-ctrl button:hover{background:#FF7849;color:#fff;}
+
+/* Toast */
+.push-toast{
+  position:fixed;
+  right:-400px;top:80px;
+  width:360px;
+  background:linear-gradient(135deg,var(--coral),var(--coral-dk));
+  color:#fff;
+  padding:18px 22px 18px 66px;
+  border-radius:14px;
+  box-shadow:0 20px 60px -10px rgba(255,120,73,0.5);
+  transition:right 0.5s cubic-bezier(0.22,1,0.36,1);
+  z-index:9998;
+}
+.push-toast.show{right:24px;}
+.push-toast::before{
+  content:'🚀';
+  position:absolute;left:18px;top:50%;transform:translateY(-50%);
+  width:36px;height:36px;
+  background:rgba(255,255,255,0.2);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+}
+.push-toast .tt{font-size:14px;font-weight:700;margin-bottom:4px;}
+.push-toast .dt{font-size:11px;opacity:0.9;line-height:1.55;}
+
+.kp-detail.updating{
+  animation:kpUpdating 1s ease;
+}
+@keyframes kpUpdating{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.04);box-shadow:0 12px 30px rgba(255,120,73,0.4);}
+}
+.kp-detail.updated{
+  background:linear-gradient(135deg,#D1FAE5 0%,#F0FDF4 100%);
+  border-color:#10B981;
+}
+.kp-detail.updated h4{color:#065F46;}
+.kp-detail.updated .path{color:#10B981;}
+
+</style>
+
+<style id="unified-nav-style">
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+body{padding-top:60px !important;}
+body > .topnav,
+body > .shell-top,
+body > .top,
+body > .topbar,
+body > nav.top-quick-nav,
+body > header.slim-header{display:none !important;}
+
+.unified-topbar{
+  position:fixed;top:0;left:0;right:0;z-index:99998;
+  height:60px;background:#FFFFFF;border-bottom:1px solid #E8ECF0;
+  padding:0 32px;display:flex;align-items:center;justify-content:space-between;
+  font-family:'Noto Sans SC','PingFang SC',sans-serif;
+  box-shadow:0 1px 3px rgba(18,21,26,0.04);
+}
+.unified-topbar *{box-sizing:border-box;}
+.unified-topbar .u-left{display:flex;align-items:center;gap:32px;}
+.unified-topbar .u-logo{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:#23B283;text-decoration:none;}
+.unified-topbar .u-mark{
+  width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(135deg,#23B283 0%,#158C68 100%);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-weight:800;font-size:13px;box-shadow:0 4px 10px rgba(35,178,131,0.3);
+}
+.unified-topbar .u-sub{
+  font-size:10px;color:#7B838C;font-weight:500;
+  padding-left:10px;border-left:1px solid #E8ECF0;margin-left:4px;letter-spacing:0.02em;
+}
+.unified-topbar .u-nav{display:flex;gap:2px;}
+.unified-topbar .u-nav a{
+  padding:7px 13px;border-radius:7px;font-size:12.5px;color:#4B535C;
+  text-decoration:none;transition:all .2s;font-weight:500;
+}
+.unified-topbar .u-nav a:hover{background:rgba(35,178,131,0.1);color:#23B283;}
+.unified-topbar .u-nav a.u-on{background:#23B283;color:#fff;font-weight:600;}
+.unified-topbar .u-right{display:flex;align-items:center;gap:12px;}
+.unified-topbar .u-back{
+  font-size:12px;color:#7B838C;padding:7px 13px;
+  border:1px solid #E8ECF0;border-radius:999px;transition:.2s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:5px;
+}
+.unified-topbar .u-back:hover{color:#23B283;border-color:#23B283;background:#EBF7F1;}
+.unified-topbar .u-av{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(35,178,131,0.2);color:#23B283;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="unified-topbar">
+  <div class="u-left">
+    <a href="./index.html" class="u-logo">
+      <div class="u-mark">雅</div>
+      讯飞小雅
+      <span class="u-sub">学科大脑 · 场景演示</span>
+    </a>
+    <nav class="u-nav"><a href="./index.html">演示总览</a><a href="./scenes.html" class="u-on">场景演示</a><a href="./frontend.html">知识库前台</a><a href="./backend/index.html">管理后台</a><a href="./tools/index.html">学科大脑工具层</a><a href="./engines/engine_dashboard.html">模型引擎</a><a href="./training.html">训练平台</a></nav>
+  </div>
+  <div class="u-right">
+    <a href="./scenes.html" class="u-back">← 返回场景列表</a>
+    <div class="u-av">婷</div>
+  </div>
+</div>
+
+<div class="shell-top">
+  <div class="shell-brand">
+    <div class="logo">🪸</div>
+    <div>
+      <div class="t">Coral 工作台</div>
+      <div class="st">CORAL · 学科知识运营</div>
+    </div>
+  </div>
+  <div class="shell-nav">
+    <a>学科资产</a>
+    <a>图谱管理</a>
+    <a class="on">教研运营</a>
+    <a>术语库</a>
+    <a>问答库</a>
+    <a>数据中台</a>
+  </div>
+  <div class="shell-right">
+    <a href="./scenes.html" class="back">← 返回演示导览</a>
+    <div class="av">徐</div>
+  </div>
+</div>
+
+<div class="crumb-row">
+  教研运营 <span style="color:#D1D5DB;">/</span>
+  <strong>高等数学 A · 学情分析与教材迭代</strong>
+</div>
+
+<div class="stage">
+
+  <!-- 左侧：课程/学情来源 -->
+  <aside class="side">
+    <div class="side-sec">
+      <div class="side-title">DATA SOURCE · 数据来源</div>
+      <div class="side-item on"><span class="dot"></span>高等数学 A<span class="meta">12 周</span></div>
+      <div class="side-item"><span class="dot" style="opacity:0.3;"></span>线性代数<span class="meta">10 周</span></div>
+      <div class="side-item"><span class="dot" style="opacity:0.3;"></span>离散数学<span class="meta">10 周</span></div>
+    </div>
+    <div class="side-sec">
+      <div class="side-title">SCOPE · 分析范围</div>
+      <div class="side-item on"><span class="dot"></span>本届 (2301-2306)</div>
+      <div class="side-item"><span class="dot" style="opacity:0.3;"></span>上届 (2201-2206)</div>
+      <div class="side-item"><span class="dot" style="opacity:0.3;"></span>近 3 届对比</div>
+    </div>
+    <div class="side-sec">
+      <div class="side-title">SIGNAL · 学情信号</div>
+      <div class="side-item"><span class="dot"></span>错题聚类</div>
+      <div class="side-item"><span class="dot"></span>答疑密度</div>
+      <div class="side-item"><span class="dot"></span>考试表现</div>
+      <div class="side-item"><span class="dot"></span>知识掌握度</div>
+    </div>
+  </aside>
+
+  <!-- 主工作区 -->
+  <main class="main">
+    <div class="work-head">
+      <div class="wh-tag">● DEMO 08 · 研 · 数据驱动的教材迭代</div>
+      <h1 class="wh-title">学情热力分析 · 教材改进发现</h1>
+      <p class="wh-sub">基于 12 周答疑 / 练习 / 考试数据，定位知识盲区和教材讲解薄弱点，触发知识库迭代。</p>
+    </div>
+
+    <!-- Insight banner -->
+    <div class="insight-banner">
+      <div class="ib-label">KEY FINDINGS · 核心发现</div>
+      <div class="ib-stat">
+        <div class="ib-num">3<span class="u">个</span></div>
+        <div class="ib-lbl">定位到 <strong>高错题聚集章节</strong><br>覆盖 128 名学生</div>
+      </div>
+      <div class="ib-stat">
+        <div class="ib-num">63<span class="u">%</span></div>
+        <div class="ib-lbl">3.2.1 节 <strong>错题率</strong><br>全章最高 · 超均值 22%</div>
+      </div>
+      <div class="ib-stat">
+        <div class="ib-num">14<span class="u">份</span></div>
+        <div class="ib-lbl">教材改进建议 <strong>待采纳</strong><br>AI 分析完成 · 等待审核</div>
+      </div>
+    </div>
+
+    <!-- Chapter heatmap -->
+    <div class="panel">
+      <div class="panel-head">
+        <h3>章节错题热力图</h3>
+        <span class="sub">12 WEEKS · 128 STUDENTS</span>
+        <div class="right">
+          <div class="tab on">错题率</div>
+          <div class="tab">答疑密度</div>
+          <div class="tab">掌握度</div>
+        </div>
+      </div>
+      <div class="chap-heat">
+        <div class="chap-row">
+          <div class="chap-name">第 1 章<small>函数与极限</small></div>
+          <div class="chap-cells">
+            <div class="cell c1"></div><div class="cell c2"></div><div class="cell c2"></div><div class="cell c1"></div>
+            <div class="cell c2"></div><div class="cell c2"></div><div class="cell c1"></div><div class="cell c2"></div>
+            <div class="cell c1"></div><div class="cell c1"></div><div class="cell c2"></div><div class="cell c1"></div>
+          </div>
+          <div class="chap-err e-good">12%</div>
+        </div>
+        <div class="chap-row">
+          <div class="chap-name">第 2 章<small>导数与微分</small></div>
+          <div class="chap-cells">
+            <div class="cell c2"></div><div class="cell c2"></div><div class="cell c3"></div><div class="cell c2"></div>
+            <div class="cell c3"></div><div class="cell c2"></div><div class="cell c2"></div><div class="cell c3"></div>
+            <div class="cell c2"></div><div class="cell c2"></div><div class="cell c3"></div><div class="cell c2"></div>
+          </div>
+          <div class="chap-err e-warn">24%</div>
+        </div>
+        <div class="chap-row">
+          <div class="chap-name">第 3 章<small>函数连续性</small></div>
+          <div class="chap-cells">
+            <div class="cell c3"></div><div class="cell c4"></div><div class="cell c6"></div><div class="cell c6"></div>
+            <div class="cell c5"></div><div class="cell c5"></div><div class="cell c5"></div><div class="cell c6"></div>
+            <div class="cell c4"></div><div class="cell c5"></div><div class="cell c4"></div><div class="cell c3"></div>
+          </div>
+          <div class="chap-err e-bad">63%</div>
+        </div>
+        <div class="chap-row">
+          <div class="chap-name">第 4 章<small>中值定理</small></div>
+          <div class="chap-cells">
+            <div class="cell c3"></div><div class="cell c3"></div><div class="cell c4"></div><div class="cell c3"></div>
+            <div class="cell c3"></div><div class="cell c4"></div><div class="cell c3"></div><div class="cell c3"></div>
+            <div class="cell c4"></div><div class="cell c3"></div><div class="cell c3"></div><div class="cell c3"></div>
+          </div>
+          <div class="chap-err e-warn">38%</div>
+        </div>
+        <div class="chap-row">
+          <div class="chap-name">第 5 章<small>不定积分</small></div>
+          <div class="chap-cells">
+            <div class="cell c2"></div><div class="cell c3"></div><div class="cell c2"></div><div class="cell c3"></div>
+            <div class="cell c3"></div><div class="cell c2"></div><div class="cell c3"></div><div class="cell c2"></div>
+            <div class="cell c2"></div><div class="cell c3"></div><div class="cell c2"></div><div class="cell c3"></div>
+          </div>
+          <div class="chap-err e-warn">26%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wrong answer clustering -->
+    <div class="panel">
+      <div class="panel-head">
+        <h3>错题聚类 · 第 3 章</h3>
+        <span class="sub">CLUSTERING · T06 质量评测</span>
+      </div>
+      <div class="cluster-grid">
+        <div class="cluster hot">
+          <h4>3.2.1 间断点分类 <span class="tag">热点</span></h4>
+          <div class="count">142<span class="u">次错误</span></div>
+          <p>学生普遍分不清"跳跃间断点"和"第二类间断点"的边界。典型错误：<strong>把 sin(1/x) 判为跳跃间断点</strong>。</p>
+        </div>
+        <div class="cluster normal">
+          <h4>3.3.2 介值定理应用</h4>
+          <div class="count">68<span class="u">次错误</span></div>
+          <p>构造辅助函数的步骤不熟。典型错误：<strong>直接用端点值判符号，忽略中间可能性</strong>。</p>
+        </div>
+        <div class="cluster normal">
+          <h4>4.1 罗尔定理条件</h4>
+          <div class="count">52<span class="u">次错误</span></div>
+          <p>三条件适用范围不清。典型错误：<strong>把 f(a)=f(b) 条件误用到拉格朗日定理</strong>。</p>
+        </div>
+        <div class="cluster normal">
+          <h4>2.3 复合函数求导</h4>
+          <div class="count">41<span class="u">次错误</span></div>
+          <p>链式法则层次混乱。典型错误：<strong>漏算内层函数的导数</strong>。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Suggestion -->
+    <div class="ai-suggest">
+      <div class="ai-hd">
+        <h3>📖 AI 教材改进建议 · 3.2.1 节</h3>
+        <span class="conf">置信度 92%</span>
+      </div>
+      <div class="ai-recom">
+        针对 <strong>3.2.1 间断点分类</strong>，我分析发现：教材在介绍"第二类间断点"时<span class="hl">仅给出了无穷型的例子（1/x）</span>，缺少<span class="hl">振荡型的反例</span>——而学生混淆点恰恰在这里。
+        <br><br>
+        <strong>具体改进建议</strong>：
+        <ul>
+          <li>在 P.124 后补充<strong>反例 1：sin(1/x) 在 x=0 处</strong>的详细分析（振荡型）</li>
+          <li>在 P.125 后补充<strong>反例 2：Dirichlet 函数</strong>的间断点集（全点振荡）</li>
+          <li>调整"间断点分类"小结，用表格对比三类间断点的<strong>左右极限状态</strong></li>
+          <li>新增随堂判断题 3 道，针对易混点进行强化</li>
+        </ul>
+      </div>
+      <div class="ai-actions">
+        <button class="ai-btn">查看详细分析</button>
+        <button class="ai-btn">对比其他教材</button>
+        <button class="ai-btn pri">✨ 采纳建议 · 更新知识库 →</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 右侧操作面板 -->
+  <aside class="ops">
+    <div class="ops-head">
+      <h3>操作面板 · 3.2.1 间断点分类</h3>
+      <p>当前定位的知识点 · 可执行的操作</p>
+    </div>
+    <div class="ops-body">
+      <div class="kp-detail">
+        <h4>🎯 3.2.1 间断点的分类</h4>
+        <div class="path">第 3 章 › 3.2 间断点 › 3.2.1 分类</div>
+        <div class="stats">
+          <div class="stat">
+            <div class="l">掌握度</div>
+            <div class="v">41%</div>
+          </div>
+          <div class="stat">
+            <div class="l">错题数</div>
+            <div class="v">142</div>
+          </div>
+          <div class="stat">
+            <div class="l">答疑次</div>
+            <div class="v">287</div>
+          </div>
+          <div class="stat">
+            <div class="l">趋势</div>
+            <div class="v">↓8%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="textbook-card">
+        <div class="tb-head">📖 原教材段落 · P.124</div>
+        <div class="tb-quote">"间断点分为第一类和第二类。第一类间断点包括可去间断点和跳跃间断点；第二类间断点包括无穷间断点（如 f(x)=1/x 在 x=0 处）..."</div>
+      </div>
+
+      <div class="action-list">
+        <div class="act-btn">
+          <div class="ic">📝</div>
+          <div>
+            <div class="tt">编辑知识点内容</div>
+            <div class="dt">直接在 Coral 编辑器中修改</div>
+          </div>
+          <span class="arr">›</span>
+        </div>
+        <div class="act-btn">
+          <div class="ic">➕</div>
+          <div>
+            <div class="tt">补充例题与反例</div>
+            <div class="dt">已有 2 个候选反例</div>
+          </div>
+          <span class="arr">›</span>
+        </div>
+        <div class="act-btn">
+          <div class="ic">🔗</div>
+          <div>
+            <div class="tt">调整先修关系</div>
+            <div class="dt">可加入"振荡函数"前置节点</div>
+          </div>
+          <span class="arr">›</span>
+        </div>
+        <div class="act-btn pri">
+          <div class="ic">🚀</div>
+          <div>
+            <div class="tt">一键采纳 AI 建议 · 推送</div>
+            <div class="dt">更新知识库 + 通知相关教师</div>
+          </div>
+          <span class="arr">→</span>
+        </div>
+      </div>
+
+      <div class="affected">
+        <strong>影响范围</strong>：采纳后将更新 <strong>3 门课程</strong>、影响 <strong>12 位任课教师</strong>、涉及 <strong>486 名学生</strong> 的学习路径。所有受影响教师会在小雅教师端收到更新通知。
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<div class="push-toast" id="pushToast">
+  <div class="tt">✓ 知识库已更新 · 推送完成</div>
+  <div class="dt">已向 12 位任课教师发送通知<br>486 名学生的学习路径已同步</div>
+</div>
+
+<div class="demo-ctrl">
+  <span class="status" id="demoStatus">等待教研主任采纳建议</span>
+  <button id="rpBtn">↺ 重播</button>
+</div>
+
+<script>
+const demoStatus=document.getElementById('demoStatus');
+const pushToast=document.getElementById('pushToast');
+const kpDetail=document.querySelector('.kp-detail');
+const rpBtn=document.getElementById('rpBtn');
+const adoptBtn=document.querySelector('.ai-btn.pri');
+const adoptMainBtn=document.querySelector('.act-btn.pri');
+
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+
+async function runAdopt(){
+  adoptBtn.disabled=true;
+  adoptMainBtn.style.pointerEvents='none';
+  demoStatus.textContent='采纳中 · 正在更新知识库...';
+  demoStatus.classList.remove('done');
+
+  // Visual feedback on AI suggestion
+  const ai=document.querySelector('.ai-suggest');
+  ai.style.transition='all 0.5s';
+  ai.style.opacity='0.55';
+  ai.style.transform='scale(0.98)';
+
+  await wait(800);
+  kpDetail.classList.add('updating');
+  demoStatus.textContent='正在融入反例到教材 3.2.1...';
+  await wait(1100);
+  kpDetail.classList.remove('updating');
+  kpDetail.classList.add('updated');
+
+  // Update stat numbers in kp-detail
+  const stats=kpDetail.querySelectorAll('.stat .v');
+  stats[0].textContent='65%';stats[0].style.color='#10B981';
+  stats[1].textContent='98';stats[1].style.color='#10B981';
+  stats[3].textContent='↑57%';stats[3].style.color='#10B981';
+
+  demoStatus.textContent='推送通知相关教师...';
+  await wait(700);
+  pushToast.classList.add('show');
+  demoStatus.textContent='演示完成 · 知识库已更新 · 12 位教师已通知 ✓';
+  demoStatus.classList.add('done');
+  await wait(4500);
+  pushToast.classList.remove('show');
+}
+
+adoptBtn.addEventListener('click',runAdopt);
+adoptMainBtn.addEventListener('click',runAdopt);
+rpBtn.addEventListener('click',()=>{
+  location.reload();
+});
+</script>
+
+</body>
+</html>

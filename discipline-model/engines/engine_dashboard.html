@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>引擎可视化总览 · 管理后台</title>
+  <style>
+    :root {
+      --primary:#1C3A5E;
+      --primary-light:#2A4A6F;
+      --accent:#3B82F6;
+      --accent-light:#60A5FA;
+      --success:#10B981;
+      --success-bg:#D1FAE5;
+      --warning:#F59E0B;
+      --warning-bg:#FEF3C7;
+      --danger:#EF4444;
+      --danger-bg:#FEE2E2;
+      --bg-1:#FAFBFC;
+      --bg-2:#F3F4F6;
+      --bg-3:#E5E7EB;
+      --text-1:#111827;
+      --text-2:#4B5563;
+      --text-3:#6B7280;
+      --text-4:#9CA3AF;
+      --border:#E5E7EB;
+      --shadow-sm:0 1px 3px rgba(0,0,0,.06);
+      --shadow-md:0 4px 12px rgba(0,0,0,.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+      background: var(--bg-1);
+      color: var(--text-1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59,130,246,.08) 0%, transparent 70%);
+      pointer-events: none;
+      transition: transform .15s ease-out;
+      z-index: 0;
+    }
+
+    /* ── topnav ── */
+    .topnav {
+      height: 56px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 28px;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .topnav::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--success));
+    }
+    .topnav-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px rgba(16,185,129,.2); }
+    .topnav-title { color: #fff; font-size: 16px; font-weight: 600; }
+    .topnav-sep { width: 1px; height: 18px; background: rgba(255,255,255,.15); }
+    .topnav-page { color: rgba(255,255,255,.7); font-size: 13px; }
+    .topnav-right { margin-left: auto; display: flex; gap: 10px; }
+    .topnav-badge { background: rgba(255,255,255,.1); color: rgba(255,255,255,.85); border-radius: 6px; padding: 4px 12px; font-size: 12px; border: 1px solid rgba(255,255,255,.12); }
+
+    /* ── layout ── */
+    .layout {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── sidebar ── */
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: #fff;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 20px 0;
+    }
+    .sidebar-label {
+      font-size: 10px;
+      color: var(--text-4);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 0 20px;
+      margin-bottom: 8px;
+      margin-top: 20px;
+    }
+    .sidebar-label:first-child { margin-top: 0; }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      font-size: 14px;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all .15s;
+      border-left: 3px solid transparent;
+      font-weight: 500;
+    }
+    .sidebar-item:hover {
+      background: var(--bg-2);
+      color: var(--text-1);
+    }
+    .sidebar-item.active {
+      background: rgba(59,130,246,.06);
+      color: var(--accent);
+      border-left-color: var(--accent);
+      font-weight: 600;
+    }
+    .sidebar-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .sidebar-badge {
+      margin-left: auto;
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--danger);
+      border-radius: 999px;
+      padding: 1px 6px;
+      min-width: 18px;
+      text-align: center;
+    }
+    .sidebar-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 16px 20px;
+    }
+    .sidebar-engines {
+      padding: 0 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .sidebar-engine {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .sidebar-engine:hover {
+      background: var(--bg-2);
+      color: var(--text-1);
+    }
+    .sidebar-engine-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .sidebar-engine-name {
+      flex: 1;
+      font-weight: 500;
+    }
+    .sidebar-engine-status {
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 999px;
+      padding: 1px 6px;
+    }
+
+    /* ── main content ── */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 32px;
+      background: var(--bg-1);
+    }
+    .container {
+      max-width: 1200px;
+    }
+
+    /* ── page sections ── */
+    .page-section {
+      display: none;
+      animation: fadeIn .25s ease;
+    }
+    .page-section.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── health cards ── */
+    .health-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .health-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: all .3s cubic-bezier(.4,0,.2,1);
+      cursor: default;
+    }
+    .health-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(59,130,246,.25);
+    }
+    .hc-label { font-size: 12px; color: var(--text-3); margin-bottom: 10px; font-weight: 500; }
+    .hc-value { font-size: 32px; font-weight: 700; line-height: 1; color: var(--text-1); margin-bottom: 8px; font-variant-numeric: tabular-nums; }
+    .hc-value small { font-size: 14px; color: var(--text-3); font-weight: 500; }
+    .hc-trend { font-size: 11px; font-weight: 500; }
+    .hc-bar { height: 4px; background: var(--bg-2); border-radius: 2px; overflow: hidden; margin-top: 10px; }
+    .hc-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+
+    /* ── section header ── */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-1);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::before {
+      content: '';
+      width: 3px;
+      height: 16px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+    .section-sub { font-size: 12px; color: var(--text-4); }
+
+    /* ── engine cards ── */
+    .engine-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .engine-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all .3s cubic-bezier(.4,0,.2,1);
+      position: relative;
+      overflow: hidden;
+    }
+    .engine-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(59,130,246,.2);
+    }
+    .engine-card:active {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+    .ec-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .ec-title { font-size: 17px; font-weight: 600; color: var(--text-1); }
+    .ec-status { font-size: 11px; border-radius: 999px; padding: 3px 10px; font-weight: 600; }
+    .ec-status.ok { background: var(--success-bg); color: var(--success); }
+    .ec-status.warn { background: var(--warning-bg); color: var(--warning); }
+    .ec-desc { font-size: 13px; color: var(--text-3); line-height: 19px; margin-bottom: 16px; }
+    .ec-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .ec-metric { background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px; padding: 10px; transition: all .2s; }
+    .ec-metric:hover { background: #fff; border-color: var(--accent); }
+    .ec-metric-label { font-size: 10px; color: var(--text-3); margin-bottom: 4px; font-weight: 500; }
+    .ec-metric-value { font-size: 18px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+    .ec-metric-value small { font-size: 11px; font-weight: 500; color: var(--text-3); }
+
+    /* ── events ── */
+    .event-list { display: flex; flex-direction: column; gap: 10px; }
+    .event-item {
+      display: flex;
+      gap: 14px;
+      padding: 14px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      border-left: 3px solid transparent;
+      transition: all .2s;
+      cursor: pointer;
+    }
+    .event-item:hover {
+      box-shadow: var(--shadow-sm);
+      transform: translateX(2px);
+    }
+    .event-item.warn { border-left-color: var(--warning); }
+    .event-item.danger { border-left-color: var(--danger); }
+    .event-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; flex-shrink: 0; }
+    .event-icon.warn { background: var(--warning-bg); color: var(--warning); }
+    .event-icon.danger { background: var(--danger-bg); color: var(--danger); }
+    .event-main { flex: 1; min-width: 0; }
+    .event-title { font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 3px; }
+    .event-desc { font-size: 12px; color: var(--text-3); line-height: 18px; }
+    .event-time { font-size: 11px; color: var(--text-4); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .event-tag { font-size: 10px; border-radius: 4px; padding: 2px 6px; font-weight: 600; margin-top: 6px; display: inline-block; }
+    .event-tag.warn { background: var(--warning-bg); color: var(--warning); }
+    .event-tag.danger { background: var(--danger-bg); color: var(--danger); }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-4); }
+  </style>
+
+<style id="unified-nav-style">
+body{padding-top:60px !important;}
+body > .topbar,body > .shell-top,body > .top,body > .xy-hd,body > header.xy-hd{display:none !important;}
+.unified-topbar{
+  position:fixed;top:0;left:0;right:0;z-index:99998;
+  height:60px;background:#FFFFFF;border-bottom:1px solid #E8ECF0;
+  padding:0 32px;display:flex;align-items:center;justify-content:space-between;
+  font-family:'Noto Sans SC','PingFang SC',sans-serif;
+  box-shadow:0 1px 3px rgba(18,21,26,0.04);
+}
+.unified-topbar *{box-sizing:border-box;}
+.unified-topbar .u-left{display:flex;align-items:center;gap:32px;}
+.unified-topbar .u-logo{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:#23B283;text-decoration:none;}
+.unified-topbar .u-mark{
+  width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(135deg,#23B283 0%,#158C68 100%);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-weight:800;font-size:13px;box-shadow:0 4px 10px rgba(35,178,131,0.3);
+}
+.unified-topbar .u-sub{
+  font-size:10px;color:#7B838C;font-weight:500;
+  padding-left:10px;border-left:1px solid #E8ECF0;margin-left:4px;letter-spacing:0.02em;
+}
+.unified-topbar .u-nav{display:flex;gap:2px;}
+.unified-topbar .u-nav a{
+  padding:7px 13px;border-radius:7px;font-size:12.5px;color:#4B535C;
+  text-decoration:none;transition:all .2s;font-weight:500;
+}
+.unified-topbar .u-nav a:hover{background:rgba(35,178,131,0.1);color:#23B283;}
+.unified-topbar .u-nav a.u-on{background:#23B283;color:#fff;font-weight:600;}
+.unified-topbar .u-right{display:flex;align-items:center;gap:12px;}
+.unified-topbar .u-back{
+  font-size:12px;color:#7B838C;padding:7px 13px;
+  border:1px solid #E8ECF0;border-radius:999px;transition:.2s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:5px;
+}
+.unified-topbar .u-back:hover{color:#23B283;border-color:#23B283;background:#EBF7F1;}
+.unified-topbar .u-av{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(35,178,131,0.2);color:#23B283;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="unified-topbar">
+  <div class="u-left">
+    <a href="../index.html" class="u-logo">
+      <div class="u-mark">雅</div>
+      讯飞小雅
+      <span class="u-sub">学科大脑 · 模型引擎</span>
+    </a>
+    <nav class="u-nav"><a href="../index.html">演示总览</a><a href="../scenes.html">场景演示</a><a href="../frontend.html">知识库前台</a><a href="../backend/index.html">管理后台</a><a href="../tools/index.html">学科大脑工具层</a><a href="../engines/engine_dashboard.html" class="u-on">模型引擎</a><a href="../training.html">训练平台</a></nav>
+  </div>
+  <div class="u-right">
+    <a href="../index.html" class="u-back">← 返回演示总览</a>
+    <div class="u-av">婷</div>
+  </div>
+</div>
+
+  <div class="topnav">
+    <div class="topnav-dot"></div>
+    <div class="topnav-title">学科大脑</div>
+    <div class="topnav-sep"></div>
+    <div class="topnav-page">引擎可视化总览</div>
+    <div class="topnav-right">
+      <div class="topnav-badge">中医药大学 · 医学部</div>
+      <div class="topnav-badge">教研中心 · 管理视图</div>
+    </div>
+  </div>
+  <div class="layout">
+    <nav class="sidebar">
+      <div class="sidebar-label">导航</div>
+      <div class="sidebar-item active" onclick="showSection('overview',this)">
+        <div class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        总览
+      </div>
+      <div class="sidebar-item" onclick="showSection('engines',this)">
+        <div class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5V4M8 12v2.5M1.5 8H4M12 8h2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        引擎监控
+      </div>
+      <div class="sidebar-item" onclick="showSection('events',this)">
+        <div class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 4v4l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        异常事件
+        <span class="sidebar-badge">3</span>
+      </div>
+
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-label">引擎快捷入口</div>
+      <div class="sidebar-engines">
+        <div class="sidebar-engine" onclick="window.location='engine_source.html'">
+          <div class="sidebar-engine-dot" style="background:var(--accent)"></div>
+          <div class="sidebar-engine-name">溯源引擎</div>
+          <div class="sidebar-engine-status" style="background:var(--success-bg);color:var(--success)">正常</div>
+        </div>
+        <div class="sidebar-engine" onclick="window.location='engine_retrieval_v3.html'">
+          <div class="sidebar-engine-dot" style="background:var(--success)"></div>
+          <div class="sidebar-engine-name">检索引擎</div>
+          <div class="sidebar-engine-status" style="background:var(--warning-bg);color:var(--warning)">异常</div>
+        </div>
+        <div class="sidebar-engine" onclick="window.location='engine_knowledge.html'">
+          <div class="sidebar-engine-dot" style="background:var(--warning)"></div>
+          <div class="sidebar-engine-name">知识构建引擎</div>
+          <div class="sidebar-engine-status" style="background:var(--success-bg);color:var(--success)">正常</div>
+        </div>
+        <div class="sidebar-engine" onclick="window.location='engine_quality.html'">
+          <div class="sidebar-engine-dot" style="background:#8B5CF6"></div>
+          <div class="sidebar-engine-name">质量引擎</div>
+          <div class="sidebar-engine-status" style="background:var(--success-bg);color:var(--success)">正常</div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="main">
+      <div class="container">
+        <!-- 总览 -->
+        <div class="page-section active" id="sec-overview">
+          <div class="section-head">
+            <div class="section-title">系统概览</div>
+            <div class="section-sub">数据更新于 14:30</div>
+          </div>
+          <div class="health-bar">
+            <div class="health-card">
+              <div class="hc-label">今日问答总量</div>
+              <div class="hc-value">1,247</div>
+              <div class="hc-trend" style="color:var(--success)">较昨日 +18.3%</div>
+              <div class="hc-bar"><div class="hc-bar-fill" style="width:78%;background:var(--accent)"></div></div>
+            </div>
+            <div class="health-card">
+              <div class="hc-label">平均召回率</div>
+              <div class="hc-value">82<small>%</small></div>
+              <div class="hc-trend" style="color:var(--success)">较上周 +4.6%</div>
+              <div class="hc-bar"><div class="hc-bar-fill" style="width:82%;background:var(--success)"></div></div>
+            </div>
+            <div class="health-card">
+              <div class="hc-label">知识库覆盖率</div>
+              <div class="hc-value">68<small>%</small></div>
+              <div class="hc-trend" style="color:var(--warning)">建议补充 9 专题</div>
+              <div class="hc-bar"><div class="hc-bar-fill" style="width:68%;background:var(--warning)"></div></div>
+            </div>
+            <div class="health-card">
+              <div class="hc-label">平均质量评分</div>
+              <div class="hc-value">85<small>/100</small></div>
+              <div class="hc-trend" style="color:var(--success)">较上月 +2.1</div>
+              <div class="hc-bar"><div class="hc-bar-fill" style="width:85%;background:#8B5CF6"></div></div>
+            </div>
+          </div>
+          <div class="section-head">
+            <div class="section-title">引擎状态</div>
+          </div>
+          <div class="engine-grid">
+            <div class="engine-card" onclick="window.location='engine_source.html'">
+              <div class="ec-head"><div class="ec-title">溯源引擎</div><div class="ec-status ok">正常</div></div>
+              <div class="ec-desc">追踪答案来源，确保回答有可靠知识库支撑</div>
+              <div class="ec-metrics">
+                <div class="ec-metric"><div class="ec-metric-label">今日溯源</div><div class="ec-metric-value" style="color:var(--accent)">1,247</div></div>
+                <div class="ec-metric"><div class="ec-metric-label">平均来源数</div><div class="ec-metric-value" style="color:var(--accent)">4.2</div></div>
+                <div class="ec-metric"><div class="ec-metric-label">可信度</div><div class="ec-metric-value" style="color:var(--accent)">94<small>%</small></div></div>
+              </div>
+            </div>
+            <div class="engine-card" onclick="window.location='engine_retrieval_v3.html'">
+              <div class="ec-head"><div class="ec-title">检索引擎</div><div class="ec-status warn">7 条异常</div></div>
+              <div class="ec-desc">三路召回 + Reranker 混合检索，监控召回质量</div>
+              <div class="ec-metrics">
+                <div class="ec-metric"><div class="ec-metric-label">召回率</div><div class="ec-metric-value" style="color:var(--success)">82<small>%</small></div></div>
+                <div class="ec-metric"><div class="ec-metric-label">平均耗时</div><div class="ec-metric-value" style="color:var(--success)">340<small>ms</small></div></div>
+                <div class="ec-metric"><div class="ec-metric-label">异常数</div><div class="ec-metric-value" style="color:var(--warning)">7</div></div>
+              </div>
+            </div>
+            <div class="engine-card" onclick="window.location='engine_knowledge.html'">
+              <div class="ec-head"><div class="ec-title">知识构建引擎</div><div class="ec-status ok">正常</div></div>
+              <div class="ec-desc">文档解析、知识点提取、图谱构建全流程监控</div>
+              <div class="ec-metrics">
+                <div class="ec-metric"><div class="ec-metric-label">总文档</div><div class="ec-metric-value" style="color:var(--warning)">1,834</div></div>
+                <div class="ec-metric"><div class="ec-metric-label">知识点</div><div class="ec-metric-value" style="color:var(--warning)">12.4<small>K</small></div></div>
+                <div class="ec-metric"><div class="ec-metric-label">图谱节点</div><div class="ec-metric-value" style="color:var(--warning)">8.7<small>K</small></div></div>
+              </div>
+            </div>
+            <div class="engine-card" onclick="window.location='engine_quality.html'">
+              <div class="ec-head"><div class="ec-title">质量引擎</div><div class="ec-status ok">正常</div></div>
+              <div class="ec-desc">四维评估确保答案质量（准确/完整/适龄/安全）</div>
+              <div class="ec-metrics">
+                <div class="ec-metric"><div class="ec-metric-label">质量分</div><div class="ec-metric-value" style="color:#8B5CF6">85<small>/100</small></div></div>
+                <div class="ec-metric"><div class="ec-metric-label">低分问答</div><div class="ec-metric-value" style="color:#8B5CF6">12</div></div>
+                <div class="ec-metric"><div class="ec-metric-label">改进建议</div><div class="ec-metric-value" style="color:#8B5CF6">34</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 引擎监控 -->
+        <div class="page-section" id="sec-engines">
+          <div class="section-head">
+            <div class="section-title">引擎监控面板</div>
+            <div class="section-sub">点击卡片进入引擎详情</div>
+          </div>
+          <div class="engine-grid">
+            <div class="engine-card" onclick="window.location='engine_source.html'">
+              <div class="ec-head"><div class="ec-title">溯源引擎</div><div class="ec-status ok">正常</div></div>
+              <div class="ec-desc">追踪答案来源，确保回答有可靠知识库支撑</div>
+              <div class="ec-metrics">
+                <div class="ec-metric"><div class="ec-metric-label">今日溯源</div><div class="ec-metric-value" style="color:var(--accent)">1,247</div></div>
+                <div class="ec-metric"><div class="ec-metric-label">平均来源数</div><div class="ec-metric-value" style="color:var(--accent)">4.2</div></div>
+                <div class="ec-metric"><div class="ec-metric-label">可信度</div><div class="ec-metric-value" style="color:var(--accent)">94<small>%</small></div></div>
+              </div>
+            </div>
+            <div class="engine-card" onclick="window.location='engine_retrieval_v3.html'">
+              <div class="ec-head"><div class="ec-title">检索引擎</div><div class="ec-status warn">7 条异常</div></div>
+              <div class="ec-desc">三路召回 + Reranker 混合检索，监控召回质量</div>
+              <div class="ec-metrics">
+                <div class="ec-metric"><div class="ec-metric-label">召回率</div><div class="ec-metric-value" style="color:var(--success)">82<small>%</small></div></div>
+                <div class="ec-metric"><div class="ec-metric-label">平均耗时</div><div class="ec-metric-value" style="color:var(--success)">340<small>ms</small></div></div>
+                <div class="ec-metric"><div class="ec-metric-label">异常数</div><div class="ec-metric-value" style="color:var(--warning)">7</div></div>
+              </div>
+            </div>
+            <div class="engine-card" onclick="window.location='engine_knowledge.html'">
+              <div class="ec-head"><div class="ec-title">知识构建引擎</div><div class="ec-status ok">正常</div></div>
+              <div class="ec-desc">文档解析、知识点提取、图谱构建全流程监控</div>
+              <div class="ec-metrics">
+                <div class="ec-metric"><div class="ec-metric-label">总文档</div><div class="ec-metric-value" style="color:var(--warning)">1,834</div></div>
+                <div class="ec-metric"><div class="ec-metric-label">知识点</div><div class="ec-metric-value" style="color:var(--warning)">12.4<small>K</small></div></div>
+                <div class="ec-metric"><div class="ec-metric-label">图谱节点</div><div class="ec-metric-value" style="color:var(--warning)">8.7<small>K</small></div></div>
+              </div>
+            </div>
+            <div class="engine-card" onclick="window.location='engine_quality.html'">
+              <div class="ec-head"><div class="ec-title">质量引擎</div><div class="ec-status ok">正常</div></div>
+              <div class="ec-desc">四维评估确保答案质量（准确/完整/适龄/安全）</div>
+              <div class="ec-metrics">
+                <div class="ec-metric"><div class="ec-metric-label">质量分</div><div class="ec-metric-value" style="color:#8B5CF6">85<small>/100</small></div></div>
+                <div class="ec-metric"><div class="ec-metric-label">低分问答</div><div class="ec-metric-value" style="color:#8B5CF6">12</div></div>
+                <div class="ec-metric"><div class="ec-metric-label">改进建议</div><div class="ec-metric-value" style="color:#8B5CF6">34</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 异常事件 -->
+        <div class="page-section" id="sec-events">
+          <div class="section-head">
+            <div class="section-title">异常事件</div>
+            <div class="section-sub">今日共 3 条异常</div>
+          </div>
+          <div class="event-list">
+            <div class="event-item danger">
+              <div class="event-icon danger">!</div>
+              <div class="event-main">
+                <div class="event-title">检索引擎 · 严重召回异常</div>
+                <div class="event-desc">中药十八反配伍例外问题连续 4 次未召回相关文档，建议补充知识库</div>
+                <div class="event-tag danger">严重</div>
+              </div>
+              <div class="event-time">14:18</div>
+            </div>
+            <div class="event-item warn">
+              <div class="event-icon warn">!</div>
+              <div class="event-main">
+                <div class="event-title">质量引擎 · 低分问答预警</div>
+                <div class="event-desc">针灸配穴禁忌问答质量评分 62 分，低于阈值 70 分</div>
+                <div class="event-tag warn">警告</div>
+              </div>
+              <div class="event-time">14:05</div>
+            </div>
+            <div class="event-item warn">
+              <div class="event-icon warn">!</div>
+              <div class="event-main">
+                <div class="event-title">知识构建引擎 · 解析质量异常</div>
+                <div class="event-desc">《方剂学·第三章》解析质量评分 58 分，建议重新解析</div>
+                <div class="event-tag warn">警告</div>
+              </div>
+              <div class="event-time">13:42</div>
+            </div>
+            <div class="event-item warn">
+              <div class="event-icon warn">!</div>
+              <div class="event-main">
+                <div class="event-title">溯源引擎 · 低可信来源</div>
+                <div class="event-desc">学生笔记来源可信度 42%，低于阈值 60%，已自动降权</div>
+                <div class="event-tag warn">警告</div>
+              </div>
+              <div class="event-time">13:15</div>
+            </div>
+            <div class="event-item danger">
+              <div class="event-icon danger">!</div>
+              <div class="event-main">
+                <div class="event-title">检索引擎 · 阈值异常</div>
+                <div class="event-desc">针灸学·配穴禁忌总表相似度 59%，低于阈值 70%，SOP未入库</div>
+                <div class="event-tag danger">严重</div>
+              </div>
+              <div class="event-time">12:48</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+function showSection(id, el) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+document.addEventListener('mousemove', function(e) {
+  document.body.style.setProperty('--mx', (e.clientX - 300) + 'px');
+  document.body.style.setProperty('--my', (e.clientY - 300) + 'px');
+  document.body.style.setProperty('--before-transform', 'translate(var(--mx), var(--my))');
+  requestAnimationFrame(function() {
+    var before = document.body;
+    before.style.setProperty('--mx', (e.clientX - 300) + 'px');
+    before.style.setProperty('--my', (e.clientY - 300) + 'px');
+  });
+});
+
+(function() {
+  var style = document.createElement('style');
+  style.textContent = 'body::before { transform: translate(var(--mx, 0px), var(--my, 0px)); }';
+  document.head.appendChild(style);
+})();
+  </script>
+</body>
+</html>

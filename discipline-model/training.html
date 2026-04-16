@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模型优化中心 - Coral</title>
+<style>
+:root {
+  --gray-0:#FFFFFF;--gray-1:#F2F5F7;--gray-2:#C2C7CC;--gray-3:#A9B0B8;--gray-4:#959DA6;
+  --gray-5:#7B838C;--gray-6:#626A73;--gray-7:#4B535C;--gray-8:#3D444D;--gray-9:#272C33;--gray-10:#12151A;
+  --green-1:#EBF7F1;--green-6:#23B283;--green-7:#158C68;
+  --brand-primary:#272C33;--brand-hover:#3D444D;--brand-pressed:#12151A;--brand-bg:#F2F5F7;
+  --success-primary:#23B283;--success-hover:#45BF92;--success-pressed:#158C68;--success-bg:#EBF7F1;
+  --danger-primary:#F53B3B;--danger-bg:#FFF2F0;--danger-pressed:#CF272D;
+  --warning-primary:#FC7819;--warning-bg:#FFF4E6;
+  --info-primary:#0077FF;--info-bg:#E6F6FF;
+  --bg-white:#FFFFFF;--bg-gray:#F2F5F7;
+  --text-1:#12151A;--text-2:#4B535C;--text-3:#7B838C;--text-4:#A9B0B8;--text-darkbg:#FFFFFF;
+  --border-primary:rgba(18,21,26,.1);
+  --shadow-hover:0 6px 8px 0 rgba(18,21,26,.06);--shadow-card:0 6px 32px 4px rgba(18,21,26,.08);
+  --radius-min:4px;--radius-sm:8px;--radius-md:10px;--radius-lg:12px;--radius-full:999px;
+  --sp1:4px;--sp2:8px;--sp3:12px;--sp4:16px;--sp5:20px;--sp6:24px;--sp7:40px;
+  --fast:.15s;--normal:.2s;
+  --ff:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;font:14px/20px var(--ff);color:var(--text-1);background:var(--bg-gray);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+.layout{width:100%;height:100%;display:flex}
+.sider{width:200px;height:100vh;display:flex;flex-direction:column;background:#fff;border-right:1px solid #e5e7eb;flex-shrink:0}
+.main{flex:1;min-height:100vh;overflow-y:auto}
+
+.logo{display:flex;align-items:center;gap:12px;padding:var(--sp5) var(--sp4)}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--success-primary),var(--success-hover));border-radius:6px}
+.logo-text{font-size:18px;font-weight:600;color:#1f2937}
+
+.nav{padding:var(--sp2) var(--sp3);flex:1}
+.nav-item{height:40px;padding:var(--sp2) var(--sp3);border-radius:var(--radius-sm);font-size:13px;color:#6b7280;display:flex;align-items:center;gap:var(--sp3);cursor:pointer;transition:all var(--fast);margin-bottom:var(--sp1)}
+.nav-item:hover{background:#f3f4f6;color:#1f2937}
+.nav-item.active{color:#1f2937;background:#f3f4f6;font-weight:500}
+.nav-icon{width:18px;text-align:center;flex-shrink:0}
+
+.page{display:none;padding:var(--sp7) var(--sp6);max-width:1400px;margin:0 auto}
+.page.visible{display:block}
+.page-hd{margin-bottom:var(--sp6)}
+.page-title{font-size:24px;font-weight:600;margin-bottom:var(--sp1)}
+.page-sub{font-size:14px;color:var(--text-3)}
+
+.card{background:var(--bg-white);border:1px solid var(--border-primary);border-radius:var(--radius-lg);padding:var(--sp6);margin-bottom:var(--sp4);box-shadow:var(--shadow-card)}
+.card-title{font-size:16px;font-weight:600;margin-bottom:var(--sp5);display:flex;align-items:center;justify-content:space-between}
+
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--sp4);margin-bottom:var(--sp6)}
+.st{background:var(--bg-white);border:1px solid var(--border-primary);border-radius:var(--radius-md);padding:var(--sp5);box-shadow:var(--shadow-hover)}
+.st-label{font-size:12px;color:var(--text-3);margin-bottom:var(--sp2)}
+.st-val{font-size:28px;font-weight:700;margin-bottom:var(--sp1)}
+.st-trend{font-size:12px;color:var(--success-primary)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp4)}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--sp4)}
+
+/* Pipeline */
+.pipe{display:flex;align-items:center;gap:var(--sp3)}
+.pipe-node{flex:1}
+.pipe-arrow{width:24px;height:2px;background:var(--border-primary);position:relative;flex-shrink:0}
+.pipe-arrow::after{content:'';position:absolute;right:-4px;top:-3px;border-left:8px solid var(--border-primary);border-top:4px solid transparent;border-bottom:4px solid transparent}
+.node{background:var(--bg-gray);border:2px solid var(--border-primary);border-radius:var(--radius-sm);padding:var(--sp4);cursor:pointer;transition:all var(--normal)}
+.node:hover{border-color:var(--success-primary);box-shadow:var(--shadow-hover)}
+.node.done{border-color:var(--success-primary)}
+.node.run{border-color:var(--success-primary);background:var(--success-bg)}
+.node-ico{width:40px;height:40px;border-radius:50%;background:var(--bg-white);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp3);font-size:18px}
+.node.done .node-ico,.node.run .node-ico{background:var(--success-primary);color:#fff}
+.node-name{font-size:13px;font-weight:500;text-align:center;margin-bottom:2px}
+.node-st{font-size:11px;color:var(--text-3);text-align:center}
+.node.run .node-st{color:var(--success-pressed);font-weight:500}
+
+/* List items */
+.li{background:var(--bg-white);border:1px solid var(--border-primary);border-radius:var(--radius-sm);padding:var(--sp4);display:flex;align-items:center;gap:var(--sp3);margin-bottom:var(--sp3)}
+.li-ico{width:36px;height:36px;border-radius:var(--radius-sm);background:var(--success-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.li-body{flex:1;min-width:0}
+.li-name{font-size:14px;font-weight:500;margin-bottom:2px}
+.li-meta{font-size:12px;color:var(--text-3)}
+.li-val{font-size:18px;font-weight:600;flex-shrink:0}
+
+.tag{display:inline-flex;padding:2px var(--sp2);border-radius:var(--radius-min);font-size:11px;font-weight:500}
+.tag-ok{background:var(--success-bg);color:var(--success-pressed)}
+.tag-run{background:var(--warning-bg);color:var(--warning-primary)}
+.tag-info{background:var(--info-bg);color:var(--info-primary)}
+.tag-err{background:var(--danger-bg);color:var(--danger-pressed)}
+.tag-gray{background:var(--bg-gray);color:var(--text-3)}
+
+.btn{display:inline-flex;align-items:center;gap:var(--sp2);padding:var(--sp2) var(--sp4);border-radius:var(--radius-sm);font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all var(--fast)}
+.btn-p{background:var(--brand-primary);color:#fff}.btn-p:hover{background:var(--brand-hover)}
+.btn-s{background:var(--success-primary);color:#fff}.btn-s:hover{background:var(--success-hover)}
+.btn-o{background:transparent;border:1px solid var(--border-primary);color:var(--text-2)}.btn-o:hover{border-color:var(--brand-primary);color:var(--brand-primary)}
+.btn-d{background:var(--danger-primary);color:#fff}
+.btn-w{width:100%}
+
+/* Progress bar */
+.prog{height:8px;background:var(--bg-gray);border-radius:var(--radius-full);overflow:hidden;margin:var(--sp2) 0}
+.prog-fill{height:100%;border-radius:var(--radius-full);transition:width .3s}
+.prog-fill.green{background:var(--success-primary)}
+.prog-fill.blue{background:var(--info-primary)}
+.prog-fill.orange{background:var(--warning-primary)}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;padding:var(--sp3) var(--sp4);color:var(--text-3);font-weight:400;border-bottom:1px solid var(--border-primary);font-size:12px}
+.tbl td{padding:var(--sp3) var(--sp4);border-bottom:1px solid var(--border-primary)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--bg-gray)}
+
+/* Flow steps */
+.flow{display:flex;gap:var(--sp3);margin-bottom:var(--sp5)}
+.flow-step{flex:1;text-align:center;padding:var(--sp4);background:var(--bg-gray);border-radius:var(--radius-sm);position:relative}
+.flow-step.done{background:var(--success-bg)}
+.flow-step.run{background:var(--warning-bg)}
+.flow-num{width:28px;height:28px;border-radius:50%;background:var(--bg-white);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp2);font-size:12px;font-weight:600;color:var(--text-3)}
+.flow-step.done .flow-num{background:var(--success-primary);color:#fff}
+.flow-step.run .flow-num{background:var(--warning-primary);color:#fff}
+.flow-label{font-size:12px;color:var(--text-2)}
+.flow-val{font-size:11px;color:var(--text-3);margin-top:2px}
+
+/* Alert */
+.alert{padding:var(--sp4);border-radius:var(--radius-sm);margin-bottom:var(--sp4);display:flex;align-items:flex-start;gap:var(--sp3);font-size:13px}
+.alert-warn{background:var(--warning-bg);color:var(--warning-primary)}
+.alert-ok{background:var(--success-bg);color:var(--success-pressed)}
+.alert-err{background:var(--danger-bg);color:var(--danger-pressed)}
+
+/* Compare bar */
+.cmp{display:flex;align-items:center;gap:var(--sp3);margin-bottom:var(--sp4)}
+.cmp-label{width:100px;font-size:13px;color:var(--text-2);flex-shrink:0}
+.cmp-bar{flex:1;height:24px;background:var(--bg-gray);border-radius:var(--radius-min);position:relative;overflow:hidden}
+.cmp-fill{height:100%;border-radius:var(--radius-min);display:flex;align-items:center;justify-content:flex-end;padding-right:var(--sp2);font-size:11px;color:#fff;font-weight:600}
+</style>
+
+<style id="unified-nav-style">
+body{padding-top:60px !important;}
+body > .topbar,body > .shell-top,body > .top,body > .xy-hd,body > header.xy-hd{display:none !important;}
+.unified-topbar{
+  position:fixed;top:0;left:0;right:0;z-index:99998;
+  height:60px;background:#FFFFFF;border-bottom:1px solid #E8ECF0;
+  padding:0 32px;display:flex;align-items:center;justify-content:space-between;
+  font-family:'Noto Sans SC','PingFang SC',sans-serif;
+  box-shadow:0 1px 3px rgba(18,21,26,0.04);
+}
+.unified-topbar *{box-sizing:border-box;}
+.unified-topbar .u-left{display:flex;align-items:center;gap:32px;}
+.unified-topbar .u-logo{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:#23B283;text-decoration:none;}
+.unified-topbar .u-mark{
+  width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(135deg,#23B283 0%,#158C68 100%);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-weight:800;font-size:13px;box-shadow:0 4px 10px rgba(35,178,131,0.3);
+}
+.unified-topbar .u-sub{
+  font-size:10px;color:#7B838C;font-weight:500;
+  padding-left:10px;border-left:1px solid #E8ECF0;margin-left:4px;letter-spacing:0.02em;
+}
+.unified-topbar .u-nav{display:flex;gap:2px;}
+.unified-topbar .u-nav a{
+  padding:7px 13px;border-radius:7px;font-size:12.5px;color:#4B535C;
+  text-decoration:none;transition:all .2s;font-weight:500;
+}
+.unified-topbar .u-nav a:hover{background:rgba(35,178,131,0.1);color:#23B283;}
+.unified-topbar .u-nav a.u-on{background:#23B283;color:#fff;font-weight:600;}
+.unified-topbar .u-right{display:flex;align-items:center;gap:12px;}
+.unified-topbar .u-back{
+  font-size:12px;color:#7B838C;padding:7px 13px;
+  border:1px solid #E8ECF0;border-radius:999px;transition:.2s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:5px;
+}
+.unified-topbar .u-back:hover{color:#23B283;border-color:#23B283;background:#EBF7F1;}
+.unified-topbar .u-av{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(35,178,131,0.2);color:#23B283;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="unified-topbar">
+  <div class="u-left">
+    <a href="./index.html" class="u-logo">
+      <div class="u-mark">雅</div>
+      讯飞小雅
+      <span class="u-sub">学科大脑 · 训练平台</span>
+    </a>
+    <nav class="u-nav"><a href="./index.html">演示总览</a><a href="./scenes.html">场景演示</a><a href="./frontend.html">知识库前台</a><a href="./backend/index.html">管理后台</a><a href="./tools/index.html">学科大脑工具层</a><a href="./engines/engine_dashboard.html">模型引擎</a><a href="./training.html" class="u-on">训练平台</a></nav>
+  </div>
+  <div class="u-right">
+    <a href="./index.html" class="u-back">← 返回演示总览</a>
+    <div class="u-av">婷</div>
+  </div>
+</div>
+
+<div class="layout">
+<div class="sider">
+  <div class="logo"><div class="logo-icon"></div><div class="logo-text">Coral</div></div>
+  <div class="nav">
+    <div class="nav-item active" data-page="p-overview"><span class="nav-icon">1</span>总览</div>
+    <div class="nav-item" data-page="p-data"><span class="nav-icon">2</span>数据工坊</div>
+    <div class="nav-item" data-page="p-train"><span class="nav-icon">3</span>训练任务</div>
+    <div class="nav-item" data-page="p-deploy"><span class="nav-icon">4</span>部署中心</div>
+    <div class="nav-item" data-page="p-verify"><span class="nav-icon">5</span>效果验证</div>
+  </div>
+</div>
+<div class="main">
+
+<!-- ==================== PAGE 1: 总览 ==================== -->
+<div id="p-overview" class="page visible">
+  <div class="page-hd"><div class="page-title">模型优化中心</div><div class="page-sub">将知识库数据持续转化为更好的模型</div></div>
+  <div class="stats">
+    <div class="st"><div class="st-label">可用知识资产</div><div class="st-val">8,420</div><div class="st-trend">较上周 +12%</div></div>
+    <div class="st"><div class="st-label">可训练样本</div><div class="st-val">6,980</div><div class="st-trend">较上周 +8%</div></div>
+    <div class="st"><div class="st-label">训练中任务</div><div class="st-val">2</div><div class="st-trend">预计 3 小时完成</div></div>
+    <div class="st"><div class="st-label">在线模型版本</div><div class="st-val">v2.3</div><div class="st-trend">准确率 91.3%</div></div>
+    <div class="st"><div class="st-label">最近效果提升</div><div class="st-val">+16.3%</div><div class="st-trend">较基线模型</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">优化流水线</div>
+    <div class="pipe">
+      <div class="pipe-node"><div class="node done"><div class="node-ico">1</div><div class="node-name">知识来源</div><div class="node-st">8,420 条知识资产</div></div></div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-node"><div class="node done"><div class="node-ico">2</div><div class="node-name">数据处理</div><div class="node-st">6,980 条训练样本</div></div></div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-node"><div class="node run"><div class="node-ico">3</div><div class="node-name">模型微调</div><div class="node-st">训练中 60%</div></div></div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-node"><div class="node"><div class="node-ico">4</div><div class="node-name">部署发布</div><div class="node-st">待部署</div></div></div>
+      <div class="pipe-arrow"></div>
+      <div class="pipe-node"><div class="node"><div class="node-ico">5</div><div class="node-name">效果验证</div><div class="node-st">待验证</div></div></div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">知识来源</div>
+      <div class="li"><div class="li-ico">Q</div><div class="li-body"><div class="li-name">QA 问答对</div><div class="li-meta">教师手工维护 · 最近更新 2 小时前</div></div><div class="li-val">1,248</div></div>
+      <div class="li"><div class="li-ico">D</div><div class="li-body"><div class="li-name">文档解析结果</div><div class="li-meta">入库文档自动解析 · 最近更新 1 天前</div></div><div class="li-val">5,832</div></div>
+      <div class="li"><div class="li-ico">K</div><div class="li-body"><div class="li-name">知识条目</div><div class="li-meta">知识库高质量条目 · 最近更新 3 天前</div></div><div class="li-val">1,340</div></div>
+      <div style="margin-top:var(--sp4)"><button class="btn btn-o btn-w">管理数据来源</button></div>
+    </div>
+    <div class="card">
+      <div class="card-title">训练任务</div>
+      <div class="li"><div class="li-ico" style="background:var(--warning-bg);color:var(--warning-primary)">E</div><div class="li-body"><div class="li-name">Embedding 模型微调</div><div class="li-meta"><span class="tag tag-run">训练中</span> 进度 60%，预计 2 小时</div></div></div>
+      <div class="li"><div class="li-ico" style="background:var(--warning-bg);color:var(--warning-primary)">R</div><div class="li-body"><div class="li-name">Reranker 模型微调</div><div class="li-meta"><span class="tag tag-run">训练中</span> 进度 35%，预计 4 小时</div></div></div>
+      <div class="li"><div class="li-ico" style="background:var(--success-bg);color:var(--success-primary)">L</div><div class="li-body"><div class="li-name">LLM 模型微调 v2.3</div><div class="li-meta"><span class="tag tag-ok">已完成</span> 准确率提升 +16.3%</div></div></div>
+      <div style="margin-top:var(--sp4)"><button class="btn btn-s btn-w">新建训练任务</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">异常与待办</div>
+    <div class="alert alert-warn">数据量提醒：Reranker 训练数据仅 820 条，建议补充至 1,500 条以上以获得更好效果。<button class="btn btn-o" style="margin-left:auto;flex-shrink:0">补充数据</button></div>
+    <div class="alert alert-ok">LLM v2.3 已训练完成，准确率 91.3%（较基线 +16.3%），可进入部署流程。<button class="btn btn-s" style="margin-left:auto;flex-shrink:0">去部署</button></div>
+  </div>
+</div>
+
+<!-- ==================== PAGE 2: 数据工坊 ==================== -->
+<div id="p-data" class="page">
+  <div class="page-hd"><div class="page-title">数据工坊</div><div class="page-sub">管理训练数据的来源、处理和产出</div></div>
+  <div class="card">
+    <div class="card-title">数据处理流程</div>
+    <div class="flow">
+      <div class="flow-step done"><div class="flow-num">1</div><div class="flow-label">知识采集</div><div class="flow-val">8,420 条</div></div>
+      <div class="flow-step done"><div class="flow-num">2</div><div class="flow-label">格式清洗</div><div class="flow-val">去重 312 条</div></div>
+      <div class="flow-step done"><div class="flow-num">3</div><div class="flow-label">质量筛选</div><div class="flow-val">过滤 1,128 条</div></div>
+      <div class="flow-step done"><div class="flow-num">4</div><div class="flow-label">样本构造</div><div class="flow-val">6,980 条</div></div>
+      <div class="flow-step run"><div class="flow-num">5</div><div class="flow-label">格式转换</div><div class="flow-val">按模型类型分流</div></div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">数据来源 <button class="btn btn-o" style="font-size:12px">添加来源</button></div>
+      <div class="li"><div class="li-ico">Q</div><div class="li-body"><div class="li-name">QA 问答对</div><div class="li-meta">来自 3 个知识库 · 教师手工维护</div></div><div class="li-val">1,248</div></div>
+      <div class="li"><div class="li-ico">D</div><div class="li-body"><div class="li-name">文档解析结果</div><div class="li-meta">PDF/Word/PPT 解析后的结构化内容</div></div><div class="li-val">5,832</div></div>
+      <div class="li"><div class="li-ico">K</div><div class="li-body"><div class="li-name">知识条目</div><div class="li-meta">知识库中标记为高质量的条目</div></div><div class="li-val">1,340</div></div>
+      <div class="li" style="border-style:dashed"><div class="li-ico" style="background:var(--bg-gray);color:var(--text-4)">+</div><div class="li-body"><div class="li-name" style="color:var(--text-3)">更多来源（规划中）</div><div class="li-meta">教师纠错记录 · Bad Case 修正 · 术语表</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">处理统计</div>
+      <div style="margin-bottom:var(--sp4)">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--sp2)"><span>原始数据</span><span>8,420 条</span></div>
+        <div class="prog"><div class="prog-fill green" style="width:100%"></div></div>
+      </div>
+      <div style="margin-bottom:var(--sp4)">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--sp2)"><span>去重后</span><span>8,108 条 <span style="color:var(--text-4)">(-312)</span></span></div>
+        <div class="prog"><div class="prog-fill green" style="width:96%"></div></div>
+      </div>
+      <div style="margin-bottom:var(--sp4)">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--sp2)"><span>质量筛选后</span><span>6,980 条 <span style="color:var(--text-4)">(-1,128)</span></span></div>
+        <div class="prog"><div class="prog-fill green" style="width:83%"></div></div>
+      </div>
+      <div class="alert alert-warn" style="margin-top:var(--sp4)">132 条样本质量评分偏低，建议人工复核。<button class="btn btn-o" style="margin-left:auto;flex-shrink:0;font-size:12px">查看</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">数据集产出（按模型类型分流）</div>
+    <div class="grid3">
+      <div style="background:var(--bg-gray);border-radius:var(--radius-sm);padding:var(--sp4)">
+        <div style="font-size:14px;font-weight:500;margin-bottom:var(--sp3)">LLM 训练数据</div>
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:var(--sp2)">instruction / input / output 格式</div>
+        <div style="font-size:24px;font-weight:700;margin-bottom:var(--sp2)">3,420</div>
+        <div style="font-size:12px;color:var(--text-3)">训练集 2,736 · 验证集 342 · 测试集 342</div>
+        <div style="margin-top:var(--sp3)"><button class="btn btn-o" style="font-size:12px;width:100%">预览样本</button></div>
+      </div>
+      <div style="background:var(--bg-gray);border-radius:var(--radius-sm);padding:var(--sp4)">
+        <div style="font-size:14px;font-weight:500;margin-bottom:var(--sp3)">Embedding 训练数据</div>
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:var(--sp2)">query-positive-negative 格式</div>
+        <div style="font-size:24px;font-weight:700;margin-bottom:var(--sp2)">2,740</div>
+        <div style="font-size:12px;color:var(--text-3)">训练集 2,192 · 验证集 274 · 测试集 274</div>
+        <div style="margin-top:var(--sp3)"><button class="btn btn-o" style="font-size:12px;width:100%">预览样本</button></div>
+      </div>
+      <div style="background:var(--bg-gray);border-radius:var(--radius-sm);padding:var(--sp4)">
+        <div style="font-size:14px;font-weight:500;margin-bottom:var(--sp3)">Reranker 训练数据</div>
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:var(--sp2)">query-doc-relevance 格式</div>
+        <div style="font-size:24px;font-weight:700;margin-bottom:var(--sp2)">820</div>
+        <div style="font-size:12px;color:var(--text-3)">训练集 656 · 验证集 82 · 测试集 82</div>
+        <div class="alert alert-warn" style="margin-top:var(--sp3);padding:var(--sp2) var(--sp3);font-size:11px">数据量不足，建议 1,500 条以上</div>
+      </div>
+    </div>
+    <div style="margin-top:var(--sp5);text-align:right"><button class="btn btn-s">生成训练数据集</button></div>
+  </div>
+</div>
+
+<!-- ==================== PAGE 3: 训练任务 ==================== -->
+<div id="p-train" class="page">
+  <div class="page-hd"><div class="page-title">训练任务</div><div class="page-sub">管理模型微调任务的创建、执行与历史</div></div>
+  <div class="card">
+    <div class="card-title">进行中的任务 <button class="btn btn-s" style="font-size:12px">新建训练任务</button></div>
+    <div class="li">
+      <div class="li-ico" style="background:var(--warning-bg);color:var(--warning-primary)">E</div>
+      <div class="li-body">
+        <div class="li-name">Embedding 模型微调 <span class="tag tag-run" style="margin-left:var(--sp2)">训练中</span></div>
+        <div class="li-meta">基座模型：bge-m3 · 数据集：v4（2,740 条） · 策略：推荐配置</div>
+        <div class="prog"><div class="prog-fill orange" style="width:60%"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-3)"><span>进度 60%</span><span>预计剩余 2 小时</span></div>
+      </div>
+      <button class="btn btn-o" style="flex-shrink:0;font-size:12px">查看详情</button>
+    </div>
+    <div class="li">
+      <div class="li-ico" style="background:var(--warning-bg);color:var(--warning-primary)">R</div>
+      <div class="li-body">
+        <div class="li-name">Reranker 模型微调 <span class="tag tag-run" style="margin-left:var(--sp2)">训练中</span></div>
+        <div class="li-meta">基座模型：bge-reranker-v2 · 数据集：v2（820 条） · 策略：快速试训</div>
+        <div class="prog"><div class="prog-fill orange" style="width:35%"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-3)"><span>进度 35%</span><span>预计剩余 4 小时</span></div>
+      </div>
+      <button class="btn btn-o" style="flex-shrink:0;font-size:12px">查看详情</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">历史任务</div>
+    <table class="tbl">
+      <thead><tr><th>任务名称</th><th>模型类型</th><th>数据量</th><th>状态</th><th>准确率变化</th><th>完成时间</th><th>操作</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:500">LLM 微调 v2.3</td><td>LLM</td><td>3,420</td><td><span class="tag tag-ok">成功</span></td><td style="color:var(--success-primary);font-weight:500">78.5% → 91.3% (+16.3%)</td><td>2026-04-10</td><td><button class="btn btn-o" style="font-size:12px">详情</button></td></tr>
+        <tr><td style="font-weight:500">Embedding 微调 v1.8</td><td>Embedding</td><td>2,100</td><td><span class="tag tag-ok">成功</span></td><td style="color:var(--success-primary);font-weight:500">72.1% → 85.6% (+13.5%)</td><td>2026-04-03</td><td><button class="btn btn-o" style="font-size:12px">详情</button></td></tr>
+        <tr><td style="font-weight:500">LLM 微调 v2.2</td><td>LLM</td><td>2,800</td><td><span class="tag tag-ok">成功</span></td><td style="color:var(--success-primary);font-weight:500">75.2% → 82.1% (+6.9%)</td><td>2026-03-28</td><td><button class="btn btn-o" style="font-size:12px">详情</button></td></tr>
+        <tr><td style="font-weight:500">Reranker 微调 v1.0</td><td>Reranker</td><td>600</td><td><span class="tag tag-err">失败</span></td><td style="color:var(--danger-primary)">数据量不足</td><td>2026-03-25</td><td><button class="btn btn-o" style="font-size:12px">详情</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== PAGE 4: 部署中心 ==================== -->
+<div id="p-deploy" class="page">
+  <div class="page-hd"><div class="page-title">部署中心</div><div class="page-sub">管理模型版本的发布、回滚与服务接口</div></div>
+  <div class="card">
+    <div class="card-title">当前在线模型</div>
+    <div class="grid3">
+      <div style="background:var(--success-bg);border-radius:var(--radius-sm);padding:var(--sp5)">
+        <div style="font-size:12px;color:var(--success-pressed);margin-bottom:var(--sp2)">LLM 模型</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:var(--sp1)">v2.3</div>
+        <div style="font-size:12px;color:var(--text-3)">准确率 91.3% · 全量发布</div>
+        <div style="font-size:12px;color:var(--text-3)">部署时间 2026-04-10 14:30</div>
+        <div style="margin-top:var(--sp3);display:flex;gap:var(--sp2)"><button class="btn btn-o" style="font-size:12px">接口文档</button><button class="btn btn-o" style="font-size:12px">回滚</button></div>
+      </div>
+      <div style="background:var(--success-bg);border-radius:var(--radius-sm);padding:var(--sp5)">
+        <div style="font-size:12px;color:var(--success-pressed);margin-bottom:var(--sp2)">Embedding 模型</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:var(--sp1)">v1.8</div>
+        <div style="font-size:12px;color:var(--text-3)">准确率 85.6% · 全量发布</div>
+        <div style="font-size:12px;color:var(--text-3)">部署时间 2026-04-05 10:15</div>
+        <div style="margin-top:var(--sp3);display:flex;gap:var(--sp2)"><button class="btn btn-o" style="font-size:12px">接口文档</button><button class="btn btn-o" style="font-size:12px">回滚</button></div>
+      </div>
+      <div style="background:var(--bg-gray);border-radius:var(--radius-sm);padding:var(--sp5)">
+        <div style="font-size:12px;color:var(--text-3);margin-bottom:var(--sp2)">Reranker 模型</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:var(--sp1);color:var(--text-3)">基线版</div>
+        <div style="font-size:12px;color:var(--text-4)">使用通用模型 · 未微调</div>
+        <div style="font-size:12px;color:var(--text-4)">等待训练完成后部署</div>
+        <div style="margin-top:var(--sp3)"><span class="tag tag-gray">待部署</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">待发布版本</div>
+      <div class="alert alert-ok">Embedding v1.9 训练完成，准确率 88.2%（较当前 +2.6%），可发布。</div>
+      <div style="display:flex;gap:var(--sp3)">
+        <button class="btn btn-o" style="flex:1">灰度发布（10% 流量）</button>
+        <button class="btn btn-s" style="flex:1">全量发布</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">服务接口</div>
+      <table class="tbl">
+        <thead><tr><th>接口</th><th>模型版本</th><th>绑定知识库</th></tr></thead>
+        <tbody>
+          <tr><td style="font-family:monospace;font-size:12px">/api/llm/chat</td><td>LLM v2.3</td><td><span class="tag tag-info">高等数学</span> <span class="tag tag-info">线性代数</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:12px">/api/embedding/encode</td><td>Emb v1.8</td><td><span class="tag tag-info">全部知识库</span></td></tr>
+          <tr><td style="font-family:monospace;font-size:12px">/api/reranker/rank</td><td>基线版</td><td><span class="tag tag-info">全部知识库</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">版本历史</div>
+    <table class="tbl">
+      <thead><tr><th>版本</th><th>模型类型</th><th>准确率</th><th>发布方式</th><th>发布时间</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:500">v2.3</td><td>LLM</td><td>91.3%</td><td>全量</td><td>2026-04-10</td><td><span class="tag tag-ok">在线</span></td><td><button class="btn btn-o" style="font-size:12px">详情</button></td></tr>
+        <tr><td style="font-weight:500">v1.8</td><td>Embedding</td><td>85.6%</td><td>全量</td><td>2026-04-05</td><td><span class="tag tag-ok">在线</span></td><td><button class="btn btn-o" style="font-size:12px">详情</button></td></tr>
+        <tr><td style="font-weight:500">v2.2</td><td>LLM</td><td>82.1%</td><td>全量</td><td>2026-03-28</td><td><span class="tag tag-gray">已下线</span></td><td><button class="btn btn-o" style="font-size:12px">详情</button></td></tr>
+        <tr><td style="font-weight:500">v1.7</td><td>Embedding</td><td>72.1%</td><td>全量</td><td>2026-03-20</td><td><span class="tag tag-gray">已下线</span></td><td><button class="btn btn-o" style="font-size:12px">详情</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== PAGE 5: 效果验证 ==================== -->
+<div id="p-verify" class="page">
+  <div class="page-hd"><div class="page-title">效果验证</div><div class="page-sub">对比微调前后的模型表现，验证优化效果</div></div>
+  <div class="card">
+    <div class="card-title">LLM v2.3 效果对比（较基线模型）</div>
+    <div class="cmp"><div class="cmp-label">准确率</div><div class="cmp-bar"><div class="cmp-fill green" style="width:91.3%">91.3%</div></div></div>
+    <div class="cmp"><div class="cmp-label" style="color:var(--text-4)">基线</div><div class="cmp-bar"><div class="cmp-fill" style="width:78.5%;background:var(--gray-3)">78.5%</div></div></div>
+    <div style="height:var(--sp4)"></div>
+    <div class="cmp"><div class="cmp-label">召回率</div><div class="cmp-bar"><div class="cmp-fill green" style="width:88.7%">88.7%</div></div></div>
+    <div class="cmp"><div class="cmp-label" style="color:var(--text-4)">基线</div><div class="cmp-bar"><div class="cmp-fill" style="width:71.2%;background:var(--gray-3)">71.2%</div></div></div>
+    <div style="height:var(--sp4)"></div>
+    <div class="cmp"><div class="cmp-label">满意度</div><div class="cmp-bar"><div class="cmp-fill green" style="width:92%">4.6/5</div></div></div>
+    <div class="cmp"><div class="cmp-label" style="color:var(--text-4)">基线</div><div class="cmp-bar"><div class="cmp-fill" style="width:76%;background:var(--gray-3)">3.8/5</div></div></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">各模型版本效果趋势</div>
+      <table class="tbl">
+        <thead><tr><th>版本</th><th>模型</th><th>准确率</th><th>较上版</th><th>测试集</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:500">v2.3</td><td>LLM</td><td style="font-weight:600">91.3%</td><td style="color:var(--success-primary)">+9.2%</td><td>342 题</td></tr>
+          <tr><td style="font-weight:500">v2.2</td><td>LLM</td><td>82.1%</td><td style="color:var(--success-primary)">+6.9%</td><td>280 题</td></tr>
+          <tr><td style="font-weight:500">v1.8</td><td>Embedding</td><td>85.6%</td><td style="color:var(--success-primary)">+13.5%</td><td>274 题</td></tr>
+          <tr><td style="font-weight:500">v1.7</td><td>Embedding</td><td>72.1%</td><td style="color:var(--text-4)">基线</td><td>200 题</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">分类表现（LLM v2.3）</div>
+      <div style="margin-bottom:var(--sp3)">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--sp1)"><span>事实类问题</span><span style="font-weight:600">95.2%</span></div>
+        <div class="prog"><div class="prog-fill green" style="width:95.2%"></div></div>
+      </div>
+      <div style="margin-bottom:var(--sp3)">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--sp1)"><span>概念解释</span><span style="font-weight:600">92.8%</span></div>
+        <div class="prog"><div class="prog-fill green" style="width:92.8%"></div></div>
+      </div>
+      <div style="margin-bottom:var(--sp3)">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--sp1)"><span>公式推导</span><span style="font-weight:600">83.5%</span></div>
+        <div class="prog"><div class="prog-fill orange" style="width:83.5%"></div></div>
+      </div>
+      <div style="margin-bottom:var(--sp3)">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:var(--sp1)"><span>综合分析</span><span style="font-weight:600">79.1%</span></div>
+        <div class="prog"><div class="prog-fill orange" style="width:79.1%"></div></div>
+      </div>
+      <div class="alert alert-warn" style="margin-top:var(--sp3);font-size:12px">公式推导和综合分析类问题准确率偏低，建议补充相关训练数据。<button class="btn btn-o" style="margin-left:auto;flex-shrink:0;font-size:11px">补充数据</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">线上运行指标（最近 7 天）</div>
+    <div class="stats" style="grid-template-columns:repeat(4,1fr)">
+      <div class="st"><div class="st-label">知识库命中率</div><div class="st-val" style="font-size:22px">88.2%</div><div class="st-trend">较上周 +3.1%</div></div>
+      <div class="st"><div class="st-label">平均响应延迟</div><div class="st-val" style="font-size:22px">1.2s</div><div class="st-trend">较上周 -0.3s</div></div>
+      <div class="st"><div class="st-label">幻觉率</div><div class="st-val" style="font-size:22px">3.8%</div><div class="st-trend">较上周 -1.2%</div></div>
+      <div class="st"><div class="st-label">用户满意度</div><div class="st-val" style="font-size:22px">4.6/5</div><div class="st-trend">较上周 +0.3</div></div>
+    </div>
+  </div>
+</div></div>
+</div>
+<script>
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('visible'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(id).classList.add('visible');
+  document.querySelector('[data-page="'+id+'"]').classList.add('active');
+}
+document.querySelectorAll('.nav-item').forEach(n=>{
+  n.addEventListener('click',()=>showPage(n.dataset.page));
+});
+</script>
+</body>
+</html>

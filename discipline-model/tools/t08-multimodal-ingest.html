@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>T08 多模态采集 · 学科大脑</title>
+<link rel="stylesheet" href="assets/tokens.css" /><link rel="stylesheet" href="assets/style.css" />
+</head><body data-page="t08">
+<div class="layout">
+  <aside class="sidebar" id="sidebar-mount"></aside>
+  <main class="main">
+    <header class="topbar"><div><span class="title">多模态采集</span><span class="crumbs">数据获取 / T08 多模态采集</span></div>
+      <div class="search"><i data-lucide="search" width="14" height="14"></i><input placeholder="搜索资产" /></div></header>
+    <div class="content">
+      <section class="page-header">
+        <div class="left"><span class="code-badge">T08</span><div><h1>多模态数据采集</h1><div class="subtitle">视频 / 音频 / 图像抽取可检索文本与关键帧，OCR 与转写</div></div></div>
+        <div class="actions"><button class="btn"><i data-lucide="link" width="14" height="14"></i>URL 导入</button>
+          <button class="btn btn-primary"><i data-lucide="upload" width="14" height="14"></i>上传采集</button></div>
+      </section>
+      <section class="kpi-row" id="kpi-row"></section>
+      <section class="filter-bar">
+        <select id="f-type"><option value="">全部类型</option><option value="video">视频</option><option value="audio">音频</option><option value="image">图像</option><option value="scan">扫描</option></select>
+        <select id="f-subject"><option value="">全部学科</option></select>
+        <select id="f-status"><option value="">全部状态</option><option value="ingesting">采集中</option><option value="processing">处理中</option><option value="ready">已入库</option><option value="failed">失败</option></select>
+        <input id="f-search" class="search-input" type="text" placeholder="搜索资产名称" />
+        <span class="spacer"></span><button class="btn btn-sm">批量重跑</button>
+      </section>
+      <div class="card-grid" id="grid"></div>
+    </div>
+  </main>
+</div>
+<aside class="drawer" id="drawer"><div class="drawer-head"><span class="title">资产详情</span><button class="close"><i data-lucide="x" width="16" height="16"></i></button></div><div class="drawer-body"></div></aside>
+<div class="drawer-mask" id="drawer-mask"></div>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="assets/data.js"></script><script src="assets/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const S=window.MOCK.mmStats, list=window.MOCK.mmAssets, meta=window.MOCK.mmStatusMeta, tm=window.MOCK.mmTypeMeta;
+  const icons={video:'film',audio:'mic',image:'image',scan:'scan-line'};
+  document.getElementById('kpi-row').innerHTML = `
+    <div class="kpi-card"><div class="label">资产总数</div><div class="value">${S.total}<span class="unit">个</span></div><div class="delta up">↑ 14 本周</div></div>
+    <div class="kpi-card"><div class="label">视频</div><div class="value">${S.videos}<span class="unit">部</span></div><div class="delta flat">含公开课</div></div>
+    <div class="kpi-card"><div class="label">图像 / 扫描</div><div class="value">${S.images}<span class="unit">张</span></div><div class="delta up">↑ 6.9%</div></div>
+    <div class="kpi-card"><div class="label">OCR 累计</div><div class="value">${window.fmtNum(S.ocrChars)}<span class="unit">字</span></div><div class="delta up">↑ 12%</div></div>`;
+  document.getElementById('f-subject').innerHTML += window.MOCK.subjects.map(s=>`<option value="${s}">${s}</option>`).join('');
+
+  function render(rows){
+    document.getElementById('grid').innerHTML = rows.map((a,i)=>`
+      <div class="item-card" data-idx="${i}">
+        <div class="card-head">
+          <div style="display:flex;gap:10px;align-items:flex-start;">
+            <div style="width:36px;height:36px;border-radius:var(--r-sm);background:var(--primary-bg);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i data-lucide="${icons[a.type]}" width="18" height="18"></i></div>
+            <div><div class="card-title" style="font-size:var(--fs-sm);">${a.name}</div><div class="card-sub">${a.id} · ${tm[a.type]}${a.durationMin?` · ${a.durationMin}min`:''}</div></div>
+          </div>
+          <span class="chip ${meta[a.status].tone}">${meta[a.status].text}</span>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px;"><span class="chip">${a.subject}</span></div>
+        ${a.keyframeStamps&&a.keyframeStamps.length>1?`<div class="keyframe-row" style="margin-top:10px;">${a.keyframeStamps.slice(0,6).map(s=>`<div class="keyframe">${s}</div>`).join('')}</div>`:''}
+        <div class="card-meta">
+          <div>大小 <span class="v">${a.sizeMb} MB</span></div>
+          <div>关键帧 <span class="v">${a.keyframes}</span></div>
+          <div>OCR <span class="v">${window.fmtNum(a.ocrChars)}</span></div>
+        </div>
+      </div>`).join('');
+    document.querySelectorAll('#grid .item-card').forEach(c=>c.addEventListener('click',()=>openMm(rows[+c.dataset.idx])));
+    lucide.createIcons();
+  }
+  render(list.slice(0,24));
+
+  function openMm(a){
+    window.__openDrawer(`
+      <div class="drawer-meta">
+        <div class="row"><span class="k">ID</span><span class="v">${a.id}</span></div>
+        <div class="row"><span class="k">类型</span><span class="v">${tm[a.type]}</span></div>
+        <div class="row"><span class="k">学科</span><span class="v">${a.subject}</span></div>
+        <div class="row"><span class="k">状态</span><span class="v">${meta[a.status].text}</span></div>
+        <div class="row"><span class="k">大小</span><span class="v num">${a.sizeMb} MB</span></div>
+        <div class="row"><span class="k">时长 / 关键帧</span><span class="v num">${a.durationMin?a.durationMin+'min':'—'} / ${a.keyframes}</span></div>
+      </div>
+      ${a.keyframeStamps.length>1?`<div class="drawer-section"><h4>关键帧预览</h4><div class="keyframe-row">${a.keyframeStamps.map(s=>`<div class="keyframe" style="width:88px;height:56px;">${s}</div>`).join('')}</div></div>`:''}
+      <div class="drawer-section"><h4>OCR / 转写摘要</h4><p style="margin:0;padding:12px;background:var(--bg);border-radius:var(--r-md);color:var(--text-2);line-height:1.7;font-size:var(--fs-sm);">${a.ocrSummary}</p></div>
+      <div class="drawer-section"><h4>处理日志</h4><div class="timeline">${a.log.map(l=>`<div class="item"><span class="at">${l.at}</span><span class="action">${l.action}</span>${l.note?`<div class="note">${l.note}</div>`:''}</div>`).join('')}</div></div>`, a.name);
+  }
+
+  const filter=()=>{const sub=document.getElementById('f-subject').value,st=document.getElementById('f-status').value,tp=document.getElementById('f-type').value,q=document.getElementById('f-search').value.toLowerCase();
+    render(list.filter(a=>(!sub||a.subject===sub)&&(!st||a.status===st)&&(!tp||a.type===tp)&&(!q||a.name.toLowerCase().includes(q))).slice(0,30));};
+  ['f-subject','f-status','f-type'].forEach(id=>document.getElementById(id).addEventListener('change',filter));
+  document.getElementById('f-search').addEventListener('input',filter);
+});
+</script>
+</body></html>

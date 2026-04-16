@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>T05 知识库管理 · 学科大脑</title>
+<link rel="stylesheet" href="assets/tokens.css" /><link rel="stylesheet" href="assets/style.css" />
+</head><body data-page="t05">
+<div class="layout">
+  <aside class="sidebar" id="sidebar-mount"></aside>
+  <main class="main">
+    <header class="topbar"><div><span class="title">知识库管理</span><span class="crumbs">内容管理 / T05 知识库管理</span></div>
+      <div class="search"><i data-lucide="search" width="14" height="14"></i><input placeholder="搜索知识库" /></div></header>
+    <div class="content">
+      <section class="page-header">
+        <div class="left"><span class="code-badge">T05</span><div><h1>知识库管理后台</h1><div class="subtitle">按学科 / 课程 / 版本组织知识资产，支持灰度与回滚</div></div></div>
+        <div class="actions"><button class="btn"><i data-lucide="history" width="14" height="14"></i>版本对比</button>
+          <button class="btn btn-primary"><i data-lucide="plus" width="14" height="14"></i>新建知识库</button></div>
+      </section>
+      <section class="kpi-row" id="kpi-row"></section>
+      <section class="filter-bar">
+        <select id="f-subject"><option value="">全部学科</option></select>
+        <select id="f-status"><option value="">全部状态</option><option value="published">发布中</option><option value="canary">灰度中</option><option value="draft">草稿</option><option value="archived">已归档</option></select>
+        <select><option>全部负责人</option></select>
+        <input id="f-search" class="search-input" type="text" placeholder="搜索名称 / 课程" />
+        <span class="spacer"></span><button class="btn btn-sm">批量操作</button>
+      </section>
+      <div class="card-grid" id="grid"></div>
+    </div>
+  </main>
+</div>
+<aside class="drawer" id="drawer"><div class="drawer-head"><span class="title">知识库详情</span><button class="close"><i data-lucide="x" width="16" height="16"></i></button></div><div class="drawer-body"></div></aside>
+<div class="drawer-mask" id="drawer-mask"></div>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="assets/data.js"></script><script src="assets/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const S=window.MOCK.kbStats, list=window.MOCK.knowledgeBases, meta=window.MOCK.kbStatusMeta;
+  document.getElementById('kpi-row').innerHTML = `
+    <div class="kpi-card"><div class="label">知识库总数</div><div class="value">${S.total}<span class="unit">个</span></div><div class="delta up">↑ 2 本月</div></div>
+    <div class="kpi-card"><div class="label">发布中</div><div class="value">${S.published}<span class="unit">个</span></div><div class="delta up">↑ 1</div></div>
+    <div class="kpi-card"><div class="label">负责人</div><div class="value">${S.owners}<span class="unit">人</span></div><div class="delta flat">稳定</div></div>
+    <div class="kpi-card"><div class="label">本月调用</div><div class="value">${S.usage}<span class="unit">次</span></div><div class="delta up">↑ 2.4%</div></div>`;
+  document.getElementById('f-subject').innerHTML += window.MOCK.subjects.map(s=>`<option value="${s}">${s}</option>`).join('');
+
+  function render(rows){
+    document.getElementById('grid').innerHTML = rows.map((k,i)=>`
+      <div class="item-card" data-idx="${i}">
+        <div class="card-head">
+          <div><div class="card-title">${k.name}</div><div class="card-sub">${k.id} · ${k.course}</div></div>
+          <span class="chip ${meta[k.status].tone||''}">${meta[k.status].text}</span>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:4px;"><span class="chip">${k.subject}</span><span class="chip info">${k.currentVersion}</span></div>
+        <div style="margin-top:10px;font-size:var(--fs-xs);color:var(--text-3);">负责人 · ${k.owner}</div>
+        <div class="card-meta">
+          <div>文档 <span class="v">${k.docs}</span></div>
+          <div>术语 <span class="v">${k.terms}</span></div>
+          <div>问答 <span class="v">${k.qas}</span></div>
+        </div>
+      </div>`).join('');
+    document.querySelectorAll('#grid .item-card').forEach(c=>c.addEventListener('click',()=>openKb(rows[+c.dataset.idx])));
+  }
+  render(list.slice(0,24));
+
+  function openKb(k){
+    window.__openDrawer(`
+      <div class="drawer-meta">
+        <div class="row"><span class="k">ID</span><span class="v">${k.id}</span></div>
+        <div class="row"><span class="k">学科 / 课程</span><span class="v">${k.subject} · ${k.course}</span></div>
+        <div class="row"><span class="k">状态</span><span class="v">${meta[k.status].text}</span></div>
+        <div class="row"><span class="k">当前版本</span><span class="v">${k.currentVersion}</span></div>
+        <div class="row"><span class="k">负责人</span><span class="v">${k.owner}</span></div>
+        <div class="row"><span class="k">更新</span><span class="v num">${k.updatedAt}</span></div>
+        <div class="row"><span class="k">文档 / 术语 / 问答</span><span class="v num">${k.docs} / ${k.terms} / ${k.qas}</span></div>
+      </div>
+      <div class="drawer-section"><h4>版本历史</h4>
+        <div style="display:flex;flex-direction:column;gap:8px;">${k.history.map((h,i)=>`
+          <div style="padding:12px;background:var(--bg);border-radius:var(--r-md);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span class="chip ${i===0?'success':''}">${h.version}${i===0?' · 当前':''}</span>
+              <span style="font-size:var(--fs-xs);color:var(--text-3);" class="num">${h.publishedAt}</span>
+            </div>
+            <div style="font-size:var(--fs-sm);color:var(--text-2);">${h.changes}</div>
+            <div style="font-size:var(--fs-xs);color:var(--text-4);margin-top:4px;">${h.by}</div>
+          </div>`).join('')}</div>
+      </div>
+      <div class="drawer-section"><div style="display:flex;gap:8px;"><button class="btn btn-sm">发布新版本</button><button class="btn btn-sm">回滚到上一版</button></div></div>`, k.name);
+  }
+
+  const filter=()=>{const sub=document.getElementById('f-subject').value,st=document.getElementById('f-status').value,q=document.getElementById('f-search').value.toLowerCase();
+    render(list.filter(k=>(!sub||k.subject===sub)&&(!st||k.status===st)&&(!q||k.name.toLowerCase().includes(q)||k.course.toLowerCase().includes(q))).slice(0,30));};
+  ['f-subject','f-status'].forEach(id=>document.getElementById(id).addEventListener('change',filter));
+  document.getElementById('f-search').addEventListener('input',filter);
+  lucide.createIcons();
+});
+</script>
+</body></html>

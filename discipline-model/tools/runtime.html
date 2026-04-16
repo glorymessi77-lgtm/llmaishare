@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>运行看板 · 学科大脑</title>
+<link rel="stylesheet" href="assets/tokens.css" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body data-page="runtime">
+<div class="layout">
+  <aside class="sidebar" id="sidebar-mount"></aside>
+  <main class="main">
+    <header class="topbar">
+      <div><span class="title">运行看板</span><span class="crumbs">总览 / 运行看板</span></div>
+      <div class="search"><i data-lucide="search" width="14" height="14"></i><input placeholder="搜索" /></div>
+    </header>
+    <div class="content">
+      <section class="page-header">
+        <div class="left"><div><h1>平台运行态总览</h1><div class="subtitle">调用规模 · 月度趋势 · 学科分布 · 实时事件流</div></div></div>
+        <div class="actions">
+          <button class="btn"><i data-lucide="download" width="14" height="14"></i>导出周报</button>
+          <button class="btn btn-primary"><i data-lucide="refresh-ccw" width="14" height="14"></i>刷新</button>
+        </div>
+      </section>
+
+      <section class="kpi-row" id="kpi-row"></section>
+
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="panel">
+          <div class="panel-head"><h3>月度调用趋势（当年 vs 去年）</h3><span class="chip info">单位：万次</span></div>
+          <div class="panel-body"><div id="chart-trend" class="chart-box"></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>学科分布 · 活跃度</h3></div>
+          <div class="panel-body"><div id="chart-subject" class="chart-box"></div></div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="panel">
+          <div class="panel-head"><h3>工具调用 Top 5</h3></div>
+          <div class="panel-body" style="padding:0;"><table class="data" id="top-tools"><thead><tr><th>工具</th><th style="text-align:right">本月调用</th><th style="text-align:right">环比</th></tr></thead><tbody></tbody></table></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>系统状态</h3><span class="chip success">全部正常</span></div>
+          <div class="panel-body"><div class="kv-list" id="system-status"></div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>实时事件流</h3><span style="font-size:var(--fs-xs);color:var(--text-3);">近 2 小时 · 8 条</span></div>
+        <div class="panel-body"><div class="timeline" id="event-feed"></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5/dist/echarts.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const o = window.MOCK.overview;
+  document.getElementById('kpi-row').innerHTML = `
+    <div class="kpi-card"><div class="label">${o.primary.label}</div><div class="value">${window.fmtNum(o.primary.value)}<span class="unit">${o.primary.unit}</span></div>${window.renderDelta(o.primary.delta)}</div>
+    ${o.secondary.map(s=>`<div class="kpi-card"><div class="label">${s.label}</div><div class="value">${window.fmtNum(s.value)}<span class="unit">${s.unit}</span></div>${s.total?`<div style="margin-top:6px;"><div class="progress"><div class="fill" style="width:${(s.value/s.total*100).toFixed(0)}%"></div></div></div>`:window.renderDelta(s.delta)}</div>`).join('')}`;
+
+  echarts.init(document.getElementById('chart-trend')).setOption({
+    grid:{left:40,right:20,top:30,bottom:30}, tooltip:{trigger:'axis'},
+    legend:{data:['当年','去年'],right:10,top:0,textStyle:{color:'#6B7280',fontSize:12}},
+    xAxis:{type:'category',data:o.monthlyTrend.months,axisLine:{lineStyle:{color:'#E5E7EB'}},axisLabel:{color:'#6B7280',fontSize:11}},
+    yAxis:{type:'value',axisLine:{show:false},axisLabel:{color:'#9CA3AF',fontSize:11},splitLine:{lineStyle:{color:'#EFF1F4'}}},
+    series:[
+      {name:'当年',type:'line',smooth:true,data:o.monthlyTrend.current,itemStyle:{color:'#10B981'},lineStyle:{width:2.4},areaStyle:{color:'rgba(16,185,129,0.08)'},symbol:'circle',symbolSize:6},
+      {name:'去年',type:'line',smooth:true,data:o.monthlyTrend.previous,itemStyle:{color:'#9CA3AF'},lineStyle:{width:1.4,type:'dashed'},symbol:'none'},
+    ]
+  });
+
+  echarts.init(document.getElementById('chart-subject')).setOption({
+    tooltip:{trigger:'item'},
+    series:[{type:'pie',radius:['52%','78%'],center:['50%','55%'],avoidLabelOverlap:true,
+      itemStyle:{borderRadius:6,borderColor:'#fff',borderWidth:2},
+      label:{color:'#374151',fontSize:11,formatter:'{b} {d}%'},
+      data: o.subjectDist.map((s,i)=>({
+        name:s.name, value:s.count,
+        itemStyle:{color:['#10B981','#3B82F6','#8B5CF6','#F59E0B','#14B8A6','#EC4899','#64748B'][i%7]}
+      }))
+    }]
+  });
+
+  document.querySelector('#top-tools tbody').innerHTML = o.topTools.map(t=>`
+    <tr><td class="strong">${t.code} · ${t.name}</td><td style="text-align:right" class="num">${window.fmtNum(t.count)}</td><td style="text-align:right">${window.renderDelta(t.delta)}</td></tr>`).join('');
+
+  document.getElementById('system-status').innerHTML = window.MOCK.systemStatus.map(s=>`
+    <div class="kv-item"><span class="k">${s.label}</span><span><span class="chip ${s.tone}">${s.value}</span> <span style="margin-left:6px;color:var(--text-4);font-size:var(--fs-xs);">${s.detail}</span></span></div>`).join('');
+
+  document.getElementById('event-feed').innerHTML = o.activityFeed.map(e=>`
+    <div class="item"><span class="at">${e.at}</span><span class="who">${e.who}</span><span class="action">${e.action}</span>
+      <span style="color:var(--primary);margin-left:6px;">《${e.target}》</span>
+      <span class="chip" style="margin-left:8px;">${e.tool}</span></div>`).join('');
+  lucide.createIcons();
+});
+</script>
+</body>
+</html>

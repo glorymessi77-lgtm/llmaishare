@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>知识构建引擎可视化 · 管理后台</title>
+  <style>
+        :root {
+      --primary:#1C3A5E;
+      --accent:#3B82F6;
+      --success:#10B981;
+      --success-bg:#D1FAE5;
+      --warning:#F59E0B;
+      --warning-bg:#FEF3C7;
+      --danger:#EF4444;
+      --danger-bg:#FEE2E2;
+      --blue:#1677FF;
+      --blue-bg:#EFF4FF;
+      --bg-1:#FAFBFC;
+      --bg-2:#F3F4F6;
+      --text-1:#111827;
+      --text-2:#4B5563;
+      --text-3:#6B7280;
+      --text-4:#9CA3AF;
+      --border:#E5E7EB;
+      --shadow-sm:0 1px 3px rgba(0,0,0,.06);
+      --shadow-md:0 4px 12px rgba(0,0,0,.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+      background: var(--bg-1);
+      color: var(--text-1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59,130,246,.08) 0%, transparent 70%);
+      pointer-events: none;
+      transition: transform .15s ease-out;
+      z-index: 0;
+    }
+    .topnav {
+      height: 56px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 28px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 10;
+    }
+    .topnav::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--success));
+    }
+    .topnav-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px rgba(16,185,129,.2); }
+    .topnav-title { color: #fff; font-size: 16px; font-weight: 600; }
+    .topnav-sep { width: 1px; height: 18px; background: rgba(255,255,255,.15); }
+    .topnav-page { color: rgba(255,255,255,.7); font-size: 13px; }
+    .topnav-back { background: rgba(255,255,255,.12); color: rgba(255,255,255,.88); border: none; border-radius: 6px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-weight: 500; transition: .15s; }
+    .topnav-back:hover { background: rgba(255,255,255,.18); }
+    .topnav-right { margin-left: auto; display: flex; gap: 10px; }
+    .topnav-badge { background: rgba(255,255,255,.1); color: rgba(255,255,255,.85); border-radius: 6px; padding: 4px 12px; font-size: 12px; border: 1px solid rgba(255,255,255,.12); }
+    .workspace{flex:1;display:grid;grid-template-columns:300px minmax(0,1fr) 280px;overflow:hidden}
+    .panel{background:var(--bg-white);overflow:hidden;display:flex;flex-direction:column}
+    .left-panel{border-right:1px solid var(--border)}.center-panel{background:var(--bg-gray);padding:12px;gap:10px}.right-panel{border-left:1px solid var(--border);padding:10px;gap:10px;background:#FAFBFC}
+    .left-head{padding:12px 12px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
+    .left-title{font-size:13px;font-weight:600;color:var(--text-1);display:flex;justify-content:space-between;margin-bottom:8px}.left-title span{font-size:11px;color:var(--text-4);font-weight:400}
+    .search-box{background:var(--bg-gray);border:1px solid var(--border);border-radius:8px;height:32px;display:flex;align-items:center;padding:0 8px;margin-bottom:8px;gap:6px}
+    .search-box input{flex:1;border:none;background:transparent;outline:none;font-size:12px;color:var(--text-1)}.search-box input::placeholder{color:var(--text-4)}
+    .filter-row{display:flex;gap:6px;overflow-x:auto;margin-bottom:7px;padding-bottom:2px}
+    .chip{border:1px solid var(--border);background:#fff;color:var(--text-3);border-radius:999px;font-size:11px;padding:3px 9px;cursor:pointer;white-space:nowrap}.chip.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+    .doc-list{flex:1;overflow-y:auto}
+    .doc-item{padding:10px 12px;border-left:3px solid transparent;cursor:pointer;transition:.15s}.doc-item:hover{background:var(--bg-gray)}.doc-item.active{background:var(--blue-bg);border-left-color:var(--blue)}
+    .doc-name{font-size:13px;line-height:18px;color:var(--text-1);font-weight:500;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .doc-meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px;color:var(--text-4)}
+    .tag{background:var(--bg-gray);color:var(--text-3);border-radius:3px;font-size:10px;padding:0 4px}.tag.ok{background:var(--success-bg);color:var(--success)}.tag.warn{background:var(--warning-bg);color:var(--warning)}.tag.run{background:var(--blue-bg);color:var(--blue)}
+    .doc-topbar{background:var(--bg-white);border-radius:10px;box-shadow:var(--shadow-sm);padding:12px;flex-shrink:0}
+    .doc-topbar-name{font-size:14px;font-weight:600;color:var(--text-1);margin-bottom:4px}.doc-topbar-meta{font-size:11px;color:var(--text-3)}
+    .timeline-wrap{flex:1;overflow-y:auto;padding:4px 2px;display:flex;flex-direction:column;gap:10px}
+    .step{background:var(--bg-white);border-radius:10px;box-shadow:var(--shadow-sm);border:1px solid transparent;overflow:hidden}
+    .step.open{border-color:rgba(22,119,255,.2)}.step-head{padding:10px 12px;display:flex;align-items:center;cursor:pointer;gap:10px}
+    .step-node{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;background:var(--bg-gray);color:var(--text-4)}
+    .step-node.done{background:var(--success-bg);color:var(--success)}.step-node.warn{background:var(--warning-bg);color:var(--warning)}.step-node.run{background:var(--blue-bg);color:var(--blue)}
+    .step-main{flex:1;min-width:0}.step-title{font-size:13px;color:var(--text-1);font-weight:600;margin-bottom:2px}.step-summary{font-size:11px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .step-badge{font-size:11px;border-radius:999px;padding:2px 8px;font-weight:500;background:var(--bg-gray);color:var(--text-4);white-space:nowrap}
+    .step-badge.ok{background:var(--success-bg);color:var(--success)}.step-badge.warn{background:var(--warning-bg);color:var(--warning)}
+    .step-body{display:none;border-top:1px solid var(--border);padding:10px 12px}.step.open .step-body{display:block}
+    .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+    .stat-card{background:var(--bg-gray);border-radius:8px;padding:8px 9px}.stat-card .label{font-size:10px;color:var(--text-3);margin-bottom:3px}.stat-card .val{font-size:20px;font-weight:700;line-height:20px;color:var(--text-1)}.stat-card .val small{font-size:11px;color:var(--text-3);font-weight:500}
+    .entity-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+    .entity-chip{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(22,119,255,.2);border-radius:4px;padding:2px 8px;font-size:11px}
+    .entity-chip.concept{background:#F0E8FF;color:#722ED1;border-color:rgba(114,46,209,.2)}
+    .entity-chip.relation{background:var(--success-bg);color:var(--success);border-color:rgba(35,178,131,.2)}
+    .ctrl-row{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+    .ctrl-btn{border:1px solid var(--border);background:#fff;color:var(--text-2);border-radius:6px;font-size:11px;padding:4px 9px;cursor:pointer}
+    .ctrl-btn.primary{background:var(--blue-bg);border-color:rgba(22,119,255,.22);color:var(--blue)}
+    .ctrl-btn.warn{background:var(--warning-bg);border-color:rgba(252,120,25,.24);color:var(--warning)}
+    .quality-bar{height:8px;border-radius:999px;background:var(--bg-gray);overflow:hidden;margin-top:6px}.quality-bar i{display:block;height:100%;border-radius:999px}
+    .issue-item{background:var(--warning-bg);border-radius:8px;padding:8px 10px;margin-top:8px;font-size:11px;color:var(--text-2);line-height:17px}
+    .issue-item b{color:var(--warning);display:block;margin-bottom:2px}
+    .quick-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+    .quick-stat{background:var(--bg-white);border:1px solid var(--border);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:3px}
+    .quick-stat-label{font-size:10px;color:var(--text-3)}.quick-stat-value{font-size:18px;line-height:18px;font-weight:700;color:var(--text-1)}.quick-stat-value small{font-size:11px;color:var(--text-3);font-weight:500}
+    .r-card{background:var(--bg-white);border:1px solid var(--border);border-radius:10px;padding:10px;box-shadow:var(--shadow-sm);margin-bottom:10px}
+    .r-card-title{font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:8px}
+    .dist-row{margin-bottom:7px}.dist-row:last-child{margin-bottom:0}.dist-row .name{font-size:11px;color:var(--text-3);margin-bottom:3px;display:flex;justify-content:space-between}
+    .dist-bar{height:6px;border-radius:999px;background:var(--bg-gray);overflow:hidden}.dist-bar i{display:block;height:100%;border-radius:999px}
+    .recent-list{display:flex;flex-direction:column;gap:6px}
+    .recent-item{background:var(--bg-gray);border-radius:7px;padding:7px;display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-2)}
+    .recent-item .status{font-size:10px;border-radius:999px;padding:1px 5px;font-weight:700;white-space:nowrap}
+    .empty{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;color:var(--text-4);font-size:12px;text-align:center;gap:8px;padding:16px}
+    .toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:rgba(18,21,26,.92);color:#fff;border-radius:8px;padding:7px 14px;font-size:12px;z-index:999;opacity:0;pointer-events:none;transition:.2s;white-space:nowrap}.toast.show{opacity:1}
+    ::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+  </style>
+</head>
+<body>
+    <div class="topnav">
+    <div class="topnav-dot"></div>
+    <div class="topnav-title">学科大脑</div>
+    <div class="topnav-sep"></div>
+    <button class="topnav-back" onclick="window.location='engine_dashboard.html'">返回总览</button>
+    <div class="topnav-sep"></div>
+    <div class="topnav-page">知识构建引擎可视化</div>
+    <div class="topnav-right">
+      <div class="topnav-badge">中医药大学 · 医学部</div>
+      <div class="topnav-badge">教研中心 · 管理视图</div>
+    </div>
+  </div>
+  </div>
+  <div class="workspace">
+    <section class="panel left-panel">
+      <div class="left-head">
+        <div class="left-title">文档列表 <span id="listCount">共 0 篇</span></div>
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0"><circle cx="6" cy="6" r="4.5" stroke="var(--text-4)" stroke-width="1.2"/><path d="M9.5 9.5L12.5 12.5" stroke="var(--text-4)" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <input id="searchInput" placeholder="搜索文档名称" oninput="onSearch(this.value)" />
+        </div>
+        <div class="filter-row" id="filterRow"></div>
+      </div>
+      <div class="doc-list" id="docList"></div>
+    </section>
+    <section class="panel center-panel" style="display:flex;">
+      <div class="doc-topbar" id="docTop">
+        <div class="doc-topbar-name" id="topName">-</div>
+        <div class="doc-topbar-meta" id="topMeta">-</div>
+      </div>
+      <div class="timeline-wrap" id="timelineWrap">
+        <div class="empty" id="emptyState">
+          <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><rect x="5" y="5" width="32" height="32" rx="7" stroke="currentColor" stroke-width="1.5"/><path d="M13 21h16M13 14h16M13 28h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          从左侧选择一篇文档，查看解析过程
+        </div>
+      </div>
+    </section>
+    <section class="panel right-panel" style="overflow-y:auto;">
+      <div class="quick-stats">
+        <div class="quick-stat"><div class="quick-stat-label">总文档数</div><div class="quick-stat-value">3,842</div></div>
+        <div class="quick-stat"><div class="quick-stat-label">总知识点</div><div class="quick-stat-value">28.6<small>k</small></div></div>
+        <div class="quick-stat"><div class="quick-stat-label">图谱节点</div><div class="quick-stat-value">12.4<small>k</small></div></div>
+        <div class="quick-stat"><div class="quick-stat-label">待处理</div><div class="quick-stat-value">23</div></div>
+      </div>
+      <div class="r-card">
+        <div class="r-card-title">解析质量分布</div>
+        <div class="dist-row"><div class="name"><span>优（>85分）</span><b>62%</b></div><div class="dist-bar"><i style="width:62%;background:var(--success)"></i></div></div>
+        <div class="dist-row"><div class="name"><span>良（70-85分）</span><b>28%</b></div><div class="dist-bar"><i style="width:28%;background:var(--warning)"></i></div></div>
+        <div class="dist-row"><div class="name"><span>差（<70分）</span><b>10%</b></div><div class="dist-bar"><i style="width:10%;background:var(--danger)"></i></div></div>
+      </div>
+      <div class="r-card">
+        <div class="r-card-title">最近上传</div>
+        <div class="recent-list">
+          <div class="recent-item"><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">中医内科学·第五章</span><span class="status" style="background:var(--success-bg);color:var(--success)">已完成</span></div>
+          <div class="recent-item"><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">温病学·卫气营血辨证</span><span class="status" style="background:var(--blue-bg);color:var(--blue)">解析中</span></div>
+          <div class="recent-item"><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">针灸学·配穴原则</span><span class="status" style="background:var(--warning-bg);color:var(--warning)">待处理</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+const docs=[{id:1,name:'中医诊断学·第四章·四诊合参',uploader:'张教授',time:'2026-04-14 09:30',type:'PDF',status:'done',pages:42,paragraphs:186,entities:124,concepts:['四诊合参','望诊','闻诊','问诊','切诊','辨证论治','证候'],relations:['四诊→合参','合参→辨证','辨证→论治'],nodes:89,edges:156,quality:92,issues:[]},{id:2,name:'中药学·十八反配伍禁忌',uploader:'李教授',time:'2026-04-13 14:20',type:'Word',status:'done',pages:28,paragraphs:112,entities:86,concepts:['十八反','配伍禁忌','甘遂','甘草','半夏','乌头'],relations:['甘遂↔甘草（反）','半夏↔乌头（反）'],nodes:62,edges:98,quality:78,issues:[{title:'OCR识别异常',desc:'第12-15页扫描件OCR质量低，部分术语识别错误'}]},{id:3,name:'方剂学·解表剂',uploader:'王教授',time:'2026-04-12 16:45',type:'PPT',status:'done',pages:56,paragraphs:234,entities:156,concepts:['桂枝汤','麻黄汤','解表剂','辛温解表','辛凉解表'],relations:['桂枝汤→表虚','麻黄汤→表实'],nodes:112,edges:187,quality:88,issues:[]},{id:4,name:'针灸学·配穴原则与禁忌',uploader:'陈教授',time:'2026-04-11 10:15',type:'PDF',status:'warn',pages:34,paragraphs:148,entities:98,concepts:['配穴','禁忌穴','安全规范','针刺深度'],relations:['穴位→禁忌','配穴→原则'],nodes:76,edges:124,quality:65,issues:[{title:'图谱关系不完整',desc:'穴位-禁忌关系边缺失较多，建议人工补充'},{title:'术语映射缺失',desc:'部分穴位别名未纳入术语库'}]}];
+let currentDoc=null,filter='all',searchTerm='';
+function init(){renderFilters();renderDocList();updateListCount();}
+function renderFilters(){const f=document.getElementById('filterRow');f.innerHTML='<div class="chip '+(filter==='all'?'active':'')+'" onclick="setFilter(\'all\')">全部</div><div class="chip '+(filter==='done'?'active':'')+'" onclick="setFilter(\'done\')">已完成</div><div class="chip '+(filter==='warn'?'active':'')+'" onclick="setFilter(\'warn\')">有问题</div>';}
+function setFilter(f2){filter=f2;renderFilters();renderDocList();}
+function onSearch(v){searchTerm=v.toLowerCase();renderDocList();}
+function renderDocList(){const filtered=docs.filter(d=>{if(filter==='done'&&d.status!=='done')return false;if(filter==='warn'&&d.issues.length===0)return false;if(searchTerm&&!d.name.toLowerCase().includes(searchTerm))return false;return true;});const list=document.getElementById('docList');list.innerHTML=filtered.map(d=>'<div class="doc-item '+(currentDoc&&currentDoc.id===d.id?'active':'')+'" onclick="loadDoc('+d.id+')"><div class="doc-name">'+d.name+'</div><div class="doc-meta"><span>'+d.uploader+'</span><span>'+d.time.split(' ')[0]+'</span><span class="tag">'+d.type+'</span>'+(d.issues.length>0?'<span class="tag warn">'+d.issues.length+' 个问题</span>':'<span class="tag ok">质量 '+d.quality+'</span>')+'</div></div>').join('');updateListCount();}
+function updateListCount(){document.getElementById('listCount').textContent='共 '+docs.length+' 篇';}
+function loadDoc(id){currentDoc=docs.find(d=>d.id===id);if(!currentDoc)return;renderDocList();document.getElementById('emptyState').style.display='none';document.getElementById('topName').textContent=currentDoc.name;document.getElementById('topMeta').textContent=currentDoc.uploader+' · '+currentDoc.time+' · '+currentDoc.type+' · '+currentDoc.pages+' 页';renderTimeline();}
+function renderTimeline(){const d=currentDoc;const w=document.getElementById('timelineWrap');w.innerHTML='<div class="step" id="step1"><div class="step-head" onclick="toggleStep(1)"><div class="step-node done">1</div><div class="step-main"><div class="step-title">文档解析</div><div class="step-summary">'+d.type+' 格式，'+d.pages+' 页，'+d.paragraphs+' 段落</div></div><div class="step-badge ok">完成</div></div><div class="step-body"><div class="stat-grid"><div class="stat-card"><div class="label">文档格式</div><div class="val">'+d.type+'</div></div><div class="stat-card"><div class="label">总页数</div><div class="val">'+d.pages+'</div></div><div class="stat-card"><div class="label">段落数</div><div class="val">'+d.paragraphs+'</div></div></div><div class="ctrl-row"><button class="ctrl-btn primary" onclick="toast(\'已重新解析\')">重新解析</button><button class="ctrl-btn" onclick="toast(\'已导出解析结果\')">导出结果</button></div></div></div><div class="step" id="step2"><div class="step-head" onclick="toggleStep(2)"><div class="step-node done">2</div><div class="step-main"><div class="step-title">知识点提取</div><div class="step-summary">提取 '+d.entities+' 个实体，'+d.concepts.length+' 个核心概念</div></div><div class="step-badge ok">完成</div></div><div class="step-body"><div class="stat-grid"><div class="stat-card"><div class="label">实体总数</div><div class="val">'+d.entities+'</div></div><div class="stat-card"><div class="label">核心概念</div><div class="val">'+d.concepts.length+'</div></div><div class="stat-card"><div class="label">关系数</div><div class="val">'+d.relations.length+'</div></div></div><div style="font-size:11px;color:var(--text-3);margin-top:8px">核心概念</div><div class="entity-list">'+d.concepts.map(c=>'<span class="entity-chip concept">'+c+'</span>').join('')+'</div><div style="font-size:11px;color:var(--text-3);margin-top:8px">关系</div><div class="entity-list">'+d.relations.map(r=>'<span class="entity-chip relation">'+r+'</span>').join('')+'</div><div class="ctrl-row"><button class="ctrl-btn primary" onclick="toast(\'已打开实体编辑器\')">编辑实体</button><button class="ctrl-btn" onclick="toast(\'已添加手动标注\')">手动标注</button></div></div></div><div class="step" id="step3"><div class="step-head" onclick="toggleStep(3)"><div class="step-node done">3</div><div class="step-main"><div class="step-title">图谱构建</div><div class="step-summary">'+d.nodes+' 个节点，'+d.edges+' 条边</div></div><div class="step-badge ok">完成</div></div><div class="step-body"><div class="stat-grid"><div class="stat-card"><div class="label">图谱节点</div><div class="val">'+d.nodes+'</div></div><div class="stat-card"><div class="label">图谱边</div><div class="val">'+d.edges+'</div></div><div class="stat-card"><div class="label">关系类型</div><div class="val">'+d.relations.length+'</div></div></div><div class="ctrl-row"><button class="ctrl-btn primary" onclick="toast(\'已打开图谱编辑器\')">编辑图谱</button><button class="ctrl-btn" onclick="toast(\'已补充关系边\')">补充关系</button></div></div></div><div class="step" id="step4"><div class="step-head" onclick="toggleStep(4)"><div class="step-node '+(d.issues.length>0?'warn':'done')+'">4</div><div class="step-main"><div class="step-title">质量检查</div><div class="step-summary">质量评分 '+d.quality+'/100'+(d.issues.length>0?'，发现 '+d.issues.length+' 个问题':'，无异常')+'</div></div><div class="step-badge '+(d.issues.length>0?'warn':'ok')+'">'+(d.issues.length>0?d.issues.length+' 个问题':'通过')+'</div></div><div class="step-body"><div style="font-size:11px;color:var(--text-3);margin-bottom:6px">质量评分</div><div style="display:flex;align-items:center;gap:8px"><span style="font-size:24px;font-weight:700;color:'+(d.quality>=85?'var(--success)':d.quality>=70?'var(--warning)':'var(--danger)')+'">'+d.quality+'</span><span style="font-size:11px;color:var(--text-3)">/100</span></div><div class="quality-bar"><i style="width:'+d.quality+'%;background:'+(d.quality>=85?'var(--success)':d.quality>=70?'var(--warning)':'var(--danger)')+'"></i></div>'+d.issues.map(iss=>'<div class="issue-item"><b>'+iss.title+'</b>'+iss.desc+'</div>').join('')+'<div class="ctrl-row"><button class="ctrl-btn primary" onclick="toast(\'已重新检查\')">重新检查</button><button class="ctrl-btn warn" onclick="toast(\'已标记待修复\')">标记待修复</button></div></div></div>';}
+function toggleStep(n){const s=document.getElementById('step'+n);const isOpen=s.classList.contains('open');document.querySelectorAll('.step').forEach(st=>st.classList.remove('open'));if(!isOpen)s.classList.add('open');}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+init();
+  
+document.addEventListener('mousemove', function(e) {
+  var x = e.clientX - 300;
+  var y = e.clientY - 300;
+  document.body.style.setProperty('--mx', x + 'px');
+  document.body.style.setProperty('--my', y + 'px');
+});
+(function() {
+  var style = document.createElement('style');
+  style.textContent = 'body::before { transform: translate(var(--mx, 0px), var(--my, 0px)); }';
+  document.head.appendChild(style);
+})();
+  </script>
+</body>
+</html>

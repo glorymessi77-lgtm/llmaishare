@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>T04 问答构建 · 学科大脑</title>
+<link rel="stylesheet" href="assets/tokens.css" /><link rel="stylesheet" href="assets/style.css" />
+</head><body data-page="t04">
+<div class="layout">
+  <aside class="sidebar" id="sidebar-mount"></aside>
+  <main class="main">
+    <header class="topbar"><div><span class="title">问答构建</span><span class="crumbs">知识构建 / T04 问答构建</span></div>
+      <div class="search"><i data-lucide="search" width="14" height="14"></i><input placeholder="搜索问答" /></div></header>
+    <div class="content">
+      <section class="page-header">
+        <div class="left"><span class="code-badge">T04</span><div><h1>问答库构建工具</h1><div class="subtitle">AI 自动生成候选问答、教师审核发布，支持单条 / Excel 批量创建</div></div></div>
+        <div class="actions"><button class="btn"><i data-lucide="download" width="14" height="14"></i>导出</button>
+          <button class="btn btn-primary"><i data-lucide="sparkles" width="14" height="14"></i>AI 生成</button></div>
+      </section>
+      <section class="kpi-row" id="kpi-row"></section>
+      <section class="filter-bar">
+        <select id="f-subject"><option value="">全部学科</option></select>
+        <select id="f-status"><option value="">全部状态</option><option value="pending">待审</option><option value="approved">通过</option><option value="rejected">驳回</option></select>
+        <select id="f-source"><option value="">全部来源</option><option value="ai">AI 生成</option><option value="manual">人工编写</option><option value="import">批量导入</option></select>
+        <input id="f-search" class="search-input" type="text" placeholder="搜索问题 / 答案" />
+        <span class="spacer"></span><button class="btn btn-sm">批量通过</button>
+      </section>
+      <div class="panel"><table class="data" id="tbl">
+        <thead><tr><th>问题</th><th>学科 / 课程</th><th>来源</th><th style="text-align:right">置信度</th><th>状态</th><th>审核人</th><th>更新</th></tr></thead><tbody></tbody></table></div>
+    </div>
+  </main>
+</div>
+<aside class="drawer" id="drawer"><div class="drawer-head"><span class="title">问答详情</span><button class="close"><i data-lucide="x" width="16" height="16"></i></button></div><div class="drawer-body"></div></aside>
+<div class="drawer-mask" id="drawer-mask"></div>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="assets/data.js"></script><script src="assets/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const S=window.MOCK.qaStats, list=window.MOCK.qaList, meta=window.MOCK.qaStatusMeta, sm=window.MOCK.qaSourceMeta;
+  document.getElementById('kpi-row').innerHTML = `
+    <div class="kpi-card"><div class="label">问答对</div><div class="value">${S.total}<span class="unit">条</span></div><div class="delta up">↑ 42 本周</div></div>
+    <div class="kpi-card"><div class="label">已审</div><div class="value">${window.fmtNum(S.reviewed)}<span class="unit">条</span></div><div class="delta up">↑ 12.3%</div></div>
+    <div class="kpi-card"><div class="label">平均置信度</div><div class="value">${S.avgConfidence}<span class="unit">%</span></div><div class="delta flat">稳定</div></div>
+    <div class="kpi-card"><div class="label">通过率</div><div class="value">${S.passRate}<span class="unit">%</span></div><div class="delta up">↑ 3.1%</div></div>`;
+  document.getElementById('f-subject').innerHTML += window.MOCK.subjects.map(s=>`<option value="${s}">${s}</option>`).join('');
+
+  function render(rows){
+    document.querySelector('#tbl tbody').innerHTML = rows.map((q,i)=>`
+      <tr data-idx="${i}">
+        <td class="strong" style="max-width:360px;"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${q.question}</div><div style="font-size:var(--fs-xs);color:var(--text-4);">${q.id}</div></td>
+        <td><span class="chip">${q.subject}</span><div style="font-size:var(--fs-xs);color:var(--text-3);margin-top:2px;">${q.course}</div></td>
+        <td style="color:var(--text-3);font-size:var(--fs-xs);">${sm[q.source]}</td>
+        <td style="text-align:right"><div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;"><div style="width:42px;"><div class="progress"><div class="fill" style="width:${q.confidence}%"></div></div></div><span class="num">${q.confidence}</span></div></td>
+        <td><span class="chip ${meta[q.status].tone}">${meta[q.status].text}</span></td>
+        <td>${q.reviewer}</td><td class="num">${q.updatedAt}</td>
+      </tr>`).join('');
+    document.querySelectorAll('#tbl tbody tr').forEach(tr=>tr.addEventListener('click',()=>openQa(rows[+tr.dataset.idx])));
+  }
+  render(list.slice(0,26));
+
+  function openQa(q){
+    window.__openDrawer(`
+      <div class="drawer-meta">
+        <div class="row"><span class="k">ID</span><span class="v">${q.id}</span></div>
+        <div class="row"><span class="k">来源</span><span class="v">${sm[q.source]}</span></div>
+        <div class="row"><span class="k">学科</span><span class="v">${q.subject}</span></div>
+        <div class="row"><span class="k">课程</span><span class="v">${q.course}</span></div>
+        <div class="row"><span class="k">置信度</span><span class="v num">${q.confidence}%</span></div>
+        <div class="row"><span class="k">状态</span><span class="v">${meta[q.status].text}</span></div>
+      </div>
+      <div class="drawer-section"><h4>问题</h4><p style="margin:0;color:var(--text-1);font-size:var(--fs-md);line-height:1.7;">${q.question}</p></div>
+      <div class="drawer-section"><h4>答案</h4><p style="margin:0;padding:12px 14px;background:var(--bg);border-radius:var(--r-md);color:var(--text-2);line-height:1.7;font-size:var(--fs-sm);">${q.answer}</p></div>
+      <div class="drawer-section"><h4>出处</h4><span class="chip info">${q.reference}</span></div>
+      <div class="drawer-section"><h4>审核日志</h4><div class="timeline">${q.log.map(l=>`<div class="item"><span class="at">${l.at}</span><span class="who">${l.who}</span><span class="action">${l.action}</span>${l.note?`<div class="note">${l.note}</div>`:''}</div>`).join('')}</div></div>`, '问答 ' + q.id);
+  }
+
+  initTableSort('#tbl');
+  const filter=()=>{const sub=document.getElementById('f-subject').value,st=document.getElementById('f-status').value,src=document.getElementById('f-source').value,qq=document.getElementById('f-search').value.toLowerCase();
+    render(list.filter(q=>(!sub||q.subject===sub)&&(!st||q.status===st)&&(!src||q.source===src)&&(!qq||q.question.toLowerCase().includes(qq))).slice(0,30));};
+  ['f-subject','f-status','f-source'].forEach(id=>document.getElementById(id).addEventListener('change',filter));
+  document.getElementById('f-search').addEventListener('input',filter);
+  lucide.createIcons();
+});
+</script>
+</body></html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>T02 术语工作台 · 学科大脑</title>
+<link rel="stylesheet" href="assets/tokens.css" /><link rel="stylesheet" href="assets/style.css" />
+</head><body data-page="t02">
+<div class="layout">
+  <aside class="sidebar" id="sidebar-mount"></aside>
+  <main class="main">
+    <header class="topbar"><div><span class="title">术语工作台</span><span class="crumbs">知识构建 / T02 术语工作台</span></div>
+      <div class="search"><i data-lucide="search" width="14" height="14"></i><input placeholder="搜索术语" /></div></header>
+    <div class="content">
+      <section class="page-header">
+        <div class="left"><span class="code-badge">T02</span><div><h1>术语管理工作台</h1><div class="subtitle">术语抽取、审核、发布一体化，构建学科术语体系</div></div></div>
+        <div class="actions"><button class="btn"><i data-lucide="download" width="14" height="14"></i>导出</button>
+          <button class="btn btn-primary"><i data-lucide="sparkles" width="14" height="14"></i>AI 抽取</button></div>
+      </section>
+      <section class="kpi-row" id="kpi-row"></section>
+      <section class="filter-bar">
+        <select id="f-subject"><option value="">全部学科</option></select>
+        <select id="f-status"><option value="">全部状态</option><option value="pending">待审</option><option value="approved">已发布</option><option value="rejected">已驳回</option><option value="draft">草稿</option></select>
+        <select><option>全部来源</option><option>教材抽取</option><option>课件解析</option><option>教师提交</option></select>
+        <input id="f-search" class="search-input" type="text" placeholder="搜索术语名称 / 释义" />
+        <span class="spacer"></span><button class="btn btn-sm">批量发布</button>
+      </section>
+      <div class="panel"><table class="data" id="tbl">
+        <thead><tr><th>术语</th><th>学科</th><th>释义</th><th style="text-align:right">置信度</th><th>来源</th><th>状态</th><th>审核人</th><th>更新</th></tr></thead>
+        <tbody></tbody></table></div>
+    </div>
+  </main>
+</div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head"><span class="title">术语详情</span><button class="close"><i data-lucide="x" width="16" height="16"></i></button></div>
+  <div class="drawer-body"></div>
+</aside><div class="drawer-mask" id="drawer-mask"></div>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="assets/data.js"></script><script src="assets/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const S=window.MOCK.termStats, list=window.MOCK.terms, meta=window.MOCK.termStatusMeta;
+  document.getElementById('kpi-row').innerHTML = `
+    <div class="kpi-card"><div class="label">术语总数</div><div class="value">${S.total}<span class="unit">条</span></div><div class="delta up">↑ 18 本周</div></div>
+    <div class="kpi-card"><div class="label">已发布</div><div class="value">${S.approved}<span class="unit">条</span></div><div class="delta up">↑ 14.2%</div></div>
+    <div class="kpi-card"><div class="label">待审核</div><div class="value">${S.pending}<span class="unit">条</span></div><div class="delta flat">分配中</div></div>
+    <div class="kpi-card"><div class="label">平均置信度</div><div class="value">${S.avgConfidence}<span class="unit">%</span></div><div class="delta up">↑ 2%</div></div>`;
+  document.getElementById('f-subject').innerHTML += window.MOCK.subjects.map(s=>`<option value="${s}">${s}</option>`).join('');
+
+  function render(rows){
+    document.querySelector('#tbl tbody').innerHTML = rows.map((t,i)=>`
+      <tr data-idx="${i}">
+        <td class="strong">${t.name}<div style="font-size:var(--fs-xs);color:var(--text-4);">${t.id}</div></td>
+        <td><span class="chip">${t.subject}</span></td>
+        <td style="max-width:320px;color:var(--text-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.definition}</td>
+        <td style="text-align:right">
+          <div style="display:flex;align-items:center;gap:6px;justify-content:flex-end;">
+            <div style="width:48px;"><div class="progress"><div class="fill" style="width:${t.confidence}%"></div></div></div>
+            <span class="num">${t.confidence}</span>
+          </div>
+        </td>
+        <td style="color:var(--text-3);font-size:var(--fs-xs);">${t.source}</td>
+        <td><span class="chip ${meta[t.status].tone}">${meta[t.status].text}</span></td>
+        <td>${t.reviewer}</td><td class="num">${t.updatedAt}</td>
+      </tr>`).join('');
+    document.querySelectorAll('#tbl tbody tr').forEach(tr=>tr.addEventListener('click',()=>openTerm(rows[+tr.dataset.idx])));
+  }
+  render(list.slice(0,26));
+
+  function openTerm(t){
+    window.__openDrawer(`
+      <div class="drawer-meta">
+        <div class="row"><span class="k">ID</span><span class="v">${t.id}</span></div>
+        <div class="row"><span class="k">学科</span><span class="v">${t.subject}</span></div>
+        <div class="row"><span class="k">状态</span><span class="v">${meta[t.status].text}</span></div>
+        <div class="row"><span class="k">置信度</span><span class="v num">${t.confidence}%</span></div>
+        <div class="row"><span class="k">引用次数</span><span class="v num">${t.citations}</span></div>
+        <div class="row"><span class="k">来源</span><span class="v">${t.source}</span></div>
+      </div>
+      <div class="drawer-section"><h4>释义</h4><p style="margin:0;color:var(--text-2);line-height:1.7;font-size:var(--fs-sm);">${t.definition}</p></div>
+      ${t.synonyms.length?`<div class="drawer-section"><h4>同义词</h4><div style="display:flex;gap:6px;flex-wrap:wrap;">${t.synonyms.map(s=>`<span class="chip info">${s}</span>`).join('')}</div></div>`:''}
+      <div class="drawer-section"><h4>审核日志</h4><div class="timeline">${t.log.map(l=>`<div class="item"><span class="at">${l.at}</span><span class="who">${l.who}</span><span class="action">${l.action}</span>${l.note?`<div class="note">${l.note}</div>`:''}</div>`).join('')}</div></div>`, t.name);
+  }
+
+  initTableSort('#tbl');
+  const filter=()=>{const sub=document.getElementById('f-subject').value,st=document.getElementById('f-status').value,q=document.getElementById('f-search').value.toLowerCase();
+    render(list.filter(t=>(!sub||t.subject===sub)&&(!st||t.status===st)&&(!q||t.name.toLowerCase().includes(q)||t.definition.toLowerCase().includes(q))).slice(0,30));};
+  document.getElementById('f-subject').addEventListener('change',filter);
+  document.getElementById('f-status').addEventListener('change',filter);
+  document.getElementById('f-search').addEventListener('input',filter);
+  lucide.createIcons();
+});
+</script>
+</body></html>

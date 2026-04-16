@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>工具层 · 学科大脑</title>
+<link rel="stylesheet" href="assets/tokens.css" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body data-page="dashboard">
+<div class="layout">
+  <aside class="sidebar" id="sidebar-mount"></aside>
+  <main class="main">
+    <header class="topbar">
+      <div><span class="title">工具层</span><span class="crumbs">总览 / 工具层</span></div>
+      <div class="search"><i data-lucide="search" width="14" height="14"></i><input placeholder="搜索工具" /></div>
+    </header>
+    <div class="content">
+      <section class="page-header">
+        <div class="left">
+          <div><h1>学科大脑 · 工具层</h1><div class="subtitle">10 个系统工具 · 4 个业务阶段 · 数据自左向右流转</div></div>
+        </div>
+        <div class="actions">
+          <a class="btn" href="runtime.html"><i data-lucide="activity" width="14" height="14"></i>运行看板</a>
+          <button class="btn btn-primary"><i data-lucide="plus" width="14" height="14"></i>申请接入</button>
+        </div>
+      </section>
+
+      <section class="kpi-row">
+        <div class="kpi-card"><div class="label">工具</div><div class="value">10<span class="unit">个</span></div><div class="delta flat">覆盖 5 阶段</div></div>
+        <div class="kpi-card"><div class="label">业务阶段</div><div class="value">4<span class="unit">段</span></div><div class="delta flat">数据流转</div></div>
+        <div class="kpi-card"><div class="label">接入学科</div><div class="value">12<span class="unit">门</span></div><div class="delta up">↑ 3 门</div></div>
+        <div class="kpi-card"><div class="label">活跃教师</div><div class="value">176<span class="unit">人</span></div><div class="delta up">↑ 4.1%</div></div>
+      </section>
+
+      <h3 style="margin:28px 0 12px;font-size:var(--fs-lg);">4 大业务阶段</h3>
+      <div id="stage-band"></div>
+
+      <h3 style="margin:32px 0 12px;font-size:var(--fs-lg);">全部工具（10）</h3>
+      <div class="entry-grid" id="tool-grid"></div>
+    </div>
+  </main>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const { tools, modules } = window.MOCK;
+  document.getElementById('stage-band').innerHTML = `
+    <div class="stage-band">${modules.map(m => `
+      <div class="stage-item">
+        <div class="idx">阶段 ${m.index}</div>
+        <div class="title">${m.title}</div>
+        <div class="desc">${m.desc}</div>
+        <div class="bar"></div>
+        <div style="display:flex;gap:14px;margin-top:12px;">
+          ${m.metrics.map(x=>`<div><div style="font-size:var(--fs-xs);color:var(--text-3);">${x.label}</div><div class="num" style="font-size:var(--fs-lg);font-weight:600;">${x.value}${x.unit?`<span style="font-size:var(--fs-xs);color:var(--text-3);margin-left:2px;">${x.unit}</span>`:''}</div></div>`).join('')}
+        </div>
+      </div>`).join('')}</div>`;
+
+  document.getElementById('tool-grid').innerHTML = tools.map(t => `
+    <a class="entry-card" href="${t.path}">
+      <span class="code">${t.code}</span>
+      <div class="title">${t.name}</div>
+      <div class="desc">${t.tagline}</div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px;padding-top:10px;border-top:1px dashed var(--border);font-size:var(--fs-xs);color:var(--text-3);">
+        <span>调用 <span class="num" style="color:var(--text-1);font-weight:500;">${window.fmtNum(t.calls)}</span></span>
+        ${window.renderDelta(t.delta)}
+      </div>
+    </a>`).join('');
+  lucide.createIcons();
+});
+</script>
+</body>
+</html>

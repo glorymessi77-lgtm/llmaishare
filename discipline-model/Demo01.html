@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Demo 01 · 建 · 新建课程 · 学科大脑</title>
+<style>
+:root{
+  --xy:#00B89C;--xy-dk:#00856F;--xy-sf:#E6F7F3;--xy-sf2:#D1F7EF;
+  --bg:#F5F7FA;--white:#fff;
+  --t1:#1A1A1A;--t2:#4B4B4B;--t3:#8C8C8C;--t4:#BFBFBF;
+  --bd:#EAEAEA;--bd-soft:#F0F0F0;
+  --coral:#FF7849;--coral-sf:#FFF3ED;
+  --blue:#3B82F6;--blue-sf:#DBEAFE;
+  --purple:#A78BFA;--purple-sf:#EDE9FE;
+  --green:#10B981;--green-sf:#D1FAE5;
+  --orange:#F59E0B;--orange-sf:#FEF3C7;
+  --r:10px;
+  --ff:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;
+  --mono:'JetBrains Mono','SF Mono',Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ff);background:var(--bg);color:var(--t1);font-size:14px;min-width:1440px;min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+.shell-top{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #E8EDF3;height:56px;display:flex;align-items:center;padding:0 32px;gap:20px;}
+.shell-brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:var(--xy);}
+.shell-brand b{width:30px;height:30px;background:linear-gradient(135deg,var(--xy),#1ABC9C);color:#fff;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;}
+.shell-nav{display:flex;gap:4px;margin-left:24px;}
+.shell-nav a{padding:8px 14px;font-size:13px;color:#6B7B8F;cursor:pointer;border-radius:6px;text-decoration:none;}
+.shell-nav a.on{color:var(--xy);font-weight:600;}
+.shell-right{margin-left:auto;display:flex;align-items:center;gap:14px;}
+.shell-back{font-size:12px;color:var(--t3);text-decoration:none;padding:6px 14px;border:1px solid var(--bd);border-radius:999px;transition:.2s;}
+.shell-back:hover{color:var(--xy);border-color:var(--xy);}
+.shell-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#EF4444);color:#fff;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;}
+
+/* ==== SCENE 1: Course grid ==== */
+.scene{
+  transition:opacity 0.6s,transform 0.6s;
+}
+.scene.hidden{opacity:0;transform:scale(0.98);pointer-events:none;position:absolute;top:56px;left:0;right:0;}
+.scene.visible{opacity:1;transform:scale(1);}
+
+.banner{max-width:1280px;margin:20px auto 0;padding:0 32px;}
+.banner-in{
+  background:linear-gradient(135deg,#E8F5F1 0%,#F0F9FF 60%,#FDF4F0 100%);
+  border-radius:16px;padding:30px 44px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.banner-in h1{font-size:24px;font-weight:800;color:#2C3E50;margin-bottom:4px;}
+.banner-in p{font-size:13px;color:#6B7B8F;}
+.banner-in .illus{font-size:52px;opacity:0.3;}
+
+.section{max-width:1280px;margin:24px auto;padding:0 32px;}
+.sec-head{display:flex;align-items:center;margin-bottom:16px;gap:20px;}
+.sec-head h2{font-size:17px;font-weight:700;color:#2C3E50;}
+.sec-tabs{display:flex;gap:14px;margin-left:8px;}
+.sec-tab{font-size:13px;color:var(--t3);cursor:pointer;padding:4px 2px;position:relative;}
+.sec-tab.on{color:var(--xy);font-weight:600;}
+.sec-tab.on::after{content:'';position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);width:20px;height:2px;background:var(--xy);border-radius:2px;}
+.sec-head .right{margin-left:auto;display:flex;gap:10px;align-items:center;}
+.search-in{padding:7px 14px;background:#fff;border:1px solid var(--bd);border-radius:7px;font-size:13px;width:220px;color:var(--t3);display:flex;align-items:center;gap:8px;}
+.btn-new{
+  padding:10px 22px;background:var(--xy);color:#fff;border:none;border-radius:8px;
+  font-size:13px;font-weight:600;cursor:pointer;font-family:var(--ff);
+  display:flex;align-items:center;gap:6px;transition:.15s;
+  box-shadow:0 2px 8px rgba(0,184,156,0.2);
+}
+.btn-new.glow{animation:btnGlow 1.8s ease-in-out infinite;}
+@keyframes btnGlow{0%,100%{box-shadow:0 2px 8px rgba(0,184,156,0.2);}50%{box-shadow:0 2px 8px rgba(0,184,156,0.2),0 0 0 10px rgba(0,184,156,0.15);}}
+.btn-new:hover{background:var(--xy-dk);transform:translateY(-1px);}
+
+.course-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.course-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.06);cursor:pointer;transition:.2s;position:relative;}
+.course-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,0.08);}
+.course-cover{height:120px;display:flex;align-items:center;justify-content:center;font-size:40px;color:rgba(255,255,255,0.9);position:relative;}
+.course-info{padding:14px 18px;}
+.course-info h3{font-size:14px;font-weight:600;color:#2C3E50;margin-bottom:4px;}
+.course-info p{font-size:11px;color:#6B7B8F;}
+.course-card.placeholder{background:transparent;border:2px dashed var(--bd);display:flex;align-items:center;justify-content:center;min-height:180px;color:var(--t3);font-size:13px;flex-direction:column;gap:6px;}
+.course-card.placeholder:hover{border-color:var(--xy);color:var(--xy);}
+.course-card.placeholder .pl-ico{font-size:28px;}
+
+/* ==== SCENE 2: Graph Builder Workspace ==== */
+.workspace{
+  position:fixed;
+  inset:56px 0 0 0;
+  background:#0A1020;
+  color:#F1F5F9;
+  display:grid;
+  grid-template-columns:1fr 460px;
+  z-index:10;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.6s;
+}
+.workspace.visible{opacity:1;pointer-events:auto;}
+
+.ws-main{
+  position:relative;
+  overflow:hidden;
+  padding:24px 32px;
+  display:flex;
+  flex-direction:column;
+  background-image:radial-gradient(circle at 50% 50%,rgba(0,184,156,0.08) 0%,transparent 70%);
+}
+
+/* Grid background */
+.ws-main::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;
+}
+
+.ws-head{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  margin-bottom:14px;
+  gap:14px;
+}
+.ws-label{
+  font-family:var(--mono);font-size:10px;color:var(--xy);
+  letter-spacing:0.15em;padding:5px 12px;
+  background:rgba(0,184,156,0.1);border:1px solid rgba(0,184,156,0.35);
+  border-radius:4px;
+}
+.ws-title{
+  font-size:24px;font-weight:800;letter-spacing:-0.01em;
+}
+.ws-title .course{color:var(--xy);}
+
+.ws-right-stats{
+  margin-left:auto;
+  display:flex;gap:22px;
+}
+.ws-stat{text-align:right;}
+.ws-stat-num{
+  font-family:var(--mono);font-size:28px;font-weight:900;
+  color:var(--xy);line-height:1;letter-spacing:-0.03em;
+}
+.ws-stat-lbl{
+  font-size:10px;color:#64748B;letter-spacing:0.08em;
+  font-family:var(--mono);margin-top:4px;
+}
+
+.ws-back{
+  padding:6px 14px;border:1px solid rgba(255,255,255,0.15);
+  border-radius:999px;color:#94A3B8;font-size:11px;
+  cursor:pointer;font-family:var(--mono);letter-spacing:0.05em;
+  background:transparent;transition:.2s;
+}
+.ws-back:hover{color:var(--xy);border-color:var(--xy);}
+
+/* Graph canvas */
+.graph-canvas{
+  flex:1;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.graph-svg{
+  width:100%;
+  height:100%;
+  max-width:1000px;
+  max-height:700px;
+}
+
+.graph-overlay{
+  position:absolute;
+  top:14px;left:14px;
+  display:flex;gap:8px;font-family:var(--mono);font-size:10px;color:#94A3B8;
+}
+.graph-overlay .badge{
+  padding:4px 10px;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);
+  border-radius:4px;display:flex;align-items:center;gap:6px;
+}
+.graph-overlay .badge.live::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--xy);box-shadow:0 0 8px var(--xy);
+  animation:pulse 1.2s infinite;
+}
+@keyframes pulse{50%{opacity:0.3;}}
+
+.graph-legend{
+  position:absolute;
+  bottom:20px;left:20px;
+  background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px;padding:10px 14px;font-size:10px;color:#94A3B8;font-family:var(--mono);
+}
+.graph-legend h5{font-size:9px;color:#64748B;margin-bottom:6px;letter-spacing:0.1em;}
+.graph-legend .row{display:flex;align-items:center;gap:6px;margin:3px 0;}
+.graph-legend .d{width:10px;height:10px;border-radius:50%;}
+.graph-legend .d.c{background:#FF7849;box-shadow:0 0 8px #FF7849;}
+.graph-legend .d.ch{background:#A78BFA;box-shadow:0 0 6px #A78BFA;}
+.graph-legend .d.kp{background:#00B89C;box-shadow:0 0 4px #00B89C;}
+
+/* ==== SVG node styles ==== */
+.node-circle{transition:all 0.4s cubic-bezier(0.22,1,0.36,1);}
+.node-text{
+  font-family:var(--ff);font-weight:600;
+  fill:#F1F5F9;text-anchor:middle;dominant-baseline:middle;
+  transition:opacity 0.5s 0.2s;
+}
+.node-line{transition:stroke-dashoffset 0.8s ease;}
+
+/* Appear animations via JS */
+
+.chapter-label{
+  position:absolute;
+  padding:5px 11px;background:rgba(167,139,250,0.15);
+  border:1px solid rgba(167,139,250,0.4);
+  border-radius:6px;
+  font-size:11px;font-weight:600;color:#C4B5FD;
+  pointer-events:none;
+  white-space:nowrap;
+  transform:translate(-50%,-50%);
+  opacity:0;
+  transition:opacity 0.4s;
+}
+.chapter-label.show{opacity:1;}
+
+/* ==== Right Drawer: XClaw + dispatch ==== */
+.ws-drawer{
+  background:#0F1626;border-left:1px solid rgba(255,255,255,0.08);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.wsd-top{
+  height:52px;background:#0A1020;border-bottom:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0;
+}
+.wsd-top .logo{
+  width:32px;height:32px;border-radius:8px;background:#fff;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;padding:2px;
+}
+.wsd-top .logo img{width:100%;height:100%;object-fit:contain;}
+.wsd-top .tt{font-size:13px;font-weight:700;color:#F1F5F9;}
+.wsd-top .sub{font-size:10px;color:#64748B;font-family:var(--mono);margin-top:1px;}
+.wsd-body{flex:1;overflow-y:auto;padding:20px 22px;}
+
+.wsd-section{margin-bottom:22px;}
+.wsd-label{
+  font-family:var(--mono);font-size:10px;color:#64748B;
+  letter-spacing:0.1em;margin-bottom:10px;
+}
+.wsd-card{
+  background:#162037;border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;padding:14px 16px;font-size:12px;color:#CBD5E1;line-height:1.75;
+}
+.wsd-card strong{color:#F1F5F9;}
+
+/* Dispatch trace */
+.trace{
+  background:#0A1020;border-radius:10px;padding:14px 16px;
+  font-family:var(--mono);font-size:11px;
+  border:1px solid rgba(255,255,255,0.08);
+}
+.trace-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;font-size:10px;color:var(--xy);letter-spacing:0.12em;
+}
+.trace-head .dot{
+  display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--xy);box-shadow:0 0 6px var(--xy);margin-right:5px;
+  animation:pulse 1s infinite;
+}
+.trace-line{
+  padding:5px 0;display:flex;align-items:center;gap:8px;
+  color:#64748B;opacity:0.4;transition:all 0.4s;
+}
+.trace-line .t-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:#64748B;flex-shrink:0;transition:.3s;
+}
+.trace-line.active{opacity:1;color:#FFB86B;}
+.trace-line.active .t-dot{background:#FFB86B;box-shadow:0 0 8px #FFB86B;animation:pulse 0.8s infinite;}
+.trace-line.done{opacity:1;color:#CBD5E1;}
+.trace-line.done .t-dot{background:var(--xy);box-shadow:0 0 6px var(--xy);}
+.trace-line .t-code{margin-left:auto;font-size:9px;color:#475569;}
+.trace-progress{
+  margin-top:10px;height:3px;background:rgba(255,255,255,0.06);
+  border-radius:2px;overflow:hidden;
+}
+.trace-progress-bar{
+  height:100%;background:linear-gradient(90deg,var(--xy),#00D4B4);
+  width:0;transition:width 0.5s;
+}
+
+/* Live counters */
+.counter-grid{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;
+}
+.counter{
+  background:#162037;border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;padding:14px 10px;text-align:center;
+}
+.counter .num{
+  font-family:var(--mono);font-size:24px;font-weight:900;
+  color:var(--xy);line-height:1;letter-spacing:-0.02em;
+}
+.counter .lbl{
+  font-size:9px;color:#64748B;font-family:var(--mono);
+  letter-spacing:0.08em;margin-top:6px;
+}
+
+/* Done card */
+.done-card{
+  background:linear-gradient(135deg,rgba(0,184,156,0.12) 0%,rgba(0,184,156,0.04) 100%);
+  border:1px solid var(--xy);border-radius:12px;padding:18px 20px;
+  opacity:0;transform:translateY(10px);transition:all 0.5s;
+}
+.done-card.show{opacity:1;transform:translateY(0);}
+.done-card h4{
+  font-size:14px;font-weight:700;color:var(--xy);
+  display:flex;align-items:center;gap:8px;margin-bottom:12px;
+}
+.done-card h4 .tick{
+  width:22px;height:22px;border-radius:50%;background:var(--xy);color:#0A1020;
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;
+}
+.done-card p{font-size:11px;color:#94A3B8;line-height:1.7;margin-bottom:10px;}
+.src-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;padding-top:10px;border-top:1px dashed rgba(255,255,255,0.08);}
+.src-chips .chip{
+  padding:3px 8px;background:rgba(0,184,156,0.1);color:var(--xy);
+  border:1px solid rgba(0,184,156,0.3);border-radius:4px;
+  font-family:var(--mono);font-size:9px;
+}
+
+.done-btn{
+  margin-top:14px;width:100%;padding:10px;
+  background:var(--xy);color:#0A1020;border:none;border-radius:8px;
+  font-size:12px;font-weight:700;cursor:pointer;font-family:var(--ff);
+}
+.done-btn:hover{background:#00D4B4;}
+
+/* ==== Modal ==== */
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:400;opacity:0;pointer-events:none;transition:.3s;backdrop-filter:blur(3px);}
+.modal-mask.on{opacity:1;pointer-events:auto;}
+.modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(0.92);width:720px;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.25);z-index:401;opacity:0;pointer-events:none;transition:all 0.3s cubic-bezier(0.22,1,0.36,1);}
+.modal.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1);}
+.modal-hd{padding:22px 28px;border-bottom:1px solid var(--bd-soft);display:flex;align-items:center;}
+.modal-hd h3{font-size:18px;font-weight:700;}
+.modal-hd .close{margin-left:auto;width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t3);font-size:18px;}
+.modal-hd .close:hover{background:#F5F7FA;}
+.modal-body{padding:26px 28px;}
+.form-row{margin-bottom:18px;}
+.form-label{display:block;font-size:12px;color:var(--t2);margin-bottom:7px;font-weight:500;}
+.form-label .req{color:#EF4444;}
+.form-in{width:100%;padding:11px 14px;border:1px solid var(--bd);border-radius:8px;font-size:13px;font-family:var(--ff);color:var(--t1);background:#FAFBFC;outline:none;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.upload-zone{border:2px dashed var(--bd);border-radius:12px;padding:24px;text-align:center;cursor:pointer;background:#FAFBFC;}
+.upload-zone.has-file{border-color:var(--xy);background:var(--xy-sf);border-style:solid;}
+.upload-zone .ic{font-size:30px;margin-bottom:8px;}
+.upload-zone .tt{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:4px;}
+.upload-zone .hint{font-size:11px;color:var(--t3);}
+.modal-ft{padding:18px 28px;border-top:1px solid var(--bd-soft);display:flex;justify-content:flex-end;gap:10px;}
+.btn{padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--ff);border:1px solid var(--bd);background:#fff;color:var(--t2);}
+.btn-primary{background:var(--xy);color:#fff;border-color:var(--xy);}
+.btn-primary:hover{background:var(--xy-dk);}
+
+/* ==== Demo control bar ==== */
+.demo-ctrl{
+  position:fixed;
+  bottom:20px;left:50%;
+  transform:translateX(-50%);
+  background:rgba(10,16,32,0.92);
+  backdrop-filter:blur(12px);
+  color:#fff;
+  padding:10px 8px 10px 22px;
+  border-radius:999px;
+  font-family:var(--mono);font-size:11px;
+  display:flex;align-items:center;gap:14px;
+  border:1px solid rgba(255,255,255,0.12);
+  z-index:9999;
+  box-shadow:0 10px 40px rgba(0,0,0,0.3);
+}
+.demo-ctrl .status{display:flex;align-items:center;gap:8px;}
+.demo-ctrl .status::before{content:'';width:7px;height:7px;border-radius:50%;background:#FFB86B;box-shadow:0 0 8px #FFB86B;animation:pulse 1.5s infinite;}
+.demo-ctrl .status.done::before{background:var(--xy);}
+.demo-ctrl button{
+  background:rgba(255,120,73,0.15);color:#FF7849;
+  border:1px solid rgba(255,120,73,0.4);
+  padding:6px 14px;border-radius:999px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  cursor:pointer;letter-spacing:0.05em;
+}
+.demo-ctrl button:hover{background:#FF7849;color:#fff;}
+
+</style>
+
+<style id="unified-nav-style">
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+body{padding-top:60px !important;}
+body > .topnav,
+body > .shell-top,
+body > .top,
+body > .topbar,
+body > nav.top-quick-nav,
+body > header.slim-header{display:none !important;}
+
+.unified-topbar{
+  position:fixed;top:0;left:0;right:0;z-index:99998;
+  height:60px;background:#FFFFFF;border-bottom:1px solid #E8ECF0;
+  padding:0 32px;display:flex;align-items:center;justify-content:space-between;
+  font-family:'Noto Sans SC','PingFang SC',sans-serif;
+  box-shadow:0 1px 3px rgba(18,21,26,0.04);
+}
+.unified-topbar *{box-sizing:border-box;}
+.unified-topbar .u-left{display:flex;align-items:center;gap:32px;}
+.unified-topbar .u-logo{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:#23B283;text-decoration:none;}
+.unified-topbar .u-mark{
+  width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(135deg,#23B283 0%,#158C68 100%);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-weight:800;font-size:13px;box-shadow:0 4px 10px rgba(35,178,131,0.3);
+}
+.unified-topbar .u-sub{
+  font-size:10px;color:#7B838C;font-weight:500;
+  padding-left:10px;border-left:1px solid #E8ECF0;margin-left:4px;letter-spacing:0.02em;
+}
+.unified-topbar .u-nav{display:flex;gap:2px;}
+.unified-topbar .u-nav a{
+  padding:7px 13px;border-radius:7px;font-size:12.5px;color:#4B535C;
+  text-decoration:none;transition:all .2s;font-weight:500;
+}
+.unified-topbar .u-nav a:hover{background:rgba(35,178,131,0.1);color:#23B283;}
+.unified-topbar .u-nav a.u-on{background:#23B283;color:#fff;font-weight:600;}
+.unified-topbar .u-right{display:flex;align-items:center;gap:12px;}
+.unified-topbar .u-back{
+  font-size:12px;color:#7B838C;padding:7px 13px;
+  border:1px solid #E8ECF0;border-radius:999px;transition:.2s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:5px;
+}
+.unified-topbar .u-back:hover{color:#23B283;border-color:#23B283;background:#EBF7F1;}
+.unified-topbar .u-av{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(35,178,131,0.2);color:#23B283;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="unified-topbar">
+  <div class="u-left">
+    <a href="./index.html" class="u-logo">
+      <div class="u-mark">雅</div>
+      讯飞小雅
+      <span class="u-sub">学科大脑 · 场景演示</span>
+    </a>
+    <nav class="u-nav"><a href="./index.html">演示总览</a><a href="./scenes.html" class="u-on">场景演示</a><a href="./frontend.html">知识库前台</a><a href="./backend/index.html">管理后台</a><a href="./tools/index.html">学科大脑工具层</a><a href="./engines/engine_dashboard.html">模型引擎</a><a href="./training.html">训练平台</a></nav>
+  </div>
+  <div class="u-right">
+    <a href="./scenes.html" class="u-back">← 返回场景列表</a>
+    <div class="u-av">婷</div>
+  </div>
+</div>
+
+<div class="shell-top">
+  <div class="shell-brand"><b>iN</b>讯飞小雅</div>
+  <div class="shell-nav">
+    <a class="on">混合式课程</a><a>MOOC</a><a>共享课程包</a><a>AI 创新空间</a><a>基础库</a><a>发现</a>
+  </div>
+  <div class="shell-right">
+    <a href="./scenes.html" class="shell-back">← 返回演示导览</a>
+    <div class="shell-av">王</div>
+  </div>
+</div>
+
+<!-- ==== SCENE 1: Course grid ==== -->
+<div class="scene visible" id="scene1">
+  <div class="banner">
+    <div class="banner-in">
+      <div>
+        <h1>扎实教学，步履不停</h1>
+        <p>您的主讲课程与进行项目都在这里，随时进入课堂或继续学习</p>
+      </div>
+      <div class="illus">📚</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head">
+      <h2>我教的课</h2>
+      <div class="sec-tabs">
+        <div class="sec-tab on">我教的课 <span style="color:var(--t4);font-weight:400;">7</span></div>
+        <div class="sec-tab">我学的课 <span style="color:var(--t4);">2</span></div>
+        <div class="sec-tab">收藏的课 <span style="color:var(--t4);">2</span></div>
+      </div>
+      <div class="right">
+        <div class="search-in">🔍 搜索</div>
+        <button class="btn-new glow" id="btnNew">➕ 创建课程</button>
+      </div>
+    </div>
+
+    <div class="course-grid">
+      <div class="course-card"><div class="course-cover" style="background:linear-gradient(135deg,#0F766E,#14B8A6);">🤖</div><div class="course-info"><h3>人工智能导论</h3><p>2026 春 · 校内公开</p></div></div>
+      <div class="course-card"><div class="course-cover" style="background:linear-gradient(135deg,#4FACFE,#00F2FE);">💻</div><div class="course-info"><h3>计算机组成原理</h3><p>2026 春 · 校内公开</p></div></div>
+      <div class="course-card"><div class="course-cover" style="background:linear-gradient(135deg,#A8E063,#56AB2F);">📊</div><div class="course-info"><h3>大数据分析</h3><p>2026 春 · 校内公开</p></div></div>
+      <div class="course-card"><div class="course-cover" style="background:linear-gradient(135deg,#667EEA,#764BA2);">🧮</div><div class="course-info"><h3>线性代数</h3><p>2026 春 · 校内公开</p></div></div>
+      <div class="course-card"><div class="course-cover" style="background:linear-gradient(135deg,#1E3A8A,#3B82F6);">📘</div><div class="course-info"><h3>大学英语</h3><p>2026 春 · 校内公开</p></div></div>
+      <div class="course-card"><div class="course-cover" style="background:linear-gradient(135deg,#DC2626,#F59E0B);">📐</div><div class="course-info"><h3>数据结构</h3><p>2026 春 · 校内公开</p></div></div>
+      <div class="course-card"><div class="course-cover" style="background:linear-gradient(135deg,#7C3AED,#C084FC);">🔬</div><div class="course-info"><h3>离散数学</h3><p>2026 春 · 校内公开</p></div></div>
+      <div class="course-card placeholder" id="plNew"><div class="pl-ico">➕</div><div>新建课程</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==== SCENE 2: Graph Builder Workspace ==== -->
+<div class="workspace" id="workspace">
+  <div class="ws-main">
+    <div class="ws-head">
+      <div class="ws-label">● GRAPH BUILDER · LIVE</div>
+      <div class="ws-title">知识图谱构建中 · <span class="course">高等数学 A</span></div>
+      <div class="ws-right-stats">
+        <div class="ws-stat"><div class="ws-stat-num" id="cntChap">0</div><div class="ws-stat-lbl">CHAPTERS</div></div>
+        <div class="ws-stat"><div class="ws-stat-num" id="cntKp">0</div><div class="ws-stat-lbl">KNOWLEDGE</div></div>
+        <div class="ws-stat"><div class="ws-stat-num" id="cntRel">0</div><div class="ws-stat-lbl">RELATIONS</div></div>
+        <button class="ws-back" id="wsBack" style="margin-left:18px;">✕ 退出</button>
+      </div>
+    </div>
+
+    <div class="graph-canvas">
+      <div class="graph-overlay">
+        <div class="badge live" id="statusBadge">解析教材中...</div>
+        <div class="badge" id="pageBadge">0 / 478 页</div>
+      </div>
+      <svg class="graph-svg" id="graphSvg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <radialGradient id="centerGrad">
+            <stop offset="0%" stop-color="#FFB86B"/>
+            <stop offset="100%" stop-color="#FF7849"/>
+          </radialGradient>
+          <radialGradient id="chapGrad">
+            <stop offset="0%" stop-color="#C4B5FD"/>
+            <stop offset="100%" stop-color="#A78BFA"/>
+          </radialGradient>
+          <radialGradient id="kpGrad">
+            <stop offset="0%" stop-color="#5EEAD4"/>
+            <stop offset="100%" stop-color="#00B89C"/>
+          </radialGradient>
+        </defs>
+        <!-- Nodes and lines added by JS -->
+      </svg>
+      <div class="graph-legend">
+        <h5>LEGEND</h5>
+        <div class="row"><span class="d c"></span>课程根节点</div>
+        <div class="row"><span class="d ch"></span>章节 · 9 个</div>
+        <div class="row"><span class="d kp"></span>知识点</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right drawer -->
+  <div class="ws-drawer">
+    <div class="wsd-top">
+      <div class="logo"><img src="./assets/xclaw-octopus.png" alt="XClaw"></div>
+      <div>
+        <div class="tt">XClaw · 建课助手</div>
+        <div class="sub">SKILL · 新建课程 · S01</div>
+      </div>
+    </div>
+    <div class="wsd-body">
+
+      <div class="wsd-section">
+        <div class="wsd-label">📖 解析上下文</div>
+        <div class="wsd-card">
+          <strong>教材</strong>：同济第七版《高等数学》上册<br>
+          <strong>页数</strong>：478 页 · 含公式 1,280 · 图表 312<br>
+          <strong>目标</strong>：9 章 · 3 级图谱 · 教学大纲
+        </div>
+      </div>
+
+      <div class="wsd-section">
+        <div class="wsd-label">🔁 调度链 · RUNTIME TRACE</div>
+        <div class="trace">
+          <div class="trace-head">
+            <span><span class="dot"></span>DISPATCH</span>
+            <span id="traceTime">0.0s</span>
+          </div>
+          <div class="trace-line" id="tl1"><span class="t-dot"></span><span>L3 权限校验</span><span class="t-code">SEC</span></div>
+          <div class="trace-line" id="tl2"><span class="t-dot"></span><span>T01 文档解析 · 478 页</span><span class="t-code">TOOL</span></div>
+          <div class="trace-line" id="tl3"><span class="t-dot"></span><span>M1 学科语料库入库</span><span class="t-code">DATA</span></div>
+          <div class="trace-line" id="tl4"><span class="t-dot"></span><span>T03 图谱标注 · 86 节点</span><span class="t-code">TOOL</span></div>
+          <div class="trace-line" id="tl5"><span class="t-dot"></span><span>M2 知识图谱落库</span><span class="t-code">DATA</span></div>
+          <div class="trace-line" id="tl6"><span class="t-dot"></span><span>E08 冲突检测 · 2 处歧义</span><span class="t-code">ENG</span></div>
+          <div class="trace-line" id="tl7"><span class="t-dot"></span><span>L5 内容合规审核</span><span class="t-code">SEC</span></div>
+          <div class="trace-progress"><div class="trace-progress-bar" id="traceBar"></div></div>
+        </div>
+      </div>
+
+      <div class="wsd-section">
+        <div class="wsd-label">📊 实时指标</div>
+        <div class="counter-grid">
+          <div class="counter"><div class="num" id="metricPage">0</div><div class="lbl">PAGES</div></div>
+          <div class="counter"><div class="num" id="metricNode">0</div><div class="lbl">NODES</div></div>
+          <div class="counter"><div class="num" id="metricEdge">0</div><div class="lbl">EDGES</div></div>
+        </div>
+      </div>
+
+      <div class="done-card" id="doneCard">
+        <h4><span class="tick">✓</span> 图谱构建完成</h4>
+        <p>高等数学 A 课程已搭建完毕 · 可直接进入备授课页面</p>
+        <div class="src-chips">
+          <span class="chip">T01 解析</span>
+          <span class="chip">T03 图谱</span>
+          <span class="chip">M1 语料</span>
+          <span class="chip">M2 图谱</span>
+          <span class="chip">E08 冲突</span>
+          <span class="chip">L3+L5 安全</span>
+        </div>
+        <button class="done-btn">进入课程 · 开始备课 →</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-mask" id="modalMask"></div>
+<div class="modal" id="modal">
+  <div class="modal-hd">
+    <h3>创建新课程</h3>
+    <div class="close" id="modalClose">✕</div>
+  </div>
+  <div class="modal-body">
+    <div class="form-row">
+      <label class="form-label">课程名称 <span class="req">*</span></label>
+      <input type="text" class="form-in" value="高等数学 A">
+    </div>
+    <div class="form-grid">
+      <div class="form-row">
+        <label class="form-label">开课学期</label>
+        <input type="text" class="form-in" value="2026 年春">
+      </div>
+      <div class="form-row">
+        <label class="form-label">课程类型</label>
+        <input type="text" class="form-in" value="校内公开 · 自主开课">
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">教材上传 <span class="req">*</span></label>
+      <div class="upload-zone has-file">
+        <div class="ic">📖</div>
+        <div class="tt">高等数学 · 同济第七版上册.pdf</div>
+        <div class="hint">14.2 MB · 478 页 · 14:32 已上传</div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-ft">
+    <button class="btn" id="modalCancel">取消</button>
+    <button class="btn btn-primary" id="modalSubmit">创建并生成图谱 ✨</button>
+  </div>
+</div>
+
+<div class="demo-ctrl" id="demoCtrl" style="display:none;">
+  <span class="status" id="demoStatus">演示运行中...</span>
+  <button id="replayBtn">↺ 重播</button>
+</div>
+
+<script>
+const btnNew=document.getElementById('btnNew');
+const plNew=document.getElementById('plNew');
+const modal=document.getElementById('modal');
+const modalMask=document.getElementById('modalMask');
+const modalClose=document.getElementById('modalClose');
+const modalCancel=document.getElementById('modalCancel');
+const modalSubmit=document.getElementById('modalSubmit');
+const scene1=document.getElementById('scene1');
+const workspace=document.getElementById('workspace');
+const wsBack=document.getElementById('wsBack');
+const graphSvg=document.getElementById('graphSvg');
+const demoCtrl=document.getElementById('demoCtrl');
+const demoStatus=document.getElementById('demoStatus');
+const replayBtn=document.getElementById('replayBtn');
+const doneCard=document.getElementById('doneCard');
+const traceBar=document.getElementById('traceBar');
+const traceTime=document.getElementById('traceTime');
+const statusBadge=document.getElementById('statusBadge');
+const pageBadge=document.getElementById('pageBadge');
+
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+
+function openModal(){modalMask.classList.add('on');modal.classList.add('on');}
+function closeModal(){modalMask.classList.remove('on');modal.classList.remove('on');}
+
+btnNew.addEventListener('click',openModal);
+plNew.addEventListener('click',openModal);
+modalClose.addEventListener('click',closeModal);
+modalCancel.addEventListener('click',closeModal);
+modalMask.addEventListener('click',closeModal);
+modalSubmit.addEventListener('click',async()=>{
+  closeModal();
+  await wait(300);
+  enterWorkspace();
+});
+wsBack.addEventListener('click',exitWorkspace);
+replayBtn.addEventListener('click',()=>{
+  resetGraph();
+  runGraphBuild();
+});
+
+function enterWorkspace(){
+  scene1.classList.remove('visible');
+  scene1.classList.add('hidden');
+  workspace.classList.add('visible');
+  demoCtrl.style.display='flex';
+  runGraphBuild();
+}
+function exitWorkspace(){
+  workspace.classList.remove('visible');
+  scene1.classList.remove('hidden');
+  scene1.classList.add('visible');
+  demoCtrl.style.display='none';
+  resetGraph();
+}
+
+// ============ Graph data ============
+const CHAPTERS=[
+  {no:1,name:'第1章 函数与极限',kps:['函数','映射','极限','无穷小','连续']},
+  {no:2,name:'第2章 导数与微分',kps:['导数定义','链式法则','隐函数','微分']},
+  {no:3,name:'第3章 函数连续性',kps:['连续定义','间断点','介值定理','一致连续']},
+  {no:4,name:'第4章 中值定理',kps:['罗尔','拉格朗日','柯西','洛必达']},
+  {no:5,name:'第5章 不定积分',kps:['基本公式','换元法','分部积分']},
+  {no:6,name:'第6章 定积分',kps:['牛顿莱布尼茨','定积分应用']},
+  {no:7,name:'第7章 微分方程',kps:['一阶线性','二阶常系数','通解']},
+  {no:8,name:'第8章 无穷级数',kps:['数项级数','幂级数','收敛判定']},
+  {no:9,name:'第9章 多元函数',kps:['偏导数','全微分','二重积分']},
+];
+
+const CENTER_X=500,CENTER_Y=350;
+const CHAP_RADIUS=210;
+const KP_RADIUS=78;
+
+function polarToCart(angle,r){
+  const rad=angle*Math.PI/180;
+  return{x:CENTER_X+r*Math.cos(rad),y:CENTER_Y+r*Math.sin(rad)};
+}
+
+function svgEl(tag,attrs){
+  const el=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  for(const k in attrs)el.setAttribute(k,attrs[k]);
+  return el;
+}
+
+function addLine(x1,y1,x2,y2,stroke,width,opacity){
+  const len=Math.hypot(x2-x1,y2-y1);
+  const line=svgEl('line',{
+    x1,y1,x2,y2,
+    stroke,'stroke-width':width,
+    'stroke-dasharray':len,
+    'stroke-dashoffset':len,
+    opacity:opacity||0.5,
+    class:'node-line'
+  });
+  graphSvg.appendChild(line);
+  requestAnimationFrame(()=>{line.style.strokeDashoffset=0;});
+  return line;
+}
+
+function addNode(x,y,r,fill,filter,label,labelSize){
+  const g=svgEl('g',{transform:`translate(${x} ${y}) scale(0)`,style:'transition:transform 0.5s cubic-bezier(0.34,1.56,0.64,1);'});
+  const circle=svgEl('circle',{cx:0,cy:0,r,fill,class:'node-circle'});
+  if(filter)circle.setAttribute('filter','url(#glow)');
+  g.appendChild(circle);
+  if(label){
+    const text=svgEl('text',{x:0,y:r+18,class:'node-text','font-size':labelSize||11,opacity:0,style:'transition:opacity 0.4s 0.2s;'});
+    text.textContent=label;
+    g.appendChild(text);
+  }
+  graphSvg.appendChild(g);
+  requestAnimationFrame(()=>{
+    g.setAttribute('transform',`translate(${x} ${y}) scale(1)`);
+    const txt=g.querySelector('text');
+    if(txt)txt.style.opacity=1;
+  });
+  return g;
+}
+
+function animateCounter(el,target,duration){
+  const start=parseInt(el.textContent)||0;
+  const startT=Date.now();
+  const tick=()=>{
+    const elapsed=Date.now()-startT;
+    if(elapsed>=duration){el.textContent=target;return;}
+    const p=elapsed/duration;
+    el.textContent=Math.floor(start+(target-start)*p);
+    requestAnimationFrame(tick);
+  };
+  tick();
+}
+
+let running=false;
+let traceInterval;
+function resetGraph(){
+  graphSvg.innerHTML=`
+    <defs>
+      <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+        <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <radialGradient id="centerGrad"><stop offset="0%" stop-color="#FFB86B"/><stop offset="100%" stop-color="#FF7849"/></radialGradient>
+      <radialGradient id="chapGrad"><stop offset="0%" stop-color="#C4B5FD"/><stop offset="100%" stop-color="#A78BFA"/></radialGradient>
+      <radialGradient id="kpGrad"><stop offset="0%" stop-color="#5EEAD4"/><stop offset="100%" stop-color="#00B89C"/></radialGradient>
+    </defs>
+  `;
+  ['cntChap','cntKp','cntRel','metricPage','metricNode','metricEdge'].forEach(id=>document.getElementById(id).textContent='0');
+  ['tl1','tl2','tl3','tl4','tl5','tl6','tl7'].forEach(id=>document.getElementById(id).classList.remove('active','done'));
+  traceBar.style.width='0%';
+  doneCard.classList.remove('show');
+  statusBadge.textContent='解析教材中...';
+  pageBadge.textContent='0 / 478 页';
+  demoStatus.textContent='演示运行中...';
+  demoStatus.classList.remove('done');
+  if(traceInterval)clearInterval(traceInterval);
+  running=false;
+}
+
+async function runGraphBuild(){
+  if(running)return;
+  running=true;
+  const startTime=Date.now();
+  traceInterval=setInterval(()=>{
+    traceTime.textContent=((Date.now()-startTime)/1000).toFixed(1)+'s';
+  },80);
+
+  const setTrace=(id,state)=>{
+    document.getElementById(id).classList.remove('active','done');
+    document.getElementById(id).classList.add(state);
+  };
+
+  // Step 1: L3 & parse
+  setTrace('tl1','active');
+  traceBar.style.width='12%';
+  await wait(500);
+  setTrace('tl1','done');
+  setTrace('tl2','active');
+  traceBar.style.width='28%';
+  statusBadge.textContent='解析 PDF 教材...';
+
+  // Animate page counter
+  let p=0;
+  const pageInt=setInterval(()=>{
+    p+=Math.floor(Math.random()*30)+15;
+    if(p>=478){p=478;clearInterval(pageInt);}
+    pageBadge.textContent=p+' / 478 页';
+    document.getElementById('metricPage').textContent=p;
+  },80);
+  await wait(1400);
+  setTrace('tl2','done');
+  setTrace('tl3','active');
+  traceBar.style.width='42%';
+  statusBadge.textContent='写入语料库...';
+  await wait(600);
+
+  // Step 2: Center node appears
+  setTrace('tl3','done');
+  setTrace('tl4','active');
+  traceBar.style.width='54%';
+  statusBadge.textContent='构建知识图谱...';
+
+  addNode(CENTER_X,CENTER_Y,36,'url(#centerGrad)',true,'📐 高等数学 A',14);
+  document.getElementById('metricNode').textContent='1';
+  await wait(500);
+
+  // Step 3: 9 chapter nodes
+  animateCounter(document.getElementById('cntChap'),9,3200);
+  let chapterNodes=[];
+  let totalKp=0,totalEdges=0;
+  for(let i=0;i<CHAPTERS.length;i++){
+    const angle=-90+i*40; // start from top
+    const pos=polarToCart(angle,CHAP_RADIUS);
+    // line first
+    addLine(CENTER_X,CENTER_Y,pos.x,pos.y,'#A78BFA',2,0.5);
+    await wait(80);
+    // then node
+    addNode(pos.x,pos.y,22,'url(#chapGrad)',true,CHAPTERS[i].name,10);
+    chapterNodes.push({pos,angle});
+    totalEdges++;
+    document.getElementById('metricNode').textContent=(i+2);
+    document.getElementById('metricEdge').textContent=totalEdges;
+    await wait(200);
+  }
+  await wait(300);
+  setTrace('tl4','done');
+  setTrace('tl5','active');
+  traceBar.style.width='68%';
+  statusBadge.textContent='展开知识点...';
+
+  // Step 4: KPs sprout from chapters
+  const totalKps=CHAPTERS.reduce((s,c)=>s+c.kps.length,0);
+  animateCounter(document.getElementById('cntKp'),totalKps,2400);
+  let kpCount=0;
+  for(let i=0;i<CHAPTERS.length;i++){
+    const chap=CHAPTERS[i];
+    const base=chapterNodes[i];
+    for(let j=0;j<chap.kps.length;j++){
+      const kpAngleOffset=(j-(chap.kps.length-1)/2)*22;
+      const kpAngle=base.angle+kpAngleOffset;
+      const kpPos=polarToCart(kpAngle,CHAP_RADIUS+KP_RADIUS);
+      addLine(base.pos.x,base.pos.y,kpPos.x,kpPos.y,'#00B89C',1.5,0.35);
+      addNode(kpPos.x,kpPos.y,9,'url(#kpGrad)',false,chap.kps[j],8);
+      kpCount++;
+      totalEdges++;
+      document.getElementById('metricNode').textContent=(1+CHAPTERS.length+kpCount);
+      document.getElementById('metricEdge').textContent=totalEdges;
+      await wait(55);
+    }
+  }
+  await wait(300);
+  setTrace('tl5','done');
+  setTrace('tl6','active');
+  traceBar.style.width='82%';
+  statusBadge.textContent='冲突检测 · 先修关系...';
+
+  // Step 5: Add some dashed先修 relations between knowledge points
+  animateCounter(document.getElementById('cntRel'),142,1800);
+  const relations=[
+    [0,1],[0,2],[1,3],[2,3],[3,4],[5,6],[6,7],[4,5],[7,8]
+  ];
+  for(const [a,b] of relations){
+    const chA=chapterNodes[a];
+    const chB=chapterNodes[b];
+    const l=svgEl('line',{
+      x1:chA.pos.x,y1:chA.pos.y,x2:chB.pos.x,y2:chB.pos.y,
+      stroke:'#FBBF24','stroke-width':1,'stroke-dasharray':'4 4',
+      opacity:0,style:'transition:opacity 0.4s;'
+    });
+    graphSvg.appendChild(l);
+    requestAnimationFrame(()=>{l.style.opacity='0.35';});
+    await wait(100);
+  }
+
+  setTrace('tl6','done');
+  setTrace('tl7','active');
+  traceBar.style.width='94%';
+  statusBadge.textContent='内容审核 · 即将完成';
+  await wait(500);
+  setTrace('tl7','done');
+  traceBar.style.width='100%';
+  statusBadge.textContent='✓ 图谱构建完成';
+  await wait(300);
+  doneCard.classList.add('show');
+  demoStatus.textContent='演示完成 ✓';
+  demoStatus.classList.add('done');
+  if(traceInterval)clearInterval(traceInterval);
+  running=false;
+}
+</script>
+</body>
+</html>

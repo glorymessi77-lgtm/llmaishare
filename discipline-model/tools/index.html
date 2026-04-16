@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>学科大脑 · 学科大脑 · 工具层</title>
+<link rel="stylesheet" href="assets/tokens.css" />
+<link rel="stylesheet" href="assets/style.css" />
+
+<style id="unified-nav-style">
+body{padding-top:60px !important;}
+body > .topbar,body > .shell-top,body > .top,body > .xy-hd,body > header.xy-hd{display:none !important;}
+.unified-topbar{
+  position:fixed;top:0;left:0;right:0;z-index:99998;
+  height:60px;background:#FFFFFF;border-bottom:1px solid #E8ECF0;
+  padding:0 32px;display:flex;align-items:center;justify-content:space-between;
+  font-family:'Noto Sans SC','PingFang SC',sans-serif;
+  box-shadow:0 1px 3px rgba(18,21,26,0.04);
+}
+.unified-topbar *{box-sizing:border-box;}
+.unified-topbar .u-left{display:flex;align-items:center;gap:32px;}
+.unified-topbar .u-logo{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:#23B283;text-decoration:none;}
+.unified-topbar .u-mark{
+  width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(135deg,#23B283 0%,#158C68 100%);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-weight:800;font-size:13px;box-shadow:0 4px 10px rgba(35,178,131,0.3);
+}
+.unified-topbar .u-sub{
+  font-size:10px;color:#7B838C;font-weight:500;
+  padding-left:10px;border-left:1px solid #E8ECF0;margin-left:4px;letter-spacing:0.02em;
+}
+.unified-topbar .u-nav{display:flex;gap:2px;}
+.unified-topbar .u-nav a{
+  padding:7px 13px;border-radius:7px;font-size:12.5px;color:#4B535C;
+  text-decoration:none;transition:all .2s;font-weight:500;
+}
+.unified-topbar .u-nav a:hover{background:rgba(35,178,131,0.1);color:#23B283;}
+.unified-topbar .u-nav a.u-on{background:#23B283;color:#fff;font-weight:600;}
+.unified-topbar .u-right{display:flex;align-items:center;gap:12px;}
+.unified-topbar .u-back{
+  font-size:12px;color:#7B838C;padding:7px 13px;
+  border:1px solid #E8ECF0;border-radius:999px;transition:.2s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:5px;
+}
+.unified-topbar .u-back:hover{color:#23B283;border-color:#23B283;background:#EBF7F1;}
+.unified-topbar .u-av{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(35,178,131,0.2);color:#23B283;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+}
+</style>
+</head>
+<body data-page="dashboard">
+<div class="unified-topbar">
+  <div class="u-left">
+    <a href="../index.html" class="u-logo">
+      <div class="u-mark">雅</div>
+      讯飞小雅
+      <span class="u-sub">学科大脑 · 学科大脑工具层</span>
+    </a>
+    <nav class="u-nav"><a href="../index.html">演示总览</a><a href="../scenes.html">场景演示</a><a href="../frontend.html">知识库前台</a><a href="../backend/index.html">管理后台</a><a href="../tools/index.html" class="u-on">学科大脑工具层</a><a href="../engines/engine_dashboard.html">模型引擎</a><a href="../training.html">训练平台</a></nav>
+  </div>
+  <div class="u-right">
+    <a href="../index.html" class="u-back">← 返回演示总览</a>
+    <div class="u-av">婷</div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar-mount"></aside>
+  <main class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;">
+        <span class="title">学科大脑</span>
+        <span class="crumbs">面向清华大学全学科 · 学科大脑 · 工具层</span>
+      </div>
+      <div class="search">
+        <i data-lucide="search" width="14" height="14"></i>
+        <input placeholder="搜索工具、学科、术语…" />
+      </div>
+    </header>
+    <div class="content">
+      <section class="entry-hero">
+        <h1>一站式学科大脑 · 工具层</h1>
+        <p>围绕 数据接入 · 知识加工 · 质量治理 · 分发协作 四阶段，打通 10 个工具，服务教材沉淀、图谱构建、问答生成、智能体应用。</p>
+      </section>
+
+      <section class="kpi-row" style="margin-top:32px">
+        <div class="kpi-card"><div class="label">系统工具</div><div class="value">10<span class="unit">个</span></div><div class="delta flat">覆盖 5 阶段</div></div>
+        <div class="kpi-card"><div class="label">业务阶段</div><div class="value">4<span class="unit">段</span></div><div class="delta flat">数据自左向右流转</div></div>
+        <div class="kpi-card"><div class="label">接入学科</div><div class="value">12<span class="unit">门</span></div><div class="delta up">↑ 3 门 近 30 日</div></div>
+        <div class="kpi-card"><div class="label">活跃教师</div><div class="value">176<span class="unit">人</span></div><div class="delta up">↑ 4.1%</div></div>
+      </section>
+
+      <div id="stages"></div>
+      <h3 style="margin:32px 0 12px;font-size:var(--fs-lg);">全部工具</h3>
+      <div class="entry-grid" id="tool-grid"></div>
+    </div>
+  </main>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const { tools, modules, stageMeta } = window.MOCK;
+  document.getElementById('stages').innerHTML = `
+    <h3 style="margin:32px 0 12px;font-size:var(--fs-lg);">4 大业务阶段</h3>
+    <div class="stage-band">
+      ${modules.map(m => `
+        <div class="stage-item">
+          <div class="idx">阶段 ${m.index}</div>
+          <div class="title">${m.title}</div>
+          <div class="desc">${m.desc}</div>
+          <div class="bar"></div>
+          <div style="margin-top:10px;font-size:var(--fs-xs);color:var(--text-3);">
+            工具 ${m.tools} · 角色 ${m.role}
+          </div>
+        </div>`).join('')}
+    </div>`;
+  document.getElementById('tool-grid').innerHTML = tools.map(t => `
+    <a class="entry-card" href="${t.path}">
+      <span class="code">${t.code}</span>
+      <div class="title">${t.name}</div>
+      <div class="desc">${t.tagline}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:10px;border-top:1px dashed var(--border);font-size:var(--fs-xs);color:var(--text-3);">
+        <span>本月调用 <span class="num" style="color:var(--text-1);font-weight:500;">${window.fmtNum(t.calls)}</span></span>
+        <span>${window.renderDelta(t.delta)}</span>
+      </div>
+    </a>`).join('');
+  lucide.createIcons();
+});
+</script>
+</body>
+</html>

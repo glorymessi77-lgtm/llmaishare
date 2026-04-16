@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>智能体配置 · 学科大脑后台</title>
+<link rel="stylesheet" href="shared.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  .agent-list{display:flex;flex-direction:column;gap:8px;}
+  .agent-card{padding:12px;border-radius:10px;border:1px solid var(--border);cursor:pointer;display:flex;gap:10px;}
+  .agent-card:hover{border-color:var(--brand);}
+  .agent-card.active{background:var(--brand-bg);border-color:var(--brand);}
+  .agent-icon{width:38px;height:38px;border-radius:10px;background:var(--brand-grad);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .agent-icon.b{background:linear-gradient(135deg,#0077FF,#0052B8);}
+  .agent-icon.o{background:linear-gradient(135deg,#FC7819,#D45A00);}
+  .agent-icon.p{background:linear-gradient(135deg,#7C5CFC,#5938D9);}
+  .agent-icon.r{background:linear-gradient(135deg,#F53B3B,#B62828);}
+  .agent-name{font-size:13px;font-weight:700;}
+  .agent-desc{font-size:11px;color:var(--text-3);margin-top:2px;}
+  .agent-meta{font-size:10px;color:var(--text-3);margin-top:6px;display:flex;gap:8px;}
+  .grp-label{font-size:11px;color:var(--text-4);font-weight:600;padding:8px 4px 4px;letter-spacing:.5px;}
+  .prompt-area{font-family:'Menlo','Consolas',monospace;font-size:13px;line-height:1.7;background:#0F1419;color:#A7E3CD;padding:18px;border-radius:var(--r-md);min-height:240px;white-space:pre-wrap;}
+  .version-list{display:flex;flex-direction:column;gap:8px;}
+  .version-item{padding:10px 12px;border-radius:8px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:13px;cursor:pointer;}
+  .version-item:hover{background:var(--brand-bg);border-color:var(--brand-20);}
+  .version-item.active{background:var(--brand-bg);border-color:var(--brand);}
+  .scope-tree{font-size:13px;}
+  .scope-node{padding:6px 10px;display:flex;align-items:center;gap:8px;border-radius:6px;cursor:pointer;}
+  .scope-node:hover{background:var(--bg-soft);}
+  .scope-children{padding-left:22px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo"><div class="logo-mark">雅</div>讯飞小雅<span class="logo-sub">学科大脑后台</span></div>
+    <div class="topbar-nav">
+      <a href="index.html"><i data-lucide="home" stroke-width="2" width="14" height="14"></i> 首页</a>
+      <a href="m5-permission.html">权限与安全</a>
+      <a href="#" class="active">智能体</a>
+      <a href="m6-knowledge-qc.html">知识质控</a>
+      <a href="m-dashboard.html">督导看板</a>
+      <a href="m2-terminology.html">术语管理</a>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-icon"><i data-lucide="bell" stroke-width="2" width="18" height="18"></i><span class="dot"></span></div>
+    <div class="avatar">王</div>
+  </div>
+</div>
+
+<div class="layout" style="grid-template-columns:300px 1fr;">
+
+  <!-- Agent list -->
+  <div class="sidebar">
+    <div class="flex-between" style="margin-bottom:12px;">
+      <div style="font-size:14px;font-weight:700;">智能体 (16)</div>
+      <button class="btn btn-primary btn-sm"><i data-lucide="plus" stroke-width="2" width="12" height="12"></i> 新建</button>
+    </div>
+    <div class="search-box" style="min-width:0;margin-bottom:12px;"><i data-lucide="search" stroke-width="2" width="14" height="14"></i><input placeholder="搜索智能体…"></div>
+
+    <div class="grp-label">学生端 · 9</div>
+    <div class="agent-list">
+      <div class="agent-card active">
+        <div class="agent-icon"><i data-lucide="calculator" stroke-width="2"></i></div>
+        <div class="grow">
+          <div class="agent-name">高等数学解题助手 <span class="tag" style="font-size:9px;">v2.4.0</span></div>
+          <div class="agent-desc">分步引导，覆盖微积分、线性代数</div>
+          <div class="agent-meta"><span>· 日活 1,283</span><span>· 已下发 12 班</span></div>
+        </div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon b"><i data-lucide="languages" stroke-width="2"></i></div>
+        <div class="grow"><div class="agent-name">学术英语陪练 <span class="tag t-blue" style="font-size:9px;">v1.8.2</span></div><div class="agent-desc">学术对话 + 发音评分</div><div class="agent-meta"><span>· 日活 962</span></div></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon o"><i data-lucide="flask-conical" stroke-width="2"></i></div>
+        <div class="grow"><div class="agent-name">科研文献助手 <span class="tag t-orange" style="font-size:9px;">v1.2.0</span></div><div class="agent-desc">论文检索与精读</div><div class="agent-meta"><span>· 日活 421</span></div></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon p"><i data-lucide="pen-tool" stroke-width="2"></i></div>
+        <div class="grow"><div class="agent-name">学术写作辅导 <span class="tag t-purple" style="font-size:9px;">v3.0.1</span></div><div class="agent-desc">论文润色 + 结构优化</div><div class="agent-meta"><span>· 日活 1,560</span></div></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon r"><i data-lucide="atom" stroke-width="2"></i></div>
+        <div class="grow"><div class="agent-name">数据结构疑难解析 <span class="tag t-red" style="font-size:9px;">v1.5.0</span></div><div class="agent-desc">算法/图论典型题</div><div class="agent-meta"><span>· 日活 738</span></div></div>
+      </div>
+    </div>
+
+    <div class="grp-label">教师端 · 7</div>
+    <div class="agent-list">
+      <div class="agent-card">
+        <div class="agent-icon"><i data-lucide="book-open" stroke-width="2"></i></div>
+        <div class="grow"><div class="agent-name">课程大纲助手 <span class="tag" style="font-size:9px;">v4.1.0</span></div><div class="agent-desc">教学设计 + 资源推荐</div><div class="agent-meta"><span>· 日活 184</span></div></div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-icon b"><i data-lucide="clipboard-check" stroke-width="2"></i></div>
+        <div class="grow"><div class="agent-name">作业自动批阅 <span class="tag t-blue" style="font-size:9px;">v2.0.3</span></div><div class="agent-desc">主客观题混合批改</div><div class="agent-meta"><span>· 日活 96</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail -->
+  <div class="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title">
+          <span class="agent-icon" style="width:36px;height:36px;border-radius:10px;"><i data-lucide="calculator" stroke-width="2"></i></span>
+          高等数学解题助手
+          <span class="brain-tag">学科引擎-V3</span>
+          <span class="status status-success">已上线</span>
+        </div>
+        <div class="page-desc">智能体ID: AGT-MATH-001 · 适用学科：高等数学 · 使用对象：学生 · 日活 1,283</div>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-ghost"><i data-lucide="play" stroke-width="2" width="14" height="14"></i> 沙箱调试</button>
+        <button class="btn btn-outline"><i data-lucide="copy" stroke-width="2" width="14" height="14"></i> 复制版本</button>
+        <button class="btn btn-primary" onclick="openModal()"><i data-lucide="upload-cloud" stroke-width="2" width="14" height="14"></i> 下发</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-pane="basic"><i data-lucide="settings" stroke-width="2" width="14" height="14"></i> 基本信息</div>
+      <div class="tab" data-pane="prompt"><i data-lucide="message-square-code" stroke-width="2" width="14" height="14"></i> Prompt 管理 <span class="badge">v2.4.0</span></div>
+      <div class="tab" data-pane="kb"><i data-lucide="database" stroke-width="2" width="14" height="14"></i> 知识库挂载 <span class="badge">3</span></div>
+      <div class="tab" data-pane="scope"><i data-lucide="send" stroke-width="2" width="14" height="14"></i> 下发范围</div>
+    </div>
+
+    <!-- Basic -->
+    <div id="pane-basic">
+      <div class="row">
+        <div class="card col">
+          <div class="card-title"><i data-lucide="info" stroke-width="2" width="16" height="16" class="card-title-icon"></i> 基本配置</div>
+          <div class="row">
+            <div class="col"><div class="field"><label class="field-label">智能体名称</label><input class="input" value="高等数学解题助手"></div></div>
+            <div class="col"><div class="field"><label class="field-label">使用对象</label><select class="select"><option>学生端</option><option>教师端</option></select></div></div>
+          </div>
+          <div class="row">
+            <div class="col"><div class="field"><label class="field-label">适用学科</label><input class="input" value="高等数学（大一、大二）"></div></div>
+            <div class="col"><div class="field"><label class="field-label">引擎模型</label><select class="select"><option>学科引擎-V3 (推荐)</option><option>学科引擎-V2</option><option>通用-Spark4</option></select></div></div>
+          </div>
+          <div class="field"><label class="field-label">智能体描述</label><textarea class="textarea">分步骤引导学生完成高等数学题目分析与解答，覆盖微积分、线性代数、概率论与数理统计等模块，鼓励学生先思考后作答。</textarea></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="card col">
+          <div class="card-title"><i data-lucide="sliders" stroke-width="2" width="16" height="16" class="card-title-icon"></i> 运行参数</div>
+          <div class="row">
+            <div class="col"><div class="field"><label class="field-label">最大上下文 (tokens)</label><input class="input" value="8192"></div></div>
+            <div class="col"><div class="field"><label class="field-label">温度 Temperature</label><input class="input" value="0.6"></div></div>
+          </div>
+          <div class="row">
+            <div class="col"><div class="field"><label class="field-label">对话轮次上限</label><input class="input" value="20"></div></div>
+            <div class="col"><div class="field"><label class="field-label">单次超时 (秒)</label><input class="input" value="30"></div></div>
+          </div>
+        </div>
+        <div class="card col">
+          <div class="card-title"><i data-lucide="shield" stroke-width="2" width="16" height="16" class="card-title-icon"></i> 安全策略</div>
+          <div class="field"><label class="field-label">内容过滤级别</label><select class="select"><option>严格 (推荐学生端)</option><option>标准</option><option>宽松</option></select></div>
+          <div class="field"><label class="field-label">敏感话题阻断</label><div style="display:flex;flex-wrap:wrap;gap:6px;"><span class="tag t-red">政治</span><span class="tag t-red">暴力</span><span class="tag t-red">隐私信息</span><span class="tag">+ 自定义</span></div></div>
+          <div class="field"><label class="field-label">外链限制</label><div style="display:flex;gap:6px;"><span class="filter-pill active">仅校内白名单</span><span class="filter-pill">禁止外链</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prompt -->
+    <div id="pane-prompt" style="display:none;">
+      <div style="display:grid;grid-template-columns:1fr 280px;gap:16px;">
+        <div>
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title"><i data-lucide="terminal" stroke-width="2" width="16" height="16" class="card-title-icon"></i> System Prompt</div>
+              <div class="flex" style="font-size:12px;color:var(--text-3);"><span class="status status-pending">草稿 v2.4.1</span><span>· 编辑中</span></div>
+            </div>
+            <div class="prompt-area" contenteditable>你是一名耐心、循循善诱的高校数学教师，专长于高等数学课程解题辅导。
+
+【角色定位】
+- 始终保持鼓励性语气，不直接给出答案
+- 通过"提问 → 引导 → 启发"三步法帮助学生理解题目
+
+【输出规范】
+1. 先复述题目要点，确认学生需求
+2. 提示关键考点（引用学科大脑术语库 v2026.04）
+3. 分步骤引导，每步等待学生回应
+4. 必要时使用 LaTeX 渲染公式
+
+【兜底策略】
+当无法理解学生题目时，回复："请把题目拍照上传，或换个方式描述～"</div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><i data-lucide="lightbulb" stroke-width="2" width="16" height="16" class="card-title-icon"></i> Few-shot 示例 (3)</div>
+            <div style="background:var(--bg-soft);padding:12px 14px;border-radius:8px;font-size:12px;color:var(--text-2);line-height:1.7;">
+              <strong>用户：</strong>解方程 x²-5x+6=0<br>
+              <strong>助手：</strong>这是一个一元二次方程，我们可以先尝试因式分解。请问你能找到两个数，它们的和是5，乘积是6吗？🤔
+            </div>
+          </div>
+
+          <div class="row">
+            <button class="btn btn-ghost"><i data-lucide="git-compare" stroke-width="2" width="14" height="14"></i> 与 v2.4.0 对比</button>
+            <button class="btn btn-outline"><i data-lucide="play" stroke-width="2" width="14" height="14"></i> 沙箱试跑</button>
+            <div class="grow"></div>
+            <button class="btn btn-ghost">保存草稿</button>
+            <button class="btn btn-primary" onclick="toast('已提交审核，待校级管理员审批','success')"><i data-lucide="send" stroke-width="2" width="14" height="14"></i> 提交发布</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin:0;">
+          <div class="card-title"><i data-lucide="history" stroke-width="2" width="16" height="16" class="card-title-icon"></i> 版本历史</div>
+          <div class="version-list">
+            <div class="version-item active">
+              <i data-lucide="circle-dot" stroke-width="2" width="14" height="14" class="text-brand"></i>
+              <div class="grow">
+                <div class="strong">v2.4.0 <span class="tag" style="font-size:10px;">线上</span></div>
+                <div style="font-size:11px;color:var(--text-3);">陈宇航 · 04-10 14:32</div>
+              </div>
+            </div>
+            <div class="version-item">
+              <i data-lucide="circle" stroke-width="2" width="14" height="14"></i>
+              <div class="grow"><div class="strong">v2.3.2</div><div style="font-size:11px;color:var(--text-3);">陈宇航 · 03-28</div></div>
+              <button class="btn btn-ghost btn-sm">回滚</button>
+            </div>
+            <div class="version-item">
+              <i data-lucide="circle" stroke-width="2" width="14" height="14"></i>
+              <div class="grow"><div class="strong">v2.3.1</div><div style="font-size:11px;color:var(--text-3);">王晓蕾 · 03-15</div></div>
+              <button class="btn btn-ghost btn-sm">回滚</button>
+            </div>
+            <div class="version-item">
+              <i data-lucide="circle" stroke-width="2" width="14" height="14"></i>
+              <div class="grow"><div class="strong">v2.3.0</div><div style="font-size:11px;color:var(--text-3);">系统 · 03-01</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KB -->
+    <div id="pane-kb" style="display:none;">
+      <div class="card">
+        <div class="card-head"><div class="card-title"><i data-lucide="database" stroke-width="2" width="16" height="16" class="card-title-icon"></i> 已挂载知识库 (3)</div><button class="btn btn-outline btn-sm"><i data-lucide="link" stroke-width="2" width="12" height="12"></i> 挂载新库</button></div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th>知识库名称</th><th>类型</th><th>条数</th><th>权重</th><th>状态</th><th>最近更新</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr><td class="strong">高等数学题库 · 校本</td><td><span class="tag">题库</span></td><td>2,486</td><td>1.0</td><td><span class="status status-success">启用</span></td><td>04-12 09:30</td><td class="row-actions"><button class="btn btn-ghost btn-sm">权重</button><button class="btn btn-ghost btn-sm">禁用</button></td></tr>
+              <tr><td class="strong">同济版高等数学教材 (上·下册)</td><td><span class="tag t-blue">教材</span></td><td>1,824</td><td>0.8</td><td><span class="status status-success">启用</span></td><td>03-28</td><td class="row-actions"><button class="btn btn-ghost btn-sm">权重</button><button class="btn btn-ghost btn-sm">禁用</button></td></tr>
+              <tr><td class="strong">考研数学常考易错点 (灰度中)</td><td><span class="tag t-orange">校本</span></td><td>368</td><td>0.5</td><td><span class="status status-warning">灰度 30%</span></td><td>04-15 11:08</td><td class="row-actions"><button class="btn btn-ghost btn-sm">权重</button><button class="btn btn-ghost btn-sm">全量</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scope -->
+    <div id="pane-scope" style="display:none;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="card" style="margin:0;">
+          <div class="card-title"><i data-lucide="folder-tree" stroke-width="2" width="16" height="16" class="card-title-icon"></i> 下发范围（学院 / 专业 / 年级 / 班级）</div>
+          <div class="scope-tree">
+            <div class="scope-node"><input type="checkbox" checked> 全校</div>
+            <div class="scope-children">
+              <div class="scope-node"><input type="checkbox" checked> 计算机学院 · 大一年级 (12 班)</div>
+              <div class="scope-children">
+                <div class="scope-node"><input type="checkbox" checked> 2024级计算机科学与技术1班 · 48人</div>
+                <div class="scope-node"><input type="checkbox" checked> 2024级计算机科学与技术2班 · 46人</div>
+                <div class="scope-node"><input type="checkbox" checked> 2024级软件工程1班 · 47人</div>
+                <div class="scope-node muted"><input type="checkbox"> 2024级人工智能1班 · 45人</div>
+              </div>
+              <div class="scope-node"><input type="checkbox" checked> 计算机学院 · 大二年级 (10 班)</div>
+              <div class="scope-node"><input type="checkbox"> 电子信息工程学院 · 大一至大三</div>
+              <div class="scope-node"><input type="checkbox"> 研究生院（研一 / 研二）</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-top:0;">
+            <div class="card-title"><i data-lucide="percent" stroke-width="2" width="16" height="16" class="card-title-icon"></i> 灰度策略</div>
+            <div class="field"><label class="field-label">灰度方式</label>
+              <div style="display:flex;gap:6px;"><span class="filter-pill active">按比例</span><span class="filter-pill">按指定教学班</span><span class="filter-pill">全量</span></div>
+            </div>
+            <div class="field"><label class="field-label">灰度比例：30%</label>
+              <input type="range" min="0" max="100" value="30" style="width:100%;">
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title"><i data-lucide="check-circle-2" stroke-width="2" width="16" height="16" class="card-title-icon"></i> 下发前校验</div>
+            <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;">
+              <div class="flex"><i data-lucide="check" stroke-width="2" class="text-brand" width="16" height="16"></i>引擎容量充足（剩余 1,832 QPS）</div>
+              <div class="flex"><i data-lucide="check" stroke-width="2" class="text-brand" width="16" height="16"></i>Prompt 合规性校验通过</div>
+              <div class="flex"><i data-lucide="check" stroke-width="2" class="text-brand" width="16" height="16"></i>校级审批已通过 (APR-20260415-019)</div>
+              <div class="flex"><i data-lucide="alert-triangle" stroke-width="2" style="color:var(--orange);" width="16" height="16"></i>知识库 "考研数学常考易错点" 仍处灰度</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Deploy Modal -->
+<div class="modal-mask" id="deployModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title"><i data-lucide="upload-cloud" stroke-width="2" width="16" height="16"></i> 下发确认</div>
+      <button class="topbar-icon" onclick="closeModal()"><i data-lucide="x" stroke-width="2" width="18" height="18"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="notice info">
+        <i data-lucide="info" stroke-width="2" class="notice-icon"></i>
+        <div><div class="notice-title">即将下发：高等数学解题助手 v2.4.0</div><div class="notice-desc">影响范围：计算机学院大一年级（前 3 班） + 大二年级 · 灰度 30%</div></div>
+      </div>
+      <table style="width:100%;font-size:13px;margin-top:14px;">
+        <tr><td class="muted" style="padding:6px 0;">影响班级</td><td><strong>22 个班</strong></td></tr>
+        <tr><td class="muted" style="padding:6px 0;">预计影响学生</td><td><strong>1,034 人（灰度后约 310 人）</strong></td></tr>
+        <tr><td class="muted" style="padding:6px 0;">预计生效时间</td><td><strong>提交后 5 分钟内</strong></td></tr>
+        <tr><td class="muted" style="padding:6px 0;">回滚预案</td><td>系统自动保留 v2.3.2 一键回滚通道</td></tr>
+      </table>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="closeModal();toast('下发成功！22 个班级将在 5 分钟内生效','success')"><i data-lucide="send" stroke-width="2" width="14" height="14"></i> 确认下发</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  lucide.createIcons();
+  function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+(type||'');setTimeout(()=>t.className='toast',2400);}
+  function openModal(){document.getElementById('deployModal').classList.add('show');}
+  function closeModal(){document.getElementById('deployModal').classList.remove('show');}
+  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');
+    const p=t.dataset.pane;
+    ['basic','prompt','kb','scope'].forEach(x=>{document.getElementById('pane-'+x).style.display=(x===p?'block':'none');});
+  }));
+  document.querySelectorAll('.agent-card').forEach(c=>c.addEventListener('click',()=>{
+    document.querySelectorAll('.agent-card').forEach(x=>x.classList.remove('active'));c.classList.add('active');
+  }));
+  document.querySelectorAll('.version-item').forEach(c=>c.addEventListener('click',()=>{
+    document.querySelectorAll('.version-item').forEach(x=>x.classList.remove('active'));c.classList.add('active');
+  }));
+</script>
+</body>
+</html>

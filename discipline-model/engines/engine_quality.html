@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>质量引擎可视化 · 管理后台</title>
+  <style>
+        :root {
+      --primary:#1C3A5E;
+      --accent:#3B82F6;
+      --success:#10B981;
+      --success-bg:#D1FAE5;
+      --warning:#F59E0B;
+      --warning-bg:#FEF3C7;
+      --danger:#EF4444;
+      --danger-bg:#FEE2E2;
+      --blue:#1677FF;
+      --blue-bg:#EFF4FF;
+      --bg-1:#FAFBFC;
+      --bg-2:#F3F4F6;
+      --text-1:#111827;
+      --text-2:#4B5563;
+      --text-3:#6B7280;
+      --text-4:#9CA3AF;
+      --border:#E5E7EB;
+      --shadow-sm:0 1px 3px rgba(0,0,0,.06);
+      --shadow-md:0 4px 12px rgba(0,0,0,.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+      background: var(--bg-1);
+      color: var(--text-1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59,130,246,.08) 0%, transparent 70%);
+      pointer-events: none;
+      transition: transform .15s ease-out;
+      z-index: 0;
+    }
+    .topnav {
+      height: 56px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 28px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 10;
+    }
+    .topnav::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--success));
+    }
+    .topnav-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px rgba(16,185,129,.2); }
+    .topnav-title { color: #fff; font-size: 16px; font-weight: 600; }
+    .topnav-sep { width: 1px; height: 18px; background: rgba(255,255,255,.15); }
+    .topnav-page { color: rgba(255,255,255,.7); font-size: 13px; }
+    .topnav-back { background: rgba(255,255,255,.12); color: rgba(255,255,255,.88); border: none; border-radius: 6px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-weight: 500; transition: .15s; }
+    .topnav-back:hover { background: rgba(255,255,255,.18); }
+    .topnav-right { margin-left: auto; display: flex; gap: 10px; }
+    .topnav-badge { background: rgba(255,255,255,.1); color: rgba(255,255,255,.85); border-radius: 6px; padding: 4px 12px; font-size: 12px; border: 1px solid rgba(255,255,255,.12); }
+    .workspace{flex:1;display:grid;grid-template-columns:300px minmax(0,1fr) 280px;overflow:hidden}
+    .panel{background:var(--bg-white);overflow:hidden;display:flex;flex-direction:column}
+    .left-panel{border-right:1px solid var(--border)}.center-panel{background:var(--bg-gray);padding:12px;gap:10px}.right-panel{border-left:1px solid var(--border);padding:10px;gap:10px;background:#FAFBFC}
+    .left-head{padding:12px 12px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
+    .left-title{font-size:13px;font-weight:600;color:var(--text-1);display:flex;justify-content:space-between;margin-bottom:8px}.left-title span{font-size:11px;color:var(--text-4);font-weight:400}
+    .search-box{background:var(--bg-gray);border:1px solid var(--border);border-radius:8px;height:32px;display:flex;align-items:center;padding:0 8px;margin-bottom:8px;gap:6px}
+    .search-box input{flex:1;border:none;background:transparent;outline:none;font-size:12px;color:var(--text-1)}.search-box input::placeholder{color:var(--text-4)}
+    .filter-row{display:flex;gap:6px;overflow-x:auto;margin-bottom:7px;padding-bottom:2px}
+    .chip{border:1px solid var(--border);background:#fff;color:var(--text-3);border-radius:999px;font-size:11px;padding:3px 9px;cursor:pointer;white-space:nowrap}.chip.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+    .record-list{flex:1;overflow-y:auto}
+    .record-item{padding:10px 12px;border-left:3px solid transparent;cursor:pointer;transition:.15s}.record-item:hover{background:var(--bg-gray)}.record-item.active{background:var(--blue-bg);border-left-color:var(--blue)}
+    .record-q{font-size:13px;line-height:18px;color:var(--text-1);font-weight:500;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .record-meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap;font-size:11px;color:var(--text-4)}
+    .tag{background:var(--bg-gray);color:var(--text-3);border-radius:3px;font-size:10px;padding:0 4px}.tag.ok{background:var(--success-bg);color:var(--success)}.tag.warn{background:var(--warning-bg);color:var(--warning)}.tag.danger{background:var(--danger-bg);color:var(--danger)}
+    .quality-topbar{background:var(--bg-white);border-radius:10px;box-shadow:var(--shadow-sm);padding:12px;flex-shrink:0;display:flex;align-items:center;gap:12px}
+    .quality-q{flex:1;min-width:0}.quality-q-title{font-size:14px;font-weight:600;color:var(--text-1);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.quality-q-meta{font-size:11px;color:var(--text-3)}
+    .quality-score{text-align:center}.quality-score-val{font-size:32px;font-weight:700;line-height:32px;color:var(--text-1)}.quality-score-label{font-size:10px;color:var(--text-3);margin-top:2px}
+    .quality-wrap{flex:1;overflow-y:auto;padding:4px 2px;display:flex;flex-direction:column;gap:10px}
+    .dim-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:10px}
+    .dim-card{background:var(--bg-white);border-radius:10px;box-shadow:var(--shadow-sm);border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:.2s}.dim-card:hover{border-color:rgba(22,119,255,.3)}
+    .dim-card.open{border-color:rgba(22,119,255,.2)}
+    .dim-head{padding:12px;display:flex;align-items:center;gap:10px}
+    .dim-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+    .dim-icon.accuracy{background:var(--success-bg);color:var(--success)}
+    .dim-icon.completeness{background:var(--blue-bg);color:var(--blue)}
+    .dim-icon.age{background:var(--purple-bg);color:var(--purple)}
+    .dim-icon.safety{background:var(--warning-bg);color:var(--warning)}
+    .dim-main{flex:1;min-width:0}.dim-name{font-size:13px;font-weight:600;color:var(--text-1);margin-bottom:3px}.dim-score{font-size:20px;font-weight:700;line-height:20px}
+    .dim-body{display:none;border-top:1px solid var(--border);padding:12px}.dim-card.open .dim-body{display:block}
+    .dim-section{margin-bottom:10px}.dim-section:last-child{margin-bottom:0}.dim-section-title{font-size:11px;font-weight:600;color:var(--text-3);margin-bottom:6px}
+    .dim-section-content{font-size:12px;color:var(--text-2);line-height:18px}
+    .dim-issues{display:flex;flex-direction:column;gap:4px}.dim-issue{font-size:11px;color:var(--text-2);padding:4px 8px;background:var(--bg-gray);border-radius:4px;border-left:2px solid var(--warning)}
+    .trend-card{background:var(--bg-white);border-radius:10px;box-shadow:var(--shadow-sm);padding:12px}
+    .trend-title{font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:10px}
+    .trend-chart{height:60px;display:flex;align-items:flex-end;gap:4px}
+    .trend-bar{flex:1;background:var(--blue-bg);border-radius:3px 3px 0 0;position:relative;transition:.2s}.trend-bar:hover{background:var(--blue)}
+    .quick-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+    .quick-stat{background:var(--bg-white);border:1px solid var(--border);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:3px}
+    .quick-stat-label{font-size:10px;color:var(--text-3)}.quick-stat-value{font-size:18px;line-height:18px;font-weight:700;color:var(--text-1)}.quick-stat-value small{font-size:11px;color:var(--text-3);font-weight:500}
+    .quick-stat.alert{cursor:pointer;border-color:rgba(245,59,59,.2);background:linear-gradient(180deg,#fff 0%,#fff7f7 100%)}.quick-stat.alert .quick-stat-value{color:var(--danger)}.quick-stat.alert .quick-stat-label{color:var(--danger)}
+    .r-card{background:var(--bg-white);border:1px solid var(--border);border-radius:10px;padding:10px;box-shadow:var(--shadow-sm);margin-bottom:10px}
+    .r-card-title{font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+    .top-list{display:flex;flex-direction:column;gap:6px}
+    .top-list .item{background:var(--bg-gray);border-radius:7px;padding:7px;display:flex;align-items:center;gap:6px;cursor:pointer;border:1px solid transparent}.top-list .item:hover{border-color:rgba(22,119,255,.25);background:var(--blue-bg)}
+    .top-list .idx{width:18px;height:18px;border-radius:50%;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;background:#fff;color:var(--text-3);flex-shrink:0}
+    .top-list .txt{flex:1;min-width:0;font-size:11px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .top-list .score{font-size:10px;color:var(--danger);background:var(--danger-bg);border-radius:999px;padding:1px 5px;font-weight:700;white-space:nowrap}
+    .subject-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    .subject-item{background:var(--bg-gray);border-radius:7px;padding:7px;text-align:center}.subject-item .name{font-size:10px;color:var(--text-3);margin-bottom:3px}.subject-item .val{font-size:16px;font-weight:700;line-height:16px}
+    .empty{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;color:var(--text-4);font-size:12px;text-align:center;gap:8px;padding:16px}
+    ::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+  </style>
+</head>
+<body>
+    <div class="topnav">
+    <div class="topnav-dot"></div>
+    <div class="topnav-title">学科大脑</div>
+    <div class="topnav-sep"></div>
+    <button class="topnav-back" onclick="window.location='engine_dashboard.html'">返回总览</button>
+    <div class="topnav-sep"></div>
+    <div class="topnav-page">质量引擎可视化</div>
+    <div class="topnav-right">
+      <div class="topnav-badge">中医药大学 · 医学部</div>
+      <div class="topnav-badge">教研中心 · 管理视图</div>
+    </div>
+  </div>
+  </div>
+  <div class="workspace">
+    <section class="panel left-panel">
+      <div class="left-head">
+        <div class="left-title">问答记录列表 <span id="listCount">今日 0 条</span></div>
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0"><circle cx="6" cy="6" r="4.5" stroke="var(--text-4)" stroke-width="1.2"/><path d="M9.5 9.5L12.5 12.5" stroke="var(--text-4)" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <input id="searchInput" placeholder="搜索问题、学号、姓名" oninput="onSearch(this.value)" />
+        </div>
+        <div class="filter-row" id="scoreFilterRow"></div>
+        <div class="filter-row" id="subjectFilterRow"></div>
+      </div>
+      <div class="record-list" id="recordList"></div>
+    </section>
+    <section class="panel center-panel" style="display:flex;">
+      <div class="quality-topbar">
+        <div class="quality-q" id="qualityTop">
+          <div class="quality-q-title" id="topQ">-</div>
+          <div class="quality-q-meta" id="topMeta">-</div>
+        </div>
+        <div class="quality-score">
+          <div class="quality-score-val" id="totalScore">-</div>
+          <div class="quality-score-label">质量总分</div>
+        </div>
+      </div>
+      <div class="quality-wrap" id="qualityWrap">
+        <div class="empty" id="emptyState">
+          <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><rect x="5" y="5" width="32" height="32" rx="7" stroke="currentColor" stroke-width="1.5"/><path d="M13 21h16M13 14h16M13 28h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          从左侧选择一条记录，查看质量评估详情
+        </div>
+      </div>
+    </section>
+    <section class="panel right-panel" style="overflow-y:auto;">
+      <div class="quick-stats">
+        <div class="quick-stat">
+          <div class="quick-stat-label">今日平均质量分</div>
+          <div class="quick-stat-value">82</div>
+        </div>
+        <div class="quick-stat alert" onclick="setScoreFilter('low')">
+          <div class="quick-stat-label">低分问答</div>
+          <div class="quick-stat-value">5</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-label">改进建议数</div>
+          <div class="quick-stat-value">12</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-label">本周趋势</div>
+          <div class="quick-stat-value" style="color:var(--success)">+3.2</div>
+        </div>
+      </div>
+      <div class="r-card">
+        <div class="r-card-title">低分问答 TOP</div>
+        <div class="top-list">
+          <div class="item" onclick="loadRecord(2)"><span class="idx">1</span><span class="txt">中药十八反临床配伍例外</span><span class="score">58分</span></div>
+          <div class="item" onclick="loadRecord(4)"><span class="idx">2</span><span class="txt">针灸配穴禁忌判断</span><span class="score">62分</span></div>
+          <div class="item" onclick="loadRecord(1)"><span class="idx">3</span><span class="txt">四诊合参与辨证论治关系</span><span class="score">68分</span></div>
+        </div>
+      </div>
+      <div class="r-card">
+        <div class="r-card-title">学科质量对比</div>
+        <div class="subject-grid">
+          <div class="subject-item"><div class="name">中医学</div><div class="val" style="color:var(--success)">85</div></div>
+          <div class="subject-item"><div class="name">中药学</div><div class="val" style="color:var(--warning)">78</div></div>
+          <div class="subject-item"><div class="name">针灸学</div><div class="val" style="color:var(--success)">82</div></div>
+          <div class="subject-item"><div class="name">方剂学</div><div class="val" style="color:var(--success)">86</div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+const records=[{id:1,q:'四诊合参与辨证论治的关系是什么？',user:'李明',uid:'2021301234',time:'14:23',subject:'中医学',score:85,accuracy:90,completeness:85,age:80,safety:95},{id:2,q:'中药十八反中有哪些临床配伍例外？',user:'王芳',uid:'2021305678',time:'14:18',subject:'中药学',score:58,accuracy:55,completeness:50,age:65,safety:62},{id:3,q:'温病卫气营血辨证的核心要点？',user:'张伟',uid:'2021302345',time:'14:12',subject:'中医学',score:91,accuracy:92,completeness:90,age:88,safety:94},{id:4,q:'针灸配穴时如何判断禁忌？',user:'刘洋',uid:'2021306789',time:'14:05',subject:'针灸学',score:62,accuracy:60,completeness:58,age:70,safety:60},{id:5,q:'方剂配伍中君臣佐使的作用？',user:'陈静',uid:'2021303456',time:'13:58',subject:'方剂学',score:88,accuracy:90,completeness:86,age:85,safety:91}];
+let currentRecord=null,scoreFilter='all',subjectFilter='all',searchTerm='';
+function init(){renderScoreFilters();renderSubjectFilters();renderRecordList();updateListCount();}
+function renderScoreFilters(){const f=document.getElementById('scoreFilterRow');f.innerHTML='<div class="chip '+(scoreFilter==='all'?'active':'')+'" onclick="setScoreFilter(\'all\')">全部</div><div class="chip '+(scoreFilter==='high'?'active':'')+'" onclick="setScoreFilter(\'high\')">高分(≥80)</div><div class="chip '+(scoreFilter==='low'?'active':'')+'" onclick="setScoreFilter(\'low\')">低分(<70)</div>';}
+function renderSubjectFilters(){const subs=[...new Set(records.map(r=>r.subject))];const f=document.getElementById('subjectFilterRow');f.innerHTML='<div class="chip '+(subjectFilter==='all'?'active':'')+'" onclick="setSubjectFilter(\'all\')">全部学科</div>'+subs.map(s=>'<div class="chip '+(subjectFilter===s?'active':'')+'" onclick="setSubjectFilter(\''+s+'\')">'+s+'</div>').join('');}
+function setScoreFilter(s){scoreFilter=s;renderScoreFilters();renderRecordList();}
+function setSubjectFilter(s){subjectFilter=s;renderSubjectFilters();renderRecordList();}
+function onSearch(v){searchTerm=v.toLowerCase();renderRecordList();}
+function renderRecordList(){const filtered=records.filter(r=>{if(scoreFilter==='high'&&r.score<80)return false;if(scoreFilter==='low'&&r.score>=70)return false;if(subjectFilter!=='all'&&r.subject!==subjectFilter)return false;if(searchTerm&&!r.q.toLowerCase().includes(searchTerm)&&!r.user.toLowerCase().includes(searchTerm)&&!r.uid.includes(searchTerm))return false;return true;});const list=document.getElementById('recordList');if(filtered.length===0){list.innerHTML='<div class="empty" style="padding:40px 16px;">无匹配记录</div>';return;}list.innerHTML=filtered.map(r=>'<div class="record-item '+(currentRecord&&currentRecord.id===r.id?'active':'')+'" onclick="loadRecord('+r.id+')"><div class="record-q">'+r.q+'</div><div class="record-meta"><span>'+r.user+'</span><span>'+r.uid+'</span><span>'+r.time+'</span><span class="tag">'+r.subject+'</span>'+(r.score>=80?'<span class="tag ok">高分</span>':r.score<70?'<span class="tag danger">低分</span>':'<span class="tag warn">中等</span>')+'<span>质量分 '+r.score+'</span></div></div>').join('');updateListCount();}
+function updateListCount(){const filtered=records.filter(r=>{if(scoreFilter==='high'&&r.score<80)return false;if(scoreFilter==='low'&&r.score>=70)return false;if(subjectFilter!=='all'&&r.subject!==subjectFilter)return false;if(searchTerm&&!r.q.toLowerCase().includes(searchTerm)&&!r.user.toLowerCase().includes(searchTerm)&&!r.uid.includes(searchTerm))return false;return true;});document.getElementById('listCount').textContent='今日 '+filtered.length+' 条';}
+function loadRecord(id){currentRecord=records.find(r=>r.id===id);if(!currentRecord)return;renderRecordList();document.getElementById('emptyState').style.display='none';document.getElementById('topQ').textContent=currentRecord.q;document.getElementById('topMeta').textContent=currentRecord.user+' · '+currentRecord.uid+' · '+currentRecord.time+' · '+currentRecord.subject;document.getElementById('totalScore').textContent=currentRecord.score;document.getElementById('totalScore').style.color=currentRecord.score>=80?'var(--success)':currentRecord.score<70?'var(--danger)':'var(--warning)';renderQuality();}
+function renderQuality(){const w=document.getElementById('qualityWrap');w.innerHTML='<div class="dim-grid"><div class="dim-card" id="dimAccuracy" onclick="toggleDim(\'dimAccuracy\')"><div class="dim-head"><div class="dim-icon accuracy">A</div><div class="dim-main"><div class="dim-name">准确性</div><div class="dim-score" style="color:'+(currentRecord.accuracy>=80?'var(--success)':currentRecord.accuracy<70?'var(--danger)':'var(--warning)')+'">'+currentRecord.accuracy+'</div></div></div><div class="dim-body"><div class="dim-section"><div class="dim-section-title">评分依据</div><div class="dim-section-content">答案与权威教材内容一致性、专业术语使用准确度</div></div><div class="dim-section"><div class="dim-section-title">扣分项</div><div class="dim-issues"><div class="dim-issue">部分术语表述不够规范</div></div></div><div class="dim-section"><div class="dim-section-title">改进建议</div><div class="dim-section-content">建议补充《中医诊断学》第四章权威定义</div></div></div></div><div class="dim-card" id="dimCompleteness" onclick="toggleDim(\'dimCompleteness\')"><div class="dim-head"><div class="dim-icon completeness">C</div><div class="dim-main"><div class="dim-name">完整性</div><div class="dim-score" style="color:'+(currentRecord.completeness>=80?'var(--success)':currentRecord.completeness<70?'var(--danger)':'var(--warning)')+'">'+currentRecord.completeness+'</div></div></div><div class="dim-body"><div class="dim-section"><div class="dim-section-title">评分依据</div><div class="dim-section-content">答案覆盖问题核心要点的完整度、关键知识点遗漏情况</div></div><div class="dim-section"><div class="dim-section-title">扣分项</div><div class="dim-issues"><div class="dim-issue">缺少临床应用场景说明</div></div></div><div class="dim-section"><div class="dim-section-title">改进建议</div><div class="dim-section-content">补充实际案例增强理解</div></div></div></div><div class="dim-card" id="dimAge" onclick="toggleDim(\'dimAge\')"><div class="dim-head"><div class="dim-icon age">G</div><div class="dim-main"><div class="dim-name">适龄性</div><div class="dim-score" style="color:'+(currentRecord.age>=80?'var(--success)':currentRecord.age<70?'var(--danger)':'var(--warning)')+'">'+currentRecord.age+'</div></div></div><div class="dim-body"><div class="dim-section"><div class="dim-section-title">评分依据</div><div class="dim-section-content">答案难度与学生年级匹配度、表述方式适合性</div></div><div class="dim-section"><div class="dim-section-title">扣分项</div><div class="dim-issues"><div class="dim-issue">部分内容超出本科阶段要求</div></div></div><div class="dim-section"><div class="dim-section-title">改进建议</div><div class="dim-section-content">调整为本科三年级理解水平</div></div></div></div><div class="dim-card" id="dimSafety" onclick="toggleDim(\'dimSafety\')"><div class="dim-head"><div class="dim-icon safety">S</div><div class="dim-main"><div class="dim-name">安全性</div><div class="dim-score" style="color:'+(currentRecord.safety>=80?'var(--success)':currentRecord.safety<70?'var(--danger)':'var(--warning)')+'">'+currentRecord.safety+'</div></div></div><div class="dim-body"><div class="dim-section"><div class="dim-section-title">评分依据</div><div class="dim-section-content">答案是否包含医疗风险提示、禁忌症说明完整性</div></div><div class="dim-section"><div class="dim-section-title">扣分项</div><div class="dim-issues"><div class="dim-issue">无</div></div></div><div class="dim-section"><div class="dim-section-title">改进建议</div><div class="dim-section-content">当前安全性良好，无需改进</div></div></div></div></div><div class="trend-card"><div class="trend-title">本周质量趋势</div><div class="trend-chart"><div class="trend-bar" style="height:45%"></div><div class="trend-bar" style="height:52%"></div><div class="trend-bar" style="height:48%"></div><div class="trend-bar" style="height:60%"></div><div class="trend-bar" style="height:65%"></div><div class="trend-bar" style="height:72%"></div><div class="trend-bar" style="height:80%"></div></div></div>';}
+function toggleDim(id){const card=document.getElementById(id);const wasOpen=card.classList.contains('open');document.querySelectorAll('.dim-card').forEach(c=>c.classList.remove('open'));if(!wasOpen)card.classList.add('open');}
+init();
+  
+document.addEventListener('mousemove', function(e) {
+  var x = e.clientX - 300;
+  var y = e.clientY - 300;
+  document.body.style.setProperty('--mx', x + 'px');
+  document.body.style.setProperty('--my', y + 'px');
+});
+(function() {
+  var style = document.createElement('style');
+  style.textContent = 'body::before { transform: translate(var(--mx, 0px), var(--my, 0px)); }';
+  document.head.appendChild(style);
+})();
+  </script>
+</body>
+</html>

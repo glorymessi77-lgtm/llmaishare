@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>T01 文档解析 · 学科大脑</title>
+<link rel="stylesheet" href="assets/tokens.css" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body data-page="t01">
+<div class="layout">
+  <aside class="sidebar" id="sidebar-mount"></aside>
+  <main class="main">
+    <header class="topbar">
+      <div><span class="title">文档解析</span><span class="crumbs">数据获取 / T01 文档解析</span></div>
+      <div class="search"><i data-lucide="search" width="14" height="14"></i><input placeholder="搜索" /></div>
+    </header>
+    <div class="content">
+      <section class="page-header">
+        <div class="left"><span class="code-badge">T01</span><div><h1>文档解析工具</h1><div class="subtitle">批量上传教材 / 讲义 / 论文，自动解析章节、段落、公式、图表</div></div></div>
+        <div class="actions">
+          <button class="btn"><i data-lucide="download" width="14" height="14"></i>导出</button>
+          <button class="btn btn-primary"><i data-lucide="upload" width="14" height="14"></i>上传文档</button>
+        </div>
+      </section>
+
+      <section class="kpi-row" id="kpi-row"></section>
+
+      <section class="filter-bar">
+        <select id="f-subject"><option value="">全部学科</option></select>
+        <select id="f-status"><option value="">全部状态</option><option value="parsing">解析中</option><option value="done">已解析</option><option value="ingested">已入库</option><option value="failed">失败</option></select>
+        <select><option>最近 14 天</option><option>最近 30 天</option></select>
+        <input id="f-search" class="search-input" type="text" placeholder="搜索文档名称" />
+        <span class="spacer"></span>
+        <button class="btn btn-sm"><i data-lucide="filter" width="12" height="12"></i>更多筛选</button>
+      </section>
+
+      <div class="panel">
+        <table class="data" id="tbl">
+          <thead><tr><th>文档</th><th>学科</th><th>类型</th><th style="text-align:right">大小</th><th style="text-align:right">段落</th><th style="text-align:right">公式</th><th>状态</th><th>上传者</th><th>更新时间</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<aside class="drawer" id="drawer">
+  <div class="drawer-head"><span class="title">文档详情</span><button class="close"><i data-lucide="x" width="16" height="16"></i></button></div>
+  <div class="drawer-body"></div>
+</aside>
+<div class="drawer-mask" id="drawer-mask"></div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="assets/data.js"></script>
+<script src="assets/app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const S = window.MOCK.docStats, list = window.MOCK.docs, meta = window.MOCK.docStatusMeta;
+  document.getElementById('kpi-row').innerHTML = `
+    <div class="kpi-card"><div class="label">解析文档</div><div class="value">${S.total}<span class="unit">份</span></div><div class="delta up">↑ 14 本周</div></div>
+    <div class="kpi-card"><div class="label">累计段落</div><div class="value">${window.fmtNum(S.paragraphs)}<span class="unit">段</span></div><div class="delta flat">含公式 ${list.reduce((s,d)=>s+d.formulas,0)} 条</div></div>
+    <div class="kpi-card"><div class="label">平均解析耗时</div><div class="value">${S.avgCost}<span class="unit">s</span></div><div class="delta down">↓ 6%</div></div>
+    <div class="kpi-card"><div class="label">成功率</div><div class="value">${S.successRate}<span class="unit">%</span></div><div class="delta up">↑ 0.8%</div></div>`;
+
+  document.getElementById('f-subject').innerHTML += window.MOCK.subjects.map(s=>`<option value="${s}">${s}</option>`).join('');
+
+  function render(rows){
+    document.querySelector('#tbl tbody').innerHTML = rows.map((d,i)=>`
+      <tr data-idx="${i}">
+        <td class="strong">${d.name}<div style="font-size:var(--fs-xs);color:var(--text-4);">${d.id}</div></td>
+        <td><span class="chip">${d.subject}</span></td>
+        <td style="text-transform:uppercase;color:var(--text-3);">${d.type}</td>
+        <td style="text-align:right" class="num">${d.sizeMB} MB</td>
+        <td style="text-align:right" class="num">${d.paragraphs}</td>
+        <td style="text-align:right" class="num">${d.formulas}</td>
+        <td><span class="chip ${meta[d.status].tone}">${meta[d.status].text}</span></td>
+        <td>${d.uploader}</td>
+        <td class="num">${d.updatedAt}</td>
+      </tr>`).join('');
+    document.querySelectorAll('#tbl tbody tr').forEach(tr=>tr.addEventListener('click',()=>openDoc(rows[+tr.dataset.idx])));
+  }
+  render(list.slice(0,24));
+
+  function openDoc(d){
+    window.__openDrawer(`
+      <div class="drawer-meta">
+        <div class="row"><span class="k">ID</span><span class="v">${d.id}</span></div>
+        <div class="row"><span class="k">类型</span><span class="v">${d.type.toUpperCase()}</span></div>
+        <div class="row"><span class="k">学科</span><span class="v">${d.subject}</span></div>
+        <div class="row"><span class="k">状态</span><span class="v">${meta[d.status].text}</span></div>
+        <div class="row"><span class="k">大小</span><span class="v num">${d.sizeMB} MB</span></div>
+        <div class="row"><span class="k">解析耗时</span><span class="v num">${d.costSec} s</span></div>
+        <div class="row"><span class="k">段落</span><span class="v num">${d.paragraphs}</span></div>
+        <div class="row"><span class="k">公式 / 图</span><span class="v num">${d.formulas} / ${d.figures}</span></div>
+      </div>
+      <div class="drawer-section"><h4>章节结构（${d.chapters.length} 章）</h4>
+        <div style="display:flex;flex-direction:column;gap:4px;">${d.chapters.map((c,i)=>`<div style="padding:8px 12px;background:var(--bg);border-radius:var(--r-sm);font-size:var(--fs-sm);color:var(--text-2);"><span style="color:var(--text-4);margin-right:8px;">${String(i+1).padStart(2,'0')}</span>${c}</div>`).join('')}</div>
+      </div>
+      <div class="drawer-section"><h4>处理日志</h4>
+        <div class="timeline">${d.log.map(l=>`<div class="item"><span class="at">${l.at}</span><span class="who">${l.who}</span><span class="action">${l.action}</span>${l.note?`<div class="note">${l.note}</div>`:''}</div>`).join('')}</div>
+      </div>`, d.name);
+  }
+
+  initTableSort('#tbl');
+  const filter = () => {
+    const sub = document.getElementById('f-subject').value, st = document.getElementById('f-status').value, q = document.getElementById('f-search').value.toLowerCase();
+    render(list.filter(d => (!sub||d.subject===sub)&&(!st||d.status===st)&&(!q||d.name.toLowerCase().includes(q))).slice(0,30));
+  };
+  document.getElementById('f-subject').addEventListener('change',filter);
+  document.getElementById('f-status').addEventListener('change',filter);
+  document.getElementById('f-search').addEventListener('input',filter);
+  lucide.createIcons();
+});
+</script>
+</body>
+</html>

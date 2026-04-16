@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440">
+<title>学科大脑 · 八大场景演示导览</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --brand:#23B283; --brand-light:#45BF92; --brand-dark:#158C68;
+  --brand-bg:#EBF7F1; --brand-10:rgba(35,178,131,0.10); --brand-20:rgba(35,178,131,0.20);
+  --brand-grad:linear-gradient(135deg,#23B283 0%,#158C68 100%);
+
+  --blue:#0077FF;     --blue-bg:#EBF5FF;
+  --orange:#FC7819;   --orange-bg:#FFF4E6;
+  --purple:#7C5CFC;   --purple-bg:#F3EEFF;
+  --gold:#F0A742;     --gold-bg:#FFF5E5;
+  --pink:#EC4899;     --pink-bg:#FDF2F8;
+  --cyan:#06B6D4;     --cyan-bg:#ECFEFF;
+  --red:#F53B3B;      --red-bg:#FEF0F0;
+
+  --text-1:#12151A; --text-2:#4B535C; --text-3:#7B838C; --text-4:#A9B0B8;
+  --bg:#F2F5F7; --bg-soft:#F7F9FB; --white:#FFFFFF;
+  --border:#E8ECF0; --border-soft:#F0F2F5;
+
+  --r-sm:8px; --r-md:10px; --r-lg:12px; --r-xl:16px; --r-full:999px;
+
+  --shadow-1:0 2px 8px rgba(18,21,26,0.04);
+  --shadow-2:0 4px 16px rgba(18,21,26,0.06);
+  --shadow-3:0 8px 32px rgba(18,21,26,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:auto;min-height:100%;}
+body{
+  font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;
+  background:var(--bg);color:var(--text-1);font-size:14px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;min-width:1440px;
+}
+a{color:inherit;text-decoration:none;}
+
+/* ============ Topbar · 对齐全链路总览 ============ */
+.topbar{
+  height:60px;background:var(--white);border-bottom:1px solid var(--border);
+  padding:0 32px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.topbar-left{display:flex;align-items:center;gap:32px;}
+.logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:var(--brand);}
+.logo-mark{
+  width:32px;height:32px;border-radius:9px;background:var(--brand-grad);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-weight:800;font-size:14px;box-shadow:0 4px 10px rgba(35,178,131,0.3);
+}
+.logo-sub{
+  font-size:11px;color:var(--text-3);font-weight:500;
+  padding-left:10px;border-left:1px solid var(--border);margin-left:4px;
+  letter-spacing:0.02em;
+}
+.topbar-nav{display:flex;gap:4px;}
+.topbar-nav a{
+  padding:8px 16px;border-radius:8px;font-size:13px;color:var(--text-2);
+  transition:all .2s;display:inline-flex;align-items:center;gap:6px;font-weight:500;
+}
+.topbar-nav a:hover{background:var(--brand-10);color:var(--brand);}
+.topbar-nav a.active{background:var(--brand);color:#fff;font-weight:600;}
+.topbar-right{display:flex;align-items:center;gap:14px;}
+.back-btn{
+  font-size:13px;color:var(--text-2);padding:7px 14px;
+  border:1px solid var(--border);border-radius:var(--r-full);
+  transition:.2s;display:inline-flex;align-items:center;gap:6px;
+}
+.back-btn:hover{color:var(--brand);border-color:var(--brand);background:var(--brand-bg);}
+.avatar{
+  width:34px;height:34px;border-radius:50%;background:var(--brand-20);color:var(--brand);
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;
+}
+
+/* ============ Hero ============ */
+.hero{
+  background:linear-gradient(135deg,#E8F5EF 0%,#F0F9F5 40%,#F2F5F7 100%);
+  padding:48px 32px 56px;position:relative;overflow:hidden;
+  border-bottom:1px solid var(--border);
+}
+.hero::before{
+  content:'';position:absolute;right:-100px;top:-80px;
+  width:380px;height:380px;border-radius:50%;
+  background:radial-gradient(circle,rgba(35,178,131,0.18),transparent 70%);
+  pointer-events:none;
+}
+.hero-inner{max-width:1280px;margin:0 auto;position:relative;z-index:1;}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--white);padding:6px 14px;border-radius:var(--r-full);
+  font-size:12px;color:var(--brand);font-weight:600;
+  border:1px solid rgba(35,178,131,0.2);box-shadow:var(--shadow-1);
+  margin-bottom:16px;letter-spacing:0.05em;
+}
+.hero-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--brand);animation:pulse 1.5s infinite;}
+@keyframes pulse{50%{opacity:0.4;}}
+.hero h1{
+  font-size:34px;font-weight:900;letter-spacing:-0.02em;
+  line-height:1.2;color:var(--text-1);margin-bottom:12px;
+}
+.hero h1 .accent{
+  background:var(--brand-grad);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-desc{
+  font-size:14px;color:var(--text-2);max-width:780px;line-height:1.85;
+}
+
+/* ============ Main ============ */
+.main{max-width:1280px;margin:0 auto;padding:36px 32px 60px;}
+
+.section-head{
+  display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:20px;
+}
+.section-head h2{
+  font-size:20px;font-weight:800;color:var(--text-1);
+  display:flex;align-items:center;gap:10px;
+}
+.section-head h2::before{
+  content:'';width:4px;height:18px;background:var(--brand);border-radius:2px;
+}
+.section-head .hint{font-size:12px;color:var(--text-3);}
+
+/* ============ 8 cards · 4×2 grid ============ */
+.scenes{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:18px;
+}
+
+.sc-card{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:var(--r-xl);
+  padding:24px 24px;
+  text-decoration:none;
+  color:inherit;
+  display:flex;flex-direction:column;
+  transition:all .28s cubic-bezier(0.22,1,0.36,1);
+  position:relative;
+  overflow:hidden;
+  min-height:260px;
+}
+.sc-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--mc);transform:scaleX(0);transform-origin:left;
+  transition:transform 0.35s ease;
+}
+.sc-card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-3);
+  border-color:var(--mc);
+}
+.sc-card:hover::before{transform:scaleX(1);}
+
+.sc-card.s-jian{--mc:var(--brand);--mc-bg:var(--brand-bg);}
+.sc-card.s-bei{--mc:var(--blue);--mc-bg:var(--blue-bg);}
+.sc-card.s-jiao{--mc:var(--orange);--mc-bg:var(--orange-bg);}
+.sc-card.s-xue{--mc:var(--purple);--mc-bg:var(--purple-bg);}
+.sc-card.s-kao{--mc:var(--cyan);--mc-bg:var(--cyan-bg);}
+.sc-card.s-du{--mc:var(--gold);--mc-bg:var(--gold-bg);}
+.sc-card.s-guan{--mc:var(--pink);--mc-bg:var(--pink-bg);}
+.sc-card.s-yan{--mc:var(--red);--mc-bg:var(--red-bg);}
+
+.sc-head{
+  display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;
+}
+.sc-num{
+  font-size:11px;color:var(--text-3);font-weight:500;letter-spacing:0.1em;
+  display:flex;align-items:center;gap:6px;
+}
+.sc-num .nn{
+  color:var(--mc);font-weight:700;
+  padding:2px 8px;background:var(--mc-bg);border-radius:var(--r-sm);
+}
+.sc-status{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:600;color:var(--brand);
+  padding:4px 10px;background:var(--brand-bg);border-radius:var(--r-full);
+}
+.sc-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--brand);}
+
+.sc-hero{
+  display:flex;align-items:center;gap:14px;margin-bottom:14px;
+}
+.sc-ch{
+  width:54px;height:54px;border-radius:14px;
+  background:var(--mc-bg);color:var(--mc);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;font-weight:900;font-family:'Noto Sans SC',serif;
+  flex-shrink:0;
+}
+.sc-title{
+  font-size:18px;font-weight:800;color:var(--text-1);line-height:1.3;
+  letter-spacing:-0.01em;
+}
+.sc-sub{
+  font-size:11px;color:var(--text-3);font-weight:500;margin-top:3px;
+}
+
+.sc-desc{
+  font-size:12.5px;color:var(--text-2);line-height:1.7;margin-bottom:14px;
+}
+.sc-highlights{
+  display:flex;flex-direction:column;gap:6px;margin-bottom:14px;
+}
+.sc-highlight{
+  font-size:11px;color:var(--text-2);line-height:1.55;
+  padding:5px 0 5px 16px;position:relative;
+}
+.sc-highlight::before{
+  content:'';position:absolute;left:0;top:11px;
+  width:6px;height:6px;border-radius:50%;background:var(--mc);
+}
+.sc-footer{
+  margin-top:auto;padding-top:12px;border-top:1px solid var(--border-soft);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sc-meta{font-size:10px;color:var(--text-3);display:flex;gap:8px;align-items:center;}
+.sc-meta strong{color:var(--text-2);font-weight:600;}
+.sc-enter{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:11px;font-weight:600;color:var(--mc);
+  padding:5px 12px;background:var(--mc-bg);border-radius:var(--r-full);
+  transition:all .25s;
+}
+.sc-card:hover .sc-enter{background:var(--mc);color:#fff;}
+.sc-enter svg{width:12px;height:12px;stroke-width:2.5;transition:transform .25s;}
+.sc-card:hover .sc-enter svg{transform:translateX(3px);}
+
+/* ============ Footer ============ */
+footer{
+  max-width:1280px;margin:40px auto 0;padding:24px 32px 40px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:flex-start;justify-content:space-between;
+  font-size:12px;color:var(--text-3);
+}
+footer .f-left > div{margin-bottom:6px;}
+footer .f-left .brand-line{font-weight:600;color:var(--text-2);}
+footer .f-right{display:flex;gap:22px;align-items:center;}
+footer a{color:var(--brand);}
+footer a:hover{text-decoration:underline;}
+.author-credit{font-size:12px;color:var(--text-3);letter-spacing:0.05em;}
+.author-credit .sep{opacity:0.35;margin:0 6px;}
+.author-credit .name{color:var(--brand);font-weight:700;}
+
+</style>
+</head>
+<body>
+
+<!-- ============ Topbar ============ -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="logo">
+      <div class="logo-mark">雅</div>
+      讯飞小雅
+      <span class="logo-sub">学科大脑 · 场景演示</span>
+    </div>
+    <nav class="topbar-nav">
+      <a href="./index.html"><i data-lucide="layout-grid" width="14" height="14"></i>演示总览</a>
+      <a class="active"><i data-lucide="play-circle" width="14" height="14"></i>场景演示</a>
+      <a href="./frontend.html"><i data-lucide="book-open" width="14" height="14"></i>知识库前台</a>
+      <a href="./backend/index.html"><i data-lucide="settings" width="14" height="14"></i>管理后台</a>
+      <a href="./tools/index.html"><i data-lucide="wrench" width="14" height="14"></i>学科大脑工具层</a>
+      <a href="./engines/engine_dashboard.html"><i data-lucide="cpu" width="14" height="14"></i>模型引擎</a>
+      <a href="./training.html"><i data-lucide="zap" width="14" height="14"></i>训练平台</a>
+    </nav>
+  </div>
+  <div class="topbar-right">
+    <a href="./index.html" class="back-btn"><i data-lucide="arrow-left" width="14" height="14"></i>文档中心</a>
+    <div class="avatar">婷</div>
+  </div>
+</div>
+
+<!-- ============ Hero ============ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag"><span class="dot"></span>SCENE HUB · 八大教学场景</div>
+    <h1>建 · 备 · 教 · 学 · 考 · 督 · 管 · 研<br><span class="accent">八个真实演示，一次看完</span></h1>
+    <p class="hero-desc">
+      每张卡片对应一条真实动线 —— 一个主角、一个平台、一条不切平台的完整路径。点击任意卡片进入对应演示。
+    </p>
+  </div>
+</section>
+
+<!-- ============ Main ============ -->
+<main class="main">
+
+  <div class="section-head">
+    <h2>八大场景 · 点击进入对应演示</h2>
+    <div class="hint">Hover 查看场景亮点 · 点击进入 Demo</div>
+  </div>
+
+  <div class="scenes">
+
+    <!-- 01 建 · 新建课程 -->
+    <a href="./Demo01.html" class="sc-card s-jian">
+      <div class="sc-head">
+        <div class="sc-num"><span class="nn">S01</span>BUILD</div>
+        <div class="sc-status">可交互</div>
+      </div>
+      <div class="sc-hero">
+        <div class="sc-ch">建</div>
+        <div>
+          <div class="sc-title">新建课程</div>
+          <div class="sc-sub">小雅教师端 · 任课教师视角</div>
+        </div>
+      </div>
+      <p class="sc-desc">
+        老师在小雅新建《高数 A》，上传教材后自动生成章节知识图谱并发布到学生端。
+      </p>
+      <div class="sc-highlights">
+        <div class="sc-highlight">SVG 实时构建 86 节点知识图谱</div>
+        <div class="sc-highlight">教师全程不切平台 · 图谱幕后生成</div>
+      </div>
+      <div class="sc-footer">
+        <div class="sc-meta"><span><strong>T01 · T03 · M2</strong></span></div>
+        <span class="sc-enter">进入 <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+
+    <!-- 02 备 · AI 备课 -->
+    <a href="./Demo02.html" class="sc-card s-bei">
+      <div class="sc-head">
+        <div class="sc-num"><span class="nn">S02</span>PREP</div>
+        <div class="sc-status">可交互</div>
+      </div>
+      <div class="sc-hero">
+        <div class="sc-ch">备</div>
+        <div>
+          <div class="sc-title">AI 备课</div>
+          <div class="sc-sub">小雅教师端 · XClaw 对话</div>
+        </div>
+      </div>
+      <p class="sc-desc">
+        基于学情 × 知识库 × 问答库三路融合，一键生成教案 / 课件 / 习题三件套。
+      </p>
+      <div class="sc-highlights">
+        <div class="sc-highlight">XClaw 主动介入 · 侧栏对话完成</div>
+        <div class="sc-highlight">资源自动同步到课程结构图</div>
+      </div>
+      <div class="sc-footer">
+        <div class="sc-meta"><span><strong>E01 · E05 · M4 · M5</strong></span></div>
+        <span class="sc-enter">进入 <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+
+    <!-- 03 教 · 课堂讲授 -->
+    <a href="./Demo03.html" class="sc-card s-jiao">
+      <div class="sc-head">
+        <div class="sc-num"><span class="nn">S03</span>TEACH</div>
+        <div class="sc-status">可交互</div>
+      </div>
+      <div class="sc-hero">
+        <div class="sc-ch">教</div>
+        <div>
+          <div class="sc-title">课堂讲授助手</div>
+          <div class="sc-sub">小雅教师端 · 课堂模式</div>
+        </div>
+      </div>
+      <p class="sc-desc">
+        课堂被学生追问超纲问题时，教师端实时溯源权威答案并可投屏。
+      </p>
+      <div class="sc-highlights">
+        <div class="sc-highlight">0.8 秒响应 · 溯源到教材页码</div>
+        <div class="sc-highlight">相关概念联想卡可投屏</div>
+      </div>
+      <div class="sc-footer">
+        <div class="sc-meta"><span><strong>E02 · E03 · M1</strong></span></div>
+        <span class="sc-enter">进入 <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+
+    <!-- 04 学 · 拍照答疑 -->
+    <a href="./Demo04.html" class="sc-card s-xue">
+      <div class="sc-head">
+        <div class="sc-num"><span class="nn">S04</span>LEARN</div>
+        <div class="sc-status">可交互</div>
+      </div>
+      <div class="sc-hero">
+        <div class="sc-ch">学</div>
+        <div>
+          <div class="sc-title">拍照答疑 · 多轮引导</div>
+          <div class="sc-sub">小雅学生端 · 手机模拟</div>
+        </div>
+      </div>
+      <p class="sc-desc">
+        学生拍题后，AI 不直接给答案，用苏格拉底式追问帮他自己推出答案。
+      </p>
+      <div class="sc-highlights">
+        <div class="sc-highlight">E07 多轮引导 · 认知断点定位</div>
+        <div class="sc-highlight">对话自动沉淀到错题本</div>
+      </div>
+      <div class="sc-footer">
+        <div class="sc-meta"><span><strong>E07 · T08 · M8</strong></span></div>
+        <span class="sc-enter">进入 <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+
+    <!-- 05 考 · 图谱组卷 -->
+    <a href="./Demo05.html" class="sc-card s-kao">
+      <div class="sc-head">
+        <div class="sc-num"><span class="nn">S05</span>TEST</div>
+        <div class="sc-status">可交互</div>
+      </div>
+      <div class="sc-hero">
+        <div class="sc-ch">考</div>
+        <div>
+          <div class="sc-title">图谱组卷</div>
+          <div class="sc-sub">小雅教务端 · 教务主任</div>
+        </div>
+      </div>
+      <p class="sc-desc">
+        教务基于知识图谱按覆盖度 × 难度分布自动组卷并下发学生端。
+      </p>
+      <div class="sc-highlights">
+        <div class="sc-highlight">图谱框选 + 难度滑杆 + 环形图</div>
+        <div class="sc-highlight">题目 stagger 动画逐条填入</div>
+      </div>
+      <div class="sc-footer">
+        <div class="sc-meta"><span><strong>M2 · M4 · T04 · T06</strong></span></div>
+        <span class="sc-enter">进入 <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+
+    <!-- 06 督 · 督导驾驶舱 -->
+    <a href="./Demo06.html" class="sc-card s-du">
+      <div class="sc-head">
+        <div class="sc-num"><span class="nn">S06</span>AUDIT</div>
+        <div class="sc-status">可交互</div>
+      </div>
+      <div class="sc-hero">
+        <div class="sc-ch">督</div>
+        <div>
+          <div class="sc-title">督导驾驶舱</div>
+          <div class="sc-sub">学校管理控制台 · 督导员</div>
+        </div>
+      </div>
+      <p class="sc-desc">
+        督导抽查全校 AI 答疑质量，筛选异常问答并打回整改。
+      </p>
+      <div class="sc-highlights">
+        <div class="sc-highlight">5 步自动 Tour · 紫色高亮引导</div>
+        <div class="sc-highlight">异常问答抽样 + 工单闭环</div>
+      </div>
+      <div class="sc-footer">
+        <div class="sc-meta"><span><strong>T06 · E02 · L5</strong></span></div>
+        <span class="sc-enter">进入 <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+
+    <!-- 07 管 · 校级驾驶舱 -->
+    <a href="./Demo07.html" class="sc-card s-guan">
+      <div class="sc-head">
+        <div class="sc-num"><span class="nn">S07</span>MANAGE</div>
+        <div class="sc-status">可交互</div>
+      </div>
+      <div class="sc-hero">
+        <div class="sc-ch">管</div>
+        <div>
+          <div class="sc-title">校级驾驶舱</div>
+          <div class="sc-sub">学校管理控制台 · 教务处长</div>
+        </div>
+      </div>
+      <p class="sc-desc">
+        教务处看全校知识资产 × 师生活跃度 × 预算执行三维治理视图。
+      </p>
+      <div class="sc-highlights">
+        <div class="sc-highlight">Jumbo 数字从 0 累加动画</div>
+        <div class="sc-highlight">院系矩阵 + 预算仪表</div>
+      </div>
+      <div class="sc-footer">
+        <div class="sc-meta"><span><strong>全模块聚合</strong></span></div>
+        <span class="sc-enter">进入 <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+
+    <!-- 08 研 · 教研运营台 -->
+    <a href="./Demo08.html" class="sc-card s-yan">
+      <div class="sc-head">
+        <div class="sc-num"><span class="nn">S08</span>RESEARCH</div>
+        <div class="sc-status">可交互</div>
+      </div>
+      <div class="sc-hero">
+        <div class="sc-ch">研</div>
+        <div>
+          <div class="sc-title">教研运营台</div>
+          <div class="sc-sub">Coral 工作台 · 教研室主任</div>
+        </div>
+      </div>
+      <p class="sc-desc">
+        教研主任基于学情反推教材改进，触发知识库迭代并推送教师。
+      </p>
+      <div class="sc-highlights">
+        <div class="sc-highlight">错题聚类 → AI 改进建议</div>
+        <div class="sc-highlight">一键采纳 · 推送 12 位教师</div>
+      </div>
+      <div class="sc-footer">
+        <div class="sc-meta"><span><strong>T06 · E06 · M1</strong></span></div>
+        <span class="sc-enter">进入 <i data-lucide="arrow-right"></i></span>
+      </div>
+    </a>
+
+  </div>
+
+</main>
+
+<footer>
+  <div class="f-left">
+    <div class="brand-line">学科大脑 · 八大场景演示导览</div>
+    <div class="author-credit">
+      作者 <span class="sep">·</span> <span class="name">婷婷</span> <span class="sep">·</span> V1 <span class="sep">·</span> 2026-04-16
+    </div>
+  </div>
+  <div class="f-right">
+    <span>内部演示 · AI 教学产品部</span>
+    <a href="./index.html">返回文档中心 →</a>
+  </div>
+</footer>
+
+<script>
+  if (window.lucide) lucide.createIcons();
+</script>
+
+</body>
+</html>

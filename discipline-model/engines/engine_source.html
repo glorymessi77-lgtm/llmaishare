@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>溯源引擎可视化 · 管理后台</title>
+  <style>
+        :root {
+      --primary:#1C3A5E;
+      --accent:#3B82F6;
+      --success:#10B981;
+      --success-bg:#D1FAE5;
+      --warning:#F59E0B;
+      --warning-bg:#FEF3C7;
+      --danger:#EF4444;
+      --danger-bg:#FEE2E2;
+      --blue:#1677FF;
+      --blue-bg:#EFF4FF;
+      --bg-1:#FAFBFC;
+      --bg-2:#F3F4F6;
+      --text-1:#111827;
+      --text-2:#4B5563;
+      --text-3:#6B7280;
+      --text-4:#9CA3AF;
+      --border:#E5E7EB;
+      --shadow-sm:0 1px 3px rgba(0,0,0,.06);
+      --shadow-md:0 4px 12px rgba(0,0,0,.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+      background: var(--bg-1);
+      color: var(--text-1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(59,130,246,.08) 0%, transparent 70%);
+      pointer-events: none;
+      transition: transform .15s ease-out;
+      z-index: 0;
+    }
+    .topnav {
+      height: 56px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 0 28px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 10;
+    }
+    .topnav::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--success));
+    }
+    .topnav-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px rgba(16,185,129,.2); }
+    .topnav-title { color: #fff; font-size: 16px; font-weight: 600; }
+    .topnav-sep { width: 1px; height: 18px; background: rgba(255,255,255,.15); }
+    .topnav-page { color: rgba(255,255,255,.7); font-size: 13px; }
+    .topnav-back { background: rgba(255,255,255,.12); color: rgba(255,255,255,.88); border: none; border-radius: 6px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-weight: 500; transition: .15s; }
+    .topnav-back:hover { background: rgba(255,255,255,.18); }
+    .topnav-right { margin-left: auto; display: flex; gap: 10px; }
+    .topnav-badge { background: rgba(255,255,255,.1); color: rgba(255,255,255,.85); border-radius: 6px; padding: 4px 12px; font-size: 12px; border: 1px solid rgba(255,255,255,.12); }
+    .workspace { flex: 1; display: grid; grid-template-columns: 300px minmax(0,1fr) 280px; overflow: hidden; position: relative; z-index: 1; }
+    .panel { background: var(--bg-white); overflow: hidden; display: flex; flex-direction: column; }
+    .left-panel { border-right: 1px solid var(--border); }
+    .center-panel { background: var(--bg-gray); padding: 12px; gap: 10px; }
+    .right-panel { border-left: 1px solid var(--border); padding: 10px; gap: 10px; background: #FAFBFC; }
+    .left-head { padding: 12px 12px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+    .left-title { font-size: 13px; font-weight: 600; color: var(--text-1); display: flex; justify-content: space-between; margin-bottom: 8px; }
+    .left-title span { font-size: 11px; color: var(--text-4); font-weight: 400; }
+    .search-box { background: var(--bg-gray); border: 1px solid var(--border); border-radius: 8px; height: 32px; display: flex; align-items: center; padding: 0 8px; margin-bottom: 8px; gap: 6px; }
+    .search-box input { flex: 1; border: none; background: transparent; outline: none; font-size: 12px; color: var(--text-1); }
+    .search-box input::placeholder { color: var(--text-4); }
+    .filter-row { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 7px; padding-bottom: 2px; }
+    .chip { border: 1px solid var(--border); background: #fff; color: var(--text-3); border-radius: 999px; font-size: 11px; padding: 3px 9px; cursor: pointer; white-space: nowrap; }
+    .chip.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .record-list { flex: 1; overflow-y: auto; }
+    .record-item { padding: 10px 12px; border-left: 3px solid transparent; cursor: pointer; transition: .15s; }
+    .record-item:hover { background: var(--bg-gray); }
+    .record-item.active { background: var(--blue-bg); border-left-color: var(--blue); }
+    .record-q { font-size: 13px; line-height: 18px; color: var(--text-1); font-weight: 500; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .record-meta { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; font-size: 11px; color: var(--text-4); }
+    .tag { background: var(--bg-gray); color: var(--text-3); border-radius: 3px; font-size: 10px; padding: 0 4px; }
+    .tag.ok { background: var(--success-bg); color: var(--success); }
+    .tag.warn { background: var(--warning-bg); color: var(--warning); }
+    .source-topbar { background: var(--bg-white); border-radius: 10px; box-shadow: var(--shadow-sm); padding: 12px; flex-shrink: 0; }
+    .source-q { font-size: 14px; font-weight: 600; color: var(--text-1); margin-bottom: 6px; }
+    .source-meta { font-size: 11px; color: var(--text-3); margin-bottom: 10px; }
+    .answer-box { background: var(--bg-gray); border-radius: 8px; padding: 10px; font-size: 12px; color: var(--text-2); line-height: 19px; }
+    .source-wrap { flex: 1; overflow-y: auto; padding: 4px 2px; display: flex; flex-direction: column; gap: 10px; }
+    .source-card { background: var(--bg-white); border-radius: 10px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); overflow: hidden; }
+    .sc-head { padding: 10px 12px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .sc-rank { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; background: var(--bg-gray); color: var(--text-3); flex-shrink: 0; }
+    .sc-rank.r1 { background: var(--warning-bg); color: var(--warning); }
+    .sc-rank.r2 { background: #F0F0F0; color: #666; }
+    .sc-rank.r3 { background: #FFF7E6; color: #D48806; }
+    .sc-main { flex: 1; min-width: 0; }
+    .sc-name { font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sc-type { font-size: 10px; color: var(--text-3); background: var(--bg-gray); border-radius: 3px; padding: 1px 5px; display: inline-block; }
+    .sc-rel { display: flex; align-items: center; gap: 6px; }
+    .rel-bar { width: 50px; height: 4px; background: var(--bg-gray); border-radius: 999px; overflow: hidden; }
+    .rel-bar i { display: block; height: 100%; background: var(--success); }
+    .rel-pct { font-size: 11px; font-weight: 700; color: var(--success); }
+    .sc-body { display: none; border-top: 1px solid var(--border); padding: 12px; background: var(--bg-gray); }
+    .source-card.open .sc-body { display: block; }
+    .excerpt { font-size: 12px; color: var(--text-2); line-height: 20px; margin-bottom: 10px; }
+    .excerpt mark { background: var(--warning-bg); color: var(--warning); font-weight: 600; padding: 0 2px; }
+    .ctrl-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ctrl-btn { border: 1px solid var(--border); background: #fff; color: var(--text-2); border-radius: 6px; font-size: 11px; padding: 4px 9px; cursor: pointer; }
+    .ctrl-btn.warn { background: var(--warning-bg); border-color: rgba(252,120,25,.24); color: var(--warning); }
+    .quick-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+    .quick-stat { background: var(--bg-white); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; display: flex; flex-direction: column; gap: 3px; }
+    .quick-stat-label { font-size: 10px; color: var(--text-3); }
+    .quick-stat-value { font-size: 18px; line-height: 18px; font-weight: 700; color: var(--text-1); }
+    .quick-stat-value small { font-size: 11px; color: var(--text-3); font-weight: 500; }
+    .r-card { background: var(--bg-white); border: 1px solid var(--border); border-radius: 10px; padding: 10px; box-shadow: var(--shadow-sm); margin-bottom: 10px; }
+    .r-card-title { font-size: 12px; font-weight: 600; color: var(--text-2); margin-bottom: 8px; }
+    .type-row { margin-bottom: 7px; }
+    .type-row:last-child { margin-bottom: 0; }
+    .type-row .name { font-size: 11px; color: var(--text-3); margin-bottom: 3px; display: flex; justify-content: space-between; }
+    .type-bar { height: 6px; border-radius: 999px; background: var(--bg-gray); overflow: hidden; }
+    .type-bar i { display: block; height: 100%; border-radius: 999px; }
+    .low-list { display: flex; flex-direction: column; gap: 6px; }
+    .low-item { background: var(--bg-gray); border-radius: 7px; padding: 7px; display: flex; align-items: center; gap: 6px; cursor: pointer; border: 1px solid transparent; }
+    .low-item:hover { border-color: rgba(252,120,25,.25); background: var(--warning-bg); }
+    .low-item .txt { flex: 1; min-width: 0; font-size: 11px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .low-item .cnt { font-size: 10px; color: var(--warning); background: var(--warning-bg); border-radius: 999px; padding: 1px 5px; font-weight: 700; white-space: nowrap; }
+    .empty { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; color: var(--text-4); font-size: 12px; text-align: center; gap: 8px; padding: 16px; }
+    .toast { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); background: rgba(18,21,26,.92); color: #fff; border-radius: 8px; padding: 7px 14px; font-size: 12px; z-index: 999; opacity: 0; pointer-events: none; transition: .2s; white-space: nowrap; }
+    .toast.show { opacity: 1; }
+    ::-webkit-scrollbar { width: 3px; height: 3px; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  </style>
+</head>
+<body>
+    <div class="topnav">
+    <div class="topnav-dot"></div>
+    <div class="topnav-title">学科大脑</div>
+    <div class="topnav-sep"></div>
+    <button class="topnav-back" onclick="window.location='engine_dashboard.html'">返回总览</button>
+    <div class="topnav-sep"></div>
+    <div class="topnav-page">溯源引擎可视化</div>
+    <div class="topnav-right">
+      <div class="topnav-badge">中医药大学 · 医学部</div>
+      <div class="topnav-badge">教研中心 · 管理视图</div>
+    </div>
+  </div>
+  </div>
+  <div class="workspace">
+    <section class="panel left-panel">
+      <div class="left-head">
+        <div class="left-title">问答记录列表 <span id="listCount">今日 0 条</span></div>
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0"><circle cx="6" cy="6" r="4.5" stroke="var(--text-4)" stroke-width="1.2"/><path d="M9.5 9.5L12.5 12.5" stroke="var(--text-4)" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <input id="searchInput" placeholder="搜索问题、学号、姓名" oninput="onSearch(this.value)" />
+        </div>
+        <div class="filter-row" id="filterRow"></div>
+      </div>
+      <div class="record-list" id="recordList"></div>
+    </section>
+    <section class="panel center-panel" style="display:flex;">
+      <div class="source-topbar" id="sourceTop">
+        <div class="source-q" id="topQ">-</div>
+        <div class="source-meta" id="topMeta">-</div>
+        <div class="answer-box" id="answerBox">选择左侧记录查看答案与溯源</div>
+      </div>
+      <div class="source-wrap" id="sourceWrap">
+        <div class="empty" id="emptyState">
+          <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><rect x="5" y="5" width="32" height="32" rx="7" stroke="currentColor" stroke-width="1.5"/><path d="M13 21h16M13 14h16M13 28h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          从左侧选择一条记录，查看答案来源
+        </div>
+      </div>
+    </section>
+    <section class="panel right-panel" style="overflow-y:auto;">
+      <div class="quick-stats">
+        <div class="quick-stat">
+          <div class="quick-stat-label">今日溯源查看</div>
+          <div class="quick-stat-value">342<small>次</small></div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-label">平均来源数</div>
+          <div class="quick-stat-value">4.2<small>个</small></div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-label">低可信来源</div>
+          <div class="quick-stat-value">12<small>%</small></div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-label">待审核来源</div>
+          <div class="quick-stat-value">8<small>条</small></div>
+        </div>
+      </div>
+      <div class="r-card">
+        <div class="r-card-title">来源类型分布</div>
+        <div class="type-row"><div class="name"><span>教材文档</span><b>45%</b></div><div class="type-bar"><i style="width:45%;background:var(--blue)"></i></div></div>
+        <div class="type-row"><div class="name"><span>教师笔记</span><b>28%</b></div><div class="type-bar"><i style="width:28%;background:var(--success)"></i></div></div>
+        <div class="type-row"><div class="name"><span>学生提交</span><b>15%</b></div><div class="type-bar"><i style="width:15%;background:var(--warning)"></i></div></div>
+        <div class="type-row"><div class="name"><span>知识图谱</span><b>8%</b></div><div class="type-bar"><i style="width:8%;background:#9254DE"></i></div></div>
+        <div class="type-row"><div class="name"><span>题库资源</span><b>4%</b></div><div class="type-bar"><i style="width:4%;background:#F5A35C"></i></div></div>
+      </div>
+      <div class="r-card">
+        <div class="r-card-title">低可信来源 TOP</div>
+        <div class="low-list">
+          <div class="low-item" onclick="toast('已定位到该来源')"><span class="txt">学生笔记·中药学·2021级李明</span><span class="cnt">可信度 42%</span></div>
+          <div class="low-item" onclick="toast('已定位到该来源')"><span class="txt">网络资料·针灸学·未审核</span><span class="cnt">可信度 38%</span></div>
+          <div class="low-item" onclick="toast('已定位到该来源')"><span class="txt">学生笔记·方剂学·2020级王芳</span><span class="cnt">可信度 51%</span></div>
+        </div>
+      </div>
+      <div class="r-card">
+        <div class="r-card-title">待审核来源队列</div>
+        <div class="low-list">
+          <div class="low-item" onclick="toast('已打开审核界面')"><span class="txt">教师笔记·温病学·张教授</span><span class="cnt">待审核</span></div>
+          <div class="low-item" onclick="toast('已打开审核界面')"><span class="txt">学生提交·中医诊断·2022级</span><span class="cnt">待审核</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+const records=[{id:1,q:'四诊合参与辨证论治的关系是什么？',user:'李明',uid:'2021301234',time:'14:23',subject:'中医学',answer:'四诊合参是中医诊断的核心方法，通过望、闻、问、切四种诊法收集患者信息，综合分析后形成辨证论治的依据。辨证论治则是在四诊合参基础上，确定证型并制定治疗方案的过程。',sources:[{rank:1,name:'中医诊断学·第四章·四诊合参',type:'教材',rel:94,excerpt:'四诊合参是中医诊断的核心方法，通过<mark>望、闻、问、切</mark>四种诊法收集患者信息，综合分析后形成<mark>辨证论治</mark>的依据。'},{rank:2,name:'中医学基础·辨证论治概论',type:'教材',rel:88,excerpt:'辨证论治是中医临床的基本原则，在<mark>四诊合参</mark>基础上，确定证型并制定治疗方案。'},{rank:3,name:'教师笔记·中医诊断·张教授',type:'笔记',rel:76,excerpt:'临床实践中，四诊合参与辨证论治密不可分，前者是信息收集，后者是决策过程。'},{rank:4,name:'知识图谱·中医诊断·四诊',type:'图谱',rel:68,excerpt:'四诊：望诊、闻诊、问诊、切诊 → 合参 → 辨证 → 论治'},{rank:5,name:'题库·中医诊断学·历年真题',type:'题库',rel:62,excerpt:'四诊合参的目的是全面收集患者信息，为辨证论治提供依据。'}]},{id:2,q:'中药十八反中有哪些临床配伍例外？',user:'王芳',uid:'2021305678',time:'14:18',subject:'中药学',answer:'中药十八反是传统配伍禁忌，但现代研究发现部分配伍在特定条件下可用，如甘遂配甘草用于顽固性水肿，半夏配乌头用于寒痰阻络等。',sources:[{rank:1,name:'中药学·十八反配伍例外专题',type:'教材',rel:91,excerpt:'<mark>甘遂配甘草</mark>在顽固性水肿中有应用，<mark>半夏配乌头</mark>用于寒痰阻络，但需严格控制剂量。'},{rank:2,name:'临床中药学·配伍禁忌案例',type:'教材',rel:84,excerpt:'十八反配伍例外需满足：病情需要、剂量控制、炮制得当、配伍合理四个条件。'},{rank:3,name:'学生笔记·中药学·2021级李明',type:'笔记',rel:42,excerpt:'老师说十八反不是绝对的，临床有例外，但我记不清具体哪些了。'}]},{id:3,q:'温病卫气营血辨证的核心要点？',user:'张伟',uid:'2021302345',time:'14:12',subject:'中医学',answer:'卫气营血辨证是温病学的核心理论，按病邪由表入里、由浅入深的传变规律，分为卫分证、气分证、营分证、血分证四个阶段，指导温病的诊断与治疗。',sources:[{rank:1,name:'温病学·卫气营血辨证',type:'教材',rel:96,excerpt:'<mark>卫气营血辨证</mark>按病邪传变规律分为四个阶段：卫分证（表证）、气分证（里热证）、营分证（热入营分）、血分证（热入血分）。'},{rank:2,name:'中医学基础·温病学概论',type:'教材',rel:89,excerpt:'卫气营血辨证是叶天士创立的温病辨证体系，反映了温病由表入里、由浅入深的传变规律。'},{rank:3,name:'教师笔记·温病学·王教授',type:'笔记',rel:82,excerpt:'临床辨证要点：卫分看发热恶寒，气分看高热口渴，营分看神昏谵语，血分看出血斑疹。'}]}];
+let currentRecord=null,filter='all',searchTerm='';
+function init(){renderFilters();renderRecordList();updateListCount();}
+function renderFilters(){const f=document.getElementById('filterRow');f.innerHTML='<div class="chip '+(filter==='all'?'active':'')+'" onclick="setFilter(\'all\')">全部</div><div class="chip '+(filter==='中医学'?'active':'')+'" onclick="setFilter(\'中医学\')">中医学</div><div class="chip '+(filter==='中药学'?'active':'')+'" onclick="setFilter(\'中药学\')">中药学</div>';}
+function setFilter(f){filter=f;renderFilters();renderRecordList();}
+function onSearch(v){searchTerm=v.toLowerCase();renderRecordList();}
+function renderRecordList(){const filtered=records.filter(r=>{if(filter!=='all'&&r.subject!==filter)return false;if(searchTerm&&!r.q.toLowerCase().includes(searchTerm)&&!r.user.toLowerCase().includes(searchTerm)&&!r.uid.includes(searchTerm))return false;return true;});const list=document.getElementById('recordList');if(filtered.length===0){list.innerHTML='<div class="empty" style="padding:40px 16px;">无匹配记录</div>';return;}list.innerHTML=filtered.map(r=>'<div class="record-item '+(currentRecord&&currentRecord.id===r.id?'active':'')+'" onclick="loadRecord('+r.id+')"><div class="record-q">'+r.q+'</div><div class="record-meta"><span>'+r.user+'</span><span>'+r.uid+'</span><span>'+r.time+'</span><span class="tag">'+r.subject+'</span><span class="tag ok">'+r.sources.length+' 个来源</span></div></div>').join('');updateListCount();}
+function updateListCount(){const filtered=records.filter(r=>{if(filter!=='all'&&r.subject!==filter)return false;if(searchTerm&&!r.q.toLowerCase().includes(searchTerm)&&!r.user.toLowerCase().includes(searchTerm)&&!r.uid.includes(searchTerm))return false;return true;});document.getElementById('listCount').textContent='今日 '+filtered.length+' 条';}
+function loadRecord(id){currentRecord=records.find(r=>r.id===id);if(!currentRecord)return;renderRecordList();document.getElementById('emptyState').style.display='none';document.getElementById('topQ').textContent=currentRecord.q;document.getElementById('topMeta').textContent=currentRecord.user+' · '+currentRecord.uid+' · '+currentRecord.time+' · '+currentRecord.subject;document.getElementById('answerBox').textContent=currentRecord.answer;renderSources();}
+function renderSources(){const w=document.getElementById('sourceWrap');w.innerHTML=currentRecord.sources.map((s,i)=>'<div class="source-card" id="src'+i+'"><div class="sc-head" onclick="toggleSource('+i+')"><div class="sc-rank r'+s.rank+'">'+s.rank+'</div><div class="sc-main"><div class="sc-name">'+s.name+'</div><span class="sc-type">'+s.type+'</span></div><div class="sc-rel"><div class="rel-bar"><i style="width:'+s.rel+'%"></i></div><span class="rel-pct">'+s.rel+'%</span></div></div><div class="sc-body"><div class="excerpt">'+s.excerpt+'</div><div class="ctrl-row"><button class="ctrl-btn" onclick="toast(\'已查看完整文档\')">查看完整文档</button><button class="ctrl-btn warn" onclick="toast(\'已标记为不准确\')">标记不准确</button><button class="ctrl-btn" onclick="toast(\'已加入补充队列\')">补充知识库</button></div></div></div>').join('');}
+function toggleSource(i){const card=document.getElementById('src'+i);card.classList.toggle('open');}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+init();
+  
+document.addEventListener('mousemove', function(e) {
+  var x = e.clientX - 300;
+  var y = e.clientY - 300;
+  document.body.style.setProperty('--mx', x + 'px');
+  document.body.style.setProperty('--my', y + 'px');
+});
+(function() {
+  var style = document.createElement('style');
+  style.textContent = 'body::before { transform: translate(var(--mx, 0px), var(--my, 0px)); }';
+  document.head.appendChild(style);
+})();
+  </script>
+</body>
+</html>

@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Demo 04 · 学 · 拍照答疑与多轮引导 · 小雅学生端</title>
+<style>
+:root{
+  --xy:#00B89C;--xy-dk:#00856F;--xy-sf:#E6F7F3;
+  --bg:#0C1324;--scene:#1A2236;
+  --ink-1:#F1F5F9;--ink-2:#94A3B8;--ink-3:#64748B;
+  --coral:#FF7849;
+  --ff:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ff);background:radial-gradient(ellipse at center,#1A2236 0%,#0C1324 80%);color:var(--ink-1);font-size:14px;min-width:1440px;min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+.top{
+  position:sticky;top:0;z-index:10;
+  padding:20px 40px;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  background:rgba(12,19,36,0.6);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.top .brand{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:700;color:var(--xy);}
+.top .brand b{width:30px;height:30px;background:linear-gradient(135deg,var(--xy),#1ABC9C);color:#fff;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;}
+.top .crumb{color:var(--ink-3);font-size:13px;display:flex;gap:8px;}
+.top .crumb strong{color:var(--ink-1);font-weight:500;}
+.top .back{margin-left:auto;padding:6px 14px;border:1px solid rgba(255,255,255,0.12);border-radius:999px;color:var(--ink-2);text-decoration:none;font-size:12px;}
+.top .back:hover{color:var(--coral);border-color:var(--coral);}
+
+.stage{
+  display:grid;
+  grid-template-columns:1fr 380px 1fr;
+  gap:40px;
+  padding:40px 60px 80px;
+  align-items:start;
+}
+
+/* Left column: narrative */
+.side-narrative{
+  padding-top:40px;
+}
+.side-narrative .tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  color:var(--coral);
+  letter-spacing:0.2em;
+  margin-bottom:14px;
+}
+.side-narrative h2{
+  font-size:36px;
+  font-weight:900;
+  line-height:1.2;
+  letter-spacing:-0.02em;
+  margin-bottom:18px;
+}
+.side-narrative p{color:var(--ink-2);line-height:1.9;font-size:14px;margin-bottom:16px;}
+.side-narrative .scene-label{
+  font-size:10px;
+  color:var(--ink-3);
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:0.12em;
+  margin:30px 0 10px;
+}
+.narr-card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:12px;
+  font-size:12px;
+  color:var(--ink-2);
+  line-height:1.65;
+}
+.narr-card strong{color:var(--ink-1);}
+.narr-card .name{color:var(--coral);font-weight:700;font-size:11px;margin-bottom:6px;letter-spacing:0.05em;}
+
+/* Phone frame */
+.phone-wrap{
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  position:relative;
+}
+.phone{
+  width:360px;
+  height:760px;
+  background:#1A1A1A;
+  border-radius:44px;
+  padding:12px;
+  box-shadow:0 40px 80px rgba(0,0,0,0.5),0 0 0 2px rgba(255,255,255,0.08),inset 0 0 0 2px rgba(255,255,255,0.04);
+  position:relative;
+}
+.phone::before{
+  content:'';
+  position:absolute;
+  top:18px;left:50%;
+  transform:translateX(-50%);
+  width:112px;height:28px;
+  background:#000;
+  border-radius:16px;
+  z-index:10;
+}
+.phone-screen{
+  width:100%;height:100%;
+  border-radius:34px;
+  background:#F5F7FA;
+  overflow:hidden;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+}
+.status-bar{
+  height:44px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  padding:0 28px 6px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;
+  font-weight:700;
+  color:#000;
+  background:#F5F7FA;
+}
+.status-bar .r{display:flex;gap:6px;align-items:center;font-size:11px;}
+.p-head{
+  padding:10px 18px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  background:#fff;
+  border-bottom:1px solid #E8EDF3;
+  color:#1A2234;
+}
+.p-head .b{width:26px;height:26px;background:linear-gradient(135deg,var(--xy),#1ABC9C);color:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;}
+.p-head .t{font-size:13px;font-weight:700;}
+.p-head .sub{margin-left:auto;font-size:10px;color:#94A3B8;font-family:'JetBrains Mono',monospace;}
+
+.p-body{
+  flex:1;
+  overflow-y:auto;
+  padding:14px 14px 80px;
+  background:#F5F7FA;
+  color:#1A2234;
+}
+.p-body::-webkit-scrollbar{width:4px;}
+.p-body::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:2px;}
+
+.xiaoya-avatar{
+  width:32px;height:32px;
+  border-radius:50%;
+  background:#fff;
+  border:2px solid var(--xy);
+  padding:2px;
+  overflow:hidden;
+  flex-shrink:0;
+}
+.xiaoya-avatar img{width:100%;height:100%;object-fit:contain;}
+
+/* Messages */
+.pm{margin-bottom:14px;animation:pmIn 0.4s ease;}
+@keyframes pmIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.pm.a{display:flex;gap:8px;align-items:flex-start;}
+.pm.a .b{
+  background:#fff;
+  border-radius:3px 14px 14px 14px;
+  padding:10px 12px;
+  font-size:12.5px;
+  line-height:1.6;
+  color:#1A2234;
+  max-width:230px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.05);
+}
+.pm.a .b strong{color:var(--xy-dk);}
+.pm.a .b .hl{background:#FEF3C7;padding:0 3px;border-radius:2px;color:#92400E;}
+.pm.a .b em{font-style:normal;background:rgba(0,184,156,0.1);color:var(--xy-dk);padding:0 4px;border-radius:3px;font-weight:600;}
+.pm.u{display:flex;justify-content:flex-end;}
+.pm.u .b{
+  background:var(--xy);
+  color:#fff;
+  border-radius:14px 3px 14px 14px;
+  padding:10px 12px;
+  font-size:12.5px;
+  line-height:1.6;
+  max-width:230px;
+}
+.pm.u.opt{justify-content:flex-end;display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+.pm.u.opt .opts{display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
+.pm.u.opt .opt-btn{
+  background:#fff;
+  border:1px solid var(--xy);
+  color:var(--xy-dk);
+  padding:8px 14px;
+  border-radius:14px;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  font-family:var(--ff);
+  transition:.15s;
+}
+.pm.u.opt .opt-btn:hover{background:var(--xy);color:#fff;}
+.pm.u.opt .opt-btn.picked{background:var(--xy);color:#fff;}
+
+.photo-card{
+  background:#fff;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+  margin-bottom:14px;
+  animation:pmIn 0.5s ease;
+}
+.photo-img{
+  height:130px;
+  background:linear-gradient(135deg,#F9FAFB,#E5E7EB);
+  position:relative;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  font-family:Georgia,'Times New Roman',serif;
+  color:#1A2234;
+  font-size:14px;
+}
+.photo-img::before{
+  content:'';
+  position:absolute;
+  inset:12px;
+  border:1px dashed #D1D5DB;
+  border-radius:6px;
+}
+.photo-img .eq{
+  position:relative;z-index:1;
+  font-style:italic;
+  color:#1A2234;
+  font-size:16px;
+}
+.photo-img .scan{
+  position:absolute;
+  left:0;right:0;
+  height:3px;
+  background:linear-gradient(90deg,transparent,var(--xy),transparent);
+  box-shadow:0 0 10px var(--xy);
+  animation:scan 2s ease-in-out infinite;
+  z-index:2;
+}
+@keyframes scan{0%,100%{top:0;opacity:0;}10%{opacity:1;}50%{top:calc(100% - 3px);opacity:1;}90%{opacity:0;}}
+.photo-label{
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:11px;
+  color:#6B7B8F;
+}
+.photo-label .ok{color:var(--xy-dk);font-weight:600;}
+.photo-label .spin{
+  width:12px;height:12px;
+  border:2px solid #E5E7EB;
+  border-top-color:var(--xy);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* Wrong notebook card */
+.notebook-card{
+  background:linear-gradient(135deg,#FFF7ED 0%,#FFFAF0 100%);
+  border:1px solid #FED7AA;
+  border-radius:12px;
+  padding:14px 14px 12px;
+  margin-top:6px;
+  font-size:11.5px;
+  line-height:1.6;
+  color:#9A3412;
+}
+.notebook-card .hd{
+  display:flex;align-items:center;gap:8px;
+  font-weight:700;
+  color:#EA580C;
+  margin-bottom:8px;
+  font-size:12px;
+}
+.notebook-card .stats{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  margin-top:8px;
+}
+.notebook-card .stat{
+  background:rgba(255,255,255,0.6);
+  border-radius:6px;
+  padding:6px 8px;
+  font-size:10px;
+}
+.notebook-card .stat strong{display:block;font-size:14px;color:#EA580C;font-family:'JetBrains Mono',monospace;}
+
+/* Bottom input */
+.p-bottom{
+  position:absolute;
+  left:12px;right:12px;bottom:12px;
+  padding:10px 14px;
+  background:#fff;
+  border-radius:14px;
+  box-shadow:0 -4px 14px rgba(0,0,0,0.08);
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.p-bottom .cam{
+  width:34px;height:34px;
+  background:var(--xy);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:16px;
+  flex-shrink:0;
+  cursor:pointer;
+  animation:camGlow 2s ease-in-out infinite;
+}
+@keyframes camGlow{50%{box-shadow:0 0 0 6px rgba(0,184,156,0.2);}}
+.p-bottom input{
+  flex:1;
+  border:none;
+  background:#F5F7FA;
+  padding:8px 12px;
+  border-radius:20px;
+  font-size:12px;
+  color:#1A2234;
+  outline:none;
+}
+
+/* Right column: trace panel */
+.side-trace{
+  padding-top:40px;
+}
+.st-head{
+  font-size:11px;
+  color:var(--coral);
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:0.2em;
+  margin-bottom:14px;
+}
+.st-title{
+  font-size:20px;
+  font-weight:800;
+  margin-bottom:18px;
+  letter-spacing:-0.01em;
+}
+
+.trace-box{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;
+  padding:18px 20px;
+}
+.trace-box h4{
+  font-size:11px;
+  color:var(--ink-3);
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:0.1em;
+  margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.trace-box h4::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--coral);box-shadow:0 0 6px var(--coral);animation:pulse 1.5s infinite;}
+@keyframes pulse{50%{opacity:0.3;}}
+
+.t-item{
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+  font-size:11px;
+  color:var(--ink-3);
+  display:flex;align-items:center;gap:8px;
+  opacity:0.4;
+  transition:.3s;
+}
+.t-item:last-child{border:none;}
+.t-item.active{color:var(--coral);opacity:1;}
+.t-item.done{color:var(--ink-1);opacity:1;}
+.t-item .t-dot{width:6px;height:6px;border-radius:50%;background:var(--ink-3);flex-shrink:0;}
+.t-item.active .t-dot{background:var(--coral);box-shadow:0 0 6px var(--coral);animation:pulse 0.8s infinite;}
+.t-item.done .t-dot{background:var(--xy);box-shadow:0 0 6px var(--xy);}
+.t-item .code{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-3);margin-left:auto;}
+
+.principle{
+  margin-top:20px;
+  padding:16px;
+  background:rgba(255,120,73,0.06);
+  border:1px solid rgba(255,120,73,0.2);
+  border-radius:10px;
+  font-size:11px;
+  color:var(--ink-2);
+  line-height:1.7;
+}
+.principle strong{color:var(--coral);font-weight:700;}
+.principle .title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  color:var(--coral);
+  letter-spacing:0.15em;
+  margin-bottom:8px;
+}
+
+.demo-ctrl{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(10,14,26,0.92);backdrop-filter:blur(12px);color:#fff;padding:10px 8px 10px 22px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:11px;display:flex;align-items:center;gap:14px;border:1px solid rgba(255,255,255,0.15);z-index:9999;box-shadow:0 10px 40px rgba(0,0,0,0.3);}
+.demo-ctrl .status{display:flex;align-items:center;gap:8px;}
+.demo-ctrl .status::before{content:'';width:7px;height:7px;border-radius:50%;background:#FFB86B;box-shadow:0 0 8px #FFB86B;animation:statusPulse 1.5s infinite;}
+.demo-ctrl .status.done::before{background:#00D4B4;}
+@keyframes statusPulse{50%{opacity:0.3;}}
+.demo-ctrl button{background:rgba(255,120,73,0.15);color:#FF7849;border:1px solid rgba(255,120,73,0.4);padding:6px 14px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;cursor:pointer;letter-spacing:0.05em;}
+.demo-ctrl button:hover{background:#FF7849;color:#fff;}
+
+</style>
+
+<style id="unified-nav-style">
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+body{padding-top:60px !important;}
+body > .topnav,
+body > .shell-top,
+body > .top,
+body > .topbar,
+body > nav.top-quick-nav,
+body > header.slim-header{display:none !important;}
+
+.unified-topbar{
+  position:fixed;top:0;left:0;right:0;z-index:99998;
+  height:60px;background:#FFFFFF;border-bottom:1px solid #E8ECF0;
+  padding:0 32px;display:flex;align-items:center;justify-content:space-between;
+  font-family:'Noto Sans SC','PingFang SC',sans-serif;
+  box-shadow:0 1px 3px rgba(18,21,26,0.04);
+}
+.unified-topbar *{box-sizing:border-box;}
+.unified-topbar .u-left{display:flex;align-items:center;gap:32px;}
+.unified-topbar .u-logo{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:700;color:#23B283;text-decoration:none;}
+.unified-topbar .u-mark{
+  width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(135deg,#23B283 0%,#158C68 100%);
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-weight:800;font-size:13px;box-shadow:0 4px 10px rgba(35,178,131,0.3);
+}
+.unified-topbar .u-sub{
+  font-size:10px;color:#7B838C;font-weight:500;
+  padding-left:10px;border-left:1px solid #E8ECF0;margin-left:4px;letter-spacing:0.02em;
+}
+.unified-topbar .u-nav{display:flex;gap:2px;}
+.unified-topbar .u-nav a{
+  padding:7px 13px;border-radius:7px;font-size:12.5px;color:#4B535C;
+  text-decoration:none;transition:all .2s;font-weight:500;
+}
+.unified-topbar .u-nav a:hover{background:rgba(35,178,131,0.1);color:#23B283;}
+.unified-topbar .u-nav a.u-on{background:#23B283;color:#fff;font-weight:600;}
+.unified-topbar .u-right{display:flex;align-items:center;gap:12px;}
+.unified-topbar .u-back{
+  font-size:12px;color:#7B838C;padding:7px 13px;
+  border:1px solid #E8ECF0;border-radius:999px;transition:.2s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:5px;
+}
+.unified-topbar .u-back:hover{color:#23B283;border-color:#23B283;background:#EBF7F1;}
+.unified-topbar .u-av{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(35,178,131,0.2);color:#23B283;
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;
+}
+</style>
+</head>
+<body>
+<div class="unified-topbar">
+  <div class="u-left">
+    <a href="./index.html" class="u-logo">
+      <div class="u-mark">雅</div>
+      讯飞小雅
+      <span class="u-sub">学科大脑 · 场景演示</span>
+    </a>
+    <nav class="u-nav"><a href="./index.html">演示总览</a><a href="./scenes.html" class="u-on">场景演示</a><a href="./frontend.html">知识库前台</a><a href="./backend/index.html">管理后台</a><a href="./tools/index.html">学科大脑工具层</a><a href="./engines/engine_dashboard.html">模型引擎</a><a href="./training.html">训练平台</a></nav>
+  </div>
+  <div class="u-right">
+    <a href="./scenes.html" class="u-back">← 返回场景列表</a>
+    <div class="u-av">婷</div>
+  </div>
+</div>
+
+<div class="top">
+  <div class="brand"><b>iN</b>讯飞小雅</div>
+  <div class="crumb"><strong>学生端</strong> · 拍照答疑 · 多轮引导</div>
+  <a href="./scenes.html" class="back">← 返回演示导览</a>
+</div>
+
+<div class="stage">
+
+  <!-- Left narrative -->
+  <div class="side-narrative">
+    <div class="tag">DEMO 04 · 学 · 苏格拉底式引导</div>
+    <h2>AI 不给答案，<br>它帮你推出答案</h2>
+    <p>陈同学在宿舍遇到一道不会的题，打开小雅学生端拍题求解。传统 AI 答疑会直接给出答案——但这会养出一代只会复制的学生。</p>
+    <p>学科大脑的 <strong>E07 多轮引导引擎</strong>让 AI 不直接答，而是用苏格拉底式追问定位认知断点，帮学生自己推出来。</p>
+    <div class="scene-label">SCENE · 宿舍 · 晚 21:47</div>
+    <div class="narr-card">
+      <div class="name">陈同学</div>
+      机械 2301 · 大一 · 《高数 A》· 今晚复习第 3 章作业
+    </div>
+    <div class="narr-card">
+      <div class="name">遇到的题</div>
+      判断 sin(1/x) 在 x=0 处的间断点类型（含思路说明）
+    </div>
+    <div class="scene-label">为什么要这么设计</div>
+    <div class="narr-card">
+      教研界对 AI 最大的担忧是"学生抄答案"。多轮引导是 <strong style="color:#fff;">唯一能通过教研评审</strong> 的答疑姿势——培养思维而非喂答案。
+    </div>
+  </div>
+
+  <!-- Phone -->
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="phone-screen">
+        <div class="status-bar">
+          <span>21:47</span>
+          <div class="r">●●● 📶 🔋</div>
+        </div>
+        <div class="p-head">
+          <div class="b">iN</div>
+          <div class="t">小雅 · 学伴</div>
+          <div class="sub">拍照答疑</div>
+        </div>
+        <div class="p-body" id="pbody">
+          <!-- messages here -->
+        </div>
+        <div class="p-bottom">
+          <div class="cam" id="cam">📷</div>
+          <input placeholder="拍照 或 输入问题...">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right trace -->
+  <div class="side-trace">
+    <div class="st-head">RUNTIME · 运行时透视</div>
+    <div class="st-title">学科大脑调用链</div>
+    <div class="trace-box">
+      <h4>本次答疑调用的底层能力</h4>
+      <div class="t-item" id="ti1"><span class="t-dot"></span>T08 多模态采集 · 拍照识题<span class="code">TOOL</span></div>
+      <div class="t-item" id="ti2"><span class="t-dot"></span>OCR · 题目文本识别<span class="code">AI</span></div>
+      <div class="t-item" id="ti3"><span class="t-dot"></span>M3 术语库 · 学科术语识别<span class="code">DATA</span></div>
+      <div class="t-item" id="ti4"><span class="t-dot"></span>E04 术语改写 · 归一化<span class="code">ENG</span></div>
+      <div class="t-item" id="ti5"><span class="t-dot"></span>E07 多轮引导 · 认知断点定位<span class="code">ENG</span></div>
+      <div class="t-item" id="ti6"><span class="t-dot"></span>M8 AI 答疑 · 对话管理<span class="code">MOD</span></div>
+      <div class="t-item" id="ti7"><span class="t-dot"></span>E03 幻觉兜底 · 回答校验<span class="code">ENG</span></div>
+      <div class="t-item" id="ti8"><span class="t-dot"></span>L5 分角色审核 · 学生模式<span class="code">SEC</span></div>
+      <div class="t-item" id="ti9"><span class="t-dot"></span>💾 错题本 · 对话沉淀<span class="code">STORE</span></div>
+    </div>
+
+    <div class="principle">
+      <div class="title">DESIGN PRINCIPLE</div>
+      <strong>不直接喂答案</strong>——从追问里，让学生自己识别出"我之前忽略了什么"。每一次追问，都对应一次认知断点的精准定位。
+    </div>
+  </div>
+
+</div>
+
+<div class="demo-ctrl">
+  <span class="status" id="demoStatus">演示开始 · 学生拍题中</span>
+  <button id="rp">↺ 重播演示</button>
+</div>
+
+<script>
+const pbody=document.getElementById('pbody');
+const cam=document.getElementById('cam');
+const rp=document.getElementById('rp');
+
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+function setTrace(id,state){
+  const el=document.getElementById(id);
+  el.classList.remove('active','done');
+  if(state)el.classList.add(state);
+}
+function addPm(cls,html){
+  const d=document.createElement('div');
+  d.className='pm '+cls;
+  d.innerHTML=html;
+  pbody.appendChild(d);
+  pbody.scrollTop=pbody.scrollHeight;
+  return d;
+}
+function addAi(html){
+  return addPm('a',`<div class="xiaoya-avatar"><img src="./assets/xclaw-octopus.png" alt="小雅学伴"></div><div class="b">${html}</div>`);
+}
+function addUser(html){return addPm('u',`<div class="b">${html}</div>`);}
+
+const demoStatus=document.getElementById('demoStatus');
+
+async function runDemo(){
+  pbody.innerHTML='';
+  ['ti1','ti2','ti3','ti4','ti5','ti6','ti7','ti8','ti9'].forEach(id=>setTrace(id,null));
+  demoStatus.textContent='演示开始 · 学生拍题中';
+  demoStatus.classList.remove('done');
+
+  await wait(800);
+  // Step 1: Photo
+  const ph=document.createElement('div');
+  ph.className='photo-card';
+  ph.innerHTML=`
+    <div class="photo-img">
+      <span class="eq">f(x) = sin(1/x)</span>
+      <div class="scan"></div>
+    </div>
+    <div class="photo-label">
+      <div class="spin"></div>
+      <span>正在识别题目...</span>
+    </div>
+  `;
+  pbody.appendChild(ph);
+  pbody.scrollTop=pbody.scrollHeight;
+  setTrace('ti1','active');
+  await wait(700);
+  setTrace('ti1','done');setTrace('ti2','active');
+  await wait(800);
+  setTrace('ti2','done');setTrace('ti3','active');
+  ph.querySelector('.photo-label').innerHTML='<span class="ok">✓</span><span>识别完成 · 高数 · 第二类间断点判定</span>';
+  await wait(500);
+  setTrace('ti3','done');setTrace('ti4','active');
+  await wait(400);
+  setTrace('ti4','done');setTrace('ti5','active');
+
+  // Step 2: XClaw greets and asks first question
+  await wait(300);
+  addAi('嗨，我是小雅学伴 👋<br>我看到你想判断 <em>f(x) = sin(1/x)</em> 在 <em>x = 0</em> 处的间断点类型。');
+  await wait(1500);
+  addAi('先不急着给答案，我想先问你一个问题——<br><br><strong>判断间断点类型</strong>的第一步是什么？');
+  setTrace('ti6','active');
+  await wait(1500);
+
+  // Option 1
+  const opt1=addPm('u opt',`
+    <div class="opts">
+      <button class="opt-btn" data-ok="true">A · 判断左右极限是否存在</button>
+      <button class="opt-btn">B · 看函数在该点有没有定义</button>
+      <button class="opt-btn">C · 直接代入 x=0 算</button>
+    </div>
+  `);
+  await wait(400);
+  // auto-pick A after brief
+  const opt1Btn=[...opt1.querySelectorAll('.opt-btn')].find(b=>b.dataset.ok==='true');
+  await wait(1200);
+  opt1Btn.classList.add('picked');
+  await wait(300);
+  addUser('A · 判断左右极限是否存在');
+  await wait(900);
+
+  addAi('很好 ✓ 你抓住了关键——<strong>间断点分类的前提就是先看左右极限</strong>。<br><br>那么下一个问题：当 x 趋近 0 时，<em>sin(1/x)</em> 的 <strong>左极限</strong>是什么？');
+  await wait(2000);
+
+  const opt2=addPm('u opt',`
+    <div class="opts">
+      <button class="opt-btn">A · 等于 0</button>
+      <button class="opt-btn" data-ok="true">B · 不存在（振荡）</button>
+      <button class="opt-btn">C · 等于 1</button>
+    </div>
+  `);
+  const opt2Btn=[...opt2.querySelectorAll('.opt-btn')].find(b=>b.dataset.ok==='true');
+  await wait(1500);
+  opt2Btn.classList.add('picked');
+  await wait(300);
+  addUser('B · 不存在（振荡）');
+  await wait(900);
+
+  addAi('完全正确 ✓<br>当 x → 0 时，<em>1/x → ∞</em>，所以 <em>sin(1/x)</em> 的值在 [-1, 1] 之间无限次振荡，<strong>左右极限都不存在</strong>。');
+  setTrace('ti5','done');setTrace('ti7','active');
+  await wait(1800);
+
+  addAi('最后一问：你还记得<strong>间断点的三类分类标准</strong>吗？<br>哪一类的定义是"至少一侧极限不存在"？');
+  await wait(1800);
+
+  const opt3=addPm('u opt',`
+    <div class="opts">
+      <button class="opt-btn">A · 可去间断点</button>
+      <button class="opt-btn">B · 跳跃间断点</button>
+      <button class="opt-btn" data-ok="true">C · 第二类间断点</button>
+    </div>
+  `);
+  const opt3Btn=[...opt3.querySelectorAll('.opt-btn')].find(b=>b.dataset.ok==='true');
+  await wait(1300);
+  opt3Btn.classList.add('picked');
+  await wait(300);
+  addUser('C · 第二类间断点');
+  await wait(800);
+
+  setTrace('ti7','done');setTrace('ti8','active');
+  await wait(400);
+  addAi('完美 🎉 你自己推出来了！<br><br>所以 <em>sin(1/x)</em> 在 <em>x = 0</em> 处是 <span class="hl">第二类间断点（振荡型）</span>。<br><br>这道题的关键不是记答案，而是掌握<strong>"先看极限，再判类型"</strong>这个思路——你这次做对了。');
+  await wait(1800);
+
+  setTrace('ti8','done');setTrace('ti9','active');
+  addAi('<div style="margin-bottom:6px;">已帮你整理到错题本 📓</div><div class="notebook-card"><div class="hd">📓 错题本 · 已同步</div>知识点：<strong>3.2.1 间断点分类</strong><br>掌握度：<strong>跳跃 → 振荡型</strong> 补强 ✓<div class="stats"><div class="stat">本章累计<strong>4 题</strong></div><div class="stat">掌握度<strong>+8%</strong></div></div></div>');
+  setTrace('ti9','done');
+  demoStatus.textContent='演示完成 · 学生推出答案并沉淀错题 ✓';
+  demoStatus.classList.add('done');
+}
+
+cam.addEventListener('click',runDemo);
+rp.addEventListener('click',runDemo);
+setTimeout(runDemo,800);
+</script>
+</body>
+</html>
