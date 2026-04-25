@@ -1138,17 +1138,23 @@ function loadRemoteCases(){
     try{
       if(!Array.isArray(rows) || rows.length === 0) return;
       const data = loadCr();
+      // trim所有key，防止Google Sheet列名带空格
+      rows = rows.map(r => {
+        const o = {};
+        Object.keys(r).forEach(k => { o[k.trim()] = r[k]; });
+        return o;
+      });
       rows.forEach(row => {
-        const person = data.find(c => c.name === row.name);
+        const person = data.find(c => c.name === (row.name||'').trim());
         const cs = {
-          title: row.title || '',
+          title: (row.title || '').trim(),
           tags: row.tags || [],
-          link: row.link || '',
-          body: row.body || '',
+          link: (row.link || '').trim(),
+          body: (row.body || '').trim(),
           date: row.date || '',
-          views: row.views || 0,
-          likes: row.likes || 0,
-          hot: row.hot || false,
+          views: Number(row.views) || 0,
+          likes: Number(row.likes) || 0,
+          hot: row.hot === true || row.hot === 'true',
         };
         if(!cs.title) return;
         if(person){
@@ -1171,13 +1177,14 @@ function loadRemoteCases(){
     // fallback: 直接 fetch（某些环境下可用）
     fetch(SHEET_API).then(r=>r.json()).then(rows=>{
       if(!Array.isArray(rows)) return;
+      rows = rows.map(r=>{const o={};Object.keys(r).forEach(k=>{o[k.trim()]=r[k]});return o});
       const data = loadCr();
       rows.forEach(row => {
-        if(!row.title) return;
-        const person = data.find(c => c.name === row.name);
-        const cs = {title:row.title,tags:row.tags||[],link:row.link||'',body:row.body||'',date:row.date||'',views:row.views||0,likes:row.likes||0,hot:row.hot||false};
+        if(!(row.title||'').trim()) return;
+        const person = data.find(c => c.name === (row.name||'').trim());
+        const cs = {title:(row.title||'').trim(),tags:row.tags||[],link:(row.link||'').trim(),body:(row.body||'').trim(),date:row.date||'',views:Number(row.views)||0,likes:Number(row.likes)||0,hot:row.hot===true||row.hot==='true'};
         if(person){if(!person.cases.some(e=>e.title===cs.title))person.cases.push(cs)}
-        else{data.push({name:row.name,cases:[cs]})}
+        else{data.push({name:(row.name||'').trim(),cases:[cs]})}
       });
       window._communityData = data;
       renderCommunity();
