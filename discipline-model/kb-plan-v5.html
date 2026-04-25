@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440, initial-scale=1.0">
+<title>学科大脑 · 场景收敛与建库方案 V5</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #F8FAFC; color: #1a2740; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+.page { max-width: 1320px; margin: 0 auto; padding: 28px 24px 60px; }
+
+:root {
+  --ink-900: #0F172A;
+  --ink-800: #1E3A5F;
+  --ink-700: #1E40AF;
+  --ink-600: #334155;
+  --ink-500: #64748B;
+  --ink-400: #94A3B8;
+  --line: #E2E8F0;
+  --bg: #F8FAFC;
+  --card: #FFFFFF;
+  --gold: #C8A45C;
+  --gold-soft: #E6D4A4;
+  --gold-deep: #A17F3F;
+  --gold-bg: #FFF9E9;
+  --accent-a: #1E40AF;
+  --accent-b: #059669;
+  --accent-c: #DC2626;
+  --accent-d: #7C3AED;
+  --accent-e: #D97706;
+}
+
+/* ============ Hero ============ */
+.hero {
+  background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 60%, #0F172A 100%);
+  border-radius: 16px; padding: 56px 60px 48px; color: #fff;
+  position: relative; overflow: hidden; margin-bottom: 28px;
+  box-shadow: 0 8px 40px rgba(15,23,42,0.15);
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 85% 30%, rgba(200,164,92,0.18) 0%, transparent 40%),
+              radial-gradient(circle at 10% 80%, rgba(30,64,175,0.22) 0%, transparent 45%);
+}
+.hero-inner { position: relative; }
+.hero .eyebrow { font-size: 12px; letter-spacing: 5px; font-weight: 700; color: var(--gold-soft); margin-bottom: 16px; }
+.hero h1 { font-size: 42px; font-weight: 900; letter-spacing: 1px; line-height: 1.25; margin-bottom: 14px; background: linear-gradient(135deg, #fff 0%, #E6D4A4 60%, #C8A45C 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero h2 { font-size: 19px; color: rgba(255,255,255,0.82); font-weight: 500; margin-bottom: 26px; }
+.hero-divider { width: 60px; height: 3px; background: linear-gradient(90deg, var(--gold) 0%, transparent 100%); margin: 20px 0; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.hero-chip { padding: 8px 18px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 24px; font-size: 12.5px; color: rgba(255,255,255,0.88); font-weight: 600; }
+.hero-chip.gold { background: rgba(200,164,92,0.18); border-color: rgba(200,164,92,0.45); color: #E6D4A4; }
+.hero-source { margin-top: 20px; font-size: 12px; color: rgba(255,255,255,0.5); }
+
+/* ============ 章节 ============ */
+.chapter { background: var(--card); border-radius: 14px; border: 1px solid var(--line); padding: 38px 44px; margin-bottom: 20px; position: relative; overflow: hidden; }
+.chapter-head { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 1px solid var(--line); position: relative; }
+.chapter-head::after { content: ''; position: absolute; left: 0; bottom: -1px; width: 80px; height: 2px; background: var(--gold); }
+.chapter-num { font-size: 11px; letter-spacing: 4px; font-weight: 800; color: var(--gold-deep); }
+.chapter-head h2 { font-size: 28px; font-weight: 800; color: var(--ink-900); letter-spacing: 0.5px; line-height: 1.35; }
+.chapter-head h2 em { color: var(--gold-deep); font-style: normal; font-weight: 800; }
+.chapter-lead { font-size: 15px; color: var(--ink-500); line-height: 1.85; margin-bottom: 24px; padding: 16px 22px; background: #F8FAFC; border-left: 3px solid var(--gold); border-radius: 4px; }
+
+/* ============ 通用表格 ============ */
+.data-table { width: 100%; border-collapse: collapse; margin: 16px 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+.data-table thead th { background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-800) 100%); color: var(--gold-soft); font-size: 12.5px; font-weight: 800; letter-spacing: 1px; padding: 14px 16px; text-align: left; }
+.data-table tbody td { padding: 12px 16px; font-size: 13px; color: var(--ink-600); border-bottom: 1px solid var(--line); line-height: 1.7; vertical-align: top; }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:nth-child(even) { background: #FAFBFC; }
+.data-table tbody tr:hover { background: #F1F5F9; }
+
+/* ============ 子标题 ============ */
+.sub-title { font-size: 17px; font-weight: 800; color: var(--ink-900); margin: 30px 0 14px; padding-left: 14px; border-left: 3px solid var(--gold); }
+.sub-title em { color: var(--gold-deep); font-style: normal; }
+
+/* ============ 优先级标签 ============ */
+.tag-p0 { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: #FEF2F2; color: var(--accent-c); letter-spacing: 1px; }
+.tag-p1 { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: var(--gold-bg); color: var(--gold-deep); letter-spacing: 1px; }
+
+/* ============ 场景卡片 ============ */
+.scene-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin: 18px 0; }
+.scene-card { background: #FFF; border: 1px solid var(--line); border-left: 4px solid var(--gold); border-radius: 10px; padding: 22px 24px; transition: box-shadow 0.2s; }
+.scene-card:hover { box-shadow: 0 4px 20px rgba(200,164,92,0.12); }
+.scene-card.p0 { border-left-color: var(--accent-c); }
+.scene-card.p1 { border-left-color: var(--gold-deep); }
+.scene-card .sc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.scene-card .sc-name { font-size: 16px; font-weight: 800; color: var(--ink-900); }
+.scene-card .sc-desc { font-size: 13px; color: var(--ink-600); line-height: 1.7; margin-bottom: 12px; }
+.sc-io-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sc-io-box { padding: 10px 14px; border-radius: 8px; font-size: 12px; line-height: 1.65; }
+.sc-io-box.input { background: #EFF6FF; border: 1px solid #DBEAFE; }
+.sc-io-box.output { background: #ECFDF5; border: 1px solid #D1FAE5; }
+.sc-io-label { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; margin-bottom: 4px; }
+.sc-io-box.input .sc-io-label { color: var(--accent-a); }
+.sc-io-box.output .sc-io-label { color: var(--accent-b); }
+.sc-io-text { color: var(--ink-600); }
+
+/* ============ 五能标签 ============ */
+.cap-row { display: flex; gap: 12px; margin: 18px 0 28px; flex-wrap: wrap; }
+.cap-tag { flex: 1; min-width: 200px; padding: 20px 22px; border-radius: 12px; text-align: center; color: #fff; position: relative; overflow: hidden; }
+.cap-tag::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 60%); }
+.cap-tag .ct-icon { font-size: 28px; margin-bottom: 6px; position: relative; }
+.cap-tag .ct-name { font-size: 18px; font-weight: 900; position: relative; margin-bottom: 4px; }
+.cap-tag .ct-sub { font-size: 12px; opacity: 0.85; position: relative; line-height: 1.5; }
+.cap1 { background: linear-gradient(135deg, #1E40AF, #3B82F6); }
+.cap2 { background: linear-gradient(135deg, #059669, #34D399); }
+.cap3 { background: linear-gradient(135deg, #DC2626, #F87171); }
+.cap4 { background: linear-gradient(135deg, #7C3AED, #A78BFA); }
+.cap5 { background: linear-gradient(135deg, #D97706, #FBBF24); }
+
+/* ============ 三层架构 ============ */
+.layer-stack { margin: 18px 0; }
+.layer-card { background: #FFF; border: 1px solid var(--line); border-radius: 14px; padding: 28px 32px; margin-bottom: 0; position: relative; }
+.layer-card + .layer-card { margin-top: -1px; border-top-left-radius: 0; border-top-right-radius: 0; }
+.layer-card:first-child { border-top-left-radius: 14px; border-top-right-radius: 14px; }
+.layer-card:last-child { border-bottom-left-radius: 14px; border-bottom-right-radius: 14px; }
+.layer-card[data-layer="1"] { border-left: 5px solid var(--accent-a); }
+.layer-card[data-layer="2"] { border-left: 5px solid var(--accent-b); }
+.layer-card[data-layer="3"] { border-left: 5px solid var(--accent-d); }
+.layer-card[data-layer="gov"] { border-left: 5px solid var(--gold-deep); background: linear-gradient(135deg, #FFF9E9 0%, #FFFDF6 100%); }
+.layer-tag { display: inline-block; padding: 3px 12px; border-radius: 12px; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; margin-bottom: 8px; }
+.layer-card[data-layer="1"] .layer-tag { background: #EFF6FF; color: var(--accent-a); }
+.layer-card[data-layer="2"] .layer-tag { background: #ECFDF5; color: var(--accent-b); }
+.layer-card[data-layer="3"] .layer-tag { background: #F5F3FF; color: var(--accent-d); }
+.layer-card[data-layer="gov"] .layer-tag { background: var(--gold-bg); color: var(--gold-deep); }
+.layer-name { font-size: 20px; font-weight: 800; color: var(--ink-900); margin-bottom: 4px; }
+.layer-slogan { font-size: 13.5px; color: var(--ink-500); margin-bottom: 14px; line-height: 1.65; }
+.layer-items { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.layer-item { padding: 6px 14px; background: #F8FAFC; border: 1px solid var(--line); border-radius: 8px; font-size: 12.5px; color: var(--ink-600); }
+.layer-arrow { text-align: center; padding: 8px 0; color: var(--ink-400); font-size: 13px; letter-spacing: 2px; }
+
+/* ============ 矩阵表 ============ */
+.matrix-table { width: 100%; border-collapse: collapse; margin: 16px 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+.matrix-table thead th { background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-800) 100%); color: var(--gold-soft); font-size: 12px; font-weight: 800; letter-spacing: 1px; padding: 12px 14px; text-align: center; }
+.matrix-table thead th:first-child { text-align: left; }
+.matrix-table tbody td { padding: 10px 14px; font-size: 13px; color: var(--ink-600); border-bottom: 1px solid var(--line); text-align: center; line-height: 1.6; }
+.matrix-table tbody td:first-child { text-align: left; font-weight: 700; color: var(--ink-900); }
+.matrix-table tbody tr:nth-child(even) { background: #FAFBFC; }
+.star { color: var(--gold-deep); font-weight: 800; }
+.circle { color: var(--ink-400); }
+
+/* ============ 治理条带 ============ */
+.gov-strip { background: linear-gradient(135deg, var(--gold-bg) 0%, #FFFDF6 100%); border: 1px solid var(--gold-soft); border-radius: 10px; padding: 20px 28px; margin-top: 18px; }
+.gov-strip h4 { font-size: 14px; font-weight: 800; color: var(--gold-deep); margin-bottom: 12px; letter-spacing: 1px; }
+.gov-items { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.gov-item { padding: 10px 14px; background: #FFF; border: 1px solid var(--gold-soft); border-radius: 8px; text-align: center; }
+.gov-item .gi-name { font-size: 13px; font-weight: 800; color: var(--gold-deep); margin-bottom: 3px; }
+.gov-item .gi-desc { font-size: 11px; color: var(--ink-500); line-height: 1.5; }
+
+/* ============ 优先级时间线 ============ */
+.priority-flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin: 18px 0; }
+.pf-item { background: #FFF; border: 1px solid var(--line); border-radius: 10px; padding: 18px 16px; position: relative; margin-right: 16px; }
+.pf-item:last-child { margin-right: 0; }
+.pf-item::after { content: '\2192'; position: absolute; top: 50%; right: -14px; transform: translateY(-50%); color: var(--gold); font-size: 18px; }
+.pf-item:last-child::after { display: none; }
+.pf-rank { font-size: 11px; letter-spacing: 2px; font-weight: 800; color: var(--gold-deep); margin-bottom: 4px; }
+.pf-name { font-size: 14px; font-weight: 800; color: var(--ink-900); margin-bottom: 6px; }
+.pf-desc { font-size: 11.5px; color: var(--ink-500); line-height: 1.55; }
+
+/* ============ 教师时间线 ============ */
+.teacher-timeline { margin: 18px 0; }
+.tt-step { display: grid; grid-template-columns: 120px 1fr; gap: 0; margin-bottom: 0; }
+.tt-time { padding: 18px 16px; background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-800) 100%); color: var(--gold-soft); font-size: 13px; font-weight: 800; text-align: center; border: 1px solid var(--ink-800); display: flex; align-items: center; justify-content: center; }
+.tt-content { padding: 16px 22px; background: #FFF; border: 1px solid var(--line); border-left: none; font-size: 13px; color: var(--ink-600); line-height: 1.75; }
+.tt-content strong { color: var(--ink-900); }
+
+.reuse-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.reuse-table th { background: #F1F5F9; color: var(--ink-900); font-size: 12px; font-weight: 800; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--line); }
+.reuse-table td { padding: 10px 14px; font-size: 13px; color: var(--ink-600); border-bottom: 1px solid var(--line); line-height: 1.65; }
+.reuse-table tr:last-child td { border-bottom: none; }
+.reuse-badge { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; }
+.reuse-badge.full { background: #ECFDF5; color: var(--accent-b); }
+.reuse-badge.partial { background: var(--gold-bg); color: var(--gold-deep); }
+
+.reuse-header { font-size: 15px; font-weight: 800; color: var(--ink-900); padding: 12px 18px; background: linear-gradient(135deg, #F8FAFC 0%, #F1F5F9 100%); border-left: 4px solid var(--gold); border-radius: 0 8px 8px 0; margin-bottom: 12px; }
+
+/* ============ 汇聚图 ============ */
+.converge-box { background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%); color: #fff; border-radius: 14px; padding: 30px 36px; margin: 18px 0; }
+.converge-box h4 { color: var(--gold-soft); font-size: 15px; letter-spacing: 2px; font-weight: 800; margin-bottom: 18px; }
+.converge-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.cv-cell { padding: 18px 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(200,164,92,0.2); border-radius: 8px; }
+.cv-pct { font-size: 28px; font-weight: 900; color: var(--gold); margin-bottom: 6px; }
+.cv-label { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.cv-desc { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.65; }
+
+/* ============ Footer ============ */
+.foot { text-align: center; padding: 40px 0 20px; }
+.foot-bar { width: 48px; height: 3px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 0 auto 18px; }
+.foot h6 { font-size: 13.5px; color: var(--ink-900); font-weight: 800; letter-spacing: 1px; margin-bottom: 6px; }
+.foot p { font-size: 11.5px; color: var(--ink-500); line-height: 1.85; }
+
+/* ============ 砍掉场景 ============ */
+.cut-box { background: #F9FAFB; border: 1px dashed var(--ink-400); border-radius: 10px; padding: 18px 24px; margin: 18px 0; }
+.cut-box h4 { font-size: 14px; color: var(--ink-500); font-weight: 700; margin-bottom: 10px; }
+.cut-list { list-style: none; }
+.cut-list li { font-size: 13px; color: var(--ink-400); padding: 4px 0 4px 18px; position: relative; line-height: 1.7; }
+.cut-list li::before { content: '\00d7'; position: absolute; left: 0; color: var(--ink-400); font-weight: 700; }
+
+/* ============ 库×场景矩阵分隔行 ============ */
+.matrix-table tbody tr.matrix-sep td { background: #F1F5F9; font-size: 11px; color: var(--ink-400); font-weight: 600; letter-spacing: 1px; padding: 6px 14px; border-bottom: 1px solid var(--line); }
+
+/* ============ 响应式 ============ */
+@media (max-width: 1100px) {
+  .scene-grid { grid-template-columns: 1fr; }
+  .priority-flow { grid-template-columns: 1fr; }
+  .pf-item { margin-right: 0; }
+  .pf-item::after { display: none; }
+  .converge-grid { grid-template-columns: 1fr; }
+  .gov-items { grid-template-columns: repeat(3, 1fr); }
+  .cap-row { flex-direction: column; }
+}
+@media (max-width: 768px) {
+  .page { padding: 16px 12px 40px; }
+  .hero { padding: 36px 24px 30px; }
+  .hero h1 { font-size: 26px; }
+  .chapter { padding: 24px 20px; }
+  .chapter-head h2 { font-size: 20px; }
+  .gov-items { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">THREE-LAYER KNOWLEDGE &times; FIVE CAPABILITIES &rarr; 7 CORE SCENARIOS</div>
+    <h1>学科大脑 &middot; 场景收敛与建库方案</h1>
+    <div class="hero-divider"></div>
+    <h2>三层知识库 &times; 五大知识能力 &rarr; 7个核心场景</h2>
+    <div class="hero-meta">
+      <span class="hero-chip gold">找得到</span>
+      <span class="hero-chip gold">看得懂</span>
+      <span class="hero-chip gold">用得准</span>
+      <span class="hero-chip gold">理得清</span>
+      <span class="hero-chip gold">记得住</span>
+    </div>
+    <div class="hero-source">V5 &middot; 2026-04-25 &middot; AI教学产品部 &middot; 来源：4.24技术风险讨论会 &middot; </div>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 01：核心场景 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div>
+      <div class="chapter-num">CHAPTER 01</div>
+      <h2>核心场景 &middot; <em>教学4场景 + 论文3场景</em></h2>
+    </div>
+  </div>
+  <p class="chapter-lead"><strong>场景 &ne; 建库动作</strong>。场景是教师/学生<strong>日常反复做</strong>的事，建库是一次性的基础设施搭建。教师早上起来不会想"今天我要建知识库"&mdash;&mdash;他想的是"明天的课还没备"。</p>
+
+  <h3 class="sub-title">教学场景 &middot; <em>T1 &middot; T4 &middot; T2 &middot; T3</em></h3>
+  <div class="scene-grid">
+
+    <!-- T1 -->
+    <div class="scene-card p0">
+      <div class="sc-head">
+        <span class="sc-name">T1 &middot; 智能问答+溯源</span>
+        <span class="tag-p0">P0</span>
+      </div>
+      <div class="sc-desc">教师和学生基于知识库进行学科专业问答。每个回答溯源到教材具体页码段落，知识库中没有的内容不编造，明确拒答并引导查阅教材。</div>
+      <div class="sc-io-grid">
+        <div class="sc-io-box input">
+          <div class="sc-io-label">INPUT</div>
+          <div class="sc-io-text">"SN1和SN2反应机理有什么区别？"<br>"第三章习题5怎么做？"</div>
+        </div>
+        <div class="sc-io-box output">
+          <div class="sc-io-label">OUTPUT</div>
+          <div class="sc-io-text">结构化回答 + 溯源标签（教材P.186-192）+ 置信度98%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- T4 -->
+    <div class="scene-card p0">
+      <div class="sc-head">
+        <span class="sc-name">T4 &middot; AI备课</span>
+        <span class="tag-p0">P0</span>
+      </div>
+      <div class="sc-desc">输入知识点或学习问题，基于知识库生成交互式课件&mdash;&mdash;PPT（自动排版+知识点导航）、音频讲解、交互式测试题。对标OpenMac。</div>
+      <div class="sc-io-grid">
+        <div class="sc-io-box input">
+          <div class="sc-io-label">INPUT</div>
+          <div class="sc-io-text">"亲核取代反应SN1和SN2，90分钟"<br>"学生总分不清SN1和SN2"</div>
+        </div>
+        <div class="sc-io-box output">
+          <div class="sc-io-label">OUTPUT</div>
+          <div class="sc-io-text">12页交互式PPT + AI音频讲解 + 嵌入式测试题 + 溯源标注</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- T2 -->
+    <div class="scene-card p1">
+      <div class="sc-head">
+        <span class="sc-name">T2 &middot; AI建课</span>
+        <span class="tag-p1">P1</span>
+      </div>
+      <div class="sc-desc">教师为课程构建知识图谱&mdash;&mdash;可导入已有图谱或从教材自动生成。支撑图谱问答和自适应学习路径推荐。建课持续进行，图谱动态更新。</div>
+      <div class="sc-io-grid">
+        <div class="sc-io-box input">
+          <div class="sc-io-label">INPUT</div>
+          <div class="sc-io-text">教材/课件上传 + 教学大纲<br>已有图谱导入 + 学生掌握度数据</div>
+        </div>
+        <div class="sc-io-box output">
+          <div class="sc-io-label">OUTPUT</div>
+          <div class="sc-io-text">课程知识图谱 + 图谱问答 + 自适应学习路径 + 图谱更新通知</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- T3 -->
+    <div class="scene-card p1">
+      <div class="sc-head">
+        <span class="sc-name">T3 &middot; 智能出题</span>
+        <span class="tag-p1">P1</span>
+      </div>
+      <div class="sc-desc">教师指定知识点范围、题型、数量和难度，系统从题库检索+AI生成新题，自动组卷。答案经校验后正确率必须100%。</div>
+      <div class="sc-io-grid">
+        <div class="sc-io-box input">
+          <div class="sc-io-label">INPUT</div>
+          <div class="sc-io-text">"从第6章亲核取代出10道选择题，中等难度"<br>"期末试卷：选择20+简答5+计算3"</div>
+        </div>
+        <div class="sc-io-box output">
+          <div class="sc-io-label">OUTPUT</div>
+          <div class="sc-io-text">格式化试卷 + 标准答案+解析 + 知识点+难度标注</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub-title">论文场景 &middot; <em>R1 &middot; R2 &middot; R3</em></h3>
+  <div class="scene-grid">
+
+    <!-- R1 -->
+    <div class="scene-card p0">
+      <div class="sc-head">
+        <span class="sc-name">R1 &middot; 论文检索+摘要</span>
+        <span class="tag-p0">P0</span>
+      </div>
+      <div class="sc-desc">"找不对称催化相关的最新综述，给我摘要和核心结论"&mdash;&mdash;高频使用，每周多次。直接驱动论文入库。</div>
+      <div class="sc-io-grid">
+        <div class="sc-io-box input">
+          <div class="sc-io-label">INPUT</div>
+          <div class="sc-io-text">研究方向/关键词/时间范围/期刊范围</div>
+        </div>
+        <div class="sc-io-box output">
+          <div class="sc-io-label">OUTPUT</div>
+          <div class="sc-io-text">论文列表 + AI摘要 + 引用关系标注 + 一键导入参考文献</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- R2 -->
+    <div class="scene-card p1">
+      <div class="sc-head">
+        <span class="sc-name">R2 &middot; 论文选题探索</span>
+        <span class="tag-p1">P1</span>
+      </div>
+      <div class="sc-desc">"碳正离子领域还有什么方向没人做？"&mdash;&mdash;</div>
+      <div class="sc-io-grid">
+        <div class="sc-io-box input">
+          <div class="sc-io-label">INPUT</div>
+          <div class="sc-io-text">研究方向关键词 + 排除已知方向 + 时间范围</div>
+        </div>
+        <div class="sc-io-box output">
+          <div class="sc-io-label">OUTPUT</div>
+          <div class="sc-io-text">研究方向热力图 + 研究空白列表 + 脉络演进图 + 推荐选题</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- R3 -->
+    <div class="scene-card p1">
+      <div class="sc-head">
+        <span class="sc-name">R3 &middot; 论文写作辅助</span>
+        <span class="tag-p1">P1</span>
+      </div>
+      <div class="sc-desc">"帮我写国基申报书的研究综述部分"&mdash;&mdash;</div>
+      <div class="sc-io-grid">
+        <div class="sc-io-box input">
+          <div class="sc-io-label">INPUT</div>
+          <div class="sc-io-text">写作任务类型 + 大纲/要求 + 参考文献列表</div>
+        </div>
+        <div class="sc-io-box output">
+          <div class="sc-io-label">OUTPUT</div>
+          <div class="sc-io-text">写作初稿（含引文）+ 格式化参考文献 + 数据分析描述 + 插图建议</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cut-box">
+    <h4>砍掉/降级的场景</h4>
+    <ul class="cut-list">
+      <li><strong>批改（P2）</strong>：OCR手写+评分一致性，技术风险高</li>
+      <li><strong>督导（P2）</strong>：ASR转写+教学行为分析，频率低</li>
+      <li><strong>学情分析（P2）</strong>：需要使用数据积累，一期没数据</li>
+      <li><strong>知识沉淀</strong>：行为积累库自然覆盖此需求&mdash;&mdash;使用检索/选题/写作的过程中，研究足迹自动沉淀</li>
+      <li><strong>投稿建议（P2）</strong>：需期刊匹配数据库，属于增值功能</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 02：三层 x 五能架构 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div>
+      <div class="chapter-num">CHAPTER 02</div>
+      <h2>三层 &times; 五能架构 &middot; <em>核心框架</em></h2>
+    </div>
+  </div>
+  <p class="chapter-lead"><strong>纵向（三层）</strong>：知识怎么来的&mdash;&mdash;存进来的 / 炼出来的 / 长出来的。<strong>横向（五能）</strong>：知识能做什么&mdash;&mdash;找得到 / 看得懂 / 用得准 / 理得清 / 记得住。两者结合才是完整的建库方案。</p>
+
+  <!-- 五大知识能力 -->
+  <h3 class="sub-title">五大知识能力 &middot; <em>横向&middot;面向用户</em></h3>
+  <div class="cap-row">
+    <div class="cap-tag cap1">
+      <div class="ct-icon">&#128269;</div>
+      <div class="ct-name">找得到</div>
+      <div class="ct-sub">问了能找到出处<br>T1问答 &middot; R1检索<br>语义检索+全链路溯源</div>
+    </div>
+    <div class="cap-tag cap2">
+      <div class="ct-icon">&#128218;</div>
+      <div class="ct-name">看得懂</div>
+      <div class="ct-sub">学科术语AI也懂<br>全部场景的基础<br>术语消歧+查询改写</div>
+    </div>
+    <div class="cap-tag cap3">
+      <div class="ct-icon">&#127919;</div>
+      <div class="ct-name">用得准</div>
+      <div class="ct-sub">出题答案不出错<br>T3出题 &middot; T4备课 &middot; R3写作<br>结构化输出+答案校验</div>
+    </div>
+    <div class="cap-tag cap4">
+      <div class="ct-icon">&#128279;</div>
+      <div class="ct-name">理得清</div>
+      <div class="ct-sub">知识点关系明确<br>T2建课 &middot; R2选题<br>知识图谱+先修关系</div>
+    </div>
+    <div class="cap-tag cap5">
+      <div class="ct-icon">&#128200;</div>
+      <div class="ct-name">记得住</div>
+      <div class="ct-sub">用过的都能找回<br>R2选题 &middot; R3写作<br>行为足迹+历史版本</div>
+    </div>
+  </div>
+
+  <!-- 建库卡片：6库横排展示 -->
+  <h3 class="sub-title">建库全景 &middot; <em>找得到 &rarr; 看得懂 &rarr; 用得准 &rarr; 理得清 &rarr; 记得住</em></h3>
+  <p style="font-size:14px;color:var(--ink-500);margin-bottom:22px;">不管是教学还是论文提效，底层都是"找得到 → 看得懂 → 用得准 → 理得清 → 记得住"五件事。每件事对应一类库，任何学科建一次就能支撑全部场景。</p>
+
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin-bottom:28px;">
+    <!-- 检索库 -->
+    <div style="background:#FFF;border:1px solid var(--line);border-left:4px solid var(--accent-c);padding:22px 18px;border-radius:10px 0 0 10px;">
+      <div style="font-size:12px;letter-spacing:3px;font-weight:800;color:var(--accent-c);margin-bottom:2px;">Ⅰ</div>
+      <div style="font-size:17px;font-weight:900;color:var(--ink-900);margin-bottom:4px;">检索库</div>
+      <div style="font-size:11px;color:var(--gold-deep);font-weight:700;margin-bottom:12px;">找得到</div>
+      <div style="width:100%;height:1px;background:var(--line);margin-bottom:12px;"></div>
+      <div style="font-size:12px;color:var(--ink-600);line-height:1.8;">
+        · 所有原始文档<br>
+        · 向量化+位置索引<br>
+        · 支持语义检索<br>
+        · 支持溯源到页段
+      </div>
+      <div style="margin-top:12px;font-size:10px;padding:3px 8px;background:#FEF2F2;color:var(--accent-c);border-radius:4px;display:inline-block;font-weight:700;">存进来的 · 上传即用</div>
+    </div>
+    <!-- 术语库 -->
+    <div style="background:#FFF;border:1px solid var(--line);border-left:4px solid var(--gold);padding:22px 18px;">
+      <div style="font-size:12px;letter-spacing:3px;font-weight:800;color:var(--gold-deep);margin-bottom:2px;">Ⅱ</div>
+      <div style="font-size:17px;font-weight:900;color:var(--ink-900);margin-bottom:4px;">术语库</div>
+      <div style="font-size:11px;color:var(--gold-deep);font-weight:700;margin-bottom:12px;">看得懂</div>
+      <div style="width:100%;height:1px;background:var(--line);margin-bottom:12px;"></div>
+      <div style="font-size:12px;color:var(--ink-600);line-height:1.8;">
+        · 学科专业术语<br>
+        · 定义+同义词<br>
+        · 中英对照<br>
+        · 查询改写扩展
+      </div>
+      <div style="margin-top:12px;font-size:10px;padding:3px 8px;background:var(--gold-bg);color:var(--gold-deep);border-radius:4px;display:inline-block;font-weight:700;">炼出来的 · AI+审核</div>
+    </div>
+    <!-- 问答对库 -->
+    <div style="background:#FFF;border:1px solid var(--line);border-left:4px solid var(--gold);padding:22px 18px;">
+      <div style="font-size:12px;letter-spacing:3px;font-weight:800;color:var(--gold-deep);margin-bottom:2px;">Ⅲ</div>
+      <div style="font-size:17px;font-weight:900;color:var(--ink-900);margin-bottom:4px;">问答对库</div>
+      <div style="font-size:11px;color:var(--gold-deep);font-weight:700;margin-bottom:12px;">用得准</div>
+      <div style="width:100%;height:1px;background:var(--line);margin-bottom:12px;"></div>
+      <div style="font-size:12px;color:var(--ink-600);line-height:1.8;">
+        · 高频FAQ标准答案<br>
+        · 习题+答案+解析<br>
+        · 知识点+难度标签<br>
+        · 教师审核状态
+      </div>
+      <div style="margin-top:12px;font-size:10px;padding:3px 8px;background:var(--gold-bg);color:var(--gold-deep);border-radius:4px;display:inline-block;font-weight:700;">炼出来的 · AI+审核</div>
+    </div>
+    <!-- 图谱库 -->
+    <div style="background:#FFF;border:1px solid var(--line);border-left:4px solid var(--gold);padding:22px 18px;">
+      <div style="font-size:12px;letter-spacing:3px;font-weight:800;color:var(--gold-deep);margin-bottom:2px;">Ⅳ</div>
+      <div style="font-size:17px;font-weight:900;color:var(--ink-900);margin-bottom:4px;">图谱库</div>
+      <div style="font-size:11px;color:var(--gold-deep);font-weight:700;margin-bottom:12px;">理得清</div>
+      <div style="width:100%;height:1px;background:var(--line);margin-bottom:12px;"></div>
+      <div style="font-size:12px;color:var(--ink-600);line-height:1.8;">
+        · 知识点先修关系<br>
+        · 论文引用网络<br>
+        · 概念包含/关联<br>
+        · 研究方向脉络
+      </div>
+      <div style="margin-top:12px;font-size:10px;padding:3px 8px;background:var(--gold-bg);color:var(--gold-deep);border-radius:4px;display:inline-block;font-weight:700;">炼出来的 · AI+审核</div>
+    </div>
+    <!-- 题库 -->
+    <div style="background:#FFF;border:1px solid var(--line);border-left:4px solid var(--gold);padding:22px 18px;">
+      <div style="font-size:12px;letter-spacing:3px;font-weight:800;color:var(--gold-deep);margin-bottom:2px;">Ⅴ</div>
+      <div style="font-size:17px;font-weight:900;color:var(--ink-900);margin-bottom:4px;">题库</div>
+      <div style="font-size:11px;color:var(--gold-deep);font-weight:700;margin-bottom:12px;">用得准</div>
+      <div style="width:100%;height:1px;background:var(--line);margin-bottom:12px;"></div>
+      <div style="font-size:12px;color:var(--ink-600);line-height:1.8;">
+        · 按知识点分类<br>
+        · 按难度分级<br>
+        · 题目+标准答案<br>
+        · 答案正确率100%
+      </div>
+      <div style="margin-top:12px;font-size:10px;padding:3px 8px;background:var(--gold-bg);color:var(--gold-deep);border-radius:4px;display:inline-block;font-weight:700;">炼出来的 · AI+审核</div>
+    </div>
+    <!-- 行为积累库 -->
+    <div style="background:#FFF;border:1px solid var(--line);border-left:4px solid var(--accent-d);padding:22px 18px;border-radius:0 10px 10px 0;">
+      <div style="font-size:12px;letter-spacing:3px;font-weight:800;color:var(--accent-d);margin-bottom:2px;">Ⅵ</div>
+      <div style="font-size:17px;font-weight:900;color:var(--ink-900);margin-bottom:4px;">行为积累库</div>
+      <div style="font-size:11px;color:var(--gold-deep);font-weight:700;margin-bottom:12px;">记得住</div>
+      <div style="width:100%;height:1px;background:var(--line);margin-bottom:12px;"></div>
+      <div style="font-size:12px;color:var(--ink-600);line-height:1.8;">
+        · 检索足迹+阅读标注<br>
+        · AI对话历史<br>
+        · 写作版本+科研脉络<br>
+        · 系统自动·零操作
+      </div>
+      <div style="margin-top:12px;font-size:10px;padding:3px 8px;background:#F5F3FF;color:var(--accent-d);border-radius:4px;display:inline-block;font-weight:700;">长出来的 · 自动积累</div>
+    </div>
+  </div>
+
+  <!-- 底部注释 -->
+  <div style="background:var(--gold-bg);border:1px solid var(--gold-soft);border-radius:10px;padding:16px 22px;margin-bottom:28px;font-size:13px;color:var(--gold-deep);line-height:1.8;">
+    <strong>一句话理解</strong>：<strong>检索库</strong>解决"找得到"——上传就能搜 · <strong>术语库/问答对库/图谱库/题库</strong>解决"看得懂+用得准+理得清"——AI从原文中炼出的结构化知识 · <strong>行为积累库</strong>解决"记得住"——越用越厚，研究脉络自动形成
+  </div>
+
+  <!-- 三层 x 五能交叉矩阵：用具体库名作为行 -->
+  <h3 class="sub-title">库 &times; 五能 交叉矩阵</h3>
+  <table class="matrix-table">
+    <thead>
+      <tr>
+        <th style="width:18%"></th>
+        <th style="width:16%">找得到</th>
+        <th style="width:16%">看得懂</th>
+        <th style="width:16%">用得准</th>
+        <th style="width:16%">理得清</th>
+        <th style="width:16%">记得住</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>检索库<br><span style="font-size:11px;color:var(--ink-400)">（存进来的）</span></td>
+        <td><span class="star">&#9733;</span><br><span style="font-size:11px">语义检索<br>全链路溯源</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="circle">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td>术语库<br><span style="font-size:11px;color:var(--ink-400)">（炼出来的）</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="star">&#9733;</span><br><span style="font-size:11px">术语消歧<br>查询改写<br>中英对照</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="circle">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td>图谱库<br><span style="font-size:11px;color:var(--ink-400)">（炼出来的）</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="star">&#9733;</span><br><span style="font-size:11px">知识图谱<br>先修关系<br>研究脉络</span></td>
+        <td><span class="circle">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td>问答对库 / 题库<br><span style="font-size:11px;color:var(--ink-400)">（炼出来的）</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="star">&#9733;</span><br><span style="font-size:11px">问答+题库<br>答案校验<br>引文真实性</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="circle">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td>行为积累库<br><span style="font-size:11px;color:var(--ink-400)">（长出来的）</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="circle">&mdash;</span></td>
+        <td><span class="star">&#9733;</span><br><span style="font-size:11px">研究足迹<br>脉络演进<br>写作复用</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:13px;color:var(--ink-500);line-height:1.7;margin:8px 0 12px;padding:10px 16px;background:#F8FAFC;border-radius:6px;">
+    <strong style="color:var(--ink-900)">一句话理解：</strong>
+    <strong>检索库</strong>解决"找得到"&mdash;&mdash;上传就能搜，搜到能溯源。
+    <strong>术语库/图谱库/问答对库/题库</strong>解决"看得懂+用得准+理得清"&mdash;&mdash;AI从原文中炼出来的结构化知识产品。
+    <strong>行为积累库</strong>解决"记得住"&mdash;&mdash;系统自动记录使用足迹，越用越厚，研究脉络自动形成。
+  </p>
+
+  <!-- 知识治理横切面 -->
+  <div class="gov-strip">
+    <h4>横切面 &middot; 知识治理层 &mdash;&mdash; 贯穿所有库的质量保障</h4>
+    <div class="gov-items">
+      <div class="gov-item"><div class="gi-name">准入质检</div><div class="gi-desc">文档入库质量分级<br>格式标准化</div></div>
+      <div class="gov-item"><div class="gi-name">术语规范</div><div class="gi-desc">消歧治理<br>中英对照维护</div></div>
+      <div class="gov-item"><div class="gi-name">答案校验</div><div class="gi-desc">答案正确性<br>去重治理</div></div>
+      <div class="gov-item"><div class="gi-name">图谱准确</div><div class="gi-desc">冲突检测<br>先修关系校验</div></div>
+      <div class="gov-item"><div class="gi-name">时效盘点</div><div class="gi-desc">过期知识降权<br>行为挖掘</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CHAPTER 03：库 x 场景矩阵 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div>
+      <div class="chapter-num">CHAPTER 03</div>
+      <h2>库 &times; 场景矩阵 &middot; <em>7场景 &times; 6库</em></h2>
+    </div>
+  </div>
+  <p class="chapter-lead">每个场景依赖哪些库？<span class="star">&#9733;</span> = 核心依赖 / <span class="circle">&#9675;</span> = 辅助使用 / &mdash; = 不涉及。最右列标注该场景的<strong>治理重点</strong>。</p>
+
+  <table class="matrix-table">
+    <thead>
+      <tr>
+        <th style="width:16%">场景</th>
+        <th style="width:12%">检索库</th>
+        <th style="width:12%">术语库</th>
+        <th style="width:12%">图谱库</th>
+        <th style="width:14%">问答对库&amp;题库</th>
+        <th style="width:14%">行为积累库</th>
+        <th style="width:18%">治理重点</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="matrix-sep"><td colspan="7">教学场景</td></tr>
+      <tr>
+        <td>T1 智能问答 <span class="tag-p0" style="margin-left:4px">P0</span></td>
+        <td><span class="star">&#9733;</span> 主力</td>
+        <td><span class="star">&#9733;</span> 改写</td>
+        <td><span class="circle">&#9675;</span> 辅助</td>
+        <td><span class="circle">&#9675;</span> 补充</td>
+        <td><span class="circle">&#9675;</span> 足迹</td>
+        <td style="font-size:12px;text-align:left">溯源+幻觉兜底</td>
+      </tr>
+      <tr>
+        <td>T4 AI备课 <span class="tag-p0" style="margin-left:4px">P0</span></td>
+        <td><span class="star">&#9733;</span> 检索</td>
+        <td><span class="star">&#9733;</span> 术语</td>
+        <td><span class="star">&#9733;</span> 导航</td>
+        <td><span class="circle">&#9675;</span> 参考</td>
+        <td><span class="star">&#9733;</span> 历史复用</td>
+        <td style="font-size:12px;text-align:left">内容时效性</td>
+      </tr>
+      <tr>
+        <td>T2 AI建课 <span class="tag-p1" style="margin-left:4px">P1</span></td>
+        <td><span class="star">&#9733;</span> 解析</td>
+        <td><span class="star">&#9733;</span> 抽取</td>
+        <td><span class="star">&#9733;</span> 构建</td>
+        <td>&mdash;</td>
+        <td><span class="circle">&#9675;</span> 记录</td>
+        <td style="font-size:12px;text-align:left">图谱准确性</td>
+      </tr>
+      <tr>
+        <td>T3 智能出题 <span class="tag-p1" style="margin-left:4px">P1</span></td>
+        <td><span class="circle">&#9675;</span> 参考</td>
+        <td><span class="star">&#9733;</span> 标注</td>
+        <td><span class="circle">&#9675;</span> 关联</td>
+        <td><span class="star">&#9733;</span> 主力</td>
+        <td><span class="circle">&#9675;</span> 偏好</td>
+        <td style="font-size:12px;text-align:left">答案正确性</td>
+      </tr>
+      <tr class="matrix-sep"><td colspan="7">论文场景</td></tr>
+      <tr>
+        <td>R1 论文检索 <span class="tag-p0" style="margin-left:4px">P0</span></td>
+        <td><span class="star">&#9733;</span> 主力</td>
+        <td><span class="star">&#9733;</span> 扩展</td>
+        <td><span class="circle">&#9675;</span> 引文</td>
+        <td>&mdash;</td>
+        <td><span class="star">&#9733;</span> 阅读标注</td>
+        <td style="font-size:12px;text-align:left">时效性排序</td>
+      </tr>
+      <tr>
+        <td>R2 论文选题 <span class="tag-p1" style="margin-left:4px">P1</span></td>
+        <td><span class="star">&#9733;</span> 分析</td>
+        <td><span class="star">&#9733;</span> 术语</td>
+        <td><span class="star">&#9733;</span> 脉络</td>
+        <td>&mdash;</td>
+        <td><span class="star">&#9733;</span> 演进追溯</td>
+        <td style="font-size:12px;text-align:left">空白验证</td>
+      </tr>
+      <tr>
+        <td>R3 论文写作 <span class="tag-p1" style="margin-left:4px">P1</span></td>
+        <td><span class="star">&#9733;</span> 引用</td>
+        <td><span class="star">&#9733;</span> 格式</td>
+        <td><span class="circle">&#9675;</span> 引文</td>
+        <td>&mdash;</td>
+        <td><span class="star">&#9733;</span> 写作复用</td>
+        <td style="font-size:12px;text-align:left">引文真实性</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:13px;color:var(--ink-500);line-height:1.7;margin:12px 0 0;padding:10px 16px;background:#F8FAFC;border-radius:6px;">
+    <strong style="color:var(--ink-900)">关键发现：</strong>
+    <strong>检索库</strong>是7个场景中5个的核心依赖&mdash;&mdash;最优先建设。
+    <strong>术语库</strong>几乎所有场景都用到&mdash;&mdash;看得懂是一切的基础。
+    <strong>行为积累库</strong>在论文场景（R1/R2/R3）中全部是核心依赖&mdash;&mdash;科研工作天然需要"记得住"。
+  </p>
+</div>
+
+<!-- ============ CHAPTER 04：建库优先级 + 教师操作时间线 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div>
+      <div class="chapter-num">CHAPTER 04</div>
+      <h2>建库优先级 &middot; <em>教师操作时间线</em></h2>
+    </div>
+  </div>
+
+  <h3 class="sub-title">建库三步走</h3>
+  <div class="priority-flow">
+    <div class="pf-item">
+      <div class="pf-rank">STEP 01 &middot; 即用</div>
+      <div class="pf-name">检索库</div>
+      <div class="pf-desc">教材/课件/论文上传 &rarr; 系统自动解析+向量化<br>2-3天/学科，自动化90%<br>做完<strong>T1问答</strong>和<strong>T4备课</strong>就能用</div>
+    </div>
+    <div class="pf-item">
+      <div class="pf-rank">STEP 02 &middot; 1-3周</div>
+      <div class="pf-name">加工四库</div>
+      <div class="pf-desc">AI从检索库中提取 &rarr; 教师审核确认<br><strong>术语库 / 图谱库 / 问答对库 / 题库</strong><br>AI 60-70% + 教师审核 30-40%</div>
+    </div>
+    <div class="pf-item">
+      <div class="pf-rank">STEP 03 &middot; 自动</div>
+      <div class="pf-name">行为积累库</div>
+      <div class="pf-desc">不需要专门建设<br>使用检索/备课/出题/写作过程中<strong>自动记录</strong><br>一学期后自动形成研究脉络&mdash;&mdash;飞轮</div>
+    </div>
+    <div class="pf-item">
+      <div class="pf-rank">ALWAYS</div>
+      <div class="pf-name">知识治理</div>
+      <div class="pf-desc">质检+盘点+挖掘三大治理机制<br>保障所有库的质量、时效、一致性<br>参照星火知识库治理体系</div>
+    </div>
+  </div>
+
+  <!-- 12个资源目录 -->
+  <h3 class="sub-title">12个资源目录 &middot; <em>教师看到的"知识库目录"</em></h3>
+  <p style="font-size:13px;color:var(--ink-500);margin-bottom:18px;">教师打开知识库，看到的不是"三层架构"，而是按资源类型分类的具体目录。一看就懂、一放就对、系统一收就能用。</p>
+
+  <!-- 教学资源 -->
+  <div style="margin-bottom:6px;font-size:12px;font-weight:800;letter-spacing:2px;color:var(--accent-a);">教学资源 · 5个目录 · 上传即用</div>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;">
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--accent-a);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">📖</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">教材文档</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">PDF/PPT/Word<br>→ 解析+向量化+页码索引</div>
+      <div style="margin-top:6px;font-size:10px;padding:2px 6px;background:#EFF6FF;color:var(--accent-a);border-radius:3px;display:inline-block;font-weight:700;">⚡快</div>
+    </div>
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--accent-a);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">📑</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">课件讲义</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">PPT/板书<br>→ 提取文字+图表</div>
+      <div style="margin-top:6px;font-size:10px;padding:2px 6px;background:#EFF6FF;color:var(--accent-a);border-radius:3px;display:inline-block;font-weight:700;">⚡快</div>
+    </div>
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--accent-a);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">📝</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">习题试卷</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">历年试卷+练习<br>→ 标注知识点+难度</div>
+      <div style="margin-top:6px;font-size:10px;padding:2px 6px;background:var(--gold-bg);color:var(--gold-deep);border-radius:3px;display:inline-block;font-weight:700;">🟡中</div>
+    </div>
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--accent-a);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">🔬</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">实验指导</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">操作规程/手册<br>→ 结构化提取</div>
+      <div style="margin-top:6px;font-size:10px;padding:2px 6px;background:#EFF6FF;color:var(--accent-a);border-radius:3px;display:inline-block;font-weight:700;">⚡快</div>
+    </div>
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--accent-a);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">📋</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">教学案例</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">经典案例/设计<br>→ 标签分类</div>
+      <div style="margin-top:6px;font-size:10px;padding:2px 6px;background:#EFF6FF;color:var(--accent-a);border-radius:3px;display:inline-block;font-weight:700;">⚡快</div>
+    </div>
+  </div>
+
+  <!-- 学术资源 -->
+  <div style="margin-bottom:6px;font-size:12px;font-weight:800;letter-spacing:2px;color:var(--accent-b);">学术资源 · 2个目录 · 上传即用</div>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;">
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--accent-b);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">📄</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">学术论文</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">本学科论文/跨学科<br>→ 摘要+引文解析</div>
+      <div style="margin-top:6px;font-size:10px;padding:2px 6px;background:#ECFDF5;color:var(--accent-b);border-radius:3px;display:inline-block;font-weight:700;">⚡快</div>
+    </div>
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--accent-b);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">📰</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">前沿资讯</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">行业动态/政策<br>→ 关键信息+时效标注</div>
+      <div style="margin-top:6px;font-size:10px;padding:2px 6px;background:#ECFDF5;color:var(--accent-b);border-radius:3px;display:inline-block;font-weight:700;">⚡快</div>
+    </div>
+  </div>
+
+  <!-- 知识资产 -->
+  <div style="margin-bottom:6px;font-size:12px;font-weight:800;letter-spacing:2px;color:var(--gold-deep);">知识资产 · 4个目录 · AI提取+教师审核</div>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;">
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">📘</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">术语词典</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">AI抽取+学校词表<br>→ 教师审核</div>
+      <div style="margin-top:6px;font-size:10px;padding:2px 6px;background:var(--gold-bg);color:var(--gold-deep);border-radius:3px;display:inline-block;font-weight:700;">🟡 1周/学科</div>
+    </div>
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">💬</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">问答标准库</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">AI生成候选<br>→ 教师审核入库</div>
+      <div style="margin-top:6px;font-size:10px;padding:2px 6px;background:var(--gold-bg);color:var(--gold-deep);border-radius:3px;display:inline-block;font-weight:700;">🟡 2-3周</div>
+    </div>
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">🔗</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">知识图谱</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">AI提取节点<br>→ 教师确认关系</div>
+      <div style="margin-top:6px;font-size:10px;padding:2px 6px;background:#FEF2F2;color:var(--accent-c);border-radius:3px;display:inline-block;font-weight:700;">🔴 3-4周</div>
+    </div>
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">📝</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">习题题库</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">已有题库导入+AI生成<br>→ 答案校验</div>
+      <div style="margin-top:6px;font-size:10px;padding:2px 6px;background:var(--gold-bg);color:var(--gold-deep);border-radius:3px;display:inline-block;font-weight:700;">🟡 需校验</div>
+    </div>
+  </div>
+
+  <!-- 行为积累库 -->
+  <div style="margin-bottom:6px;font-size:12px;font-weight:800;letter-spacing:2px;color:var(--accent-d);">行为积累库 · 系统自动持续积累 · 教师零操作</div>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px;">
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--accent-d);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">🔍</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">检索足迹</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">搜过什么关键词<br>点开过哪些文档<br>→ 反映关注方向</div>
+    </div>
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--accent-d);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">📖</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">阅读标注</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">读论文时标记的重点<br>教材批注<br>→ 反映判断力</div>
+    </div>
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--accent-d);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">💬</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">AI对话历史</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">提过什么问题<br>AI给过什么建议<br>→ 反映思路演进</div>
+    </div>
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--accent-d);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">✍️</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">写作版本</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">申报书/综述历史版本<br>备课方案迭代<br>→ 可复用写作素材</div>
+    </div>
+    <div style="background:#FFF;border:1px solid var(--line);border-top:3px solid var(--accent-d);border-radius:8px;padding:14px 12px;">
+      <div style="font-size:16px;margin-bottom:4px;">🧭</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ink-900);">研究脉络</div>
+      <div style="font-size:11px;color:var(--ink-500);margin-top:4px;line-height:1.6;">研究方向演进轨迹<br>探索过但放弃的方向<br>→ 个人研究地图</div>
+    </div>
+  </div>
+
+  <div style="background:#F5F3FF;border:1px solid #DDD6FE;border-radius:8px;padding:12px 16px;margin-bottom:28px;font-size:12px;color:var(--accent-d);line-height:1.7;">
+    <strong>行为积累库的独特价值</strong>：不需要教师主动操作——使用检索/备课/出题/写作的过程中<strong>系统自动记录</strong>。一学期后自动形成个人研究脉络图。唯一一个<strong>"越用越厚"</strong>的库，也是"使用即建设"飞轮的核心驱动力。
+  </div>
+
+  <!-- 教师操作时间线 -->
+  <h3 class="sub-title">教师操作时间线 &middot; <em>从拿到系统到飞轮转起来</em></h3>
+  <div class="teacher-timeline">
+    <div class="tt-step">
+      <div class="tt-time">第1天<br>10分钟</div>
+      <div class="tt-content">打开知识库 &rarr; 看到分类目录 &rarr; 把U盘里的<strong>教材PDF</strong>拖到"教材文档"、<strong>PPT课件</strong>拖到"课件讲义"、<strong>历年试卷</strong>拖到"习题试卷" &rarr; 系统提示："326份文件已接收，预计2小时完成解析"</div>
+    </div>
+    <div class="tt-step">
+      <div class="tt-time">第1天<br>2小时后</div>
+      <div class="tt-content">系统通知："<strong>解析完成</strong>，已提取247个术语、512条问答" &rarr; 教师花10分钟审核标红的54条低置信度术语 &rarr; <strong>检索库+加工四库基础可用</strong></div>
+    </div>
+    <div class="tt-step">
+      <div class="tt-time">第2天起<br>日常使用</div>
+      <div class="tt-content">备课时问知识库 &rarr; 得到教案 / 学生问问题 &rarr; AI溯源回答 / 周末出一套试卷 &rarr; AI从题库组卷 &rarr; <strong>行为积累库在后台默默积累</strong></div>
+    </div>
+    <div class="tt-step">
+      <div class="tt-time">一学期后<br>飞轮转起</div>
+      <div class="tt-content">术语从247增长到<strong>400+</strong> / 问答从512增长到<strong>1800+</strong> / 行为积累库自动形成研究脉络图 &rarr; <strong>"不知不觉就长大了"&mdash;&mdash;使用即建设</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<div class="foot">
+  <div class="foot-bar"></div>
+  <h6>学科大脑 &middot; 场景收敛与建库方案</h6>
+  <p>V5 &middot; 2026-04-25 &middot; 三层知识库 &times; 五大知识能力 &rarr; 7个核心场景<br>AI教学产品部 &middot; </p>
+</div>
+
+</div>
+</body>
+</html>
