@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440, initial-scale=1.0">
+<title>学科大脑 × GBrain · 能力对位分析 V1</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #F8FAFC; color: #1a2740; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.75; -webkit-font-smoothing: antialiased; }
+.page { max-width: 1320px; margin: 0 auto; padding: 28px 24px 60px; }
+
+:root {
+  --ink-900: #0F172A;
+  --ink-800: #1E3A5F;
+  --ink-700: #1E40AF;
+  --ink-600: #334155;
+  --ink-500: #64748B;
+  --ink-400: #94A3B8;
+  --line: #E2E8F0;
+  --bg: #F8FAFC;
+  --card: #FFFFFF;
+  --gold: #C8A45C;
+  --gold-soft: #E6D4A4;
+  --gold-deep: #A17F3F;
+  --gold-bg: #FFF9E9;
+  --green: #059669;
+  --green-bg: #ECFDF5;
+  --green-soft: #D1FAE5;
+  --red: #DC2626;
+  --red-bg: #FEF2F2;
+  --red-soft: #FECACA;
+  --orange: #D97706;
+  --orange-bg: #FFFBEB;
+  --orange-soft: #FED7AA;
+  --purple: #7C3AED;
+  --purple-bg: #F5F3FF;
+  --purple-soft: #DDD6FE;
+  --blue: #1E40AF;
+  --blue-bg: #EFF6FF;
+  --blue-soft: #DBEAFE;
+}
+
+/* ============ 返回导航 ============ */
+.nav-bar { background: #FFF; border: 1px solid var(--line); border-radius: 10px; padding: 10px 18px; margin-bottom: 18px; display: flex; align-items: center; gap: 16px; font-size: 13px; }
+.nav-bar a { color: var(--ink-700); text-decoration: none; font-weight: 600; transition: color 0.2s; }
+.nav-bar a:hover { color: var(--gold-deep); }
+.nav-bar .sep { color: var(--ink-400); }
+.nav-bar .here { color: var(--ink-500); font-weight: 500; }
+
+/* ============ Hero ============ */
+.hero {
+  background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 60%, #0F172A 100%);
+  border-radius: 16px; padding: 56px 60px 48px; color: #fff;
+  position: relative; overflow: hidden; margin-bottom: 28px;
+  box-shadow: 0 8px 40px rgba(15,23,42,0.15);
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 85% 30%, rgba(200,164,92,0.18) 0%, transparent 40%),
+              radial-gradient(circle at 10% 80%, rgba(30,64,175,0.22) 0%, transparent 45%);
+}
+.hero-inner { position: relative; }
+.hero .eyebrow { font-size: 12px; letter-spacing: 5px; font-weight: 700; color: var(--gold-soft); margin-bottom: 16px; }
+.hero h1 { font-size: 40px; font-weight: 900; letter-spacing: 1px; line-height: 1.25; margin-bottom: 14px; background: linear-gradient(135deg, #fff 0%, #E6D4A4 60%, #C8A45C 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero h2 { font-size: 18px; color: rgba(255,255,255,0.82); font-weight: 500; margin-bottom: 26px; }
+.hero-divider { width: 60px; height: 3px; background: linear-gradient(90deg, var(--gold) 0%, transparent 100%); margin: 20px 0; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.hero-chip { padding: 8px 18px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 24px; font-size: 12.5px; color: rgba(255,255,255,0.88); font-weight: 600; }
+.hero-chip.gold { background: rgba(200,164,92,0.18); border-color: rgba(200,164,92,0.45); color: #E6D4A4; }
+.hero-source { margin-top: 22px; font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.7; }
+.hero-source a { color: rgba(230,212,164,0.85); text-decoration: none; }
+
+/* ============ 结论卡 ============ */
+.tldr { background: linear-gradient(135deg, #FFF9E9 0%, #FFFDF6 100%); border: 1px solid var(--gold-soft); border-radius: 14px; padding: 28px 32px; margin-bottom: 22px; position: relative; }
+.tldr::before { content: ''; position: absolute; left: 0; top: 14px; bottom: 14px; width: 4px; background: var(--gold); border-radius: 2px; }
+.tldr .tldr-label { font-size: 11px; font-weight: 800; letter-spacing: 4px; color: var(--gold-deep); margin-bottom: 10px; }
+.tldr p { font-size: 15px; color: var(--ink-700); line-height: 1.95; }
+.tldr p strong { color: var(--ink-900); background: linear-gradient(180deg, transparent 60%, rgba(200,164,92,0.35) 60%, rgba(200,164,92,0.35) 90%, transparent 90%); padding: 0 2px; }
+.tldr p em { font-style: normal; color: var(--gold-deep); font-weight: 700; }
+
+/* ============ 章节 ============ */
+.chapter { background: var(--card); border-radius: 14px; border: 1px solid var(--line); padding: 36px 42px; margin-bottom: 20px; position: relative; overflow: hidden; }
+.chapter-head { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--line); position: relative; }
+.chapter-head::after { content: ''; position: absolute; left: 0; bottom: -1px; width: 80px; height: 2px; background: var(--gold); }
+.chapter.green .chapter-head::after { background: var(--green); }
+.chapter.red .chapter-head::after { background: var(--red); }
+.chapter.gray .chapter-head::after { background: var(--ink-400); }
+.chapter-num { font-size: 11px; letter-spacing: 4px; font-weight: 800; color: var(--gold-deep); }
+.chapter.green .chapter-num { color: var(--green); }
+.chapter.red .chapter-num { color: var(--red); }
+.chapter.gray .chapter-num { color: var(--ink-500); }
+.chapter-head h2 { font-size: 26px; font-weight: 800; color: var(--ink-900); letter-spacing: 0.5px; line-height: 1.35; }
+.chapter-head h2 em { color: var(--gold-deep); font-style: normal; font-weight: 800; }
+.chapter.green .chapter-head h2 em { color: var(--green); }
+.chapter.red .chapter-head h2 em { color: var(--red); }
+.chapter-lead { font-size: 14px; color: var(--ink-500); line-height: 1.85; margin-bottom: 22px; padding: 14px 20px; background: #F8FAFC; border-left: 3px solid var(--gold); border-radius: 4px; }
+.chapter.green .chapter-lead { border-left-color: var(--green); background: var(--green-bg); }
+.chapter.red .chapter-lead { border-left-color: var(--red); background: var(--red-bg); }
+
+/* ============ 通用表格 ============ */
+.data-table { width: 100%; border-collapse: collapse; margin: 14px 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+.data-table thead th { background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-800) 100%); color: var(--gold-soft); font-size: 12.5px; font-weight: 800; letter-spacing: 1px; padding: 14px 16px; text-align: left; }
+.data-table tbody td { padding: 14px 16px; font-size: 13px; color: var(--ink-600); border-bottom: 1px solid var(--line); line-height: 1.7; vertical-align: top; }
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:nth-child(even) { background: #FAFBFC; }
+.data-table tbody tr:hover { background: #F1F5F9; }
+.data-table strong { color: var(--ink-900); }
+
+/* ============ 优先级标签 ============ */
+.tag-p0 { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: var(--red-bg); color: var(--red); letter-spacing: 1px; }
+.tag-p1 { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: var(--gold-bg); color: var(--gold-deep); letter-spacing: 1px; }
+.tag-p2 { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; background: #F1F5F9; color: var(--ink-500); letter-spacing: 1px; }
+
+/* ============ 缺口卡片 ============ */
+.gap-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin: 18px 0; }
+.gap-card { background: #FFF; border: 1px solid var(--line); border-left: 4px solid var(--red); border-radius: 10px; padding: 22px 26px; transition: box-shadow 0.2s; }
+.gap-card:hover { box-shadow: 0 4px 20px rgba(220,38,38,0.08); }
+.gap-card .gap-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px dashed var(--line); }
+.gap-card .gap-num { font-size: 11px; letter-spacing: 3px; font-weight: 800; color: var(--red); }
+.gap-card .gap-title { font-size: 17px; font-weight: 800; color: var(--ink-900); flex: 1; margin-left: 12px; }
+.gap-card .gap-anchor { font-size: 11px; padding: 3px 10px; background: var(--gold-bg); color: var(--gold-deep); border-radius: 6px; font-weight: 700; }
+.gap-row { display: grid; grid-template-columns: 80px 1fr; gap: 14px; padding: 8px 0; font-size: 13px; line-height: 1.75; }
+.gap-row .gr-label { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: var(--ink-500); padding-top: 3px; }
+.gap-row .gr-content { color: var(--ink-700); }
+.gap-row .gr-content strong { color: var(--ink-900); }
+.gap-row.gbrain .gr-label { color: var(--blue); }
+.gap-row.ours .gr-label { color: var(--red); }
+.gap-row.fix .gr-label { color: var(--green); }
+.gap-row.fix .gr-content { background: var(--green-bg); border: 1px solid var(--green-soft); padding: 10px 14px; border-radius: 6px; margin-left: -2px; }
+
+/* ============ 不可复用清单 ============ */
+.skip-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+.skip-item { background: #F8FAFC; border: 1px solid var(--line); border-radius: 8px; padding: 16px 20px; }
+.skip-item .si-name { font-size: 14px; font-weight: 800; color: var(--ink-700); margin-bottom: 6px; }
+.skip-item .si-reason { font-size: 12.5px; color: var(--ink-500); line-height: 1.7; }
+
+/* ============ 下一步时间线 ============ */
+.timeline-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 16px 0; }
+.tl-card { background: #FFF; border: 1px solid var(--line); border-top: 4px solid var(--green); border-radius: 12px; padding: 22px 24px; }
+.tl-card[data-when="mid"] { border-top-color: var(--gold); }
+.tl-card[data-when="long"] { border-top-color: var(--purple); }
+.tl-card .tl-when { font-size: 11px; letter-spacing: 3px; font-weight: 800; color: var(--green); margin-bottom: 4px; }
+.tl-card[data-when="mid"] .tl-when { color: var(--gold-deep); }
+.tl-card[data-when="long"] .tl-when { color: var(--purple); }
+.tl-card .tl-title { font-size: 16px; font-weight: 800; color: var(--ink-900); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed var(--line); }
+.tl-card ul { list-style: none; padding: 0; margin: 0; }
+.tl-card li { font-size: 13px; color: var(--ink-700); line-height: 1.7; padding: 7px 0 7px 20px; position: relative; }
+.tl-card li::before { content: '▸'; position: absolute; left: 0; top: 7px; color: var(--green); font-weight: 800; }
+.tl-card[data-when="mid"] li::before { color: var(--gold-deep); }
+.tl-card[data-when="long"] li::before { color: var(--purple); }
+.tl-card li strong { color: var(--ink-900); }
+
+/* ============ 项目摘要面板 ============ */
+.project-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 18px 0 24px; }
+.proj-card { background: #FFF; border: 1px solid var(--line); border-radius: 12px; padding: 24px 26px; position: relative; }
+.proj-card.gbrain { border-top: 4px solid var(--blue); }
+.proj-card.ours { border-top: 4px solid var(--gold); }
+.proj-card .pc-name { font-size: 18px; font-weight: 900; color: var(--ink-900); margin-bottom: 4px; }
+.proj-card .pc-author { font-size: 11px; color: var(--ink-500); letter-spacing: 1px; margin-bottom: 14px; }
+.proj-card .pc-positioning { font-size: 13px; color: var(--ink-700); line-height: 1.8; padding: 12px 16px; background: #F8FAFC; border-radius: 6px; margin-bottom: 14px; border-left: 3px solid var(--gold); }
+.proj-card.gbrain .pc-positioning { border-left-color: var(--blue); }
+.proj-card .pc-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.proj-card .pc-stat { text-align: center; padding: 12px 8px; background: #F8FAFC; border-radius: 8px; }
+.proj-card .pc-stat .ps-num { font-size: 22px; font-weight: 900; color: var(--ink-900); line-height: 1.1; }
+.proj-card.gbrain .pc-stat .ps-num { color: var(--blue); }
+.proj-card.ours .pc-stat .ps-num { color: var(--gold-deep); }
+.proj-card .pc-stat .ps-label { font-size: 10px; color: var(--ink-500); margin-top: 4px; letter-spacing: 1px; }
+
+/* ============ 关键洞察条 ============ */
+.insight-strip { background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%); border-radius: 12px; padding: 26px 32px; margin: 18px 0 0; color: #fff; position: relative; overflow: hidden; }
+.insight-strip::before { content: ''; position: absolute; right: -40px; top: -40px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(200,164,92,0.18) 0%, transparent 70%); }
+.insight-strip .is-label { font-size: 11px; letter-spacing: 4px; font-weight: 800; color: var(--gold-soft); margin-bottom: 10px; }
+.insight-strip p { font-size: 14.5px; line-height: 1.95; color: rgba(255,255,255,0.92); }
+.insight-strip strong { color: var(--gold-soft); }
+
+/* ============ Footer ============ */
+.foot { margin-top: 36px; padding: 28px 0 8px; text-align: center; border-top: 1px solid var(--line); }
+.foot-bar { width: 60px; height: 3px; background: var(--gold); margin: 0 auto 16px; border-radius: 2px; }
+.foot h6 { font-size: 14px; color: var(--ink-700); font-weight: 800; letter-spacing: 1px; margin-bottom: 6px; }
+.foot p { font-size: 12px; color: var(--ink-500); line-height: 1.85; }
+.foot p strong { color: var(--gold-deep); }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- 返回导航 -->
+<div class="nav-bar">
+  <a href="../index.html">🏠 首页</a>
+  <span class="sep">›</span>
+  <a href="kb-plan-v5.html">📋 建库方案 V5</a>
+  <span class="sep">›</span>
+  <span class="here">GBrain 对位分析 V1</span>
+</div>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">COMPARATIVE ANALYSIS · KNOWLEDGE BASE</div>
+    <h1>学科大脑 × GBrain 能力对位分析</h1>
+    <h2>Garry Tan / YC 总裁开源的 Agent 记忆系统 vs. 我们 4-25 设计的学科大脑建库方案</h2>
+    <div class="hero-divider"></div>
+    <div class="hero-meta">
+      <span class="hero-chip gold">8 项可直接复用</span>
+      <span class="hero-chip">7 大缺口待补</span>
+      <span class="hero-chip">5 项不抄</span>
+      <span class="hero-chip">3 段落地节奏</span>
+    </div>
+    <div class="hero-source">
+      参考源 · <a href="https://github.com/garrytan/gbrain" target="_blank">github.com/garrytan/gbrain</a>（Garry Tan / YC President · 生产级 Agent 记忆系统 · 17,888 页 / 4,383 人物档案 / 21 个 cron 任务）<br>
+      对照源 · 《学科大脑·场景收敛与建库方案 V5》（2026-04-25 · 三层库 × 五能 → 7 场景）
+    </div>
+  </div>
+</div>
+
+<!-- ============ TLDR ============ -->
+<div class="tldr">
+  <div class="tldr-label">ONE-LINER · 一句话结论</div>
+  <p>
+    GBrain 是 <strong>"个人 / 组织级 Agent 记忆系统的工程级参考实现"</strong>，我们的学科大脑是 <strong>"学科教学 / 科研场景的知识库产品"</strong>。<em>底座架构高度同构</em>——GBrain 几乎是我们"检索库 + 炼出库 + 行为积累库"三层架构的成熟工程版；但在<strong>搜索质量、知识治理、后台任务、引用防幻觉、技能化沉淀</strong>这五块，远走在我们前面，<em>尤其后两块是 4-24 青林点出"治理短板"的现成答案</em>。
+  </p>
+</div>
+
+<!-- ============ 项目摘要面板 ============ -->
+<div class="project-panel">
+  <div class="proj-card gbrain">
+    <div class="pc-name">GBrain</div>
+    <div class="pc-author">YC GARRY TAN · OPEN SOURCE · TYPESCRIPT + BUN</div>
+    <div class="pc-positioning">"Your AI agent is smart but forgetful. GBrain gives it a brain." 为 Agent 提供持久化、可搜索、自我完善的知识库。</div>
+    <div class="pc-stats">
+      <div class="pc-stat"><div class="ps-num">29</div><div class="ps-label">SKILLS</div></div>
+      <div class="pc-stat"><div class="ps-num">21</div><div class="ps-label">CRON 任务</div></div>
+      <div class="pc-stat"><div class="ps-num">5层</div><div class="ps-label">搜索管道</div></div>
+    </div>
+  </div>
+  <div class="proj-card ours">
+    <div class="pc-name">学科大脑（4-25 V5）</div>
+    <div class="pc-author">AI 教学产品部 · 2026-04-25 · 三层库 × 五能</div>
+    <div class="pc-positioning">学科知识库产品，服务"教学 + 科研"双场景，覆盖五助（助教 / 助学 / 助研 / 助管 / 助国际交流）。</div>
+    <div class="pc-stats">
+      <div class="pc-stat"><div class="ps-num">7</div><div class="ps-label">场景</div></div>
+      <div class="pc-stat"><div class="ps-num">3层</div><div class="ps-label">库架构</div></div>
+      <div class="pc-stat"><div class="ps-num">5</div><div class="ps-label">知识能力</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 章节 1：可复用 ============ -->
+<div class="chapter green">
+  <div class="chapter-head">
+    <div>
+      <div class="chapter-num">CHAPTER 01 · REUSABLE</div>
+      <h2>可直接复用的 <em>8 项能力</em>（拿来主义清单）</h2>
+    </div>
+  </div>
+  <div class="chapter-lead">
+    GBrain 的工程实现已经过 17,888 页生产数据验证。下列 8 项可<strong>直接借鉴架构、抄管道、套数据结构</strong>，省自研成本与试错周期。按建议优先级排序。
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width:22%">GBrain 模块</th>
+        <th style="width:18%">对应我们哪块</th>
+        <th style="width:48%">怎么用</th>
+        <th style="width:12%">优先级</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>混合搜索 5 层管道</strong><br><span style="font-size:11px;color:var(--ink-500)">向量 + BM25 + RRF + 图遍历 + 余弦重排</span></td>
+        <td>R1 检索 + T1 问答</td>
+        <td>直接抄管道。我们当前只有"向量 + 关键字"两层，至少补 <strong>RRF 融合</strong>和<strong>反向链接推升</strong>——GBrain 的 BrainBench 实测：图谱开启时精度从 17.7% → 49.1%。</td>
+        <td><span class="tag-p0">P0</span></td>
+      </tr>
+      <tr>
+        <td><strong>零 LLM 自动链接</strong><br><span style="font-size:11px;color:var(--ink-500)">正则 + 类型推断从写入抽实体</span></td>
+        <td>图谱库（炼出库）</td>
+        <td>红红方案靠 KAG 图谱构建——成本高、慢。<strong>加一层"零 LLM 链接"做底层兜底</strong>，KAG 只跑高价值实体，整体成本可降一个数量级。</td>
+        <td><span class="tag-p0">P0</span></td>
+      </tr>
+      <tr>
+        <td><strong>编译真理 + 时间线双结构</strong><br><span style="font-size:11px;color:var(--ink-500)">Compiled Truth 可重写 / Timeline 仅追加</span></td>
+        <td>行为积累库 / 研究足迹</td>
+        <td>我们之前定义"研究足迹 = 何老师脉络 + 星火隐性知识 + 过程性存档"——GBrain 的 <code>Compiled Truth + Timeline</code> 是这个概念的<strong>现成数据结构</strong>。每个研究足迹页就用这个 schema。</td>
+        <td><span class="tag-p0">P0</span></td>
+      </tr>
+      <tr>
+        <td><strong>citation-fixer 引用修复 Skill</strong><br><span style="font-size:11px;color:var(--ink-500)">自动修复 + 来源追踪</span></td>
+        <td>R3 论文写作</td>
+        <td>R3 写作刚需。论文场景必须解决"GPT 编引文"问题，<strong>直接抄 Skill 实现</strong>，作为论文场景上线前置门槛。</td>
+        <td><span class="tag-p0">P0</span></td>
+      </tr>
+      <tr>
+        <td><strong>小兵队列 Minions</strong><br><span style="font-size:11px;color:var(--ink-500)">Postgres 原生持久化后台任务</span></td>
+        <td>库治理 / 长任务</td>
+        <td>性能对比：<strong>小兵 753ms / $0 / 100% 成功</strong>，子代理 &gt;10s 超时 / $0.03 / 0% 成功率。备课批量、图谱治理、夜间增强——这些确定性后台任务<strong>不要走 SubAgent</strong>，走持久化队列。改我们的技术选型。</td>
+        <td><span class="tag-p1">P1</span></td>
+      </tr>
+      <tr>
+        <td><strong>三层 Enrichment</strong><br><span style="font-size:11px;color:var(--ink-500)">Tier1 / Tier2 / Tier3 分层丰富化</span></td>
+        <td>炼出库的炼制流程</td>
+        <td>炼出库的术语 / 图谱 / 问答对，套用<strong>"重要实体走 Tier3 深度增强、长尾走 Tier1 轻量"</strong>的成本控制思路。</td>
+        <td><span class="tag-p1">P1</span></td>
+      </tr>
+      <tr>
+        <td><strong>soul-audit 身份审计</strong><br><span style="font-size:11px;color:var(--ink-500)">代理人设 / 边界 / 拒答规则</span></td>
+        <td>五助（助教 / 助学 / 助研...）</td>
+        <td>五助每个角色都需要<strong>"人设 + 能力边界 + 拒答规则"</strong>三件套——GBrain 有现成 Skill 化模板。</td>
+        <td><span class="tag-p1">P1</span></td>
+      </tr>
+      <tr>
+        <td><strong>PGLite 单机嵌入式部署</strong><br><span style="font-size:11px;color:var(--ink-500)">30 分钟装好，无服务器</span></td>
+        <td>学校私有化交付</td>
+        <td>高校私有化痛点是"运维重"。PGLite 单机模式可作为<strong>学院级试点的最小可用包</strong>，降低 POC 门槛。</td>
+        <td><span class="tag-p2">P2</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ============ 章节 2：缺口 ============ -->
+<div class="chapter red">
+  <div class="chapter-head">
+    <div>
+      <div class="chapter-num">CHAPTER 02 · GAPS</div>
+      <h2>我们方案没考虑到的 <em>7 大缺口</em>（必须补）</h2>
+    </div>
+  </div>
+  <div class="chapter-lead">
+    下列 7 项是 GBrain 已经实现、但我们 V5 方案<strong>完全或部分遗漏</strong>的环节。其中缺口 1、3、6 是<strong>4-24 场景收敛会议</strong>已被点过名的薄弱区，必须在 V6 方案里补齐。
+  </div>
+
+  <div class="gap-grid">
+
+    <!-- 缺口 1 -->
+    <div class="gap-card">
+      <div class="gap-head">
+        <div class="gap-num">GAP · 01</div>
+        <div class="gap-title">知识治理体系（21 个 cron 任务）</div>
+        <div class="gap-anchor">⚠️ 4-24 青林点过名</div>
+      </div>
+      <div class="gap-row gbrain">
+        <div class="gr-label">GBrain</div>
+        <div class="gr-content">跑着 19-21 个自主 cron：引用修复、孤立页检测、反向链接强制、健康检查、跨模态校验、技能验证、背链一致性、过期内容归档⋯⋯<strong>把"治理"做成了发条系统</strong>。</div>
+      </div>
+      <div class="gap-row ours">
+        <div class="gr-label">我们</div>
+        <div class="gr-content">只定义了"采集 → 治理 → 检索"<strong>三个动词</strong>，治理具体做什么、谁触发、多久跑一次——<strong>全部没定义</strong>。</div>
+      </div>
+      <div class="gap-row fix">
+        <div class="gr-label">怎么补</div>
+        <div class="gr-content">列我们自己的 cron 清单：<strong>术语去重 / 图谱孤点扫描 / 问答对失效检测 / 研究足迹归档 / 引用核验 / 跨学科冲突检测</strong>——画到 V6 库架构图，标注"治理层"。</div>
+      </div>
+    </div>
+
+    <!-- 缺口 2 -->
+    <div class="gap-card">
+      <div class="gap-head">
+        <div class="gap-num">GAP · 02</div>
+        <div class="gap-title">Skills 化的能力沉淀范式</div>
+        <div class="gap-anchor">范式缺失</div>
+      </div>
+      <div class="gap-row gbrain">
+        <div class="gr-label">GBrain</div>
+        <div class="gr-content">所有能力沉淀成 29 个 Skills，含 <code>skill-creator + skillify + skillpack-check</code> 三件套——<strong>能力可自我繁衍 + 自动健康检查</strong>。</div>
+      </div>
+      <div class="gap-row ours">
+        <div class="gr-label">我们</div>
+        <div class="gr-content">场景定义只到"输入示例 + 输出示例"，没有定义<strong>"这个场景怎么变成可复用的能力模块"</strong>，也没有质量校验机制。</div>
+      </div>
+      <div class="gap-row fix">
+        <div class="gr-label">怎么补</div>
+        <div class="gr-content">每个场景（T1 / T4 / R1...）落到 <strong>Skill schema</strong>（触发指令 / 5 步流程 / IO 契约 / 质量门槛 / 失败回退），且强制配套<strong>"质量校验 Skill"</strong>做兜底。</div>
+      </div>
+    </div>
+
+    <!-- 缺口 3 -->
+    <div class="gap-card">
+      <div class="gap-head">
+        <div class="gap-num">GAP · 03</div>
+        <div class="gap-title">幻觉防护 / 引用追踪机制</div>
+        <div class="gap-anchor">⚠️ 论文场景必备</div>
+      </div>
+      <div class="gap-row gbrain">
+        <div class="gr-label">GBrain</div>
+        <div class="gr-content"><code>citation-fixer</code> 列为<strong>常驻 Skill</strong>，所有写入必带来源追踪，所有引文必反查原文。</div>
+      </div>
+      <div class="gap-row ours">
+        <div class="gr-label">我们</div>
+        <div class="gr-content">R3 论文写作场景只写了"输出示例"，<strong>没有任何防幻觉 / 引文核验机制</strong>——这条若不补，论文场景上线即翻车。</div>
+      </div>
+      <div class="gap-row fix">
+        <div class="gr-label">怎么补</div>
+        <div class="gr-content">写作场景强制<strong>"每段输出 → 反查检索库 → 标注来源页"</strong>，引文未命中检索库直接拒答；上线门槛硬性指标：引文核验通过率 ≥ 95%。</div>
+      </div>
+    </div>
+
+    <!-- 缺口 4 -->
+    <div class="gap-card">
+      <div class="gap-head">
+        <div class="gap-num">GAP · 04</div>
+        <div class="gap-title">信号检测器（实时摄入不阻塞主流程）</div>
+        <div class="gap-anchor">行为积累库的引擎</div>
+      </div>
+      <div class="gap-row gbrain">
+        <div class="gr-label">GBrain</div>
+        <div class="gr-content"><code>signal-detector</code> 在用户与 Agent 对话时<strong>并行抽取实体 / 想法写入大脑</strong>——非阻塞、零感知。</div>
+      </div>
+      <div class="gap-row ours">
+        <div class="gr-label">我们</div>
+        <div class="gr-content">建库流程定义为"上传 → 解析 → 入库"——师生日常使用<strong>沉淀的"研究足迹"怎么自动产生，没说清</strong>。</div>
+      </div>
+      <div class="gap-row fix">
+        <div class="gr-label">怎么补</div>
+        <div class="gr-content">行为积累库需要一个<strong>"沉默观察者"</strong>：T1 问答 / R3 写作过程中自动抽信号，写入研究足迹页——这是"使用即建设"飞轮的真正引擎。</div>
+      </div>
+    </div>
+
+    <!-- 缺口 5 -->
+    <div class="gap-card">
+      <div class="gap-head">
+        <div class="gap-num">GAP · 05</div>
+        <div class="gap-title">评估基准（BrainBench）</div>
+        <div class="gap-anchor">效果证明缺失</div>
+      </div>
+      <div class="gap-row gbrain">
+        <div class="gr-label">GBrain</div>
+        <div class="gr-content">自己造了一个 240 页测试集，能跑出"图谱开 / 关"的精度差异：<strong>49.1% vs 17.7%</strong>——有数据说话。</div>
+      </div>
+      <div class="gap-row ours">
+        <div class="gr-label">我们</div>
+        <div class="gr-content">建库方案<strong>没有任何"怎么证明这个库有用"的基准</strong>——只能靠示意截图说服客户。</div>
+      </div>
+      <div class="gap-row fix">
+        <div class="gr-label">怎么补</div>
+        <div class="gr-content">每个场景定 <strong>20-50 条 ground truth 测试集</strong>，建库前 / 后对比；POC 时直接展示"我们的库 vs 通用大模型"的命中率差异。</div>
+      </div>
+    </div>
+
+    <!-- 缺口 6 -->
+    <div class="gap-card">
+      <div class="gap-head">
+        <div class="gap-num">GAP · 06</div>
+        <div class="gap-title">可读性优先 ≠ 数据库优先</div>
+        <div class="gap-anchor">⚠️ 高校学术自主权</div>
+      </div>
+      <div class="gap-row gbrain">
+        <div class="gr-label">GBrain</div>
+        <div class="gr-content">所有页面是 <strong>markdown 文件</strong>，数据库只是索引。承诺"代理可写、人类永远可改"——源代码永远可审计。</div>
+      </div>
+      <div class="gap-row ours">
+        <div class="gr-label">我们</div>
+        <div class="gr-content">默认是"数据库存储 + 前端展示"，老师<strong>改不了底层数据</strong>——这违背了高校用户的核心心理诉求。</div>
+      </div>
+      <div class="gap-row fix">
+        <div class="gr-label">怎么补</div>
+        <div class="gr-content">至少<strong>图谱库 / 术语库 / 研究足迹</strong>这三块支持老师"直接编辑底层 markdown"——这是高校用户的核心心理诉求（学术自主权 + 数据可带走）。</div>
+      </div>
+    </div>
+
+    <!-- 缺口 7 -->
+    <div class="gap-card">
+      <div class="gap-head">
+        <div class="gap-num">GAP · 07</div>
+        <div class="gap-title">跨模态融合（语音 / 邮件 / 会议 → 页面）</div>
+        <div class="gap-anchor">隐性知识源</div>
+      </div>
+      <div class="gap-row gbrain">
+        <div class="gr-label">GBrain</div>
+        <div class="gr-content">把会议转录、邮件、推文、语音通话<strong>都标准化成"页面"</strong>——四模态统一摄入。</div>
+      </div>
+      <div class="gap-row ours">
+        <div class="gr-label">我们</div>
+        <div class="gr-content">只考虑了"文献 / 课件 / 题目"<strong>结构化输入</strong>——录课视频、师生答疑录音、会议纪要这些隐性知识源全部漏掉。</div>
+      </div>
+      <div class="gap-row fix">
+        <div class="gr-label">怎么补</div>
+        <div class="gr-content">教师的录课视频、师生答疑录音、会议纪要——这些是高校最大的隐性知识源，方案里要补 <code>media-ingest + meeting-ingestion</code> 两条管道。</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ 章节 3：不抄 ============ -->
+<div class="chapter gray">
+  <div class="chapter-head">
+    <div>
+      <div class="chapter-num">CHAPTER 03 · SKIP</div>
+      <h2>不可复用 / 场景不匹配的部分</h2>
+    </div>
+  </div>
+  <div class="chapter-lead">
+    GBrain 服务的是<strong>"个人执行高管 / 研究者"的单租户场景</strong>，与我们"高校多租户 + 学科共享"的定位不同。下列 5 项不抄，但其中"多租户记忆边界"是我们<strong>比 GBrain 更难、也更值钱</strong>的差异化机会。
+  </div>
+  <div class="skip-list">
+    <div class="skip-item">
+      <div class="si-name">Twilio 语音电话接入</div>
+      <div class="si-reason">C 端单人场景，高校教学不需要电话与 Agent 交互。</div>
+    </div>
+    <div class="skip-item">
+      <div class="si-name">Twitter / X API 摄入</div>
+      <div class="si-reason">国内场景不适用，对应可换成微信 / 公众号 / 知网，但优先级低。</div>
+    </div>
+    <div class="skip-item">
+      <div class="si-name">个人执行高管场景（"为我准备 Jordan 会议"）</div>
+      <div class="si-reason">个人助理场景，与"五助"教学 / 科研定位不重合。</div>
+    </div>
+    <div class="skip-item">
+      <div class="si-name">GStack 编码协作（设计决策 → 代码审查）</div>
+      <div class="si-reason">我们不做编码 Agent，跨产品桥接不必要。</div>
+    </div>
+    <div class="skip-item" style="grid-column: span 2; border-left: 4px solid var(--purple); background: var(--purple-bg);">
+      <div class="si-name" style="color: var(--purple);">⚡ 单用户人设强绑定（"你的"思想检索）</div>
+      <div class="si-reason">我们是<strong>多租户 + 学科共享</strong>模型，记忆的归属边界要重新设计——这是 GBrain 没解决的难题，<strong>是我们比 GBrain 更难、也更值钱的差异化机会</strong>。建议 V6 方案里专门一章。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 章节 4：下一步 ============ -->
+<div class="chapter">
+  <div class="chapter-head">
+    <div>
+      <div class="chapter-num">CHAPTER 04 · ACTION</div>
+      <h2>建议的下一步动作 · <em>3 段落地节奏</em></h2>
+    </div>
+  </div>
+  <div class="chapter-lead">
+    按短期 / 中期 / 长期分三段推进，重点是<strong>本周必须把"治理层" + "引用核验" + "Compiled Truth schema"补进 V6 方案</strong>，回应 4-24 会议未解决的问题。
+  </div>
+  <div class="timeline-grid">
+    <div class="tl-card" data-when="short">
+      <div class="tl-when">SHORT · 本周</div>
+      <div class="tl-title">补 V6 方案三件套</div>
+      <ul>
+        <li>库架构图加一层 <strong>"治理 cron 清单"</strong>——直接回应 4-24 青林</li>
+        <li>R3 论文写作场景<strong>强制加 citation-fixer</strong>，否则不上线</li>
+        <li>行为积累库页面 schema <strong>直接抄 Compiled Truth + Timeline 双结构</strong></li>
+      </ul>
+    </div>
+    <div class="tl-card" data-when="mid">
+      <div class="tl-when">MID · 下周</div>
+      <div class="tl-title">技术选型 + 评估基准</div>
+      <ul>
+        <li>各场景定义<strong>评估基准集</strong>（每场景 20-50 条 ground truth）</li>
+        <li>技术选型评审：<strong>确定性后台任务走 Postgres 队列</strong>，不走 SubAgent</li>
+        <li>POC 模式确认：PGLite 单机包是否作为<strong>学院级试点交付物</strong></li>
+      </ul>
+    </div>
+    <div class="tl-card" data-when="long">
+      <div class="tl-when">LONG · 与红红讨论</div>
+      <div class="tl-title">差异化机会</div>
+      <ul>
+        <li><strong>多租户记忆边界</strong>——GBrain 没解决，是我们的差异化机会，提到 V6 专门一章</li>
+        <li>五助 × soul-audit 身份模板设计</li>
+        <li>跨模态摄入（语音 / 视频 / 会议）的优先级排序</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 关键洞察条 -->
+  <div class="insight-strip">
+    <div class="is-label">META INSIGHT · 元洞察</div>
+    <p>
+      GBrain 给我们最大的启发不是"具体怎么做"，而是<strong>"知识库不是数据工程，而是 Agent 工程"</strong>——它是把所有能力沉淀成 Skills、把所有维护沉淀成 cron、把所有内容沉淀成可读 markdown 的<strong>"代理操作系统"</strong>。这个视角下，我们 V5 方案的"三层库"只是数据存储层，真正缺的是<strong>"这个库怎么活起来 + 怎么自我修复 + 怎么被代理操作"</strong>的运维层。<strong>V6 方案应该从"数据架构"升级为"Agent 运行时架构"。</strong>
+    </p>
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<div class="foot">
+  <div class="foot-bar"></div>
+  <h6>学科大脑 × GBrain · 能力对位分析</h6>
+  <p>
+    <strong>V1</strong> · 2026-04-26 · 8 项可复用 / 7 大缺口 / 5 项不抄 / 3 段落地节奏<br>
+    AI 教学产品部 · <strong>作者：婷婷</strong> · 参考源 github.com/garrytan/gbrain
+  </p>
+</div>
+
+</div>
+</body>
+</html>
