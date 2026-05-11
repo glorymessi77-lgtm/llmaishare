@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XClaw Vibecoding 难度分层 V1 · 内部讨论稿</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+:root {
+  --vibe: #B8479C;
+  --vibe-dark: #8A2870;
+  --vibe-bg: #FAEEF7;
+  --brand: #00A89C;
+  --brand-dark: #007A72;
+  --brand-bg: #F0FBFA;
+  --text-1: #0E1216;
+  --text-2: #4B535C;
+  --text-3: #7B838C;
+  --text-4: #A9B0B8;
+  --bg-page: #F7F9FA;
+  --border: rgba(14, 18, 22, 0.08);
+  --warning: #E89C2C;
+  --warning-bg: #FDF4E6;
+  --success: #1AAB6E;
+  --success-bg: #E6F7EE;
+  --danger: #DC4646;
+  --danger-bg: #FCEDED;
+  --info: #2E7CD6;
+  --info-bg: #E8F1FB;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Inter', -apple-system, sans-serif;
+  font-size: 16px; line-height: 1.75;
+  color: var(--text-1); background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+}
+
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0; height: 56px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border); z-index: 100;
+  display: flex; align-items: center; padding: 0 32px;
+}
+.topnav .back {
+  display: flex; align-items: center; gap: 6px;
+  color: var(--text-2); text-decoration: none;
+  font-size: 13px; font-weight: 500;
+  padding: 6px 10px; border-radius: 6px;
+}
+.topnav .back:hover { background: #EEF1F3; color: var(--text-1); }
+.topnav .title { margin-left: 20px; font-size: 13px; color: var(--text-3); font-weight: 500; }
+.topnav .badge {
+  margin-left: auto; background: var(--warning-bg); color: var(--warning);
+  font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 12px;
+  display: flex; align-items: center; gap: 4px;
+}
+
+.hero {
+  margin-top: 56px; padding: 100px 32px 60px;
+  background: linear-gradient(135deg, #4A1C3D 0%, #8A2870 50%, #B8479C 100%);
+  color: white; text-align: center; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -200px; left: 50%;
+  width: 800px; height: 800px; transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+}
+.hero-inner { max-width: 760px; margin: 0 auto; position: relative; }
+.hero .eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.15); padding: 6px 16px;
+  border-radius: 100px; font-size: 12px; font-weight: 500;
+  border: 1px solid rgba(255,255,255,0.2); margin-bottom: 24px;
+}
+.hero h1 {
+  font-size: 48px; font-weight: 700; line-height: 1.2;
+  letter-spacing: -1px; margin-bottom: 20px;
+}
+.hero h1 .accent {
+  background: linear-gradient(90deg, #FFD1F0 0%, #FFE9F5 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero .one-liner {
+  font-size: 19px; color: rgba(255,255,255,0.92);
+  line-height: 1.7; margin-bottom: 32px;
+}
+.hero .meta {
+  display: flex; gap: 24px; justify-content: center;
+  font-size: 12px; opacity: 0.7;
+}
+
+.main {
+  max-width: 900px; margin: 0 auto;
+  padding: 64px 32px 80px;
+}
+
+/* 关键问题块 */
+.problem-block {
+  background: white; border-radius: 16px;
+  padding: 32px 36px; margin-bottom: 40px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(14,18,22,0.04);
+}
+.problem-block h2 {
+  font-size: 22px; font-weight: 700; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.problem-block p {
+  font-size: 15px; color: var(--text-2); line-height: 1.7;
+  margin-bottom: 14px;
+}
+.problem-block p:last-child { margin-bottom: 0; }
+.problem-block .key-insight {
+  padding: 14px 18px; background: var(--vibe-bg);
+  border-left: 4px solid var(--vibe);
+  border-radius: 6px; font-size: 14px;
+  color: var(--text-1); line-height: 1.7;
+}
+.problem-block .key-insight strong { color: var(--vibe-dark); }
+
+/* 4 层难度阶梯 */
+.section-tag {
+  font-size: 12px; font-weight: 700; letter-spacing: 2px;
+  color: var(--vibe); margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.section-h2 {
+  font-size: 32px; font-weight: 700; line-height: 1.3;
+  margin-bottom: 8px; letter-spacing: -0.5px;
+}
+.section-lead {
+  font-size: 16px; color: var(--text-2); margin-bottom: 36px;
+  line-height: 1.6;
+}
+
+.layer-list { display: flex; flex-direction: column; gap: 16px; margin-bottom: 56px; }
+.layer-card {
+  background: white; border-radius: 14px;
+  border: 1px solid var(--border); overflow: hidden;
+}
+.layer-card-head {
+  padding: 18px 24px;
+  background: linear-gradient(135deg, var(--vibe-bg) 0%, #FFFFFF 100%);
+  display: flex; align-items: center; gap: 16px;
+}
+.layer-num {
+  width: 48px; height: 48px; border-radius: 10px;
+  background: var(--vibe); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 700; flex-shrink: 0;
+  font-family: 'Inter', sans-serif;
+}
+.layer-title { flex: 1; }
+.layer-title h3 {
+  font-size: 19px; font-weight: 700; margin-bottom: 4px;
+  line-height: 1.3;
+}
+.layer-title .layer-meta {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  font-size: 11.5px; color: var(--text-3);
+}
+.layer-title .layer-meta span {
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.layer-pct {
+  text-align: right; flex-shrink: 0;
+}
+.layer-pct .pct-num {
+  font-size: 28px; font-weight: 700; color: var(--vibe);
+  font-family: 'Inter', sans-serif; line-height: 1;
+}
+.layer-pct .pct-label {
+  font-size: 10.5px; color: var(--text-3); margin-top: 4px;
+}
+
+.layer-body { padding: 18px 24px; }
+.layer-row {
+  display: grid; grid-template-columns: 92px 1fr;
+  gap: 14px; padding: 10px 0;
+  border-top: 1px solid #F0F0F0;
+  font-size: 14px; line-height: 1.65;
+  align-items: start;
+}
+.layer-row:first-of-type { border-top: none; }
+.layer-row .key {
+  font-size: 11px; font-weight: 700;
+  color: var(--text-3); letter-spacing: 1px;
+  text-transform: uppercase; padding-top: 3px;
+}
+.layer-row .val { color: var(--text-1); }
+.layer-row .val strong { color: var(--vibe-dark); }
+.layer-row .val .example {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  padding: 2px 8px;
+  background: var(--gray-1);
+  border-radius: 4px;
+  color: var(--text-2);
+}
+
+/* 原子能力依赖矩阵 */
+.atom-matrix {
+  background: white; border-radius: 14px;
+  border: 1px solid var(--border); overflow: hidden;
+  margin-bottom: 56px;
+}
+.atom-matrix-head {
+  padding: 20px 24px; background: var(--text-1); color: white;
+}
+.atom-matrix-head h4 {
+  font-size: 18px; font-weight: 700; margin-bottom: 4px;
+}
+.atom-matrix-head p {
+  font-size: 13px; opacity: 0.85; line-height: 1.5;
+}
+.atom-table { width: 100%; border-collapse: collapse; }
+.atom-table th {
+  background: #F0F0F0; padding: 11px 14px;
+  text-align: left; font-size: 12px; font-weight: 700;
+  color: var(--text-2); letter-spacing: 0.3px;
+  border-bottom: 1px solid var(--border);
+}
+.atom-table td {
+  padding: 12px 14px; font-size: 13px;
+  border-bottom: 1px solid var(--border); line-height: 1.55;
+  vertical-align: top;
+}
+.atom-table td:first-child {
+  font-weight: 700; color: var(--text-1);
+  font-size: 12.5px;
+}
+.atom-status {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 4px; letter-spacing: 0.3px;
+}
+.atom-status.ready { background: var(--success-bg); color: var(--success); }
+.atom-status.partial { background: var(--warning-bg); color: var(--warning); }
+.atom-status.todo { background: var(--danger-bg); color: var(--danger); }
+
+/* 对标三种产品 */
+.benchmark-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  margin-bottom: 40px;
+}
+.benchmark-card {
+  background: white; border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 22px; border-top: 3px solid;
+}
+.benchmark-card.coze { border-top-color: #FF6B35; }
+.benchmark-card.cc { border-top-color: #00A89C; }
+.benchmark-card.xclaw { border-top-color: var(--vibe); background: var(--vibe-bg); }
+.benchmark-card h4 {
+  font-size: 16px; font-weight: 700; margin-bottom: 6px;
+}
+.benchmark-card .bm-tag {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 4px; margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+.benchmark-card.coze .bm-tag { background: rgba(255,107,53,0.15); color: #C84A0F; }
+.benchmark-card.cc .bm-tag { background: var(--brand-bg); color: var(--brand-dark); }
+.benchmark-card.xclaw .bm-tag { background: var(--vibe); color: white; }
+.benchmark-card .bm-row {
+  font-size: 13px; line-height: 1.65; padding: 6px 0;
+  border-top: 1px solid rgba(14,18,22,0.06);
+  color: var(--text-1);
+}
+.benchmark-card .bm-row:first-of-type { border-top: none; }
+.benchmark-card .bm-row strong {
+  font-size: 11px; font-weight: 700; color: var(--text-3);
+  display: block; letter-spacing: 0.5px;
+  text-transform: uppercase; margin-bottom: 2px;
+}
+
+/* 落地风险 */
+.risk-block {
+  background: linear-gradient(135deg, var(--danger-bg) 0%, #FFFFFF 100%);
+  border: 1px solid var(--danger);
+  border-left: 4px solid var(--danger);
+  border-radius: 12px; padding: 24px 28px;
+  margin-bottom: 56px;
+}
+.risk-block h4 {
+  font-size: 16px; font-weight: 700; color: var(--danger);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.risk-block .risk-row {
+  padding: 10px 0; font-size: 14px; line-height: 1.7;
+  border-top: 1px solid rgba(220,70,70,0.15);
+}
+.risk-block .risk-row:first-of-type { border-top: none; }
+.risk-block .risk-row strong { color: var(--danger); }
+
+/* 推荐路径 */
+.recommendation {
+  background: linear-gradient(135deg, #00352F 0%, var(--vibe-dark) 100%);
+  border-radius: 16px; padding: 40px 36px;
+  color: white; margin-bottom: 16px; position: relative; overflow: hidden;
+}
+.recommendation::before {
+  content: ''; position: absolute; top: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+}
+.recommendation .rec-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.15); padding: 4px 12px;
+  border-radius: 100px; font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; margin-bottom: 14px; position: relative;
+}
+.recommendation h3 {
+  font-size: 24px; font-weight: 700; margin-bottom: 18px;
+  line-height: 1.4; position: relative;
+}
+.recommendation .phase {
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px; margin-bottom: 10px;
+  font-size: 14px; line-height: 1.65;
+  position: relative; backdrop-filter: blur(10px);
+}
+.recommendation .phase strong { color: #FFD1F0; }
+
+footer {
+  background: #0E1216; color: rgba(255,255,255,0.55);
+  padding: 32px; font-size: 12px; text-align: center;
+}
+footer .footer-meta { display: flex; gap: 20px; justify-content: center; margin-bottom: 10px; }
+footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
+
+@media (max-width: 720px) {
+  .hero h1 { font-size: 32px; }
+  .benchmark-grid { grid-template-columns: 1fr; }
+  .layer-card-head { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="../学科大模型文档中心/index.html" class="back">
+    <i data-lucide="chevron-left" style="width:16px;height:16px;stroke-width:2;"></i>
+    <span>返回文档中心</span>
+  </a>
+  <span class="title">XClaw · Vibecoding 难度分层 V1</span>
+  <span class="badge">
+    <i data-lucide="message-square" style="width:11px;height:11px;stroke-width:2;"></i>
+    调研附录 · 内部稿
+  </span>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">
+      <i data-lucide="layers-3" style="width:14px;height:14px;stroke-width:2;"></i>
+      Vibecoding 难度分层调研
+    </div>
+    <h1>不是所有 Vibecoding<br><span class="accent">都一样难</span></h1>
+    <p class="one-liner">教师"零编程"做工具，从"改参数"到"训智能体"，难度差 10 倍以上。先讲清分层，再决定能给老师哪些层级。</p>
+    <div class="meta">
+      <span>作者 · 婷婷</span>
+      <span>·</span>
+      <span>V1 · 2026-05-11</span>
+      <span>·</span>
+      <span>5 分钟读完</span>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- 问题陈述 -->
+  <div class="problem-block">
+    <h2>
+      <i data-lucide="help-circle" style="width:22px;height:22px;stroke-width:2;color:var(--vibe);"></i>
+      问题：Vibecoding 到底有几层难度？
+    </h2>
+    <p>之前 V4 把 Vibecoding 简化成"自然语言 / 拖拽 / 代码"三梯度——只看了用户操作复杂度。但实际上：</p>
+    <p style="color:var(--text-1);">同样用"自然语言操作"，做"出题工具"很容易、做"教师答疑分身"几乎不可能。</p>
+    <div class="key-insight">
+      <strong>真正决定难度的是"创编对象的复杂度 + 用户能力 + 底层原子能力支撑"三件事，不是用户怎么说。</strong>
+      这一节把 Vibecoding 重新分成 4 层难度阶梯，让产研一眼看见"能给老师哪一层、哪一层还差什么"。
+    </div>
+  </div>
+
+  <!-- 4 层难度阶梯 -->
+  <div class="section-tag">CORE FRAMEWORK</div>
+  <h2 class="section-h2">Vibecoding 4 层难度阶梯</h2>
+  <p class="section-lead">从最简单到最高级 · 每一层标注：老师能不能做、需要什么底层支撑、典型场景</p>
+
+  <div class="layer-list">
+
+    <!-- L1 模板微调 -->
+    <div class="layer-card">
+      <div class="layer-card-head">
+        <div class="layer-num">L1</div>
+        <div class="layer-title">
+          <h3>模板微调 · 改参数</h3>
+          <div class="layer-meta">
+            <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>普通教师</span>
+            <span><i data-lucide="clock" style="width:11px;height:11px;stroke-width:2;"></i>1 分钟上手</span>
+            <span><i data-lucide="check-circle" style="width:11px;height:11px;stroke-width:2;"></i>必做底层</span>
+          </div>
+        </div>
+        <div class="layer-pct">
+          <div class="pct-num">90%</div>
+          <div class="pct-label">老师能用</div>
+        </div>
+      </div>
+      <div class="layer-body">
+        <div class="layer-row">
+          <div class="key">怎么用</div>
+          <div class="val">从 20 件种子 Skill 改参数。比如"按布鲁姆分类"改成"按 SOLO 分类"。</div>
+        </div>
+        <div class="layer-row">
+          <div class="key">能做啥</div>
+          <div class="val">出题 Skill 调参 · 评语 Skill 改风格 · 学情周报模板替换</div>
+        </div>
+        <div class="layer-row">
+          <div class="key">底层依赖</div>
+          <div class="val">LLM 推理 + <strong>种子 Skill 模板库</strong>（教学专家产出）</div>
+        </div>
+        <div class="layer-row">
+          <div class="key">类比</div>
+          <div class="val">像拍照滤镜调参——只动几个滑块，不用懂相机原理。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- L2 自然语言生成 -->
+    <div class="layer-card">
+      <div class="layer-card-head">
+        <div class="layer-num">L2</div>
+        <div class="layer-title">
+          <h3>自然语言生成新 Skill</h3>
+          <div class="layer-meta">
+            <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>普通教师努力一下</span>
+            <span><i data-lucide="clock" style="width:11px;height:11px;stroke-width:2;"></i>10 分钟</span>
+            <span><i data-lucide="alert-triangle" style="width:11px;height:11px;stroke-width:2;"></i>体验关键</span>
+          </div>
+        </div>
+        <div class="layer-pct">
+          <div class="pct-num">70%</div>
+          <div class="pct-label">老师能用</div>
+        </div>
+      </div>
+      <div class="layer-body">
+        <div class="layer-row">
+          <div class="key">怎么用</div>
+          <div class="val">从空白页用自然语言描述需求 → AI 生成 Skill 骨架 → 教师审核 → 保存</div>
+        </div>
+        <div class="layer-row">
+          <div class="key">能做啥</div>
+          <div class="val">单课程定制小工具。比如"我的中医辨证思维训练器"、"我的英语作文 5 维度批改器"</div>
+        </div>
+        <div class="layer-row">
+          <div class="key">底层依赖</div>
+          <div class="val">LLM 推理 + 工作流编排器 + <strong>Skill 校验器</strong>（防止教师写出错误工作流）</div>
+        </div>
+        <div class="layer-row">
+          <div class="key">类比</div>
+          <div class="val">像跟设计师描述需求——你说要什么、他帮你画出来。</div>
+        </div>
+        <div class="layer-row">
+          <div class="key">对标</div>
+          <div class="val">Coze 主打这层 · Claude Code 也有 · <strong>XClaw 必须做到这层才算成功</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- L3 可视化拖拽 -->
+    <div class="layer-card">
+      <div class="layer-card-head">
+        <div class="layer-num">L3</div>
+        <div class="layer-title">
+          <h3>可视化拖拽编排</h3>
+          <div class="layer-meta">
+            <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>中级教师 / 课程组长</span>
+            <span><i data-lucide="clock" style="width:11px;height:11px;stroke-width:2;"></i>半小时-2 小时</span>
+            <span><i data-lucide="zap" style="width:11px;height:11px;stroke-width:2;"></i>差异化能力</span>
+          </div>
+        </div>
+        <div class="layer-pct">
+          <div class="pct-num">10%</div>
+          <div class="pct-label">老师能用</div>
+        </div>
+      </div>
+      <div class="layer-body">
+        <div class="layer-row">
+          <div class="key">怎么用</div>
+          <div class="val">拖拽"采集 → 处理 → 输出"积木 + 配置 MCP 调用 + 一键试跑沙箱</div>
+        </div>
+        <div class="layer-row">
+          <div class="key">能做啥</div>
+          <div class="val">跨多个 MCP 的复杂工作流。比如"每周自动学情周报"——抓教务+作业+课堂数据 → 跑分析 → 输出 PDF</div>
+        </div>
+        <div class="layer-row">
+          <div class="key">底层依赖</div>
+          <div class="val">拖拽编辑器 + 步骤校验器 + 一键试跑沙箱 + <strong>多 MCP 接入打通</strong></div>
+        </div>
+        <div class="layer-row">
+          <div class="key">类比</div>
+          <div class="val">像 Power Automate / 滴答清单——拖拼出复杂自动化流程，但不写代码。</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- L4 智能体调教 -->
+    <div class="layer-card">
+      <div class="layer-card-head">
+        <div class="layer-num">L4</div>
+        <div class="layer-title">
+          <h3>智能体调教（数字分身）</h3>
+          <div class="layer-meta">
+            <span><i data-lucide="user-cog" style="width:11px;height:11px;stroke-width:2;"></i>高级教师 + 算法配合</span>
+            <span><i data-lucide="clock" style="width:11px;height:11px;stroke-width:2;"></i>持续数周-数月</span>
+            <span><i data-lucide="rocket" style="width:11px;height:11px;stroke-width:2;"></i>核心壁垒</span>
+          </div>
+        </div>
+        <div class="layer-pct">
+          <div class="pct-num">5%</div>
+          <div class="pct-label">老师参与<br>(算法主导)</div>
+        </div>
+      </div>
+      <div class="layer-body">
+        <div class="layer-row">
+          <div class="key">怎么用</div>
+          <div class="val">教师授权采集（授课视频/答疑历史/教学反思）→ 算法建模人格 → 教师标记"不像我"→ 系统迭代</div>
+        </div>
+        <div class="layer-row">
+          <div class="key">能做啥</div>
+          <div class="val">教师数字分身（答疑/陪伴学生）—— 学生面对的"像王教授本人"</div>
+        </div>
+        <div class="layer-row">
+          <div class="key">底层依赖</div>
+          <div class="val"><strong>最多原子能力支撑</strong>：ASR 语音识别 + 风格建模算法 + 三层知识检索 + 多轮对话引擎 + 边界控制（详见原子能力清单）</div>
+        </div>
+        <div class="layer-row">
+          <div class="key">类比</div>
+          <div class="val">像训练新员工——你不写流程文档，是给反馈让 ta 越来越像你。</div>
+        </div>
+        <div class="layer-row">
+          <div class="key">关键</div>
+          <div class="val"><strong>教师只做"画像调教"，工程在算法侧</strong>——教师不用懂 prompt 工程、不用懂 RAG、不用懂模型微调。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 原子能力依赖矩阵 -->
+  <div class="section-tag">DEPENDENCY MATRIX</div>
+  <h2 class="section-h2">原子能力依赖清单</h2>
+  <p class="section-lead">教师能不能做某类 Skill，取决于平台底层有没有对应的原子能力。教师再会描述，没 OCR 就做不出"扫描手写作业批改 Skill"。</p>
+
+  <div class="atom-matrix">
+    <div class="atom-matrix-head">
+      <h4>11 项教学场景特有原子能力</h4>
+      <p>每项标注"已就绪 / 部分就绪 / 待建"——让产研一眼看见 Q3-Q4 还差什么</p>
+    </div>
+    <table class="atom-table">
+      <thead>
+        <tr>
+          <th>原子能力</th>
+          <th>解决什么 Skill</th>
+          <th>状态</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>大模型推理</td>
+          <td>所有 Skill 都需要 · 内容理解 / 生成 / 分类判断</td>
+          <td><span class="atom-status ready">已就绪</span></td>
+        </tr>
+        <tr>
+          <td>沙箱代码执行</td>
+          <td>编程题批改 / 学情数据可视化 / STEM 实验</td>
+          <td><span class="atom-status ready">已就绪</span></td>
+        </tr>
+        <tr>
+          <td>OCR 文字识别</td>
+          <td>扫描试卷 / 手写作业批改 / 教材切片</td>
+          <td><span class="atom-status partial">部分就绪</span></td>
+        </tr>
+        <tr>
+          <td>公式识别（LaTeX）</td>
+          <td>数学/物理/化学 公式批改与生成</td>
+          <td><span class="atom-status todo">待建</span></td>
+        </tr>
+        <tr>
+          <td>数学求解器</td>
+          <td>数学题答案校验（不是 LLM 猜答案）</td>
+          <td><span class="atom-status todo">待建</span></td>
+        </tr>
+        <tr>
+          <td>PDF 文档解析</td>
+          <td>教材/讲义/论文切片入库</td>
+          <td><span class="atom-status ready">已就绪</span></td>
+        </tr>
+        <tr>
+          <td>ASR 语音识别</td>
+          <td>课堂录音转写 / 督管报告 / 分身建模</td>
+          <td><span class="atom-status ready">已就绪</span></td>
+        </tr>
+        <tr>
+          <td>TTS 语音合成</td>
+          <td>教师分身的"声音"</td>
+          <td><span class="atom-status partial">部分就绪</span></td>
+        </tr>
+        <tr>
+          <td>视频处理（切片+字幕）</td>
+          <td>课堂录像切片 / 缺勤课回放 / 督导分析</td>
+          <td><span class="atom-status partial">部分就绪</span></td>
+        </tr>
+        <tr>
+          <td>知识图谱构建</td>
+          <td>教材自动建立知识点关系 / 学习路径推荐</td>
+          <td><span class="atom-status partial">部分就绪</span></td>
+        </tr>
+        <tr>
+          <td>OpenMAIC 课件生成</td>
+          <td>交互式课件 · 学习资源生成（<strong>已商业验证</strong>）</td>
+          <td><span class="atom-status ready">已就绪</span></td>
+        </tr>
+        <tr>
+          <td>风格建模（人格 prompt）</td>
+          <td><strong>数字分身的"像不像本人"</strong>——L4 最关键</td>
+          <td><span class="atom-status todo">待建</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 对标三家 -->
+  <div class="section-tag">BENCHMARK</div>
+  <h2 class="section-h2">对标 Coze / Claude Code / XClaw</h2>
+  <p class="section-lead">市面三种 Vibecoding 流派 · 看清差异，XClaw 不抄哪个、走第三条路</p>
+
+  <div class="benchmark-grid">
+    <div class="benchmark-card coze">
+      <span class="bm-tag">字节</span>
+      <h4>Coze</h4>
+      <div class="bm-row">
+        <strong>用户画像</strong>
+        普通办公人员
+      </div>
+      <div class="bm-row">
+        <strong>主打层级</strong>
+        L1 - L3 都做
+      </div>
+      <div class="bm-row">
+        <strong>强项</strong>
+        bot 定义 + 插件市场 + 工作流拖拽
+      </div>
+      <div class="bm-row">
+        <strong>不适合教师</strong>
+        通用 bot 工厂 · 不懂教学语境 · 复杂逻辑要写代码
+      </div>
+    </div>
+
+    <div class="benchmark-card cc">
+      <span class="bm-tag">Anthropic</span>
+      <h4>Claude Code / Codex</h4>
+      <div class="bm-row">
+        <strong>用户画像</strong>
+        程序员
+      </div>
+      <div class="bm-row">
+        <strong>主打层级</strong>
+        L2 - L4（但需要懂代码）
+      </div>
+      <div class="bm-row">
+        <strong>强项</strong>
+        自然语言 → 代码 · 高度灵活
+      </div>
+      <div class="bm-row">
+        <strong>不适合教师</strong>
+        用户必须懂代码 / 调试 / 部署 · 教师用不来
+      </div>
+    </div>
+
+    <div class="benchmark-card xclaw">
+      <span class="bm-tag">XClaw 路线</span>
+      <h4>XClaw（教师专用）</h4>
+      <div class="bm-row">
+        <strong>用户画像</strong>
+        教师（非程序员、非办公人员）
+      </div>
+      <div class="bm-row">
+        <strong>主打层级</strong>
+        L1 - L2 普及 · L3 中级 · L4 算法配合
+      </div>
+      <div class="bm-row">
+        <strong>差异化路线</strong>
+        教学 SOP 模板 + 教师填空微调 + 算法配合调教
+      </div>
+      <div class="bm-row">
+        <strong>核心策略</strong>
+        <strong>从空白页让老师创编一定失败</strong>·一定要给种子 Skill 包，老师在上面改
+      </div>
+    </div>
+  </div>
+
+  <!-- 落地风险 -->
+  <div class="risk-block">
+    <h4>
+      <i data-lucide="alert-triangle" style="width:16px;height:16px;stroke-width:2;"></i>
+      4 个最容易被挑战的落地风险（彤彤指出 + 我们必须答好）
+    </h4>
+    <div class="risk-row">
+      <strong>1. Vibecoding 产物如何部署到平台？</strong>
+      老师生成完 Skill 怎么发布给学生用 · 账号鉴权怎么打通 · 这套流程不是一句话能解决的
+    </div>
+    <div class="risk-row">
+      <strong>2. 教师分发权限怎么管理？</strong>
+      私人 / 班级 / 全校三层权限 · 教师可随时收回 · 学生侧调用审计 —— 产品交互必须从第一天就定死
+    </div>
+    <div class="risk-row">
+      <strong>3. 教师创编后真的会用吗（Skill 沉睡风险）？</strong>
+      80% 教师可能不会主动创编 · 必须把"存为 Skill"放主路径强引导（每次用完 AI 后自动问）
+    </div>
+    <div class="risk-row">
+      <strong>4. L4 分身风格建模算法可行性？</strong>
+      研究院从 0 到 1 · Q3 末必须做小样本验证 · 不能等到 Q4 才开始 · 与星火语音组数字分身能力打通
+    </div>
+  </div>
+
+  <!-- 推荐路径 -->
+  <div class="recommendation">
+    <span class="rec-tag">
+      <i data-lucide="target" style="width:11px;height:11px;stroke-width:2;"></i>
+      XClaw 推荐落地路径
+    </span>
+    <h3>分三阶段推进 · 先打透 L1-L2 普及 · L3-L4 算法配合做精品</h3>
+    <div class="phase"><strong>2026 Q3</strong> · 主攻 L1 模板微调（20 件种子 Skill）+ L2 自然语言生成 V1 · 普通老师能用</div>
+    <div class="phase"><strong>2026 Q4</strong> · L2 全面开放 + L3 可视化拖拽试点（中级教师 / 课程组长） + L4 分身建模小样本验证</div>
+    <div class="phase"><strong>2027 H1</strong> · L4 数字分身规模化 + 教师创编激励机制（共享被使用 → 教学创新成果加分）</div>
+    <div class="phase" style="background:rgba(255,255,255,0.18);margin-top:14px;"><strong>⚠️ 一句话原则</strong> · <strong>不要让老师从空白页创编</strong>——所有层级都建立在"种子 Skill 包 + 微调"基础上。这是 XClaw 跟 Coze/CC 最大的差异化。</div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-meta">
+    <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>作者 · 婷婷</span>
+    <span><i data-lucide="git-branch" style="width:11px;height:11px;stroke-width:2;"></i>V1 · 调研附录</span>
+    <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>2026-05-11</span>
+  </div>
+  <div>本文档为内部讨论稿 · 配套 XClaw 整体规划 V4 阅读 · 待青柠 5/18 出可行性报告后修订</div>
+</footer>
+
+<script>
+  if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+</script>
+
+</body>
+</html>
