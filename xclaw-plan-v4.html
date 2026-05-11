@@ -594,33 +594,41 @@ section.chapter { margin-bottom: 96px; scroll-margin-top: 80px; }
   background: var(--gray-2); color: var(--gray-4);
 }
 
-/* 状态图例 + 使用模式 */
-.la-bottom {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+/* 单元格颜色含义（横向显眼条，放矩阵上方）*/
+.la-color-legend {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 10px; padding: 14px 16px;
+  background: linear-gradient(135deg, #FFF9F0 0%, #FFFFFF 100%);
+  border: 1px solid var(--warning);
+  border-radius: 10px; margin-bottom: 14px;
 }
-.la-state-legend {
-  background: var(--gray-1); border-radius: 10px; padding: 16px;
-}
-.la-state-legend-title {
-  font-size: 11px; font-weight: 700; color: var(--text-2);
+.la-color-legend .lc-title-row {
+  grid-column: 1 / -1;
+  font-size: 11px; font-weight: 700; color: var(--warning);
   text-transform: uppercase; letter-spacing: 1px;
-  margin-bottom: 10px;
+  margin-bottom: 2px;
+  display: flex; align-items: center; gap: 6px;
 }
-.la-state-list {
-  display: flex; flex-direction: column; gap: 8px;
-}
-.la-state-item {
+.la-color-item {
   display: flex; align-items: center; gap: 10px;
-  font-size: 12.5px; color: var(--text-1);
+  padding: 8px 10px; background: white; border-radius: 8px;
+  border: 1px solid var(--border);
 }
-.la-state-item .matrix-badge {
-  width: 24px; height: 24px; font-size: 10px;
+.la-color-item .matrix-badge {
+  width: 28px; height: 28px; font-size: 12px; flex-shrink: 0;
 }
-.la-state-item strong { font-weight: 600; }
-.la-state-item span.note { color: var(--text-3); font-size: 11.5px; }
+.la-color-item .lc-text { line-height: 1.4; }
+.la-color-item .lc-name {
+  font-size: 12.5px; font-weight: 700; color: var(--text-1);
+}
+.la-color-item .lc-note {
+  font-size: 10.5px; color: var(--text-3); margin-top: 1px;
+}
 
+/* 使用模式 · 老师 vs 学生（保留，但布局调整为横向 2 列）*/
 .la-usage-pattern {
-  display: flex; flex-direction: column; gap: 10px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  margin-top: 14px;
 }
 .la-usage-card {
   padding: 14px 16px; border-radius: 10px;
@@ -1742,6 +1750,42 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
           </div>
         </div>
 
+        <!-- 单元格颜色含义（关键 · 看矩阵前先看这个）-->
+        <div class="la-color-legend">
+          <div class="lc-title-row">
+            <i data-lucide="palette" style="width:12px;height:12px;stroke-width:2;"></i>
+            👇 矩阵单元格的 4 种颜色 · 看矩阵前先看这个
+          </div>
+          <div class="la-color-item">
+            <span class="matrix-badge core">①</span>
+            <div class="lc-text">
+              <div class="lc-name">本场景核心</div>
+              <div class="lc-note">没了这个杠杆该场景跑不通</div>
+            </div>
+          </div>
+          <div class="la-color-item">
+            <span class="matrix-badge direct">①</span>
+            <div class="lc-text">
+              <div class="lc-name">直接使用</div>
+              <div class="lc-note">该场景需要这个杠杆参与</div>
+            </div>
+          </div>
+          <div class="la-color-item">
+            <span class="matrix-badge indirect">①</span>
+            <div class="lc-text">
+              <div class="lc-name">间接受益</div>
+              <div class="lc-note">通过教师创编物使用</div>
+            </div>
+          </div>
+          <div class="la-color-item">
+            <span class="matrix-badge unused">①</span>
+            <div class="lc-text">
+              <div class="lc-name">本场景不涉及</div>
+              <div class="lc-note">该场景不需要这个杠杆</div>
+            </div>
+          </div>
+        </div>
+
         <!-- 使用矩阵表 -->
         <div class="usage-matrix">
           <table>
@@ -1826,74 +1870,38 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
           </table>
         </div>
 
-        <!-- 状态图例 + 使用模式对比 -->
-        <div class="la-bottom">
-          <div class="la-state-legend">
-            <div class="la-state-legend-title">徽章状态图例</div>
-            <div class="la-state-list">
-              <div class="la-state-item">
-                <span class="matrix-badge core">①</span>
-                <strong>本场景核心杠杆</strong><span class="note">· 解决该场景的关键能力</span>
-              </div>
-              <div class="la-state-item">
+        <!-- 老师 vs 学生使用模式 -->
+        <div class="la-usage-pattern">
+          <div class="la-usage-card teacher-pattern">
+            <div class="lup-head">
+              <i data-lucide="user-cog" style="width:14px;height:14px;stroke-width:2;"></i>
+              老师 · Creator（XClaw 真正的核心用户）
+            </div>
+            <div class="lup-row">
+              <span class="mini-badges">
                 <span class="matrix-badge direct">①</span>
-                <strong>直接使用</strong><span class="note">· 该场景需要这个杠杆参与</span>
-              </div>
-              <div class="la-state-item">
+                <span class="matrix-badge direct">②</span>
+                <span class="matrix-badge direct">③</span>
+                <span class="matrix-badge direct">④</span>
+              </span>
+              <span>4 场景 × 4 杠杆 = 16 格全 direct/core，没有 unused</span>
+            </div>
+          </div>
+          <div class="la-usage-card student-pattern">
+            <div class="lup-head">
+              <i data-lucide="user-round" style="width:14px;height:14px;stroke-width:2;"></i>
+              学生 · Consumer（教师创编物的消费者）
+            </div>
+            <div class="lup-row">
+              <span class="mini-badges">
                 <span class="matrix-badge indirect">①</span>
-                <strong>间接受益</strong><span class="note">· 通过教师创编物使用，不直接调用</span>
-              </div>
-              <div class="la-state-item">
-                <span class="matrix-badge unused">①</span>
-                <strong>本场景不涉及</strong><span class="note">· 不需要这个杠杆</span>
-              </div>
+                <span class="matrix-badge direct">②</span>
+                <span class="matrix-badge direct">③</span>
+                <span class="matrix-badge indirect">④</span>
+              </span>
+              <span>②③ 直接 · ①④ 间接（用老师创编物）</span>
             </div>
           </div>
-
-          <div class="la-usage-pattern">
-            <div class="la-usage-card teacher-pattern">
-              <div class="lup-head">
-                <i data-lucide="user-cog" style="width:14px;height:14px;stroke-width:2;"></i>
-                老师 · Creator（XClaw 真正的核心用户）
-              </div>
-              <div class="lup-row">
-                <span class="mini-badges">
-                  <span class="matrix-badge direct">①</span>
-                  <span class="matrix-badge direct">②</span>
-                  <span class="matrix-badge direct">③</span>
-                  <span class="matrix-badge direct">④</span>
-                </span>
-                <span><strong>4 个场景 × 4 个杠杆 = 16 格全部 direct/core</strong>，没有 unused</span>
-              </div>
-            </div>
-            <div class="la-usage-card student-pattern">
-              <div class="lup-head">
-                <i data-lucide="user-round" style="width:14px;height:14px;stroke-width:2;"></i>
-                学生 · Consumer（教师创编物的消费者）
-              </div>
-              <div class="lup-row">
-                <span class="mini-badges">
-                  <span class="matrix-badge indirect">①</span>
-                  <span class="matrix-badge direct">②</span>
-                  <span class="matrix-badge direct">③</span>
-                  <span class="matrix-badge indirect">④</span>
-                </span>
-                <span>②③ 直接 · ①④ 间接（用老师创编物）</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 杠杆订正说明（关键澄清）-->
-        <div style="margin-top:24px;padding:18px 22px;background:linear-gradient(135deg, #FFF9F0 0%, #FFFFFF 100%);border:1px solid var(--warning);border-left:4px solid var(--warning);border-radius:10px;font-size:13.5px;color:var(--text-1);line-height:1.75;">
-          <div style="display:inline-flex;align-items:center;gap:6px;background:var(--warning);color:white;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:700;letter-spacing:0.5px;margin-bottom:10px;">
-            <i data-lucide="info" style="width:11px;height:11px;stroke-width:2;"></i>
-            杠杆 ② 的关键澄清
-          </div>
-          <strong style="color:var(--warning);">"教师人格化记忆 / 数字分身"是同一套共享底层，不是只服务学生。</strong>
-          <div style="margin-top:8px;">教师自用 AI 助手时也需要"我的风格 + 这门课的记忆 + 上下文"——备建课要懂"我去年怎么讲"、考评要按"我的评语风格"、督管要记得"督导员关注重点"。所以教师 4 个场景都直接使用杠杆 ②，不是只有教学场景。学生侧"教师数字分身"只是这套底层的一种消费形态。</div>
-          <div style="margin-top:8px;padding:10px 12px;background:white;border-radius:6px;border-left:3px solid var(--warning);font-size:12.5px;">
-            <strong>同类逻辑订正</strong>：杠杆 ① Vibecoding 也是教师场景普适能力（督管员也能创编 Skill）· 杠杆 ④ 工作区是所有教师场景的累积载体——<strong>教师 4 场景应当 4 杠杆全用，没有 unused</strong>。这是 Creator 全栈使用的产品本质。</div>
         </div>
       </div>
 
@@ -3088,98 +3096,67 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
 
     <!-- 09 核心问题共识与技术选型（新增）-->
     <section class="chapter" id="consensus">
-      <div class="chapter-num">09 · CORE Q&A</div>
-      <h2>核心问题共识与技术选型</h2>
-      <p class="lead">内部研讨 与学科大脑团队负责人研讨 XClaw 教学应用，识别出 5 个仍未形成定论的核心问题。后续会议（小雅平台 / 教学顾问 / 分院 / 架构组 / 研发团队）必须对齐口径。</p>
-
-      <div class="consensus-intro">
-        <div class="ci-tag">
-          <i data-lucide="users" style="width:11px;height:11px;stroke-width:2;"></i>
-          会议背景
-        </div>
-        <h3>内部产品 × 技术研讨 · 1 小时</h3>
-        <p>讨论 XClaw 教学应用的产品形态、技术选型、师生场景边界。核心结论已对齐，但 5 个概念/技术问题仍需跨团队拍板。<strong>本章对所有问题给出建议口径</strong>，作为后续会议的对齐基础。</p>
-      </div>
+      <div class="chapter-num">09 · KEY CLARIFICATIONS</div>
+      <h2>5 个产品定型关键澄清</h2>
+      <p class="lead">产品定型阶段的 5 个关键命题——概念边界、技术选型、场景范围、架构层级。下面是每条的产品事实陈述。</p>
 
       <!-- Q1 -->
       <div class="consensus-list">
         <div class="consensus-item">
           <div class="consensus-q">
-            <span class="q-tag">Q1</span>
-            <span class="q-title">Skill 是不是 OpenClaw（龙虾）专属概念？</span>
-            <span class="q-status">概念共识</span>
+            <span class="q-tag">1</span>
+            <span class="q-title">Skill 是概念家族，不是 OpenClaw 专属</span>
+            <span class="q-status">概念边界</span>
           </div>
           <div class="consensus-body">
-            <div class="consensus-conflict">
-              <div class="conflict-side tt">
-                <strong>产品视角</strong>Skill 是行业通用概念 · 是可复用的智能体动作单元 · 不是 OpenClaw 专属
-              </div>
-              <div class="conflict-side tongtong">
-                <strong>技术视角质疑</strong>只要涉及 Skill 调度就是龙虾类产品 · ima.copilot 也是龙虾类封装
-              </div>
-            </div>
             <div class="consensus-answer">
-              <span class="answer-label">建议口径</span>
-              产品定位正确，但表述要分清三层：<strong>① "Skill 概念"</strong>（动作单元封装）= 通用，所有智能体平台都有等价物；<strong>② "OpenClaw 原生 Skill 格式"</strong>（markdown + 工具调用 + 沙箱）= 龙虾系特有；<strong>③ "能调度 Skill 的产品"</strong> = 大概率是 Claude 系生态二次封装（CC、Cursor、Codex、ima.copilot 等）。<br><br>
-              <strong>对外口径</strong>："Skill 是概念家族——OpenClaw 原生 Skill 是最完整形态，其他智能体的 Skill 是等价物。XClaw 选 OpenClaw 内核是为拿最强 Skill 调度能力，但不被'Skill = 龙虾'绑死。"
+              Skill 分三层来看：
+              <ul style="margin:8px 0 8px 18px;line-height:1.8;">
+                <li><strong>① Skill 概念</strong>（可复用动作单元）= 通用 · 所有智能体平台都有等价物（Coze 插件 / Dify 工具 / ima.copilot Skill）</li>
+                <li><strong>② OpenClaw 原生 Skill 格式</strong>（markdown + 工具调用 + 沙箱）= 龙虾系特有</li>
+                <li><strong>③ 能调度 Skill 的产品</strong> = 大概率是 Claude 系生态二次封装（CC / Cursor / Codex / ima.copilot 等）</li>
+              </ul>
+              <strong>对外口径</strong>：XClaw 选 OpenClaw 内核是为了拿最强 Skill 调度能力，但 Skill 概念不被"龙虾"绑死。
             </div>
           </div>
         </div>
 
-        <!-- Q2 -->
+        <!-- 2 -->
         <div class="consensus-item">
           <div class="consensus-q">
-            <span class="q-tag">Q2</span>
-            <span class="q-title">学生端到底是不是龙虾产品？</span>
+            <span class="q-tag">2</span>
+            <span class="q-title">学生不接触 XClaw 本身，技术层由 XClaw Engine 调度</span>
             <span class="q-status">产品定义</span>
           </div>
           <div class="consensus-body">
-            <div class="consensus-conflict">
-              <div class="conflict-side tt">
-                <strong>产品视角</strong>学生是 Consumer · 用阉割版 Claw 或封装的超级智能体 · 不接触 XClaw 本身
-              </div>
-              <div class="conflict-side tongtong">
-                <strong>技术视角质疑</strong>学生用 Skill 一定要通过某种 Claw 调度 · 所以也得接触 Claw
-              </div>
-            </div>
             <div class="consensus-answer">
-              <span class="answer-label">建议口径</span>
-              <strong>技术实现 vs 用户感知是两件事</strong>——
+              <strong>技术实现 vs 用户感知是两件事</strong>：
               <ul style="margin:8px 0 8px 18px;line-height:1.8;">
-                <li><strong>产品层（用户感知）</strong>：学生用的是"教师数字分身"产品形态，不需要懂 XClaw —— 产品定位 ✅</li>
-                <li><strong>技术层（运行时）</strong>：分身背后用 XClaw Engine 调度教师创编的 Skill —— 技术判断 ✅</li>
+                <li><strong>产品层（用户感知）</strong>：学生用的是"教师数字分身"产品形态，不需要懂 XClaw</li>
+                <li><strong>技术层（运行时）</strong>：分身背后由 XClaw Engine 调度教师创编的 Skill</li>
               </ul>
-              两者并不矛盾。<strong>类比</strong>：用户用微信，不需要懂腾讯云。学生感知"伴学空间/数字助教"，背后是 XClaw Engine。
+              <strong>类比</strong>：用户用微信，不需要懂腾讯云。学生感知"伴学空间 / 数字助教"，背后是 XClaw Engine。
             </div>
           </div>
         </div>
 
-        <!-- Q3 -->
+        <!-- 3 -->
         <div class="consensus-item">
           <div class="consensus-q">
-            <span class="q-tag">Q3</span>
-            <span class="q-title">CLI / Skill / MCP 三种实现方式怎么选？</span>
-            <span class="q-status">技术战略</span>
+            <span class="q-tag">3</span>
+            <span class="q-title">CLI / Skill / MCP 三方案按场景选型</span>
+            <span class="q-status">技术选型</span>
           </div>
           <div class="consensus-body">
-            <div class="consensus-conflict">
-              <div class="conflict-side tt">
-                <strong>产品视角</strong>校内其他平台用 CLI / MCP / Skill 都可以接入
-              </div>
-              <div class="conflict-side tongtong">
-                <strong>技术洞察</strong>MCP 全量读取耗 token · 自家产品对接没必要上 MCP · 除非战略要公开生态
-              </div>
-            </div>
             <div class="consensus-answer">
-              <span class="answer-label">建议口径</span>
-              <strong>按"调用范围 × token 成本 × 战略意图"三维选型 · 短期走 CLI/Skill，中期再判断 MCP</strong>。详细技术对比见下方调研。
+              按<strong>调用范围 × Token 成本 × 战略意图</strong>三维选型——自家平台对接走 CLI/Skill 最省，开放生态才上 MCP。下面是完整对比。
             </div>
 
             <!-- CLI/Skill/MCP 对比表 -->
             <div class="tech-compare">
               <div class="tech-compare-head">
                 <h4>🔬 CLI / Skill / MCP 三方案对比调研</h4>
-                <p>从场景支撑、Token 成本、技术成本、开放性等维度系统对比 · 给小雅平台/架构组/研发团队当作后续讨论的事实基础</p>
+                <p>从场景支撑、Token 成本、技术成本、开放性等维度系统对比</p>
               </div>
               <table class="tech-table">
                 <thead>
@@ -3286,116 +3263,45 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
               <div class="strategy-row"><span class="phase">2026 Q3-Q4</span>· CLI 走自家平台融合（XClaw ↔ 小雅 / 学科大脑） + Skill 做教师创编主力 · <strong>不上 MCP</strong></div>
               <div class="strategy-row"><span class="phase">2027 H1</span>· 视生态战略决定是否上 MCP 暴露 Skill 给第三方（CC/Coze 调用 XClaw）</div>
               <div class="strategy-row"><span class="phase">2027+</span>· 看技术趋势决策——技术判断 MCP 未来可能被新协议取代，不必过早 all-in</div>
-              <div class="strategy-row" style="margin-top:8px;padding-top:12px;border-top:1px dashed var(--success);">
-                ⚠️ <strong>需要明天会上小雅平台 / 架构组表态</strong>：他们一直倾向"把平台拆解成 MCP 化"，方向是否还坚持？这个战略问题决定了 Q3 工程量。
-              </div>
             </div>
           </div>
         </div>
 
-        <!-- Q4 -->
+        <!-- 4 -->
         <div class="consensus-item">
           <div class="consensus-q">
-            <span class="q-tag">Q4</span>
-            <span class="q-title">五层架构的 L2 层定位（MCP 接入层 vs 原子能力层）</span>
-            <span class="q-status">架构定型</span>
+            <span class="q-tag">4</span>
+            <span class="q-title">L2 是"原子能力 / 接口层"，不仅指 MCP</span>
+            <span class="q-status">架构层级</span>
           </div>
           <div class="consensus-body">
-            <div class="consensus-conflict">
-              <div class="conflict-side tongtong">
-                <strong>技术质疑</strong>L2 MCP 接入层和 L3 Skill 库为什么分两层？Skill 可以脱离 MCP，MCP 也不一定支持 Skill
-              </div>
-              <div class="conflict-side tt">
-                <strong>正确口径</strong>MCP/API = 底层能干啥（原子能力） · Skill = 怎么用这些原子能力干活（工作流说明手册）
-              </div>
-            </div>
             <div class="consensus-answer">
-              <span class="answer-label">建议口径</span>
-              <strong>L2 改名为"原子能力 / 接口层"</strong>（已在本文档第 02 章架构图更新）。MCP 只是 L2 的一种实现方式，CLI / 内部 API 也属于 L2。<br><br>
-              ✅ 架构图调整：<strong>L2 · 接入</strong>（原子能力 / 接口层）→ 涵盖 CLI / Skill / MCP / API 等多种方式<br>
-              ✅ Skill 库依然是 L3（工作流定义层）—— Skill 内部可调用 L2 的任意接入方式
+              <strong>L2 名称：原子能力 / 接口层</strong>——MCP 只是 L2 的一种实现方式，CLI / 内部 API 也属于 L2。<br><br>
+              ✅ <strong>L2 · 接入</strong>（原子能力 / 接口层）→ 涵盖 CLI / Skill / MCP / API 多种方式<br>
+              ✅ <strong>L3 · Skill 库</strong>（工作流定义层）→ Skill 内部可调用 L2 的任意接入方式
             </div>
           </div>
         </div>
 
-        <!-- Q5 -->
+        <!-- 5 -->
         <div class="consensus-item">
           <div class="consensus-q">
-            <span class="q-tag">Q5</span>
-            <span class="q-title">教师 / 学生场景最终定型</span>
-            <span class="q-status">场景定型</span>
+            <span class="q-tag">5</span>
+            <span class="q-title">教师 4 场景 + 学生 4 子场景定型</span>
+            <span class="q-status">场景范围</span>
           </div>
           <div class="consensus-body">
-            <div class="consensus-conflict">
-              <div class="conflict-side tt">
-                <strong>聚焦版本</strong>教师 4 场景：备建课、教学、考评、督管
-              </div>
-              <div class="conflict-side tongtong">
-                <strong>另一观点</strong>5 场景一线教师高频 · 去掉管理层（不在平台体现）
-              </div>
-            </div>
             <div class="consensus-answer">
-              <span class="answer-label">建议口径</span>
-              <strong>两人趋同，差异在督管和管理层放不放</strong>——
+              <strong>对应内部八大核心场景</strong>（备/建/教/学/考/评/督/管）：
               <ul style="margin:8px 0 8px 18px;line-height:1.8;">
-                <li>✅ 教师固定 <strong>4 个场景</strong>：备建课、教学、考评、督管（聚焦版本）</li>
-                <li>✅ 学生固定 <strong>1 个大场景 = 自主学习，4 个子场景</strong>：答疑、学习路径、资源生成（OpenMAIC）、学情自检</li>
-                <li>❌ <strong>砍掉评/管</strong>——评（评教半年一次价值低）+ 管（教务/学籍/管理层在平台体现不出来）</li>
+                <li>✅ <strong>教师 4 个场景</strong>：备建课 / 教学 / 考评 / 督管</li>
+                <li>✅ <strong>学生 1 大场景 4 子</strong>：自主学习 → 答疑 / 学习路径 / 资源生成（OpenMAIC）/ 学情自检</li>
+                <li>❌ <strong>不在 XClaw 发力</strong>：评（评教半年一次价值低）+ 管（教务/学籍/管理层在平台体现不出来）</li>
               </ul>
-              砍掉这两个不是否定它们重要，而是 <strong>XClaw 不在这两个场景发力</strong>—— Q3/Q4 资源聚焦四大场景。
+              Q3/Q4 资源聚焦四大教师场景 + 自主学习。
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- 待办分工 -->
-      <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:24px;margin-top:32px;">
-        <h4 style="font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
-          <i data-lucide="list-checks" style="width:16px;height:16px;stroke-width:2;color:var(--brand-primary);"></i>
-          后续会议待办分工
-        </h4>
-        <table style="width:100%;border-collapse:collapse;font-size:13px;">
-          <thead>
-            <tr style="background:var(--gray-1);">
-              <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;width:40%;">待办事项</th>
-              <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;width:18%;">主负责</th>
-              <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;width:18%;">截止</th>
-              <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;">输出物</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr style="border-top:1px solid var(--border);">
-              <td style="padding:11px 14px;">Vibecoding 难度分层 & 可行性分析</td>
-              <td style="padding:11px 14px;color:var(--text-2);">研发团队 + 产品团队</td>
-              <td style="padding:11px 14px;color:var(--danger);font-weight:600;">5/18 (1 周)</td>
-              <td style="padding:11px 14px;color:var(--text-3);">4 层难度分层 + 原子能力依赖清单 + 部署/鉴权可行性</td>
-            </tr>
-            <tr style="border-top:1px solid var(--border);">
-              <td style="padding:11px 14px;">MCP / Skill / CLI 战略选型拍板</td>
-              <td style="padding:11px 14px;color:var(--text-2);">小雅平台 + 架构组 + 产品团队</td>
-              <td style="padding:11px 14px;color:var(--danger);font-weight:600;">本周内</td>
-              <td style="padding:11px 14px;color:var(--text-3);">短期 CLI/Skill or 短期 MCP · 后续会议必须明确</td>
-            </tr>
-            <tr style="border-top:1px solid var(--border);">
-              <td style="padding:11px 14px;">校外开放 Skill 安全合规白名单机制</td>
-              <td style="padding:11px 14px;color:var(--text-2);">法务 + 学校 IT + 学科大脑团队</td>
-              <td style="padding:11px 14px;color:var(--warning);font-weight:600;">6/15 (一月)</td>
-              <td style="padding:11px 14px;color:var(--text-3);">校内/校外预审/校外开放 三层 Skill 白名单规则</td>
-            </tr>
-            <tr style="border-top:1px solid var(--border);">
-              <td style="padding:11px 14px;">教师 Vibecoding 产物 → 平台部署/分发流程</td>
-              <td style="padding:11px 14px;color:var(--text-2);">研发团队 + 学科大脑团队</td>
-              <td style="padding:11px 14px;color:var(--warning);font-weight:600;">5/25 (2 周)</td>
-              <td style="padding:11px 14px;color:var(--text-3);">账号鉴权 + 权限管理 + 发布订阅完整流程图</td>
-            </tr>
-            <tr style="border-top:1px solid var(--border);">
-              <td style="padding:11px 14px;">教师 AI 助手 vs XClaw 产品命名统一</td>
-              <td style="padding:11px 14px;color:var(--text-2);">产品团队 + 小雅产品</td>
-              <td style="padding:11px 14px;color:var(--warning);font-weight:600;">5/18 (1 周)</td>
-              <td style="padding:11px 14px;color:var(--text-3);">对外统一称谓 · 内部统一称谓 · 销售话术</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </section>
 
@@ -3577,7 +3483,7 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
           <div class="ap-content">
             <h4>XClaw Vibecoding 难度分层 · 调研 V1</h4>
             <p>4 层难度阶梯（L1 模板微调 → L4 智能体调教）+ 11 项原子能力依赖矩阵 + 对标 Coze/CC + 落地风险 + 三阶段推进路径。5 分钟读完。</p>
-            <div class="ap-meta">作者 · 婷婷 · 2026-05-11 · V1 · 待研发团队 5/18 可行性报告后修订</div>
+            <div class="ap-meta">作者 · 婷婷 · 2026-05-11 · V1</div>
           </div>
           <i data-lucide="external-link" class="ap-arrow" style="width:18px;height:18px;stroke-width:2;"></i>
         </a>
