@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coze 扣子编程 vs CC/Cursor/Codex/XClaw · 对比调研 V1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+:root {
+  --coze: #FF6B35;
+  --coze-bg: #FFF1EC;
+  --xclaw: #00A89C;
+  --xclaw-dark: #007A72;
+  --xclaw-bg: #F0FBFA;
+  --cc: #5B6EE1;
+  --cc-bg: #EEF0FB;
+  --text-1: #0E1216;
+  --text-2: #4B535C;
+  --text-3: #7B838C;
+  --bg-page: #F7F9FA;
+  --border: rgba(14, 18, 22, 0.08);
+  --warning: #E89C2C;
+  --warning-bg: #FDF4E6;
+  --success: #1AAB6E;
+  --success-bg: #E6F7EE;
+  --danger: #DC4646;
+  --danger-bg: #FCEDED;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Inter', -apple-system, sans-serif;
+  font-size: 16px; line-height: 1.75;
+  color: var(--text-1); background: var(--bg-page);
+  -webkit-font-smoothing: antialiased;
+}
+
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0; height: 56px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border); z-index: 100;
+  display: flex; align-items: center; padding: 0 32px;
+}
+.topnav .back {
+  display: flex; align-items: center; gap: 6px;
+  color: var(--text-2); text-decoration: none;
+  font-size: 13px; font-weight: 500;
+  padding: 6px 10px; border-radius: 6px;
+}
+.topnav .back:hover { background: #EEF1F3; color: var(--text-1); }
+.topnav .title { margin-left: 20px; font-size: 13px; color: var(--text-3); font-weight: 500; }
+.topnav .badge {
+  margin-left: auto; background: var(--warning-bg); color: var(--warning);
+  font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 12px;
+  display: flex; align-items: center; gap: 4px;
+}
+
+.hero {
+  margin-top: 56px; padding: 100px 32px 60px;
+  background: linear-gradient(135deg, #2A1810 0%, #C84A0F 50%, #FF6B35 100%);
+  color: white; text-align: center; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -200px; left: 50%;
+  width: 800px; height: 800px; transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+}
+.hero-inner { max-width: 760px; margin: 0 auto; position: relative; }
+.hero .eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.15); padding: 6px 16px;
+  border-radius: 100px; font-size: 12px; font-weight: 500;
+  border: 1px solid rgba(255,255,255,0.2); margin-bottom: 24px;
+}
+.hero h1 {
+  font-size: 44px; font-weight: 700; line-height: 1.25;
+  letter-spacing: -1px; margin-bottom: 20px;
+}
+.hero h1 .accent {
+  background: linear-gradient(90deg, #FFE9DD 0%, #FFD4BD 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero .one-liner {
+  font-size: 18px; color: rgba(255,255,255,0.92);
+  line-height: 1.7; margin-bottom: 32px;
+}
+.hero .meta {
+  display: flex; gap: 24px; justify-content: center;
+  font-size: 12px; opacity: 0.7;
+}
+
+.main { max-width: 920px; margin: 0 auto; padding: 64px 32px 80px; }
+
+.section-tag {
+  font-size: 12px; font-weight: 700; letter-spacing: 2px;
+  color: var(--coze); margin-bottom: 8px; text-transform: uppercase;
+}
+.section-h2 {
+  font-size: 32px; font-weight: 700; line-height: 1.3;
+  margin-bottom: 8px; letter-spacing: -0.5px;
+}
+.section-lead {
+  font-size: 16px; color: var(--text-2); margin-bottom: 36px;
+  line-height: 1.6;
+}
+
+/* 核心发现 */
+.key-finding {
+  background: white; border-radius: 16px;
+  padding: 32px 36px; margin-bottom: 48px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(14,18,22,0.04);
+  border-left: 6px solid var(--coze);
+}
+.key-finding h2 {
+  font-size: 22px; font-weight: 700; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.key-finding .finding-text {
+  font-size: 17px; color: var(--text-1); line-height: 1.7;
+  margin-bottom: 16px;
+}
+.key-finding .finding-text strong { color: var(--coze); }
+.key-finding .corollary {
+  padding: 14px 18px; background: var(--coze-bg);
+  border-radius: 8px; font-size: 14px;
+  color: var(--text-1); line-height: 1.7;
+}
+.key-finding .corollary strong { color: var(--coze); }
+
+/* 3 张截图观察 */
+.screenshot-list {
+  display: flex; flex-direction: column; gap: 18px;
+  margin-bottom: 56px;
+}
+.screenshot-card {
+  background: white; border-radius: 14px;
+  border: 1px solid var(--border); overflow: hidden;
+}
+.screenshot-head {
+  padding: 18px 24px;
+  background: linear-gradient(135deg, var(--coze-bg) 0%, #FFFFFF 100%);
+  border-bottom: 1px solid var(--border);
+}
+.screenshot-head h4 {
+  font-size: 17px; font-weight: 700; margin-bottom: 4px;
+}
+.screenshot-head .ss-meta {
+  font-size: 12px; color: var(--text-3);
+}
+.screenshot-body { padding: 20px 24px; }
+.screenshot-body .ss-row {
+  display: grid; grid-template-columns: 96px 1fr;
+  gap: 14px; padding: 8px 0;
+  font-size: 14px; line-height: 1.65;
+}
+.screenshot-body .ss-row .key {
+  font-size: 11px; font-weight: 700;
+  color: var(--text-3); letter-spacing: 1px;
+  text-transform: uppercase; padding-top: 3px;
+}
+.screenshot-body .ss-row .val { color: var(--text-1); }
+.screenshot-body .ss-row .val strong { color: var(--coze); }
+.screenshot-body .ss-row .quote {
+  display: inline-block; padding: 2px 8px;
+  background: var(--coze-bg); color: var(--coze);
+  border-radius: 4px; font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+}
+
+/* 4 家产品对比 */
+.benchmark-table {
+  background: white; border-radius: 14px;
+  border: 1px solid var(--border); overflow: hidden;
+  margin-bottom: 32px;
+}
+.benchmark-table-head {
+  padding: 18px 24px; background: var(--text-1); color: white;
+}
+.benchmark-table-head h4 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.benchmark-table-head p { font-size: 13px; opacity: 0.85; }
+
+.bm-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.bm-table th {
+  background: #F0F0F0; padding: 12px 14px;
+  text-align: left; font-size: 12px; font-weight: 700;
+  color: var(--text-2); letter-spacing: 0.3px;
+  border-bottom: 1px solid var(--border);
+}
+.bm-table th.cc-h { color: var(--cc); background: var(--cc-bg); }
+.bm-table th.coze-h { color: var(--coze); background: var(--coze-bg); }
+.bm-table th.xclaw-h { color: var(--xclaw-dark); background: var(--xclaw-bg); }
+.bm-table td {
+  padding: 11px 14px; line-height: 1.55;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.bm-table td:first-child {
+  font-weight: 700; color: var(--text-1);
+  font-size: 12.5px; width: 130px;
+  background: var(--bg-page);
+}
+.bm-table tr:last-child td { border-bottom: none; }
+.bm-table .highlight { font-weight: 700; color: var(--xclaw-dark); }
+
+/* 用户身份图 */
+.user-spectrum {
+  background: white; border-radius: 14px;
+  border: 1px solid var(--border);
+  padding: 28px; margin-bottom: 48px;
+}
+.user-spectrum h4 {
+  font-size: 16px; font-weight: 700; margin-bottom: 6px;
+}
+.user-spectrum .us-lead {
+  font-size: 13px; color: var(--text-3); margin-bottom: 24px;
+}
+.spectrum-line {
+  position: relative; height: 80px; margin: 30px 20px;
+}
+.spectrum-bar {
+  position: absolute; left: 0; right: 0; top: 40px;
+  height: 3px; background: linear-gradient(90deg, #C84A0F 0%, var(--cc) 50%, var(--xclaw) 100%);
+  border-radius: 2px;
+}
+.spectrum-dot {
+  position: absolute; width: 14px; height: 14px;
+  border-radius: 50%; background: white;
+  border: 3px solid; top: 34px;
+  transform: translateX(-50%);
+}
+.spectrum-label {
+  position: absolute; transform: translateX(-50%);
+  font-size: 11px; font-weight: 600;
+  text-align: center; white-space: nowrap;
+}
+.spectrum-label.top { top: -5px; color: var(--text-2); }
+.spectrum-label.bottom { top: 55px; }
+
+/* XClaw 路线 */
+.path-block {
+  background: linear-gradient(135deg, var(--xclaw-bg) 0%, #FFFFFF 100%);
+  border: 1px solid var(--xclaw);
+  border-left: 4px solid var(--xclaw);
+  border-radius: 12px; padding: 28px 32px;
+  margin-bottom: 32px;
+}
+.path-block .pb-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--xclaw); color: white;
+  padding: 4px 12px; border-radius: 100px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.path-block h3 {
+  font-size: 22px; font-weight: 700; margin-bottom: 8px;
+  color: var(--text-1);
+}
+.path-block p {
+  font-size: 14.5px; color: var(--text-2); line-height: 1.7;
+  margin-bottom: 14px;
+}
+.path-block .path-row {
+  padding: 12px 16px;
+  background: white; border-radius: 8px;
+  font-size: 13.5px; line-height: 1.65;
+  margin-bottom: 8px;
+  border-left: 3px solid var(--xclaw);
+}
+.path-block .path-row strong { color: var(--xclaw-dark); }
+
+/* 启示 */
+.insights {
+  background: white; border-radius: 14px;
+  border: 1px solid var(--border);
+  padding: 28px 32px; margin-bottom: 48px;
+}
+.insights h4 {
+  font-size: 18px; font-weight: 700; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.insight-item {
+  padding: 14px 0;
+  border-top: 1px solid #F0F0F0;
+}
+.insight-item:first-of-type { border-top: none; }
+.insight-item h5 {
+  font-size: 15px; font-weight: 700; margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+  color: var(--xclaw-dark);
+}
+.insight-item .insight-num {
+  width: 24px; height: 24px; border-radius: 6px;
+  background: var(--xclaw); color: white;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  font-family: 'Inter', sans-serif;
+}
+.insight-item p {
+  font-size: 14px; color: var(--text-2); line-height: 1.7;
+  margin-left: 32px;
+}
+.insight-item p strong { color: var(--text-1); }
+
+/* 总结 */
+.summary {
+  background: linear-gradient(135deg, #00352F 0%, #00A89C 100%);
+  border-radius: 16px; padding: 40px 36px;
+  color: white; margin-bottom: 16px; position: relative; overflow: hidden;
+}
+.summary::before {
+  content: ''; position: absolute; top: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+}
+.summary .sum-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.15); padding: 4px 12px;
+  border-radius: 100px; font-size: 11px; font-weight: 700;
+  letter-spacing: 1px; margin-bottom: 14px; position: relative;
+}
+.summary h3 {
+  font-size: 24px; font-weight: 700; margin-bottom: 16px;
+  line-height: 1.4; position: relative;
+}
+.summary p {
+  font-size: 15px; color: rgba(255,255,255,0.92); line-height: 1.75;
+  position: relative; margin-bottom: 10px;
+}
+.summary p strong { color: #7FFAEB; font-weight: 600; }
+
+footer {
+  background: #0E1216; color: rgba(255,255,255,0.55);
+  padding: 32px; font-size: 12px; text-align: center;
+}
+footer .footer-meta { display: flex; gap: 20px; justify-content: center; margin-bottom: 10px; }
+footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
+
+@media (max-width: 720px) {
+  .hero h1 { font-size: 32px; }
+  .bm-table { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="../学科大模型文档中心/index.html" class="back">
+    <i data-lucide="chevron-left" style="width:16px;height:16px;stroke-width:2;"></i>
+    <span>返回文档中心</span>
+  </a>
+  <span class="title">Coze 扣子编程对比调研 V1</span>
+  <span class="badge">
+    <i data-lucide="search" style="width:11px;height:11px;stroke-width:2;"></i>
+    竞品调研 · 内部稿
+  </span>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">
+      <i data-lucide="layers" style="width:14px;height:14px;stroke-width:2;"></i>
+      竞品产品策略调研
+    </div>
+    <h1>扣子编程 = 字节做的<br><span class="accent">OpenClaw SaaS 包装</span></h1>
+    <p class="one-liner">看清它在干嘛，XClaw 才知道自己在哪条路上。同样用 OpenClaw 内核，扣子编程把它包装成 49 元/月 SaaS 卖给半技术用户——XClaw 走的是教师专用路线，不一样。</p>
+    <div class="meta">
+      <span>作者 · 婷婷</span>
+      <span>·</span>
+      <span>V1 · 2026-05-12</span>
+      <span>·</span>
+      <span>5 分钟读完</span>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- 核心发现 -->
+  <div class="key-finding">
+    <h2>
+      <i data-lucide="search-check" style="width:22px;height:22px;stroke-width:2;color:var(--coze);"></i>
+      最重要的一个发现
+    </h2>
+    <div class="finding-text">
+      <strong>Coze 扣子编程不是自己造内核，是直接接入 OpenClaw 把它包装成 SaaS 卖。</strong>
+      产品弹窗写着"3 分钟极简部署 OpenClaw"、"Vibe OpenClaw：用自然语言部署真正强大的 OpenClaw"——这是字节把 OpenClaw 商业化的明牌。
+    </div>
+    <div class="corollary">
+      <strong>由此印证两件事 →</strong>
+      ① OpenClaw 是行业 runtime 标准（连字节都直接接，不自己造） ·
+      ② 之前争论"Skill 是否专属龙虾"的答案明确——<strong>同样用 OpenClaw 内核，不同产品做完全不同的包装</strong>，Coze 卖给半技术用户、XClaw 卖给教师。
+    </div>
+  </div>
+
+  <!-- 3 张截图观察 -->
+  <div class="section-tag">SCREENSHOTS</div>
+  <h2 class="section-h2">3 张截图说了什么</h2>
+  <p class="section-lead">从扣子编程产品截图里能看到的产品策略 · 文字描述</p>
+
+  <div class="screenshot-list">
+
+    <div class="screenshot-card">
+      <div class="screenshot-head">
+        <h4>截图 1 · OpenClaw 部署指南弹窗</h4>
+        <div class="ss-meta">扣子编程首页 · 引导用户付费部署</div>
+      </div>
+      <div class="screenshot-body">
+        <div class="ss-row">
+          <div class="key">看到什么</div>
+          <div class="val">标题 <span class="quote">3 分钟极简部署 OpenClaw</span> · 报价 <span class="quote">49 元/月 限时体验</span> · slogan <span class="quote">Vibe OpenClaw：用自然语言，部署真正强大的 OpenClaw</span></div>
+        </div>
+        <div class="ss-row">
+          <div class="key">读出什么</div>
+          <div class="val"><strong>扣子编程 = OpenClaw 部署即服务</strong>。用户买的不是新工具，是"省掉自己装 OpenClaw 的麻烦"。49 元/月 是钓鱼价（限时），实际是月付订阅模式。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screenshot-card">
+      <div class="screenshot-head">
+        <h4>截图 2 · OpenClaw 部署成功后的工作台</h4>
+        <div class="ss-meta">付费后用户看到的是标准 OpenClaw 界面</div>
+      </div>
+      <div class="screenshot-body">
+        <div class="ss-row">
+          <div class="key">看到什么</div>
+          <div class="val">左侧是任务清单（"功能介绍 / 所有配置已完成 / 导览模型"）· 右侧是 chat 对话框 + 控制台 console 日志（典型 OpenClaw gateway 日志）</div>
+        </div>
+        <div class="ss-row">
+          <div class="key">读出什么</div>
+          <div class="val"><strong>用户体验 = 原生 OpenClaw + 引导式 onboarding</strong>。扣子编程没改 OpenClaw 主体，只是加了"新手任务清单"降低上手门槛。本质还是一个 chat + console 工作台。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screenshot-card">
+      <div class="screenshot-head">
+        <h4>截图 3 · 扣子编程主界面</h4>
+        <div class="ss-meta">大标题"扣子编程，你的 AI 开发伙伴已就位"</div>
+      </div>
+      <div class="screenshot-body">
+        <div class="ss-row">
+          <div class="key">看到什么</div>
+          <div class="val">入口分 4 类：<span class="quote">阿里应用</span> / <span class="quote">小程序</span> / <span class="quote">智能体</span> / <span class="quote">工作流</span> · 卡片包含 <span class="quote">一键部署 OpenClaw</span> / <span class="quote">智能体开发</span> / <span class="quote">工作流开发</span></div>
+        </div>
+        <div class="ss-row">
+          <div class="key">读出什么</div>
+          <div class="val"><strong>目标场景 = 多 AI 应用形态混合工厂</strong>。从阿里应用（电商场景）到小程序（前端场景）到智能体/工作流（业务场景）——它不是聚焦某一类用户，而是给"想做 AI 应用的所有人"提供工具。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 用户身份分布 -->
+  <div class="section-tag">USER POSITIONING</div>
+  <h2 class="section-h2">扣子编程的目标用户在哪？</h2>
+  <p class="section-lead">从"代码功底"维度看，4 家产品分布在不同位置</p>
+
+  <div class="user-spectrum">
+    <h4>代码功底 vs 业务理解 · 用户分布谱</h4>
+    <p class="us-lead">从最技术到最业务化，4 家产品定位各自不同</p>
+
+    <div class="spectrum-line">
+      <div class="spectrum-bar"></div>
+
+      <div class="spectrum-dot" style="left:5%;border-color:var(--cc);"></div>
+      <div class="spectrum-label top" style="left:5%;color:var(--cc);">资深工程师</div>
+      <div class="spectrum-label bottom" style="left:5%;color:var(--cc);font-weight:700;">Claude Code / Codex</div>
+
+      <div class="spectrum-dot" style="left:25%;border-color:var(--cc);"></div>
+      <div class="spectrum-label top" style="left:25%;color:var(--cc);">开发者</div>
+      <div class="spectrum-label bottom" style="left:25%;color:var(--cc);font-weight:700;">Cursor</div>
+
+      <div class="spectrum-dot" style="left:55%;border-color:var(--coze);"></div>
+      <div class="spectrum-label top" style="left:55%;color:var(--coze);">半技术用户</div>
+      <div class="spectrum-label bottom" style="left:55%;color:var(--coze);font-weight:700;">扣子编程 (Coze)</div>
+
+      <div class="spectrum-dot" style="left:88%;border-color:var(--xclaw);background:var(--xclaw);"></div>
+      <div class="spectrum-label top" style="left:88%;color:var(--xclaw-dark);font-weight:700;">教师 (非技术)</div>
+      <div class="spectrum-label bottom" style="left:88%;color:var(--xclaw-dark);font-weight:700;">XClaw</div>
+    </div>
+
+    <div style="margin-top:48px;padding:16px 18px;background:var(--coze-bg);border-left:3px solid var(--coze);border-radius:6px;font-size:14px;line-height:1.7;color:var(--text-1);">
+      <strong style="color:var(--coze);">扣子编程的目标用户画像 →</strong>
+      不是工程师（他们直接用 Claude Code / Cursor），也不是普通办公人员（Coze 主站给他们用）。<strong>是夹在中间的半技术用户</strong>——产品经理 / 运营 / 增长黑客 / 小老板，能描述需求 + 懂业务流程 + 不写代码 + 不想自己运维。
+    </div>
+  </div>
+
+  <!-- 4 家产品对比 -->
+  <div class="section-tag">BENCHMARK</div>
+  <h2 class="section-h2">4 家产品横向对比</h2>
+  <p class="section-lead">Claude Code · Cursor · Codex · 扣子编程——8 维硬对比</p>
+
+  <div class="benchmark-table">
+    <div class="benchmark-table-head">
+      <h4>4 家 vibecoding 类产品对比矩阵</h4>
+      <p>同样基于大模型 + 工具调用，但目标用户、形态、计费、运维方式完全不同</p>
+    </div>
+    <table class="bm-table">
+      <thead>
+        <tr>
+          <th>维度</th>
+          <th class="cc-h">Claude Code</th>
+          <th class="cc-h">Cursor</th>
+          <th class="cc-h">Codex (OpenAI)</th>
+          <th class="coze-h">扣子编程 (Coze)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>产品形态</td>
+          <td>CLI 终端工具</td>
+          <td>IDE 编辑器</td>
+          <td>API + Playground</td>
+          <td>SaaS 网页平台</td>
+        </tr>
+        <tr>
+          <td>目标用户</td>
+          <td>资深工程师</td>
+          <td>开发者</td>
+          <td>开发者 / 集成方</td>
+          <td>半技术用户（产品 / 运营 / 老板）</td>
+        </tr>
+        <tr>
+          <td>主要场景</td>
+          <td>代码项目</td>
+          <td>代码项目</td>
+          <td>代码项目 + API 集成</td>
+          <td>业务流程 / 多形态 AI 应用</td>
+        </tr>
+        <tr>
+          <td>底层引擎</td>
+          <td>自研 + Claude API</td>
+          <td>自研 + 多模型</td>
+          <td>OpenAI API</td>
+          <td><strong>OpenClaw（接入开源内核）</strong></td>
+        </tr>
+        <tr>
+          <td>部署 / 运维</td>
+          <td>用户自管</td>
+          <td>用户自管</td>
+          <td>用户自管</td>
+          <td><strong>平台代管（一键部署）</strong></td>
+        </tr>
+        <tr>
+          <td>Vibecoding 形态</td>
+          <td>终端对话</td>
+          <td>编辑器 inline 提示</td>
+          <td>API + 简单 UI</td>
+          <td>拖拽 + 表单 + 自然语言</td>
+        </tr>
+        <tr>
+          <td>计费模式</td>
+          <td>API 用量</td>
+          <td>$20/月 订阅</td>
+          <td>API 用量</td>
+          <td><strong>49 元/月 SaaS</strong></td>
+        </tr>
+        <tr>
+          <td>核心价值</td>
+          <td>程序员副驾</td>
+          <td>程序员副驾</td>
+          <td>集成到自家产品</td>
+          <td><strong>不写代码就能做 AI 应用</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 一条画线说差异 -->
+  <div style="background:white;padding:28px 32px;border-radius:14px;border:1px solid var(--border);margin-bottom:56px;">
+    <h4 style="font-size:16px;font-weight:700;margin-bottom:14px;">⚙️ 用一条线画清差异</h4>
+    <pre style="font-family:'JetBrains Mono', monospace;font-size:13px;line-height:1.85;background:var(--bg-page);padding:18px 20px;border-radius:8px;white-space:pre-wrap;color:var(--text-1);">CC / Cursor / Codex
+└─ "程序员副驾"（你已经在写代码，AI 帮你更快）
+   适合：会写代码的人
+
+扣子编程
+└─ "半技术 SaaS 工厂"（你不写代码，但想做 AI 应用）
+   适合：会描述需求 + 懂业务流程 + 愿意付月费免运维的人
+
+XClaw（教师专用）
+└─ "教学 SOP 模板 + 教师填空 + 算法配合调教"
+   适合：教师（非程序员、非业务人员、只懂教学）</pre>
+  </div>
+
+  <!-- XClaw 在哪条路上 -->
+  <div class="section-tag">XCLAW POSITIONING</div>
+  <h2 class="section-h2">XClaw 走的是第三条路</h2>
+  <p class="section-lead">既不抄 CC/Cursor/Codex，也不简单照搬扣子编程——教学场景需要再下沉一层</p>
+
+  <div class="path-block">
+    <span class="pb-tag">
+      <i data-lucide="route" style="width:11px;height:11px;stroke-width:2;"></i>
+      XClaw 的差异化路线
+    </span>
+    <h3>不让教师从空白页开始</h3>
+    <p>Coze 扣子编程虽然门槛低，但仍要求用户"配置工作流 + 选插件 + 理解触发器"——<strong>这对普通教师还是太难</strong>。XClaw 必须再下沉一层：</p>
+
+    <div class="path-row">
+      <strong>① 种子 Skill 包先行</strong>·教学专家定义 20 件普适教具（出题/批改/评语/学情周报…）—— 教师打开 XClaw 不是空白页，是 20 个能用的工具
+    </div>
+    <div class="path-row">
+      <strong>② 教师只做"模板微调"</strong>·90% 教师停在 L1 模板微调（改参数）+ L2 自然语言生成（说一句话 AI 生成新 Skill）—— <strong>不要求教师懂工作流</strong>
+    </div>
+    <div class="path-row">
+      <strong>③ 算法配合做难的</strong>·教师数字分身（L4）让算法做底层风格建模，教师只标记"不像我"——不要求教师懂 prompt / 微调 / RAG
+    </div>
+    <div class="path-row">
+      <strong>④ 教学语境深度封装</strong>·每个 Skill 都内置教学法（布鲁姆分类 / SOLO 分类 / 苏格拉底追问）—— 不是通用工具加一层教育皮肤
+    </div>
+  </div>
+
+  <!-- 3 条关键启示 -->
+  <div class="insights">
+    <h4>
+      <i data-lucide="lightbulb" style="width:18px;height:18px;stroke-width:2;color:var(--xclaw);"></i>
+      对 XClaw 战略选择的 3 条启示
+    </h4>
+
+    <div class="insight-item">
+      <h5><span class="insight-num">1</span>OpenClaw 内核选型再次得到印证</h5>
+      <p>连字节都直接接 OpenClaw（不自己造），<strong>说明这是行业 runtime 标准</strong>。XClaw V0.2 已基于 OpenClaw 二开，方向无误。后续 2027 自研"高教龙虾"内核时也要保持与 OpenClaw 的 Skills 兼容——既不被锁死，又能跟得上行业生态。</p>
+    </div>
+
+    <div class="insight-item">
+      <h5><span class="insight-num">2</span>不抄"半技术 SaaS"路线 · 教师不是产品经理</h5>
+      <p>Coze 扣子编程的"业务装配"路线对普通教师还是太难（要懂工作流、要选插件、要配触发器）。XClaw 必须再下沉——<strong>从"教师配置 Skill" 退到 "教师在已有 Skill 上微调"</strong>。这是教学场景 vs 通用业务场景的本质差异。</p>
+    </div>
+
+    <div class="insight-item">
+      <h5><span class="insight-num">3</span>价格参照 · 本地化定价已有竞争力</h5>
+      <p>Coze 扣子编程 49 元/月 SaaS（年 588 元 / 人）—— XClaw 本地化版 18 万/校/年，假设 1 校 200 教师，<strong>年人均 900 元</strong>。同价位但 XClaw 给的是"本地化部署 + 教学场景特化 + Skill 跨学期累积"，价值密度远高。销售话术可以直接说："我们不卖 SaaS 月费，卖的是学校的教学数字资产容器。"</p>
+    </div>
+  </div>
+
+  <!-- 总结 -->
+  <div class="summary">
+    <span class="sum-tag">
+      <i data-lucide="quote" style="width:11px;height:11px;stroke-width:2;"></i>
+      一句话总结
+    </span>
+    <h3>Coze 扣子编程是镜子，照清 XClaw 的差异化</h3>
+    <p>
+      <strong>同样基于 OpenClaw 内核</strong>，扣子编程包装成 49 元/月 SaaS 给半技术用户做业务流程，XClaw 包装成本地化教学工作台给教师做备建课/教学/考评/督管。
+    </p>
+    <p>
+      产品形态不同、目标用户不同、计费模式不同、差异化定位不同——<strong>看清扣子编程，反而能确认 XClaw 在产品光谱上的正确位置</strong>：教学场景专用，教师友好，不要做"半技术 SaaS"。
+    </p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-meta">
+    <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>作者 · 婷婷</span>
+    <span><i data-lucide="git-branch" style="width:11px;height:11px;stroke-width:2;"></i>V1 · 竞品调研</span>
+    <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>2026-05-12</span>
+  </div>
+  <div>本文档为内部讨论稿 · 配套 XClaw 整体规划 V4 阅读 · 数据来源：扣子编程官方产品截图（2026-05-11）</div>
+</footer>
+
+<script>
+  if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+</script>
+
+</body>
+</html>
