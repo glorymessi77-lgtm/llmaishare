@@ -1351,6 +1351,169 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
 
 .icon-svg { width: 18px; height: 18px; stroke-width: 2; }
 
+/* 核心问题共识章节 */
+.consensus-intro {
+  background: linear-gradient(135deg, var(--warning-bg) 0%, #FFFFFF 100%);
+  border: 1px solid var(--warning); border-left: 4px solid var(--warning);
+  border-radius: 12px; padding: 24px 28px; margin-bottom: 28px;
+}
+.consensus-intro .ci-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--warning); color: white;
+  padding: 4px 12px; border-radius: 100px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.consensus-intro h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+.consensus-intro p { font-size: 13.5px; color: var(--text-2); line-height: 1.65; }
+.consensus-intro p strong { color: var(--text-1); }
+
+.consensus-list { display: flex; flex-direction: column; gap: 20px; margin-bottom: 32px; }
+.consensus-item {
+  background: white; border-radius: 12px;
+  border: 1px solid var(--border); overflow: hidden;
+}
+.consensus-q {
+  background: linear-gradient(135deg, var(--gray-9) 0%, #2D3A47 100%);
+  color: white; padding: 16px 22px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.consensus-q .q-tag {
+  background: var(--warning); color: white;
+  padding: 3px 10px; border-radius: 100px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+}
+.consensus-q .q-title { font-size: 15px; font-weight: 600; flex: 1; }
+.consensus-q .q-status {
+  font-size: 10.5px; padding: 3px 10px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.25);
+}
+.consensus-body { padding: 18px 22px; }
+.consensus-conflict {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-bottom: 14px;
+}
+.conflict-side {
+  padding: 12px 14px; border-radius: 8px;
+  font-size: 13px; line-height: 1.6;
+}
+.conflict-side.tt { background: var(--teacher-bg); border-left: 3px solid var(--teacher-color); }
+.conflict-side.tongtong { background: var(--info-bg); border-left: 3px solid var(--info); }
+.conflict-side strong { font-weight: 700; display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: 0.5px; }
+.conflict-side.tt strong { color: var(--teacher-color); }
+.conflict-side.tongtong strong { color: var(--info); }
+.consensus-answer {
+  padding: 14px 16px; background: var(--brand-bg);
+  border-radius: 8px; border-left: 4px solid var(--brand-primary);
+  font-size: 13.5px; color: var(--text-1); line-height: 1.7;
+}
+.consensus-answer strong { color: var(--brand-dark); font-weight: 600; }
+.consensus-answer .answer-label {
+  display: inline-block; background: var(--brand-primary); color: white;
+  padding: 2px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  margin-right: 8px;
+}
+
+/* CLI/Skill/MCP 对比表 */
+.tech-compare {
+  background: white; border-radius: 12px;
+  border: 1px solid var(--border); overflow: hidden;
+  margin-top: 20px;
+}
+.tech-compare-head { padding: 18px 24px; background: var(--gray-9); color: white; }
+.tech-compare-head h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.tech-compare-head p { font-size: 12.5px; opacity: 0.85; line-height: 1.5; }
+.tech-table { width: 100%; border-collapse: collapse; }
+.tech-table th {
+  background: var(--gray-1); padding: 11px 14px;
+  text-align: left; font-size: 12px; font-weight: 700;
+  color: var(--text-2);
+  border-bottom: 1px solid var(--border);
+}
+.tech-table th.cli-col { color: var(--success); background: var(--success-bg); }
+.tech-table th.skill-col { color: var(--warning); background: var(--warning-bg); }
+.tech-table th.mcp-col { color: var(--info); background: var(--info-bg); }
+.tech-table td {
+  padding: 11px 14px; font-size: 12.5px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top; line-height: 1.55;
+}
+.tech-table td:first-child {
+  font-weight: 700; color: var(--text-1);
+  font-size: 12px; background: var(--gray-1); width: 22%;
+}
+.tech-table tr:last-child td { border-bottom: none; }
+
+.cost-bar {
+  display: inline-flex; gap: 3px; align-items: center;
+  vertical-align: middle;
+}
+.cost-bar .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.cost-bar .dot.green { background: var(--success); }
+.cost-bar .dot.yellow { background: var(--warning); }
+.cost-bar .dot.red { background: var(--danger); }
+.cost-bar .dot.empty { background: var(--gray-3); }
+.cost-label {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  margin-left: 6px; vertical-align: middle;
+}
+.cost-label.low { color: var(--success); }
+.cost-label.mid { color: var(--warning); }
+.cost-label.high { color: var(--danger); }
+
+/* 决策树 */
+.decision-tree {
+  background: linear-gradient(135deg, var(--brand-bg) 0%, #FFFFFF 100%);
+  border: 1px solid var(--brand-primary);
+  border-radius: 12px; padding: 24px; margin-top: 20px;
+}
+.decision-tree-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--brand-dark); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.decision-tree pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px; color: var(--text-1);
+  line-height: 1.75; background: white;
+  padding: 18px; border-radius: 8px;
+  white-space: pre-wrap; overflow-x: auto;
+  border: 1px solid var(--border);
+}
+
+/* 战略选择 */
+.strategy-pick {
+  margin-top: 20px; padding: 22px 26px;
+  background: linear-gradient(135deg, #FFFFFF 0%, var(--success-bg) 100%);
+  border: 1px solid var(--success);
+  border-left: 4px solid var(--success);
+  border-radius: 12px;
+}
+.strategy-pick-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--success); color: white;
+  padding: 4px 10px; border-radius: 100px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+.strategy-pick h5 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--text-1); }
+.strategy-pick .strategy-row {
+  padding: 10px 0; font-size: 13.5px; line-height: 1.7;
+  color: var(--text-1); border-bottom: 1px solid rgba(26,171,110,0.15);
+}
+.strategy-pick .strategy-row:last-child { border-bottom: none; }
+.strategy-pick .strategy-row strong { color: var(--success); }
+.strategy-pick .strategy-row .phase {
+  display: inline-block; min-width: 100px;
+  font-weight: 700; color: var(--success);
+  font-size: 12px;
+}
+
 @media (max-width: 1100px) {
   .sidebar { display: none; }
   .layout { padding: 32px; }
@@ -1412,6 +1575,7 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
       <a href="#agent">专题②: 智能体</a>
       <a href="#vibe">专题③: Vibecoding</a>
       <a href="#roadmap">Q3/Q4 技术路标</a>
+      <a href="#consensus">🆕 核心问题共识</a>
       <a href="#selfcheck">对抗性自检</a>
       <a href="#duty">职责分工</a>
       <a href="#takeaway">总结</a>
@@ -1780,11 +1944,11 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
           </div>
         </div>
 
-        <!-- L2 MCP -->
+        <!-- L2 接入层 -->
         <div class="arch-layer l2">
-          <span class="arch-layer-tag">L2 · MCP</span>
-          <h4><i data-lucide="plug" style="width:18px;height:18px;stroke-width:2;"></i>MCP 接入层（外部系统标准协议）</h4>
-          <div class="desc">不重复造小雅 / 学科大脑 / 校内其他平台（教务/学籍/评价/图书等），通过 MCP 标准化调用</div>
+          <span class="arch-layer-tag">L2 · 接入</span>
+          <h4><i data-lucide="plug" style="width:18px;height:18px;stroke-width:2;"></i>原子能力 / 接口层（CLI / Skill / MCP 多种实现）</h4>
+          <div class="desc">不重复造小雅 / 学科大脑 / 校内其他平台（教务/学籍/评价/图书等）。**MCP 只是其中一种实现** —— 自家平台对接走 CLI/内部接口更省 token，跨产品/跨平台才上 MCP（详见第 09 章技术选型）</div>
           <div class="mcp-row">
             <span>小雅平台 MCP × 8</span>
             <span>学科大脑 MCP × 3</span>
@@ -2805,9 +2969,322 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
       </table>
     </section>
 
-    <!-- 09 自检 -->
+    <!-- 09 核心问题共识与技术选型（新增）-->
+    <section class="chapter" id="consensus">
+      <div class="chapter-num">09 · CORE Q&A</div>
+      <h2>核心问题共识与技术选型</h2>
+      <p class="lead">5/11 与徐彤彤研讨 XClaw 教学应用，识别出 5 个仍未形成定论的核心问题。明天会议（孙笑 / 何老师 / 分校 / 小欧 / 青柠）必须对齐口径。</p>
+
+      <div class="consensus-intro">
+        <div class="ci-tag">
+          <i data-lucide="users" style="width:11px;height:11px;stroke-width:2;"></i>
+          会议背景
+        </div>
+        <h3>5/11 婷婷 × 彤彤研讨 · 1 小时</h3>
+        <p>讨论 XClaw 教学应用的产品形态、技术选型、师生场景边界。核心结论已对齐，但 5 个概念/技术问题仍需跨团队拍板。<strong>本章对所有问题给出建议口径</strong>，作为明天会议的对齐基础。</p>
+      </div>
+
+      <!-- Q1 -->
+      <div class="consensus-list">
+        <div class="consensus-item">
+          <div class="consensus-q">
+            <span class="q-tag">Q1</span>
+            <span class="q-title">Skill 是不是 OpenClaw（龙虾）专属概念？</span>
+            <span class="q-status">概念共识</span>
+          </div>
+          <div class="consensus-body">
+            <div class="consensus-conflict">
+              <div class="conflict-side tt">
+                <strong>婷婷立场</strong>Skill 是行业通用概念 · 是可复用的智能体动作单元 · 不是 OpenClaw 专属
+              </div>
+              <div class="conflict-side tongtong">
+                <strong>彤彤挑战</strong>只要涉及 Skill 调度就是龙虾类产品 · ima.copilot 也是龙虾类封装
+              </div>
+            </div>
+            <div class="consensus-answer">
+              <span class="answer-label">建议口径</span>
+              婷婷立场正确，但表述要分清三层：<strong>① "Skill 概念"</strong>（动作单元封装）= 通用，所有智能体平台都有等价物；<strong>② "OpenClaw 原生 Skill 格式"</strong>（markdown + 工具调用 + 沙箱）= 龙虾系特有；<strong>③ "能调度 Skill 的产品"</strong> = 大概率是 Claude 系生态二次封装（CC、Cursor、Codex、ima.copilot 等）。<br><br>
+              <strong>对外口径</strong>："Skill 是概念家族——OpenClaw 原生 Skill 是最完整形态，其他智能体的 Skill 是等价物。XClaw 选 OpenClaw 内核是为拿最强 Skill 调度能力，但不被'Skill = 龙虾'绑死。"
+            </div>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="consensus-item">
+          <div class="consensus-q">
+            <span class="q-tag">Q2</span>
+            <span class="q-title">学生端到底是不是龙虾产品？</span>
+            <span class="q-status">产品定义</span>
+          </div>
+          <div class="consensus-body">
+            <div class="consensus-conflict">
+              <div class="conflict-side tt">
+                <strong>婷婷立场</strong>学生是 Consumer · 用阉割版 Claw 或封装的超级智能体 · 不接触 XClaw 本身
+              </div>
+              <div class="conflict-side tongtong">
+                <strong>彤彤挑战</strong>学生用 Skill 一定要通过某种 Claw 调度 · 所以也得接触 Claw
+              </div>
+            </div>
+            <div class="consensus-answer">
+              <span class="answer-label">建议口径</span>
+              <strong>技术实现 vs 用户感知是两件事</strong>——
+              <ul style="margin:8px 0 8px 18px;line-height:1.8;">
+                <li><strong>产品层（用户感知）</strong>：学生用的是"教师数字分身"产品形态，不需要懂 XClaw —— 婷婷立场 ✅</li>
+                <li><strong>技术层（运行时）</strong>：分身背后用 XClaw Engine 调度教师创编的 Skill —— 彤彤判断 ✅</li>
+              </ul>
+              两者并不矛盾。<strong>类比</strong>：用户用微信，不需要懂腾讯云。学生感知"伴学空间/数字助教"，背后是 XClaw Engine。
+            </div>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="consensus-item">
+          <div class="consensus-q">
+            <span class="q-tag">Q3</span>
+            <span class="q-title">CLI / Skill / MCP 三种实现方式怎么选？</span>
+            <span class="q-status">技术战略</span>
+          </div>
+          <div class="consensus-body">
+            <div class="consensus-conflict">
+              <div class="conflict-side tt">
+                <strong>婷婷立场</strong>校内其他平台用 CLI / MCP / Skill 都可以接入
+              </div>
+              <div class="conflict-side tongtong">
+                <strong>彤彤洞察</strong>MCP 全量读取耗 token · 自家产品对接没必要上 MCP · 除非战略要公开生态
+              </div>
+            </div>
+            <div class="consensus-answer">
+              <span class="answer-label">建议口径</span>
+              <strong>按"调用范围 × token 成本 × 战略意图"三维选型 · 短期走 CLI/Skill，中期再判断 MCP</strong>。详细技术对比见下方调研。
+            </div>
+
+            <!-- CLI/Skill/MCP 对比表 -->
+            <div class="tech-compare">
+              <div class="tech-compare-head">
+                <h4>🔬 CLI / Skill / MCP 三方案对比调研</h4>
+                <p>从场景支撑、Token 成本、技术成本、开放性等维度系统对比 · 给孙笑/小欧/青柠当作明天讨论的事实基础</p>
+              </div>
+              <table class="tech-table">
+                <thead>
+                  <tr>
+                    <th>维度</th>
+                    <th class="cli-col">🟢 CLI / 内部接口</th>
+                    <th class="skill-col">🟡 Skill</th>
+                    <th class="mcp-col">🔵 MCP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>本质</td>
+                    <td>直接函数调用 / RESTful API / RPC</td>
+                    <td>标准化工作流定义（markdown + 工具调用 + SOP）</td>
+                    <td>开放协议（JSON-RPC over WebSocket/HTTP）</td>
+                  </tr>
+                  <tr>
+                    <td>调用方</td>
+                    <td>程序代码（不经过 LLM）</td>
+                    <td>智能体 / XClaw Engine</td>
+                    <td>任何支持 MCP 的 LLM 客户端</td>
+                  </tr>
+                  <tr>
+                    <td>Token 成本</td>
+                    <td><span class="cost-bar"><span class="dot green"></span><span class="dot empty"></span><span class="dot empty"></span></span><span class="cost-label low">极低（不进 LLM）</span></td>
+                    <td><span class="cost-bar"><span class="dot green"></span><span class="dot yellow"></span><span class="dot empty"></span></span><span class="cost-label mid">中（按需读取 Skill 定义）</span></td>
+                    <td><span class="cost-bar"><span class="dot red"></span><span class="dot red"></span><span class="dot red"></span></span><span class="cost-label high">高（全量读取所有能力描述）</span></td>
+                  </tr>
+                  <tr>
+                    <td>实现成本</td>
+                    <td><span class="cost-bar"><span class="dot green"></span><span class="dot empty"></span><span class="dot empty"></span></span><span class="cost-label low">低（直接接代码）</span></td>
+                    <td><span class="cost-bar"><span class="dot green"></span><span class="dot yellow"></span><span class="dot empty"></span></span><span class="cost-label mid">中（定义 SOP + 调试）</span></td>
+                    <td><span class="cost-bar"><span class="dot yellow"></span><span class="dot yellow"></span><span class="dot empty"></span></span><span class="cost-label mid">中-高（适配 MCP 协议 + 服务部署）</span></td>
+                  </tr>
+                  <tr>
+                    <td>延迟</td>
+                    <td>最低（毫秒级）</td>
+                    <td>中（含 LLM 推理）</td>
+                    <td>中-高（含网络往返 + LLM 推理）</td>
+                  </tr>
+                  <tr>
+                    <td>开放性</td>
+                    <td>私有（耦合自家系统）</td>
+                    <td>半私有（教师创编 + 课程组共享）</td>
+                    <td>完全开放（任何 MCP 客户端可调用）</td>
+                  </tr>
+                  <tr>
+                    <td>跨平台</td>
+                    <td>❌ 锁死自家</td>
+                    <td>🟡 通过 MCP 暴露可跨</td>
+                    <td>✅ 天然跨平台</td>
+                  </tr>
+                  <tr>
+                    <td>教师可创编</td>
+                    <td>❌ 需研发</td>
+                    <td>✅ Vibecoding 主力</td>
+                    <td>❌ 需研发（封装 MCP Server）</td>
+                  </tr>
+                  <tr>
+                    <td>能力发现</td>
+                    <td>程序固化（写死）</td>
+                    <td>智能体按需选择</td>
+                    <td>LLM 动态发现可用能力</td>
+                  </tr>
+                  <tr>
+                    <td>典型场景</td>
+                    <td><strong>XClaw ↔ 小雅自家对接</strong> · 内部数据流转 · 高频低延迟</td>
+                    <td><strong>教师备/建课/教学/考核/督导工作流</strong> · 标准教学动作封装</td>
+                    <td><strong>暴露给第三方智能体</strong>（CC / Coze / 通义） · 生态开放</td>
+                  </tr>
+                  <tr>
+                    <td>典型不适用</td>
+                    <td>开放给第三方调用 · 教师创编</td>
+                    <td>复杂逻辑分支 · 跨产品集成</td>
+                    <td>自家平台高频对接（成本爆炸）</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- 决策树 -->
+            <div class="decision-tree">
+              <div class="decision-tree-title">
+                <i data-lucide="git-branch" style="width:14px;height:14px;stroke-width:2;"></i>
+                选型决策树
+              </div>
+              <pre>是不是自家平台内部对接（小雅 / XClaw / 学科大脑）?
+├─ 是 → CLI / 内部接口  ✅ 最便宜、最快、自家可控
+└─ 否 → 需要教师创编 / 沉淀教学方法论?
+        ├─ 是 → Skill                  ✅ 教师友好 · Vibecoding 主力
+        └─ 否 → 战略上要开放给第三方智能体?
+                ├─ 是 → MCP             ✅ 跨平台生态
+                └─ 否 → CLI            ✅ 性能最佳</pre>
+            </div>
+
+            <!-- 战略选择 -->
+            <div class="strategy-pick">
+              <span class="strategy-pick-tag">
+                <i data-lucide="target" style="width:11px;height:11px;stroke-width:2;"></i>
+                XClaw 推荐战略
+              </span>
+              <h5>短期 CLI/Skill 主力 · 中期再决策是否开放 MCP 生态</h5>
+              <div class="strategy-row"><span class="phase">2026 Q3-Q4</span>· CLI 走自家平台融合（XClaw ↔ 小雅 / 学科大脑） + Skill 做教师创编主力 · <strong>不上 MCP</strong></div>
+              <div class="strategy-row"><span class="phase">2027 H1</span>· 视生态战略决定是否上 MCP 暴露 Skill 给第三方（CC/Coze 调用 XClaw）</div>
+              <div class="strategy-row"><span class="phase">2027+</span>· 看技术趋势决策——彤彤判断 MCP 未来可能被新协议取代，不必过早 all-in</div>
+              <div class="strategy-row" style="margin-top:8px;padding-top:12px;border-top:1px dashed var(--success);">
+                ⚠️ <strong>需要明天会上孙笑 / 小欧表态</strong>：他们一直倾向"把平台拆解成 MCP 化"，方向是否还坚持？这个战略问题决定了 Q3 工程量。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="consensus-item">
+          <div class="consensus-q">
+            <span class="q-tag">Q4</span>
+            <span class="q-title">五层架构的 L2 层定位（MCP 接入层 vs 原子能力层）</span>
+            <span class="q-status">架构定型</span>
+          </div>
+          <div class="consensus-body">
+            <div class="consensus-conflict">
+              <div class="conflict-side tongtong">
+                <strong>彤彤质疑</strong>L2 MCP 接入层和 L3 Skill 库为什么分两层？Skill 可以脱离 MCP，MCP 也不一定支持 Skill
+              </div>
+              <div class="conflict-side tt">
+                <strong>婷婷澄清</strong>MCP/API = 底层能干啥（原子能力） · Skill = 怎么用这些原子能力干活（工作流说明手册）
+              </div>
+            </div>
+            <div class="consensus-answer">
+              <span class="answer-label">建议口径</span>
+              <strong>L2 改名为"原子能力 / 接口层"</strong>（已在本文档第 02 章架构图更新）。MCP 只是 L2 的一种实现方式，CLI / 内部 API 也属于 L2。<br><br>
+              ✅ 架构图调整：<strong>L2 · 接入</strong>（原子能力 / 接口层）→ 涵盖 CLI / Skill / MCP / API 等多种方式<br>
+              ✅ Skill 库依然是 L3（工作流定义层）—— Skill 内部可调用 L2 的任意接入方式
+            </div>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="consensus-item">
+          <div class="consensus-q">
+            <span class="q-tag">Q5</span>
+            <span class="q-title">教师 / 学生场景最终定型</span>
+            <span class="q-status">场景定型</span>
+          </div>
+          <div class="consensus-body">
+            <div class="consensus-conflict">
+              <div class="conflict-side tt">
+                <strong>婷婷版本</strong>教师 4 场景：备/建课、教学、考核、督导
+              </div>
+              <div class="conflict-side tongtong">
+                <strong>彤彤版本</strong>5 场景一线教师高频 · 去掉管理层（不在平台体现）
+              </div>
+            </div>
+            <div class="consensus-answer">
+              <span class="answer-label">建议口径</span>
+              <strong>两人趋同，差异在督导和管理层放不放</strong>——
+              <ul style="margin:8px 0 8px 18px;line-height:1.8;">
+                <li>✅ 教师固定 <strong>4 个场景</strong>：备/建课、教学、考核、督导（婷婷版本）</li>
+                <li>✅ 学生固定 <strong>1 个大场景 = 自主学习，4 个子场景</strong>：答疑、学习路径、资源生成（OpenMAIC）、学情自检</li>
+                <li>❌ <strong>砍掉评/管</strong>——评（评教半年一次价值低）+ 管（教务/学籍/管理层在平台体现不出来）</li>
+              </ul>
+              砍掉这两个不是否定它们重要，而是 <strong>XClaw 不在这两个场景发力</strong>—— Q3/Q4 资源聚焦四大场景。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 待办分工 -->
+      <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:24px;margin-top:32px;">
+        <h4 style="font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+          <i data-lucide="list-checks" style="width:16px;height:16px;stroke-width:2;color:var(--brand-primary);"></i>
+          明天会议待办分工
+        </h4>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="background:var(--gray-1);">
+              <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;width:40%;">待办事项</th>
+              <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;width:18%;">主负责</th>
+              <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;width:18%;">截止</th>
+              <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--text-2);text-transform:uppercase;letter-spacing:0.5px;">输出物</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-top:1px solid var(--border);">
+              <td style="padding:11px 14px;">Vibecoding 难度分层 & 可行性分析</td>
+              <td style="padding:11px 14px;color:var(--text-2);">青柠 + 婷婷</td>
+              <td style="padding:11px 14px;color:var(--danger);font-weight:600;">5/18 (1 周)</td>
+              <td style="padding:11px 14px;color:var(--text-3);">4 层难度分层 + 原子能力依赖清单 + 部署/鉴权可行性</td>
+            </tr>
+            <tr style="border-top:1px solid var(--border);">
+              <td style="padding:11px 14px;">MCP / Skill / CLI 战略选型拍板</td>
+              <td style="padding:11px 14px;color:var(--text-2);">孙笑 + 小欧 + 婷婷</td>
+              <td style="padding:11px 14px;color:var(--danger);font-weight:600;">5/12 明天</td>
+              <td style="padding:11px 14px;color:var(--text-3);">短期 CLI/Skill or 短期 MCP · 明天会议必须明确</td>
+            </tr>
+            <tr style="border-top:1px solid var(--border);">
+              <td style="padding:11px 14px;">校外开放 Skill 安全合规白名单机制</td>
+              <td style="padding:11px 14px;color:var(--text-2);">法务 + 学校 IT + 彤彤</td>
+              <td style="padding:11px 14px;color:var(--warning);font-weight:600;">6/15 (一月)</td>
+              <td style="padding:11px 14px;color:var(--text-3);">校内/校外预审/校外开放 三层 Skill 白名单规则</td>
+            </tr>
+            <tr style="border-top:1px solid var(--border);">
+              <td style="padding:11px 14px;">教师 Vibecoding 产物 → 平台部署/分发流程</td>
+              <td style="padding:11px 14px;color:var(--text-2);">青柠 + 彤彤</td>
+              <td style="padding:11px 14px;color:var(--warning);font-weight:600;">5/25 (2 周)</td>
+              <td style="padding:11px 14px;color:var(--text-3);">账号鉴权 + 权限管理 + 发布订阅完整流程图</td>
+            </tr>
+            <tr style="border-top:1px solid var(--border);">
+              <td style="padding:11px 14px;">教师 AI 助手 vs XClaw 产品命名统一</td>
+              <td style="padding:11px 14px;color:var(--text-2);">婷婷 + 小雅产品</td>
+              <td style="padding:11px 14px;color:var(--warning);font-weight:600;">5/18 (1 周)</td>
+              <td style="padding:11px 14px;color:var(--text-3);">对外统一称谓 · 内部统一称谓 · 销售话术</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 10 自检 -->
     <section class="chapter" id="selfcheck">
-      <div class="chapter-num">09 · STRESS TEST</div>
+      <div class="chapter-num">10 · STRESS TEST</div>
       <h2>对抗性自检</h2>
       <p class="lead">这套规划可能错在哪——主动暴露风险，欢迎教学专家与跨团队挑战。</p>
 
@@ -2850,9 +3327,9 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
       </div>
     </section>
 
-    <!-- 10 分工 -->
+    <!-- 11 分工 -->
     <section class="chapter" id="duty">
-      <div class="chapter-num">10 · OWNERSHIP</div>
+      <div class="chapter-num">11 · OWNERSHIP</div>
       <h2>职责分工</h2>
       <p class="lead">XClaw 是六方协作产物：教学专家供方法论 · 小雅做接入 · XClaw 团队做 Engine · 研究院做分身 · 学科大脑给知识 · 销售交付做服务。各司其职，互不越界。</p>
 
@@ -2935,9 +3412,9 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
       </div>
     </section>
 
-    <!-- 11 总结 -->
+    <!-- 12 总结 -->
     <section class="chapter" id="takeaway">
-      <div class="chapter-num">11 · TAKEAWAY</div>
+      <div class="chapter-num">12 · TAKEAWAY</div>
       <h2>一句话总结</h2>
       <div class="takeaway">
         <div class="label">
