@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XClaw 2026 Q3/Q4 产品路标 V1 · 功能清单 + 用户价值</title>
+<title>XClaw 2026 Q3/Q4 产品路标 V1 · 从演示到 1000 人规模交付</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -19,6 +19,8 @@
   --q4: #5B6EE1;
   --q4-dark: #3F4FAF;
   --q4-bg: #EEF0FB;
+  --infra: #B8479C;
+  --infra-bg: #FAEEF7;
   --teacher: #00A89C;
   --teacher-bg: #E6F7F5;
   --student: #5B6EE1;
@@ -86,7 +88,7 @@ body {
   border: 1px solid rgba(255,255,255,0.2); margin-bottom: 24px;
 }
 .hero h1 {
-  font-size: 48px; font-weight: 700; line-height: 1.2;
+  font-size: 46px; font-weight: 700; line-height: 1.2;
   letter-spacing: -1px; margin-bottom: 20px;
 }
 .hero h1 .accent {
@@ -117,6 +119,37 @@ body {
   font-size: 16px; color: var(--text-2); margin-bottom: 36px;
   line-height: 1.6;
 }
+
+/* 现状陈述（最重要）*/
+.status-callout {
+  background: linear-gradient(135deg, var(--warning-bg) 0%, #FFFFFF 100%);
+  border: 1px solid var(--warning);
+  border-left: 6px solid var(--warning);
+  border-radius: 14px; padding: 28px 32px;
+  margin-bottom: 32px;
+}
+.status-callout .sc-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--warning); color: white;
+  padding: 4px 12px; border-radius: 100px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+.status-callout h3 {
+  font-size: 20px; font-weight: 700; margin-bottom: 10px;
+}
+.status-callout p {
+  font-size: 14.5px; color: var(--text-2); line-height: 1.7;
+  margin-bottom: 12px;
+}
+.status-callout p strong { color: var(--text-1); }
+.status-callout .sc-key {
+  padding: 14px 18px; background: white;
+  border-radius: 8px; border-left: 3px solid var(--warning);
+  font-size: 13.5px; line-height: 1.7;
+  color: var(--text-1);
+}
+.status-callout .sc-key strong { color: var(--warning); }
 
 /* 总览块 */
 .overview {
@@ -151,9 +184,14 @@ body {
 .overview-quarter h4 {
   font-size: 22px; font-weight: 700; margin-bottom: 10px;
 }
-.overview-quarter .oq-theme {
-  font-size: 14px; color: var(--text-2); line-height: 1.6; margin-bottom: 14px;
+.overview-quarter .oq-goal {
+  padding: 10px 14px; background: white; border-radius: 8px;
+  font-size: 13px; color: var(--text-1); line-height: 1.6;
+  margin-bottom: 14px;
+  font-weight: 600;
 }
+.overview-quarter.q3 .oq-goal { border-left: 3px solid var(--q3); }
+.overview-quarter.q4 .oq-goal { border-left: 3px solid var(--q4); }
 .overview-quarter .oq-items {
   display: flex; flex-direction: column; gap: 6px;
   font-size: 13px; color: var(--text-1); line-height: 1.55;
@@ -167,6 +205,10 @@ body {
 }
 .overview-quarter.q3 .oq-items li::before { color: var(--q3); }
 .overview-quarter.q4 .oq-items li::before { color: var(--q4); }
+.overview-quarter .oq-items li.infra {
+  font-weight: 700; color: var(--infra);
+}
+.overview-quarter .oq-items li.infra::before { color: var(--infra); }
 
 /* 季度区块 */
 .quarter-section {
@@ -200,6 +242,13 @@ body {
 .quarter-header .qh-theme {
   font-size: 15px; opacity: 0.92; position: relative;
 }
+.quarter-header .qh-criteria {
+  margin-top: 16px; padding: 12px 16px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 8px; position: relative;
+  font-size: 13px; line-height: 1.7;
+}
+.quarter-header .qh-criteria strong { color: #7FFAEB; }
 
 .quarter-body {
   background: white; padding: 32px;
@@ -207,15 +256,34 @@ body {
   border-radius: 0 0 16px 16px;
 }
 
+/* 模块组标题 */
+.module-group-title {
+  font-size: 14px; font-weight: 700;
+  color: var(--text-1); margin: 28px 0 14px;
+  padding: 8px 14px; border-radius: 6px;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.module-group-title.infra {
+  background: var(--infra-bg); color: var(--infra);
+}
+.module-group-title.scene {
+  background: var(--q3-bg); color: var(--q3-dark);
+}
+.module-group-title.scene.q4 {
+  background: var(--q4-bg); color: var(--q4-dark);
+}
+.module-group-title:first-child { margin-top: 0; }
+
 /* 功能模块卡 */
 .feature-list {
-  display: flex; flex-direction: column; gap: 16px;
+  display: flex; flex-direction: column; gap: 14px;
 }
 .feature-card {
   border-radius: 12px; padding: 22px 26px;
   border: 1px solid var(--border);
   background: white;
 }
+.feature-card.infra { border-left: 4px solid var(--infra); }
 .feature-card.q3 { border-left: 4px solid var(--q3); }
 .feature-card.q4 { border-left: 4px solid var(--q4); }
 .feature-card-head {
@@ -228,6 +296,7 @@ body {
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; font-size: 20px;
 }
+.feature-card.infra .feature-card-icon { background: var(--infra-bg); color: var(--infra); }
 .feature-card.q3 .feature-card-icon { background: var(--q3-bg); color: var(--q3-dark); }
 .feature-card.q4 .feature-card-icon { background: var(--q4-bg); color: var(--q4-dark); }
 .feature-card-title { flex: 1; }
@@ -246,6 +315,7 @@ body {
   border-radius: 4px; letter-spacing: 0.5px;
   flex-shrink: 0;
 }
+.feature-card-tag.p0-infra { background: var(--infra); color: white; }
 .feature-card-tag.must { background: var(--danger-bg); color: var(--danger); }
 .feature-card-tag.high { background: var(--warning-bg); color: var(--warning); }
 .feature-card-tag.normal { background: var(--info-bg); color: var(--info); }
@@ -271,6 +341,9 @@ body {
 .feature-row .fr-val .item.high {
   background: var(--success-bg); color: var(--success); font-weight: 600;
 }
+.feature-row .fr-val .item.infra {
+  background: var(--infra-bg); color: var(--infra); font-weight: 600;
+}
 
 .value-row {
   display: grid; grid-template-columns: 1fr 1fr 1fr;
@@ -291,6 +364,8 @@ body {
 .value-cell.student .vc-role { color: var(--student); }
 .value-cell.manager { background: var(--warning-bg); }
 .value-cell.manager .vc-role { color: var(--warning); }
+.value-cell.it { background: var(--infra-bg); }
+.value-cell.it .vc-role { color: var(--infra); }
 
 .lever-tags {
   display: inline-flex; gap: 4px; margin-left: 8px;
@@ -315,48 +390,49 @@ body {
 .risk-tag.m { background: var(--warning-bg); color: var(--warning); }
 .risk-tag.l { background: var(--success-bg); color: var(--success); }
 
-/* 总收益 */
-.benefit-summary {
+/* 真实成功标准 */
+.success-criteria {
   background: linear-gradient(135deg, #00352F 0%, #00A89C 100%);
-  border-radius: 16px; padding: 40px 36px;
+  border-radius: 16px; padding: 36px 32px;
   color: white; margin-bottom: 40px; position: relative; overflow: hidden;
 }
-.benefit-summary::before {
+.success-criteria::before {
   content: ''; position: absolute; top: 0; right: 0;
   width: 400px; height: 400px;
   background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
 }
-.benefit-summary .bs-tag {
+.success-criteria .sc-tag {
   display: inline-flex; align-items: center; gap: 6px;
   background: rgba(255,255,255,0.15); padding: 4px 12px;
   border-radius: 100px; font-size: 11px; font-weight: 700;
   letter-spacing: 1px; margin-bottom: 14px; position: relative;
 }
-.benefit-summary h3 {
-  font-size: 26px; font-weight: 700; margin-bottom: 20px;
+.success-criteria h3 {
+  font-size: 24px; font-weight: 700; margin-bottom: 20px;
   line-height: 1.4; position: relative;
 }
-.benefit-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+.success-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
   position: relative;
 }
-.benefit-card {
+.success-card {
   background: rgba(255,255,255,0.1);
   border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 12px; padding: 20px 22px;
+  border-radius: 12px; padding: 18px 20px;
   backdrop-filter: blur(10px);
 }
-.benefit-card .bc-num {
-  font-size: 32px; font-weight: 700;
-  color: #7FFAEB; line-height: 1;
-  font-family: 'Inter', sans-serif;
+.success-card .sc-q {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  background: rgba(255,255,255,0.2); padding: 2px 8px;
+  border-radius: 100px; letter-spacing: 0.5px; margin-bottom: 8px;
 }
-.benefit-card .bc-unit {
-  font-size: 14px; color: rgba(255,255,255,0.9);
-  margin: 6px 0;
+.success-card .sc-num {
+  font-size: 26px; font-weight: 700; color: #7FFAEB;
+  margin-bottom: 4px; font-family: 'Inter', sans-serif;
+  line-height: 1.2;
 }
-.benefit-card .bc-desc {
-  font-size: 12.5px; color: rgba(255,255,255,0.78);
+.success-card .sc-text {
+  font-size: 13px; color: rgba(255,255,255,0.92);
   line-height: 1.6;
 }
 
@@ -396,7 +472,7 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
   .hero h1 { font-size: 32px; }
   .overview-grid { grid-template-columns: 1fr; }
   .value-row { grid-template-columns: 1fr; }
-  .benefit-grid { grid-template-columns: 1fr; }
+  .success-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -418,25 +494,37 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
   <div class="hero-inner">
     <div class="eyebrow">
       <i data-lucide="rocket" style="width:14px;height:14px;stroke-width:2;"></i>
-      Q3 教师工作台首单签约 · Q4 学生分身全量上线
+      Q3 工程化交付 · Q4 学生侧扩展 + 续费锁定
     </div>
-    <h1>2026 Q3/Q4 产品路标<br><span class="accent">从可签约到可续费</span></h1>
-    <p class="one-liner">Q3 让 XClaw 从"可演示"进化为"可签约"——备课/出题/批改/学情 4 大杀手 Skill + 教师 AI 助手 V1 + 5 个 P0 MCP。Q4 让产品从"老师爱用"扩展为"学生离不开"——教师数字分身 V1 + 自主学习 4 子场景 + Vibecoding 创编全开放。</p>
+    <h1>从演示到 1000 人规模<br><span class="accent">首单工程化交付</span></h1>
+    <p class="one-liner">Q3 第一目标——让 1 所学校 1000 人规模真实跑通。多租户 + 本地化部署包是 P0，教师 4 场景 Skill 是 P1。Q4 在首单稳定基础上做学生侧 + 教师创编平台，锁定续费。</p>
     <div class="meta">
       <span>作者 · 婷婷</span>
       <span>·</span>
       <span>V1 · 2026-05-12</span>
       <span>·</span>
-      <span>8 分钟读完</span>
-      <span>·</span>
-      <span>基于立项路标 + 技术可行性 + 用户价值最大化</span>
+      <span>10 分钟读完</span>
     </div>
   </div>
 </header>
 
 <div class="main">
 
-  <!-- 总览 -->
+  <!-- 现状陈述 · 关键前提 -->
+  <div class="status-callout">
+    <span class="sc-tag">
+      <i data-lucide="alert-circle" style="width:11px;height:11px;stroke-width:2;"></i>
+      关键前提 · 现状澄清
+    </span>
+    <h3>XClaw 当前在演示阶段，还没批量化部署</h3>
+    <p>之前路标里讲"3-5 首批 POC 学校"是<strong>远期目标</strong>，不是 Q3 现实路径。实际情况：V0.2 只验证过 1000 用户级压测，本地化部署包还没标准化，多租户细颗粒度（学院/教师/班级）还没打透。</p>
+    <div class="sc-key">
+      <strong>所以 Q3 第一目标必须是 → </strong>实现 <strong>1 所学校 1000 人规模</strong>的真实项目交付。多租户 + 本地化部署包 + 标准化运维交付包，这三件事是 P0，优先级**高于** 教师 4 场景 Skill。<br><br>
+      场景 Skill 也要做，但定位是"在 1000 人规模上验证场景能跑通"，而不是"先做 4 场景再期待 5 所学校签约"。<strong>先把 1 单做扎实，才有规模化复制的基础。</strong>
+    </div>
+  </div>
+
+  <!-- Q3 / Q4 主线总览 -->
   <div class="overview">
     <h3>
       <i data-lucide="compass" style="width:20px;height:20px;stroke-width:2;color:var(--brand);"></i>
@@ -445,30 +533,30 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
     <div class="overview-grid">
       <div class="overview-quarter q3">
         <div class="oq-label">QUARTER 1 · 2026 Q3</div>
-        <h4>教师场景闭环 · 首单签约</h4>
-        <div class="oq-theme">让教师 4 大场景在 1 所学校真实跑通——备建课 / 教学 / 考评 / 督管 工作流 Skill 全部上线，支撑首单签约。</div>
+        <h4>工程化交付 · 首单 1000 人跑通</h4>
+        <div class="oq-goal">🎯 核心目标：让 1 所学校 1000 人规模真实跑起来，教师 4 场景可演示</div>
         <ul class="oq-items">
-          <li>M5 备课 + 出题 杀手 Skill 上线</li>
-          <li>M6 批改 + 学情分析 Skill 上线</li>
-          <li>教师 AI 助手 V1（聊天 + Skill 工具箱）</li>
+          <li class="infra">P0 · 多租户能力打通（学院/教师/班级三级隔离）</li>
+          <li class="infra">P0 · 本地化部署包标准化（一键部署 + IT 自维护）</li>
+          <li class="infra">P0 · K8s 适配 + 1000 人压测</li>
           <li>5 个 P0 MCP 上线（小雅协同）</li>
-          <li>20 件原子 Skill 种子包</li>
-          <li>Vibecoding L1 模板微调 + L2 自然语言生成</li>
-          <li>本地化部署包打磨完成 · 首单 POC 落地</li>
+          <li>教师 AI 助手 V1（聊天 + Skill 工具箱）</li>
+          <li>备建课 + 出题 + 批改 + 督管 4 个 Skill V1</li>
+          <li>Vibecoding L1 模板微调（20 件种子 Skill）</li>
         </ul>
       </div>
       <div class="overview-quarter q4">
         <div class="oq-label">QUARTER 2 · 2026 Q4</div>
-        <h4>学生分身全量 · 续费锁定</h4>
-        <div class="oq-theme">让学生侧自主学习 4 子场景跑通——教师数字分身 + 学习路径 + 资源生成 + 学情自检，锁定续费。</div>
+        <h4>学生侧扩展 · 续费锁定</h4>
+        <div class="oq-goal">🎯 核心目标：首单稳定运行 + 学生 4 子场景上线 + 教师创编平台 → 锁定续费意向</div>
         <ul class="oq-items">
-          <li>M7 教师创编平台（Vibecoding L3 拖拽）</li>
-          <li>教师数字分身 V1（答疑场景）</li>
-          <li>学生自主学习 4 子场景上线</li>
-          <li>5 个 P1 MCP 上线（含 OpenMAIC）</li>
-          <li>12 件学科教具 Skill 补全</li>
+          <li class="infra">P0 · 多租户 V2（跨校 + 跨课程组共享）</li>
+          <li>教师数字分身 V1（答疑场景小样本验证）</li>
+          <li>学生自主学习 4 子场景</li>
+          <li>5 个 P1 MCP（含 OpenMAIC）</li>
+          <li>教师创编平台 V1（Vibecoding L2 自然语言 + L3 拖拽）</li>
           <li>三层知识检索架构（私人/课程/学科）</li>
-          <li>智能体调教机制 · L4 数字分身小样本验证</li>
+          <li>12 件学科教具补全</li>
         </ul>
       </div>
     </div>
@@ -479,60 +567,55 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
     <div class="quarter-header q3-h">
       <span class="qh-tag">
         <i data-lucide="target" style="width:11px;height:11px;stroke-width:2;"></i>
-        Q3 · 教师场景闭环
+        Q3 · 工程化交付优先
       </span>
-      <h3>2026 Q3 · 7 大核心功能交付</h3>
-      <div class="qh-theme">主线：让 XClaw 在 1 所学校真实跑通 · 教师 4 场景闭环 · 支撑首单签约 · 验证商业模式</div>
+      <h3>2026 Q3 · 工程化交付 + 4 场景验证</h3>
+      <div class="qh-theme">主线：让 1 所学校 1000 人真实跑通 · 多租户和部署包先于场景丰富度 · 验证商业模式可复制</div>
+      <div class="qh-criteria">
+        <strong>Q3 真实成功标准</strong>：① 1 所学校 1000 并发用户跑通 30 天不重大故障 · ② 客户 IT 可自接手日常运维 · ③ 教师 4 场景在真实班级跑通至少 100 次 · ④ 首单建设费一期到账
+      </div>
     </div>
     <div class="quarter-body">
+
+      <!-- Q3 基础设施组 P0 -->
+      <div class="module-group-title infra">
+        <i data-lucide="server" style="width:14px;height:14px;stroke-width:2;"></i>
+        🏗 基础设施层 · P0 三件套（优先于场景）
+      </div>
+
       <div class="feature-list">
 
-        <!-- Q3 功能 1 -->
-        <div class="feature-card q3">
+        <!-- 1 · 多租户 V1 -->
+        <div class="feature-card infra">
           <div class="feature-card-head">
-            <div class="feature-card-icon"><i data-lucide="book-open-check" style="width:20px;height:20px;stroke-width:2;"></i></div>
+            <div class="feature-card-icon"><i data-lucide="users" style="width:20px;height:20px;stroke-width:2;"></i></div>
             <div class="feature-card-title">
-              <h4>① 备建课杀手 Skill</h4>
+              <h4>① 多租户能力 V1 · 校内三级隔离</h4>
               <div class="fc-meta">
-                <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>教师备建课场景</span>
-                <span><i data-lucide="layers-3" style="width:11px;height:11px;stroke-width:2;"></i>立项 M5</span>
-                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q3 7-8 月交付</span>
+                <span><i data-lucide="layers" style="width:11px;height:11px;stroke-width:2;"></i>L1 Engine</span>
+                <span><i data-lucide="building" style="width:11px;height:11px;stroke-width:2;"></i>1 所学校内</span>
+                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q3 7-8 月</span>
               </div>
             </div>
-            <span class="feature-card-tag must">P0 · 必交付</span>
+            <span class="feature-card-tag p0-infra">P0 · 工程基础</span>
           </div>
-
           <div class="feature-row">
             <div class="fr-key">功能描述</div>
-            <div class="fr-val">教师一句话生成<strong>七模块教学设计</strong>（教学目标/重难点/教学过程/板书设计/课堂练习/课后作业/教学反思）· 溯源到指定教材页码 · 二次编辑量 ≤30%</div>
+            <div class="fr-val">支持<strong>校内学院/教师/班级三级权限隔离</strong>，数据物理隔离 + 工作区隔离 · 1 个本地化部署服务 1 所学校的全部师生 1000+ 人</div>
           </div>
           <div class="feature-row">
             <div class="fr-key">含子能力</div>
             <div class="fr-val">
-              <span class="item">教学大纲生成</span>
-              <span class="item">章节资源调用</span>
-              <span class="item">习题阶梯生成</span>
-              <span class="item">板书要点提取</span>
-              <span class="item">课堂讨论问题</span>
-              <span class="item">教案 → PPT 转换</span>
-              <span class="item">跨学期备课对比</span>
+              <span class="item infra">AsyncLocalStorage 用户上下文传播</span>
+              <span class="item infra">物理路径隔离（每用户一个目录+DB）</span>
+              <span class="item infra">学院/教师/班级三级权限管理</span>
+              <span class="item infra">教师 Skill 私人/课程/学校三层权限</span>
+              <span class="item infra">数据导出 + 离职带走机制</span>
             </div>
           </div>
           <div class="feature-row">
             <div class="fr-key">技术可行</div>
-            <div class="fr-val">🟢 高 · V0.2 已有 Skill 框架 + 沙箱执行 + 工作区持久化 · 主要工作是教学专家定义 SOP + 调通小雅课程信息 MCP</div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">独有杠杆</div>
-            <div class="fr-val">
-              <span class="lever-tags">
-                <span class="lever-tag">①</span>
-                <span class="lever-tag">②</span>
-                <span class="lever-tag">③</span>
-                <span class="lever-tag core">④</span>
-              </span>
-              4 杠杆全用 · core=④ 跨学期工作区记忆
-            </div>
+            <div class="fr-val">🟡 中 · V0.2 已有 AsyncLocalStorage + 物理路径隔离基础，1000 用户级验证过 · 主要工作是补三级权限管理 + 校级压测</div>
           </div>
           <div class="feature-row">
             <div class="fr-key">用户价值</div>
@@ -540,269 +623,182 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
               <div class="value-row">
                 <div class="value-cell teacher">
                   <div class="vc-role">教师</div>
-                  备课时间 3 小时 → 1 小时（66% 减少）· AI 生成可直接修改用 · 跨学期复用前期备课
+                  自己的 Skill 和工作区只有自己看 · 班级数据不会串
                 </div>
-                <div class="value-cell student">
-                  <div class="vc-role">学生</div>
-                  获得溯源到教材页码的学习材料 · 不同难度梯度的练习题
+                <div class="value-cell it">
+                  <div class="vc-role">学校 IT</div>
+                  按学院/班级独立配置和审计 · 数据合规可追溯
                 </div>
                 <div class="value-cell manager">
                   <div class="vc-role">管理者</div>
-                  老师备课周期可见 · 教学资源数字化沉淀 · 校长视察可看见资产
+                  学院间数据互不干扰 · 教学资产可分级共享
                 </div>
               </div>
             </div>
           </div>
           <div class="feature-row">
             <div class="fr-key">关键风险</div>
-            <div class="fr-val">小雅 P0 MCP（课程信息/教学资源）准时交付 <span class="risk-tag h">高</span> · 教学专家产 SOP 节奏 <span class="risk-tag m">中</span></div>
+            <div class="fr-val">权限粒度设计 <span class="risk-tag m">中</span> · 压测瓶颈定位 <span class="risk-tag m">中</span></div>
           </div>
         </div>
 
-        <!-- Q3 功能 2 -->
-        <div class="feature-card q3">
+        <!-- 2 · 本地化部署包 V1 -->
+        <div class="feature-card infra">
           <div class="feature-card-head">
-            <div class="feature-card-icon"><i data-lucide="file-question" style="width:20px;height:20px;stroke-width:2;"></i></div>
+            <div class="feature-card-icon"><i data-lucide="package" style="width:20px;height:20px;stroke-width:2;"></i></div>
             <div class="feature-card-title">
-              <h4>② 智能出题杀手 Skill</h4>
+              <h4>② 本地化部署包 V1 · 标准化可复制</h4>
               <div class="fc-meta">
-                <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>教师备建课 + 考评场景</span>
-                <span><i data-lucide="layers-3" style="width:11px;height:11px;stroke-width:2;"></i>立项 M5</span>
-                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q3 7-8 月交付</span>
+                <span><i data-lucide="layers" style="width:11px;height:11px;stroke-width:2;"></i>L1 Engine</span>
+                <span><i data-lucide="hard-drive" style="width:11px;height:11px;stroke-width:2;"></i>本地化部署</span>
+                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q3 7-8 月</span>
               </div>
             </div>
-            <span class="feature-card-tag must">P0 · 必交付</span>
+            <span class="feature-card-tag p0-infra">P0 · 工程基础</span>
           </div>
-
           <div class="feature-row">
             <div class="fr-key">功能描述</div>
-            <div class="fr-val">按知识点/难度/题型组卷 · <strong>答案正确率 100%</strong> · 与近 3 年试卷重复率 ≤5% · 接 OpenMAIC 生成交互式课件题</div>
+            <div class="fr-val"><strong>标准化本地化部署包</strong> · 客户 IT 部门按文档执行可独立部署，不依赖驻场调试 · 含 K8s 适配 + 运维手册 + 灾难恢复方案</div>
           </div>
           <div class="feature-row">
             <div class="fr-key">含子能力</div>
             <div class="fr-val">
-              <span class="item">按布鲁姆/SOLO 分类出题</span>
-              <span class="item">题库去重</span>
-              <span class="item">答案校验（沙箱代码执行）</span>
-              <span class="item">阶梯难度调整</span>
-              <span class="item high">OpenMAIC 交互式课件题（已商业验证）</span>
+              <span class="item infra">Docker Compose 一键部署</span>
+              <span class="item infra">K8s manifests 适配落地</span>
+              <span class="item infra">配置脚本化（环境变量/SSL/SSO）</span>
+              <span class="item infra">监控告警（Prometheus + Grafana）</span>
+              <span class="item infra">备份 + 灾难恢复手册</span>
+              <span class="item infra">客户 IT 自维护运维手册</span>
+              <span class="item infra">升级路径设计（不停服更新）</span>
             </div>
           </div>
           <div class="feature-row">
             <div class="fr-key">技术可行</div>
-            <div class="fr-val">🟢 高 · 大模型出题已成熟 · 数学求解器是新建依赖（公式识别+答案校验） · OpenMAIC MCP 接入是已商业验证能力</div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">独有杠杆</div>
-            <div class="fr-val">
-              <span class="lever-tags">
-                <span class="lever-tag">①</span>
-                <span class="lever-tag">②</span>
-                <span class="lever-tag">③</span>
-                <span class="lever-tag core">④</span>
-              </span>
-              4 杠杆全用 · core=④ 题库累积跨学期
-            </div>
+            <div class="fr-val">🟡 中 · V0.2 已有 Docker Compose · K8s manifests 存在但未落地 · 主要工作是文档标准化 + 客户 IT 视角验证</div>
           </div>
           <div class="feature-row">
             <div class="fr-key">用户价值</div>
             <div class="fr-val">
               <div class="value-row">
-                <div class="value-cell teacher">
-                  <div class="vc-role">教师</div>
-                  出题时间 1 小时 → 10 分钟 · 不再担心 AI 出错答案 · 题目难度可控
-                </div>
-                <div class="value-cell student">
-                  <div class="vc-role">学生</div>
-                  适合自己水平的练习题 · 交互式课件题（不只是文字题）
+                <div class="value-cell it">
+                  <div class="vc-role">学校 IT</div>
+                  按文档独立部署 · 不依赖驻场 · 升级可自主操作
                 </div>
                 <div class="value-cell manager">
-                  <div class="vc-role">管理者</div>
-                  考试出题质量可追溯 · 出题人力成本下降
+                  <div class="vc-role">采购方</div>
+                  部署成本可预估 · 不会"装了一年还没上线"
+                </div>
+                <div class="value-cell teacher">
+                  <div class="vc-role">交付团队</div>
+                  从"每单驻场"变"远程支持" · 单单交付成本下降 50%+
                 </div>
               </div>
             </div>
           </div>
           <div class="feature-row">
             <div class="fr-key">关键风险</div>
-            <div class="fr-val">数学求解器从 0 到 1 <span class="risk-tag m">中</span> · OpenMAIC MCP 接入工程量 <span class="risk-tag l">低</span></div>
+            <div class="fr-val">K8s 适配落地 <span class="risk-tag h">高</span> · 客户 IT 水平参差 <span class="risk-tag m">中</span></div>
           </div>
         </div>
 
-        <!-- Q3 功能 3 -->
-        <div class="feature-card q3">
+        <!-- 3 · 1000 人压测 -->
+        <div class="feature-card infra">
           <div class="feature-card-head">
-            <div class="feature-card-icon"><i data-lucide="check-square" style="width:20px;height:20px;stroke-width:2;"></i></div>
+            <div class="feature-card-icon"><i data-lucide="gauge" style="width:20px;height:20px;stroke-width:2;"></i></div>
             <div class="feature-card-title">
-              <h4>③ 智能批改 + 学情分析 Skill</h4>
+              <h4>③ 1000 人规模性能压测 + 稳定性保障</h4>
               <div class="fc-meta">
-                <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>教师考评场景</span>
-                <span><i data-lucide="layers-3" style="width:11px;height:11px;stroke-width:2;"></i>立项 M6</span>
-                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q3 8-9 月交付</span>
+                <span><i data-lucide="layers" style="width:11px;height:11px;stroke-width:2;"></i>L1 Engine</span>
+                <span><i data-lucide="activity" style="width:11px;height:11px;stroke-width:2;"></i>性能验证</span>
+                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q3 8-9 月</span>
               </div>
             </div>
-            <span class="feature-card-tag must">P0 · 必交付</span>
+            <span class="feature-card-tag p0-infra">P0 · 工程基础</span>
           </div>
-
           <div class="feature-row">
             <div class="fr-key">功能描述</div>
-            <div class="fr-val">自动批改（客观题 100% + 主观题 70% 辅助）· <strong>错题按知识点归类</strong> · 班级薄弱点热力图 · 个性化评语（按教师风格生成）· 学情归档跨学期累积</div>
+            <div class="fr-val">1 所学校 <strong>1000 并发用户真实场景压测</strong>·定位性能瓶颈 · 30 天稳定性验证 · 故障演练</div>
           </div>
           <div class="feature-row">
             <div class="fr-key">含子能力</div>
             <div class="fr-val">
-              <span class="item">OCR 手写作业识别</span>
-              <span class="item">沙箱跑 Python 批改</span>
-              <span class="item">错题归因 Skill</span>
-              <span class="item">班级薄弱点诊断</span>
-              <span class="item">个性化评语生成</span>
-              <span class="item">回写小雅作业系统</span>
-              <span class="item">跨学期对比</span>
+              <span class="item infra">HA 三层架构落地（网关/重计算/Redis）</span>
+              <span class="item infra">压测脚本 + 监控指标体系</span>
+              <span class="item infra">故障注入演练</span>
+              <span class="item infra">SLA 承诺（99.5% 可用性）</span>
             </div>
           </div>
           <div class="feature-row">
             <div class="fr-key">技术可行</div>
-            <div class="fr-val">🟡 中 · OCR 部分就绪 · 沙箱+大模型组合可用 · MCP 回写需小雅作业 MCP（P1）配合</div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">独有杠杆</div>
-            <div class="fr-val">
-              <span class="lever-tags">
-                <span class="lever-tag">①</span>
-                <span class="lever-tag">②</span>
-                <span class="lever-tag">③</span>
-                <span class="lever-tag core">④</span>
-              </span>
-              4 杠杆全用 · core=④ 学情归档跨学期是闭环关键
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">用户价值</div>
-            <div class="fr-val">
-              <div class="value-row">
-                <div class="value-cell teacher">
-                  <div class="vc-role">教师</div>
-                  批改 50 份作业从周末 1 天 → 2 小时 · 错题归因不用再手算 · 个性化评语自动出
-                </div>
-                <div class="value-cell student">
-                  <div class="vc-role">学生</div>
-                  立即拿到批改结果 + 老师风格的评语 + 自己薄弱点定位
-                </div>
-                <div class="value-cell manager">
-                  <div class="vc-role">管理者</div>
-                  班级学情数据自动入库 · 教学评估有量化基础
-                </div>
-              </div>
-            </div>
+            <div class="fr-val">🟡 中 · V0.2 HA 架构已设计 · 1000 用户压测过但是模拟数据 · 需在 POC 学校真实负载验证</div>
           </div>
           <div class="feature-row">
             <div class="fr-key">关键风险</div>
-            <div class="fr-val">OCR 手写识别准确率 <span class="risk-tag m">中</span> · 主观题批改 AI 准确度老师信任度 <span class="risk-tag m">中</span></div>
+            <div class="fr-val">真实压力下的瓶颈未知 <span class="risk-tag h">高</span></div>
           </div>
         </div>
 
-        <!-- Q3 功能 4 -->
+      </div>
+
+      <!-- Q3 场景层 P1 -->
+      <div class="module-group-title scene">
+        <i data-lucide="briefcase" style="width:14px;height:14px;stroke-width:2;"></i>
+        🎯 场景层 · P1 教师 4 场景验证（基础设施跑通后）
+      </div>
+
+      <div class="feature-list">
+
+        <!-- 4 · 5 P0 MCP -->
         <div class="feature-card q3">
           <div class="feature-card-head">
-            <div class="feature-card-icon"><i data-lucide="clipboard-check" style="width:20px;height:20px;stroke-width:2;"></i></div>
+            <div class="feature-card-icon"><i data-lucide="plug" style="width:20px;height:20px;stroke-width:2;"></i></div>
             <div class="feature-card-title">
-              <h4>④ 督管 Skill（督导报告 + 学情汇总）</h4>
+              <h4>④ 5 个 P0 MCP 上线（小雅协同）</h4>
               <div class="fc-meta">
-                <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>督导员 / 教务管理者</span>
-                <span><i data-lucide="layers-3" style="width:11px;height:11px;stroke-width:2;"></i>立项延伸</span>
-                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q3 9 月交付</span>
+                <span><i data-lucide="layers" style="width:11px;height:11px;stroke-width:2;"></i>L2 接入层</span>
+                <span><i data-lucide="users" style="width:11px;height:11px;stroke-width:2;"></i>跨团队</span>
+                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q3 全季</span>
               </div>
             </div>
-            <span class="feature-card-tag high">P1 · 重要</span>
-          </div>
-
-          <div class="feature-row">
-            <div class="fr-key">功能描述</div>
-            <div class="fr-val">课堂录音转写 → 四维结构化督导报告（教学目标/学情应对/教学方法/改进建议）· 督导员只改 20% 定稿 · 效率提升 5 倍</div>
+            <span class="feature-card-tag must">P1 · 关键路径</span>
           </div>
           <div class="feature-row">
-            <div class="fr-key">含子能力</div>
+            <div class="fr-key">5 个 MCP</div>
             <div class="fr-val">
-              <span class="item">ASR 课堂录音转写</span>
-              <span class="item">教案对比执行情况</span>
-              <span class="item">督导四维模板</span>
-              <span class="item">回写小雅督导评价系统</span>
+              <span class="item">课程信息 MCP</span>
+              <span class="item">教学资源 MCP</span>
+              <span class="item">学情数据 MCP</span>
+              <span class="item">身份组织 MCP</span>
+              <span class="item">课表日程 MCP</span>
             </div>
           </div>
           <div class="feature-row">
-            <div class="fr-key">技术可行</div>
-            <div class="fr-val">🟢 高 · ASR 已就绪 · 工作区教案对比依赖前置功能 · 督导评价 MCP（P1）需小雅配合</div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">独有杠杆</div>
-            <div class="fr-val">
-              <span class="lever-tags">
-                <span class="lever-tag">①</span>
-                <span class="lever-tag">②</span>
-                <span class="lever-tag">③</span>
-                <span class="lever-tag core">④</span>
-              </span>
-              4 杠杆全用 · core=④ 教案对比执行情况
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">用户价值</div>
-            <div class="fr-val">
-              <div class="value-row">
-                <div class="value-cell teacher">
-                  <div class="vc-role">督导员</div>
-                  写报告时间 800 字/份 × 10 份/周 → AI 起草 + 20% 修改 · 5 倍效率
-                </div>
-                <div class="value-cell student">
-                  <div class="vc-role">学生</div>
-                  教学督导反馈更及时 · 课堂质量改进周期变短
-                </div>
-                <div class="value-cell manager">
-                  <div class="vc-role">管理者</div>
-                  督导数据可量化 · 教学质量管理有数据支撑
-                </div>
-              </div>
-            </div>
+            <div class="fr-key">说明</div>
+            <div class="fr-val">技术上推荐用 <strong>CLI（轻、快、稳）</strong>而非 MCP——自家平台对接没必要上 MCP 全量协议（详见第 09 章 Q3 选型）· 如战略上要开放生态，则预留 MCP 标准</div>
           </div>
           <div class="feature-row">
             <div class="fr-key">关键风险</div>
-            <div class="fr-val">小雅督导评价 MCP 准时性 <span class="risk-tag m">中</span></div>
+            <div class="fr-val">小雅团队人力 <span class="risk-tag h">高</span> · 必须有浏览器自动化降级方案</div>
           </div>
         </div>
 
-        <!-- Q3 功能 5 -->
+        <!-- 5 · 教师 AI 助手 V1 -->
         <div class="feature-card q3">
           <div class="feature-card-head">
             <div class="feature-card-icon"><i data-lucide="bot" style="width:20px;height:20px;stroke-width:2;"></i></div>
             <div class="feature-card-title">
-              <h4>⑤ 教师 AI 助手 V1（教师工作台入口）</h4>
+              <h4>⑤ 教师 AI 助手 V1 · 工作台入口</h4>
               <div class="fc-meta">
-                <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>教师 4 场景共用入口</span>
-                <span><i data-lucide="layers-3" style="width:11px;height:11px;stroke-width:2;"></i>L4 智能体</span>
-                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q3 8 月交付</span>
+                <span><i data-lucide="layers" style="width:11px;height:11px;stroke-width:2;"></i>L4 智能体</span>
+                <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>教师入口</span>
+                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q3 8 月</span>
               </div>
             </div>
-            <span class="feature-card-tag must">P0 · 必交付</span>
+            <span class="feature-card-tag must">P1 · 必交付</span>
           </div>
-
           <div class="feature-row">
             <div class="fr-key">功能描述</div>
-            <div class="fr-val">教师每天打开的工作伙伴 · 聊天框 + Skill 工具箱（类 OpenClaw 体验）· 调度备建课/教学/考评/督管四大工作流 Skill · <strong>记得这位老师的偏好和教学风格</strong></div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">含子能力</div>
-            <div class="fr-val">
-              <span class="item">类 OpenClaw 聊天界面</span>
-              <span class="item">Skill 工具箱视图</span>
-              <span class="item">意图识别自动调用 Skill</span>
-              <span class="item">教师人格化记忆（共享底层）</span>
-              <span class="item">跨学期工作区累积</span>
-              <span class="item">工作模式切换（备课/批改/督导）</span>
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">技术可行</div>
-            <div class="fr-val">🟢 高 · V0.2 OpenClaw 内核已就绪 · 主要工作是教师场景化封装 + 人格化记忆机制</div>
+            <div class="fr-val">教师每天打开的工作伙伴 · 聊天框 + Skill 工具箱 · 调度备建课/教学/考评/督管四大工作流 Skill · 记住教师偏好和教学风格</div>
           </div>
           <div class="feature-row">
             <div class="fr-key">独有杠杆</div>
@@ -813,7 +809,7 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
                 <span class="lever-tag">③</span>
                 <span class="lever-tag">④</span>
               </span>
-              本身是杠杆 ② 的载体 · 4 杠杆全用
+              core=② 教师人格化记忆是本场景核心
             </div>
           </div>
           <div class="feature-row">
@@ -830,131 +826,82 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
                 </div>
                 <div class="value-cell manager">
                   <div class="vc-role">管理者</div>
-                  教师使用 AI 工具频次可统计 · 教学数字化推进可见
+                  教师 AI 使用频次可统计 · 教学数字化推进可见
                 </div>
               </div>
             </div>
           </div>
-          <div class="feature-row">
-            <div class="fr-key">关键风险</div>
-            <div class="fr-val">教师人格化记忆机制设计 <span class="risk-tag m">中</span> · 与小雅平台入口承接 <span class="risk-tag m">中</span></div>
-          </div>
         </div>
 
-        <!-- Q3 功能 6 -->
+        <!-- 6 · 教师 4 场景 Skill -->
         <div class="feature-card q3">
           <div class="feature-card-head">
-            <div class="feature-card-icon"><i data-lucide="plug" style="width:20px;height:20px;stroke-width:2;"></i></div>
+            <div class="feature-card-icon"><i data-lucide="layers-3" style="width:20px;height:20px;stroke-width:2;"></i></div>
             <div class="feature-card-title">
-              <h4>⑥ 5 个 P0 MCP 上线（小雅协同）</h4>
+              <h4>⑥ 教师 4 场景 Skill V1 · 备建课 / 教学 / 考评 / 督管</h4>
               <div class="fc-meta">
-                <span><i data-lucide="server" style="width:11px;height:11px;stroke-width:2;"></i>L2 接入层</span>
-                <span><i data-lucide="users" style="width:11px;height:11px;stroke-width:2;"></i>小雅协同</span>
+                <span><i data-lucide="layers" style="width:11px;height:11px;stroke-width:2;"></i>L3 Skill 库</span>
+                <span><i data-lucide="briefcase" style="width:11px;height:11px;stroke-width:2;"></i>立项 M5/M6</span>
                 <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q3 7-9 月分批</span>
               </div>
             </div>
-            <span class="feature-card-tag must">P0 · 关键路径</span>
-          </div>
-
-          <div class="feature-row">
-            <div class="fr-key">功能描述</div>
-            <div class="fr-val">XClaw 通过 MCP 协议调用小雅平台核心数据——<strong>不重复造轮子</strong>，工作产物也通过 MCP 回流到小雅</div>
+            <span class="feature-card-tag high">P1 · 4 件套</span>
           </div>
           <div class="feature-row">
-            <div class="fr-key">含 5 个 MCP</div>
-            <div class="fr-val">
-              <span class="item">课程信息 MCP（教学大纲/进度/章节）</span>
-              <span class="item">教学资源 MCP（PPT/讲义/题库）</span>
-              <span class="item">学情数据 MCP（作业/成绩/学习行为）</span>
-              <span class="item">身份组织 MCP（教师/班级/课程归属）</span>
-              <span class="item">课表日程 MCP（课节/作业 DDL）</span>
-            </div>
+            <div class="fr-key">备建课 Skill</div>
+            <div class="fr-val">七模块教学设计生成 · 教材页码溯源 · 二次编辑 ≤30% · <strong>教师备课 3h → 1h</strong></div>
           </div>
           <div class="feature-row">
-            <div class="fr-key">技术可行</div>
-            <div class="fr-val">🔴 高风险 · 小雅平台需配合开发 MCP 接口 · 跨团队依赖 · 必须有降级方案（浏览器自动化兜底）</div>
+            <div class="fr-key">出题 Skill</div>
+            <div class="fr-val">按知识点/难度组卷 · 答案 100% · 与近 3 年试卷重复率 ≤5% · 接 OpenMAIC 交互课件</div>
           </div>
           <div class="feature-row">
-            <div class="fr-key">独有杠杆</div>
-            <div class="fr-val">本身就是杠杆 ③ MCP 数据融合的实现 · 没有它整个矩阵的 ③ 列就空了</div>
+            <div class="fr-key">批改 Skill</div>
+            <div class="fr-val">OCR 手写识别 + 沙箱跑 Python · 错题归因 + 班级薄弱点 + 个性化评语 · <strong>批改 50 份从 1 天 → 2 小时</strong></div>
           </div>
           <div class="feature-row">
-            <div class="fr-key">用户价值</div>
-            <div class="fr-val">所有教师 Skill 都能调本校真实数据 · 不是通用 AI 假回答 · <strong>这是 XClaw 区别于 ChatGPT/通义最重要的能力</strong></div>
+            <div class="fr-key">督管 Skill</div>
+            <div class="fr-val">课堂录音转写 → 四维结构化报告 · 督导员只改 20% · <strong>效率 5×</strong></div>
           </div>
           <div class="feature-row">
-            <div class="fr-key">关键风险</div>
-            <div class="fr-val">小雅团队人力投入 <span class="risk-tag h">高</span> · 接口规约对齐时间 <span class="risk-tag h">高</span> · 降级方案必须 5 月底前确认</div>
-          </div>
-        </div>
-
-        <!-- Q3 功能 7 -->
-        <div class="feature-card q3">
-          <div class="feature-card-head">
-            <div class="feature-card-icon"><i data-lucide="sparkles" style="width:20px;height:20px;stroke-width:2;"></i></div>
-            <div class="feature-card-title">
-              <h4>⑦ Vibecoding L1+L2 上线（教师创编基础）</h4>
-              <div class="fc-meta">
-                <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>普通教师 90% 可用</span>
-                <span><i data-lucide="zap" style="width:11px;height:11px;stroke-width:2;"></i>核心壁垒</span>
-                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q3 9 月交付</span>
-              </div>
-            </div>
-            <span class="feature-card-tag high">P1 · 差异化</span>
-          </div>
-
-          <div class="feature-row">
-            <div class="fr-key">功能描述</div>
-            <div class="fr-val">教师"零编程"创编 Skill 能力 V1——<strong>L1 模板微调</strong>（90% 教师能用）+ <strong>L2 自然语言生成新 Skill</strong>（70% 教师努力一下能用）</div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">含子能力</div>
-            <div class="fr-val">
-              <span class="item high">20 件普适教具种子 Skill 包</span>
-              <span class="item">参数微调 UI</span>
-              <span class="item">自然语言 → Skill AI 生成</span>
-              <span class="item">Skill 审核试跑沙箱</span>
-              <span class="item">私人/课程/学校三层权限</span>
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">技术可行</div>
-            <div class="fr-val">🟢 高 · 大模型生成 Skill 已成熟 · 主要工作是 UI 引导 + 教学专家定义种子包</div>
+            <div class="fr-key">交付节奏</div>
+            <div class="fr-val">M5（7-8 月）：备建课 + 出题 · M6（8-9 月）：批改 + 学情 · 督管 V1（9 月）</div>
           </div>
           <div class="feature-row">
             <div class="fr-key">独有杠杆</div>
             <div class="fr-val">
               <span class="lever-tags">
-                <span class="lever-tag core">①</span>
+                <span class="lever-tag">①</span>
                 <span class="lever-tag">②</span>
                 <span class="lever-tag">③</span>
-                <span class="lever-tag">④</span>
+                <span class="lever-tag core">④</span>
               </span>
-              本身是杠杆 ① Vibecoding 的实现 · 是 XClaw 区别于通用 AI 的核心壁垒
+              4 场景都 4 杠杆全用 · core 都是 ④ 跨学期工作区
             </div>
           </div>
-          <div class="feature-row">
-            <div class="fr-key">用户价值</div>
-            <div class="fr-val">
-              <div class="value-row">
-                <div class="value-cell teacher">
-                  <div class="vc-role">教师</div>
-                  把日常 AI 使用沉淀为可复用 Skill · 个人方法论数字化
-                </div>
-                <div class="value-cell student">
-                  <div class="vc-role">学生</div>
-                  老师创编的 Skill 通过分身惠及学生
-                </div>
-                <div class="value-cell manager">
-                  <div class="vc-role">管理者</div>
-                  教师方法论资产化 · 学校积累不再依赖个人
-                </div>
+        </div>
+
+        <!-- 7 · Vibecoding L1 -->
+        <div class="feature-card q3">
+          <div class="feature-card-head">
+            <div class="feature-card-icon"><i data-lucide="sparkles" style="width:20px;height:20px;stroke-width:2;"></i></div>
+            <div class="feature-card-title">
+              <h4>⑦ Vibecoding L1 上线 · 20 件种子 Skill 模板微调</h4>
+              <div class="fc-meta">
+                <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>普通教师 90% 可用</span>
+                <span><i data-lucide="zap" style="width:11px;height:11px;stroke-width:2;"></i>差异化基础</span>
+                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q3 9 月</span>
               </div>
             </div>
+            <span class="feature-card-tag normal">P2 · 差异化基础</span>
           </div>
           <div class="feature-row">
-            <div class="fr-key">关键风险</div>
-            <div class="fr-val">教师主动创编率（沉睡风险）<span class="risk-tag m">中</span> · 必须把创编入口放主路径强引导</div>
+            <div class="fr-key">功能描述</div>
+            <div class="fr-val">教师在 20 件种子 Skill 上改参数 · <strong>不让教师从空白页开始</strong> · 这是差异化基础但不是 Q3 首单交付硬条件</div>
+          </div>
+          <div class="feature-row">
+            <div class="fr-key">说明</div>
+            <div class="fr-val">L2 自然语言生成 Skill 延后到 Q4 · Q3 先确保 L1 模板微调可用</div>
           </div>
         </div>
 
@@ -967,47 +914,80 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
     <div class="quarter-header q4-h">
       <span class="qh-tag">
         <i data-lucide="rocket" style="width:11px;height:11px;stroke-width:2;"></i>
-        Q4 · 学生分身全量 + 续费锁定
+        Q4 · 学生侧 + 续费锁定
       </span>
-      <h3>2026 Q4 · 7 大核心功能交付</h3>
-      <div class="qh-theme">主线：让学生侧自主学习 4 子场景跑通 · 教师创编平台正式开放 · 锁定首批客户续费</div>
+      <h3>2026 Q4 · 学生侧扩展 + 创编平台 + 续费锁定</h3>
+      <div class="qh-theme">主线：首单稳定运行的基础上 · 学生 4 子场景 + 教师创编平台 → 锁定首所学校续费 · 验证第二所学校可复制</div>
+      <div class="qh-criteria">
+        <strong>Q4 真实成功标准</strong>：① 首所学校 30 天 SLA ≥99.5% · ② 学生 4 子场景在 ≥3 门课上线 · ③ 教师数字分身在 1 门课上线（小样本验证） · ④ 首所学校续费意向确认 · ⑤ 第二所学校 POC 立项启动
+      </div>
     </div>
     <div class="quarter-body">
+
+      <!-- Q4 基础设施 -->
+      <div class="module-group-title infra">
+        <i data-lucide="server" style="width:14px;height:14px;stroke-width:2;"></i>
+        🏗 基础设施层 · 多租户 V2
+      </div>
+
       <div class="feature-list">
 
-        <!-- Q4 功能 1 -->
-        <div class="feature-card q4">
+        <!-- Q4 · 1 多租户 V2 -->
+        <div class="feature-card infra">
           <div class="feature-card-head">
-            <div class="feature-card-icon"><i data-lucide="user-circle-2" style="width:20px;height:20px;stroke-width:2;"></i></div>
+            <div class="feature-card-icon"><i data-lucide="building-2" style="width:20px;height:20px;stroke-width:2;"></i></div>
             <div class="feature-card-title">
-              <h4>① 教师数字分身 V1（答疑场景）</h4>
+              <h4>① 多租户 V2 · 跨校 + 跨课程组共享</h4>
               <div class="fc-meta">
-                <span><i data-lucide="users" style="width:11px;height:11px;stroke-width:2;"></i>学生自主学习 · 答疑子场景</span>
-                <span><i data-lucide="layers-3" style="width:11px;height:11px;stroke-width:2;"></i>L4 智能体</span>
+                <span><i data-lucide="layers" style="width:11px;height:11px;stroke-width:2;"></i>L1 Engine</span>
+                <span><i data-lucide="users" style="width:11px;height:11px;stroke-width:2;"></i>规模化复制</span>
                 <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q4 10-11 月</span>
               </div>
             </div>
-            <span class="feature-card-tag must">P0 · 核心交付</span>
+            <span class="feature-card-tag p0-infra">P0 · 规模化</span>
           </div>
-
           <div class="feature-row">
             <div class="fr-key">功能描述</div>
-            <div class="fr-val">学生 24h 陪伴的<strong>教师数字代理</strong>——按真实老师的<strong>风格 + 课程记忆 + 学情上下文</strong>答疑 · 学生面对的是"王教授本人的数字版"不是通用 AI</div>
+            <div class="fr-val">支持<strong>多学校独立部署 + 跨课程组 Skill 共享</strong>·为第二所学校签约做工程准备 · 跨校 Skill 模板中央回流机制（讯飞侧）</div>
           </div>
           <div class="feature-row">
             <div class="fr-key">含子能力</div>
             <div class="fr-val">
-              <span class="item">教师答疑风格建模</span>
-              <span class="item">课程内容深度记忆</span>
-              <span class="item">学生学情上下文注入</span>
-              <span class="item">多教师分身切换</span>
-              <span class="item">边界控制（超纲升级真老师）</span>
-              <span class="item">学生侧伴学空间嵌入</span>
+              <span class="item infra">跨校部署管理后台</span>
+              <span class="item infra">课程组 Skill 共建机制</span>
+              <span class="item infra">Skill 中央模板库（讯飞云端，可选）</span>
+              <span class="item infra">学校间数据严格隔离审计</span>
             </div>
           </div>
+        </div>
+
+      </div>
+
+      <!-- Q4 学生侧 -->
+      <div class="module-group-title scene q4">
+        <i data-lucide="graduation-cap" style="width:14px;height:14px;stroke-width:2;"></i>
+        🎓 学生侧扩展 · 自主学习 4 子场景
+      </div>
+
+      <div class="feature-list">
+
+        <!-- 2 · 教师数字分身 V1 -->
+        <div class="feature-card q4">
+          <div class="feature-card-head">
+            <div class="feature-card-icon"><i data-lucide="user-circle-2" style="width:20px;height:20px;stroke-width:2;"></i></div>
+            <div class="feature-card-title">
+              <h4>② 教师数字分身 V1（答疑场景）</h4>
+              <div class="fc-meta">
+                <span><i data-lucide="users" style="width:11px;height:11px;stroke-width:2;"></i>学生侧 · 答疑</span>
+                <span><i data-lucide="layers" style="width:11px;height:11px;stroke-width:2;"></i>L4 智能体</span>
+                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q4 10-11 月</span>
+              </div>
+            </div>
+            <span class="feature-card-tag must">P0 · 核心差异化</span>
+          </div>
           <div class="feature-row">
-            <div class="fr-key">技术可行</div>
-            <div class="fr-val">🔴 高难度 · 风格建模算法从 0 到 1 · 需研究院+算法团队配合 · Q3 末必须做小样本可行性验证 · 与星火语音组数字分身能力打通</div>
+            <div class="fr-key">功能描述</div>
+            <div class="fr-val">学生 24h 陪伴的<strong>教师数字代理</strong>——按真实老师的风格 + 课程记忆 + 学情上下文答疑 · 学生面对的是"老师的数字版"不是通用 AI · <strong>先在 1 门课小样本验证</strong></div>
           </div>
           <div class="feature-row">
             <div class="fr-key">独有杠杆</div>
@@ -1018,348 +998,144 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
                 <span class="lever-tag">③</span>
                 <span class="lever-tag">④</span>
               </span>
-              core=② 是本场景的核心载体
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">用户价值</div>
-            <div class="fr-val">
-              <div class="value-row">
-                <div class="value-cell teacher">
-                  <div class="vc-role">教师</div>
-                  关注力可复制——一个老师同时陪 60 个学生 · 课后跟进自动化
-                </div>
-                <div class="value-cell student">
-                  <div class="vc-role">学生</div>
-                  深夜难题有"老师"答 · 像真老师讲法 · 不是通用 AI 泛泛回答
-                </div>
-                <div class="value-cell manager">
-                  <div class="vc-role">管理者</div>
-                  学生答疑响应时长 24h → 即时 · 教学服务能力指数级提升
-                </div>
-              </div>
+              core=② 本场景核心载体
             </div>
           </div>
           <div class="feature-row">
             <div class="fr-key">关键风险</div>
-            <div class="fr-val">风格建模算法可行性 <span class="risk-tag h">高</span> · 教师授权采集合规 <span class="risk-tag m">中</span> · 算法迭代周期 <span class="risk-tag h">高</span></div>
+            <div class="fr-val">风格建模算法可行性 <span class="risk-tag h">高</span> · 教师授权采集合规 <span class="risk-tag m">中</span> · Q3 末必须做小样本可行性验证</div>
           </div>
         </div>
 
-        <!-- Q4 功能 2 -->
+        <!-- 3 · 学生自主学习 4 子场景 -->
         <div class="feature-card q4">
           <div class="feature-card-head">
             <div class="feature-card-icon"><i data-lucide="compass" style="width:20px;height:20px;stroke-width:2;"></i></div>
             <div class="feature-card-title">
-              <h4>② 学习路径推荐 Skill（学生自主学习）</h4>
+              <h4>③ 学生自主学习 4 子场景全量上线</h4>
               <div class="fc-meta">
-                <span><i data-lucide="users" style="width:11px;height:11px;stroke-width:2;"></i>学生自主学习 · 路径子场景</span>
-                <span><i data-lucide="layers-3" style="width:11px;height:11px;stroke-width:2;"></i>L3 工作流 Skill</span>
-                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q4 10 月</span>
+                <span><i data-lucide="users" style="width:11px;height:11px;stroke-width:2;"></i>学生侧</span>
+                <span><i data-lucide="layers" style="width:11px;height:11px;stroke-width:2;"></i>L3 工作流</span>
+                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q4 10-12 月</span>
               </div>
             </div>
             <span class="feature-card-tag must">P0 · 必交付</span>
           </div>
-
           <div class="feature-row">
-            <div class="fr-key">功能描述</div>
-            <div class="fr-val">基于学生当前学情 + 课程进度 + 知识图谱，推荐"下一步学什么 + 多久学完" · <strong>班级齐步走的解药</strong></div>
+            <div class="fr-key">AI 答疑</div>
+            <div class="fr-val">教师数字分身 24h 陪伴 · 像真老师答的解答</div>
           </div>
           <div class="feature-row">
-            <div class="fr-key">技术可行</div>
-            <div class="fr-val">🟡 中 · 依赖知识图谱构建能力（部分就绪）+ 学情 MCP（P0）+ 教师分身个性化判断</div>
+            <div class="fr-key">学习路径推荐</div>
+            <div class="fr-val">基于学情 + 课程图谱 · 推荐"下一步学什么"</div>
           </div>
           <div class="feature-row">
-            <div class="fr-key">独有杠杆</div>
-            <div class="fr-val">
-              <span class="lever-tags">
-                <span class="lever-tag">①</span>
-                <span class="lever-tag">②</span>
-                <span class="lever-tag core">③</span>
-                <span class="lever-tag">④</span>
-              </span>
-              core=③ MCP 学情+课程图谱
-            </div>
+            <div class="fr-key">学习资源生成</div>
+            <div class="fr-val">接入 OpenMAIC 交互式课件 · <strong>已商业验证</strong></div>
           </div>
           <div class="feature-row">
-            <div class="fr-key">用户价值</div>
-            <div class="fr-val">
-              <div class="value-row">
-                <div class="value-cell teacher">
-                  <div class="vc-role">教师</div>
-                  顾不过来的薄弱学生有 AI 路径推荐兜底
-                </div>
-                <div class="value-cell student">
-                  <div class="vc-role">学生</div>
-                  自己进度自己定 · 不被班级平均速度拖慢/拖快
-                </div>
-                <div class="value-cell manager">
-                  <div class="vc-role">管理者</div>
-                  分层教学可量化 · 因材施教从口号变实际
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">关键风险</div>
-            <div class="fr-val">知识图谱准确度 <span class="risk-tag m">中</span></div>
+            <div class="fr-key">学情自检</div>
+            <div class="fr-val">学生自检"我哪错了/哪弱/怎么补" · 与教师批改归因共用底层 Skill</div>
           </div>
         </div>
 
-        <!-- Q4 功能 3 -->
+        <!-- 4 · 5 P1 MCP -->
         <div class="feature-card q4">
           <div class="feature-card-head">
-            <div class="feature-card-icon"><i data-lucide="layout-template" style="width:20px;height:20px;stroke-width:2;"></i></div>
+            <div class="feature-card-icon"><i data-lucide="plug" style="width:20px;height:20px;stroke-width:2;"></i></div>
             <div class="feature-card-title">
-              <h4>③ 学习资源生成 Skill（OpenMAIC 交互式课件）</h4>
+              <h4>④ 5 个 P1 MCP 上线（小雅协同 · 含 OpenMAIC）</h4>
               <div class="fc-meta">
-                <span><i data-lucide="users" style="width:11px;height:11px;stroke-width:2;"></i>学生自主学习 · 资源子场景</span>
+                <span><i data-lucide="layers" style="width:11px;height:11px;stroke-width:2;"></i>L2 接入层</span>
                 <span><i data-lucide="check-circle-2" style="width:11px;height:11px;stroke-width:2;color:var(--success);"></i>已商业验证</span>
-                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q4 10 月</span>
-              </div>
-            </div>
-            <span class="feature-card-tag must">P0 · 已验证</span>
-          </div>
-
-          <div class="feature-row">
-            <div class="fr-key">功能描述</div>
-            <div class="fr-val">接入 OpenMAIC 交互式课件生成能力——学生按自己水平/兴趣生成<strong>定制化课件</strong> · 已客户买单的商业验证能力</div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">技术可行</div>
-            <div class="fr-val">🟢 高 · OpenMAIC 已商业验证 · 主要工作是 MCP 协议接入 + 教师课件素材库联动</div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">独有杠杆</div>
-            <div class="fr-val">
-              <span class="lever-tags">
-                <span class="lever-tag">①</span>
-                <span class="lever-tag">②</span>
-                <span class="lever-tag core">③</span>
-                <span class="lever-tag">④</span>
-              </span>
-              core=③ OpenMAIC MCP
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">用户价值</div>
-            <div class="fr-val">
-              <div class="value-row">
-                <div class="value-cell teacher">
-                  <div class="vc-role">教师</div>
-                  备课时也能用 OpenMAIC 生成课件 · 师生场景共用
-                </div>
-                <div class="value-cell student">
-                  <div class="vc-role">学生</div>
-                  现有课件不适配 → 个性化生成 · 交互式不是死的 PPT
-                </div>
-                <div class="value-cell manager">
-                  <div class="vc-role">管理者</div>
-                  课件生成成本下降 · 学生满意度提升
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">关键风险</div>
-            <div class="fr-val">OpenMAIC MCP 接入工程量 <span class="risk-tag l">低</span></div>
-          </div>
-        </div>
-
-        <!-- Q4 功能 4 -->
-        <div class="feature-card q4">
-          <div class="feature-card-head">
-            <div class="feature-card-icon"><i data-lucide="activity" style="width:20px;height:20px;stroke-width:2;"></i></div>
-            <div class="feature-card-title">
-              <h4>④ 学情自检 Skill（学生侧）</h4>
-              <div class="fc-meta">
-                <span><i data-lucide="users" style="width:11px;height:11px;stroke-width:2;"></i>学生自主学习 · 自检子场景</span>
-                <span><i data-lucide="recycle" style="width:11px;height:11px;stroke-width:2;"></i>跨场景共享 Skill</span>
-                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q4 11 月</span>
+                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q4 全季</span>
               </div>
             </div>
             <span class="feature-card-tag high">P1 · 重要</span>
           </div>
-
           <div class="feature-row">
-            <div class="fr-key">功能描述</div>
-            <div class="fr-val">学生自检"我哪错了 / 我哪弱 / 怎么补"——<strong>与教师考评的错题归因 Skill 共用底层</strong>，从教师视角变成学生视角呈现</div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">技术可行</div>
-            <div class="fr-val">🟢 高 · 与 Q3 教师批改归因共用底层 Skill · 学生视角的呈现层封装</div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">独有杠杆</div>
+            <div class="fr-key">5 个 MCP</div>
             <div class="fr-val">
-              <span class="lever-tags">
-                <span class="lever-tag">①</span>
-                <span class="lever-tag">②</span>
-                <span class="lever-tag core">③</span>
-                <span class="lever-tag">④</span>
-              </span>
-              core=③ 学情 MCP
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">用户价值</div>
-            <div class="fr-val">
-              <div class="value-row">
-                <div class="value-cell teacher">
-                  <div class="vc-role">教师</div>
-                  减轻"逐个反馈"压力 · 学生自我诊断后再问老师
-                </div>
-                <div class="value-cell student">
-                  <div class="vc-role">学生</div>
-                  考完不再黑盒 · 看得见自己薄弱在哪 · 有针对性补救
-                </div>
-                <div class="value-cell manager">
-                  <div class="vc-role">管理者</div>
-                  学生自主学习能力提升数据可见
-                </div>
-              </div>
+              <span class="item">作业批改 MCP</span>
+              <span class="item">考试出卷 MCP</span>
+              <span class="item">督导评价 MCP</span>
+              <span class="item high">OpenMAIC MCP（已商业验证）</span>
+              <span class="item">录音字幕 MCP</span>
             </div>
           </div>
         </div>
 
-        <!-- Q4 功能 5 -->
+      </div>
+
+      <!-- Q4 创编平台 -->
+      <div class="module-group-title scene q4">
+        <i data-lucide="wand-2" style="width:14px;height:14px;stroke-width:2;"></i>
+        ✨ 教师创编平台 + 知识架构升级
+      </div>
+
+      <div class="feature-list">
+
+        <!-- 5 · 教师创编平台 V1 -->
         <div class="feature-card q4">
           <div class="feature-card-head">
             <div class="feature-card-icon"><i data-lucide="wand-2" style="width:20px;height:20px;stroke-width:2;"></i></div>
             <div class="feature-card-title">
-              <h4>⑤ 教师创编平台 V1（Vibecoding L3 拖拽）</h4>
+              <h4>⑤ 教师创编平台 V1（Vibecoding L2 + L3）</h4>
               <div class="fc-meta">
-                <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>中级教师 / 课程组长</span>
-                <span><i data-lucide="layers-3" style="width:11px;height:11px;stroke-width:2;"></i>立项 M7</span>
+                <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>教师 + 课程组长</span>
+                <span><i data-lucide="layers" style="width:11px;height:11px;stroke-width:2;"></i>立项 M7</span>
                 <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q4 11-12 月</span>
               </div>
             </div>
-            <span class="feature-card-tag must">P0 · 转折点</span>
+            <span class="feature-card-tag must">P0 · 续费理由</span>
           </div>
-
           <div class="feature-row">
             <div class="fr-key">功能描述</div>
-            <div class="fr-val">Vibecoding L3 上线——可视化拖拽编排积木 · 中级教师/课程组长能做<strong>复杂工作流 Skill</strong> · 智能体调教机制（教师标记"不像我"系统迭代）</div>
+            <div class="fr-val"><strong>Vibecoding L2 自然语言生成 + L3 可视化拖拽</strong>·教师/课程组长能创编新 Skill · 智能体调教机制（标记"不像我"系统迭代）· 是续费的核心理由</div>
           </div>
           <div class="feature-row">
-            <div class="fr-key">含子能力</div>
-            <div class="fr-val">
-              <span class="item">积木式拖拽编辑器</span>
-              <span class="item">步骤校验器</span>
-              <span class="item">一键试跑沙箱</span>
-              <span class="item">智能体画像调教</span>
-              <span class="item">教师 → 学生 Skill 授权机制</span>
-              <span class="item">课程层共用 Skill 入库审核</span>
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">技术可行</div>
-            <div class="fr-val">🟡 中 · 拖拽编辑器是工程活 · 智能体调教机制需算法配合 · L3 是 Coze 已验证可行</div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">独有杠杆</div>
-            <div class="fr-val">
-              <span class="lever-tags">
-                <span class="lever-tag core">①</span>
-                <span class="lever-tag">②</span>
-                <span class="lever-tag">③</span>
-                <span class="lever-tag">④</span>
-              </span>
-              本身是杠杆 ① Vibecoding 的高级形态
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">用户价值</div>
-            <div class="fr-val">
-              <div class="value-row">
-                <div class="value-cell teacher">
-                  <div class="vc-role">教师</div>
-                  从"我方交付"变为"客户自生长"· 教师方法论可深度数字化
-                </div>
-                <div class="value-cell student">
-                  <div class="vc-role">学生</div>
-                  老师创编的更丰富 · 学生侧体验更精细
-                </div>
-                <div class="value-cell manager">
-                  <div class="vc-role">管理者</div>
-                  续费理由强化 · 学校 Skill 库变成可累积资产
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">关键风险</div>
-            <div class="fr-val">教师 → 学生权限管理机制 <span class="risk-tag m">中</span> · L3 老师上手难度 <span class="risk-tag m">中</span></div>
+            <div class="fr-key">关键意义</div>
+            <div class="fr-val">从"我方交付"变为"客户自生长"——客户 Skill 库越累积越离不开 · 这是 LTV 从 198 万拉升到 722 万的核心引擎</div>
           </div>
         </div>
 
-        <!-- Q4 功能 6 -->
+        <!-- 6 · 三层知识检索 -->
         <div class="feature-card q4">
           <div class="feature-card-head">
             <div class="feature-card-icon"><i data-lucide="layers" style="width:20px;height:20px;stroke-width:2;"></i></div>
             <div class="feature-card-title">
-              <h4>⑥ 三层知识检索架构（私人 / 课程 / 学科）</h4>
+              <h4>⑥ 三层知识检索架构（私人/课程/学科）</h4>
               <div class="fc-meta">
-                <span><i data-lucide="users" style="width:11px;height:11px;stroke-width:2;"></i>师生场景共用</span>
+                <span><i data-lucide="users" style="width:11px;height:11px;stroke-width:2;"></i>师生共用</span>
                 <span><i data-lucide="database" style="width:11px;height:11px;stroke-width:2;"></i>底层架构</span>
-                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q4 10-12 月</span>
+                <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q4 全季</span>
               </div>
             </div>
             <span class="feature-card-tag high">P1 · 重要</span>
           </div>
-
           <div class="feature-row">
             <div class="fr-key">功能描述</div>
-            <div class="fr-val">统一 query 接口 · 自动按"越个性化越优先"路由——教师工作区（私人）→ 课程组共建（课程）→ Coral 学科大脑（学科）</div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">技术可行</div>
-            <div class="fr-val">🟡 中 · 私人 + 学科两层可先做 · 课程层等课程组规模化再加</div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">独有杠杆</div>
-            <div class="fr-val">
-              <span class="lever-tags">
-                <span class="lever-tag">①</span>
-                <span class="lever-tag">②</span>
-                <span class="lever-tag core">③</span>
-                <span class="lever-tag">④</span>
-              </span>
-              本身是杠杆 ③ MCP 数据融合的内部架构实现
-            </div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">用户价值</div>
-            <div class="fr-val">所有 Skill 调用知识时<strong>从精准到泛用三层兜底</strong>——查不到老师私人记忆 → 查课程组共建 → 查学科大脑 · AI 回答准确度大幅提升</div>
+            <div class="fr-val">统一 query 接口 · 自动按"越个性化越优先"路由——教师工作区（私人）→ 课程组共建（课程）→ Coral 学科大脑（学科）· AI 回答准确度大幅提升</div>
           </div>
         </div>
 
-        <!-- Q4 功能 7 -->
+        <!-- 7 · 12 件学科教具 -->
         <div class="feature-card q4">
           <div class="feature-card-head">
             <div class="feature-card-icon"><i data-lucide="package" style="width:20px;height:20px;stroke-width:2;"></i></div>
             <div class="feature-card-title">
               <h4>⑦ 12 件学科教具 Skill 补全</h4>
               <div class="fc-meta">
-                <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>学科教师专用</span>
-                <span><i data-lucide="puzzle" style="width:11px;height:11px;stroke-width:2;"></i>Skill 库扩展</span>
+                <span><i data-lucide="user" style="width:11px;height:11px;stroke-width:2;"></i>学科教师</span>
+                <span><i data-lucide="puzzle" style="width:11px;height:11px;stroke-width:2;"></i>Skill 扩展</span>
                 <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>Q4 全季</span>
               </div>
             </div>
-            <span class="feature-card-tag normal">P2 · 扩展</span>
-          </div>
-
-          <div class="feature-row">
-            <div class="fr-key">功能描述</div>
-            <div class="fr-val">12 件学科教具：理工 4 件（LaTeX 转换/数学求解/实验数据分析/编程批改）+ 文科 4 件（文献综述/作文批改/论证分析/引用规范）+ 外语 2 件（作文改错/口语评测）+ 医/法/经管 2 件（病例/案例/财报分析）</div>
+            <span class="feature-card-tag normal">P2 · 学科覆盖</span>
           </div>
           <div class="feature-row">
-            <div class="fr-key">技术可行</div>
-            <div class="fr-val">🟡 中 · 公式识别 + 数学求解器需新建（前面 Q3 已开始） · 学科专家产规格</div>
-          </div>
-          <div class="feature-row">
-            <div class="fr-key">用户价值</div>
-            <div class="fr-val">学科教师不再用通用 Skill · <strong>每个学科有自己的工具箱</strong> · 学校学科覆盖率提升</div>
+            <div class="fr-key">12 件分布</div>
+            <div class="fr-val">理工 4 + 文科 4 + 外语 2 + 医/法/经管 2 · 每个学科有自己的工具箱 · 提升学科覆盖率</div>
           </div>
         </div>
 
@@ -1367,43 +1143,53 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
     </div>
   </section>
 
-  <!-- 总收益 -->
-  <div class="benefit-summary">
-    <span class="bs-tag">
+  <!-- 真实成功标准 -->
+  <div class="success-criteria">
+    <span class="sc-tag">
       <i data-lucide="trending-up" style="width:11px;height:11px;stroke-width:2;"></i>
-      Q3 + Q4 总收益预估
+      Q3 + Q4 真实成功标准
     </span>
-    <h3>实现后的最大商业 + 教学收益</h3>
-    <div class="benefit-grid">
-      <div class="benefit-card">
-        <div class="bc-num">3-5</div>
-        <div class="bc-unit">首批 POC 学校</div>
-        <div class="bc-desc">Q3 末教师 4 场景跑通 · 支撑首单签约 · 单校年费 18 万本地化 · 累计 54-90 万签约金额</div>
+    <h3>不讲虚远目标 · 只讲可验证的真实里程碑</h3>
+    <div class="success-grid">
+      <div class="success-card">
+        <div class="sc-q">Q3 ①</div>
+        <div class="sc-num">1000 人</div>
+        <div class="sc-text">1 所学校 1000 并发用户跑通 30 天 · 0 重大故障 · SLA ≥99%</div>
       </div>
-      <div class="benefit-card">
-        <div class="bc-num">≥80%</div>
-        <div class="bc-unit">续费率目标</div>
-        <div class="bc-desc">Q4 教师创编平台 + 数字分身上线后 · 学校 Skill 库变成不可迁移资产 · 续费动力锁定</div>
+      <div class="success-card">
+        <div class="sc-q">Q3 ②</div>
+        <div class="sc-num">自维护</div>
+        <div class="sc-text">客户 IT 部门可按文档自接手日常运维 · 不依赖驻场</div>
       </div>
-      <div class="benefit-card">
-        <div class="bc-num">66%</div>
-        <div class="bc-unit">教师备课减时</div>
-        <div class="bc-desc">3 小时 → 1 小时 · 客户可感知核心价值 · 教师推荐意愿高</div>
+      <div class="success-card">
+        <div class="sc-q">Q3 ③</div>
+        <div class="sc-num">100+ 次</div>
+        <div class="sc-text">教师 4 场景在真实班级跑通至少 100 次 · 老师真实使用</div>
       </div>
-      <div class="benefit-card">
-        <div class="bc-num">5×</div>
-        <div class="bc-unit">督导效率提升</div>
-        <div class="bc-desc">10 份/周 督导报告 80% AI 起草 · 教务管理可量化</div>
+      <div class="success-card">
+        <div class="sc-q">Q3 ④</div>
+        <div class="sc-num">建设费</div>
+        <div class="sc-text">首单建设费一期到账 · 验证商业模式</div>
       </div>
-      <div class="benefit-card">
-        <div class="bc-num">24h</div>
-        <div class="bc-unit">学生答疑响应</div>
-        <div class="bc-desc">数字分身 24 小时陪伴 · 一个老师能服务 60 个学生 · 教学服务能力指数级提升</div>
+      <div class="success-card">
+        <div class="sc-q">Q4 ①</div>
+        <div class="sc-num">≥99.5%</div>
+        <div class="sc-text">首所学校 SLA · 学生 4 子场景上线 ≥3 门课</div>
       </div>
-      <div class="benefit-card">
-        <div class="bc-num">722 万</div>
-        <div class="bc-unit">5 年 LTV / 校</div>
-        <div class="bc-desc">建设费 306 万 + 年费 56-156 万 × 4 + 学科扩展 50 万 × 3 · 是一次性 SaaS 的 3.6 倍</div>
+      <div class="success-card">
+        <div class="sc-q">Q4 ②</div>
+        <div class="sc-num">1 门课</div>
+        <div class="sc-text">教师数字分身 V1 在 1 门课小样本验证</div>
+      </div>
+      <div class="success-card">
+        <div class="sc-q">Q4 ③</div>
+        <div class="sc-num">续费意向</div>
+        <div class="sc-text">首所学校续费意向确认 · 教师创编平台开放试用</div>
+      </div>
+      <div class="success-card">
+        <div class="sc-q">Q4 ④</div>
+        <div class="sc-num">第 2 所</div>
+        <div class="sc-text">第二所学校 POC 立项启动 · 验证可复制性</div>
       </div>
     </div>
   </div>
@@ -1412,12 +1198,12 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
   <div class="risk-map">
     <div class="risk-map-head">
       <h4>Q3 + Q4 关键风险地图</h4>
-      <p>10 个核心风险 · 缓解方案 · 必须前置解决</p>
+      <p>10 个核心风险 · 工程化交付优先级</p>
     </div>
     <table class="risk-table">
       <thead>
         <tr>
-          <th style="width:200px;">风险项</th>
+          <th style="width:230px;">风险项</th>
           <th style="width:90px;">所属季度</th>
           <th style="width:80px;">等级</th>
           <th>缓解方案</th>
@@ -1425,64 +1211,64 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
       </thead>
       <tbody>
         <tr>
+          <td><strong>K8s 适配 + 本地化部署包标准化</strong></td>
+          <td>Q3</td>
+          <td><span class="risk-tag h">高</span></td>
+          <td>P0 · V0.2 manifests 存在但未落地 · 不解决 = 单单驻场，无规模化基础</td>
+        </tr>
+        <tr>
+          <td><strong>1000 人压测真实瓶颈未知</strong></td>
+          <td>Q3</td>
+          <td><span class="risk-tag h">高</span></td>
+          <td>P0 · 选 1 所小校 POC 真实负载验证 · 不是模拟数据</td>
+        </tr>
+        <tr>
+          <td><strong>多租户三级权限粒度设计</strong></td>
+          <td>Q3</td>
+          <td><span class="risk-tag m">中</span></td>
+          <td>V0.2 已有基础 · 权限模型需详细设计</td>
+        </tr>
+        <tr>
           <td><strong>小雅 P0 MCP 准时性</strong></td>
           <td>Q3</td>
           <td><span class="risk-tag h">高</span></td>
-          <td>跨团队最大单点依赖 · 浏览器自动化降级兜底 · 接口规约 5 月底前定稿</td>
+          <td>跨团队最大单点 · 浏览器自动化降级兜底 · CLI 替代方案</td>
         </tr>
         <tr>
-          <td><strong>K8s 多校适配</strong></td>
-          <td>Q3</td>
-          <td><span class="risk-tag h">高</span></td>
-          <td>V0.2 manifests 存在但未落地 · 不解决=单机部署天花板 · Q3 优先级最高</td>
-        </tr>
-        <tr>
-          <td><strong>校级 5 万人压测</strong></td>
+          <td><strong>客户 IT 部门水平参差</strong></td>
           <td>Q3</td>
           <td><span class="risk-tag m">中</span></td>
-          <td>V0.2 仅过 1000 用户 · 选 1 所小校 POC 真实负载验证</td>
+          <td>标准化运维手册 + 远程支持机制 + IT 培训包</td>
         </tr>
         <tr>
-          <td><strong>教师风格建模算法</strong></td>
+          <td><strong>教师风格建模算法可行性</strong></td>
           <td>Q4</td>
           <td><span class="risk-tag h">高</span></td>
-          <td>从 0 到 1 · Q3 末小样本可行性验证 · 与星火语音组数字分身打通</td>
+          <td>研究院从 0 到 1 · Q3 末必须小样本验证 · 与星火语音组数字分身打通</td>
         </tr>
         <tr>
           <td><strong>合规/数据采集授权</strong></td>
           <td>Q4</td>
           <td><span class="risk-tag m">中</span></td>
-          <td>教师视频/录音建模 · 法务前置介入 + 默认私有 + 主动授权机制</td>
+          <td>教师视频/录音建模 · 法务前置介入 + 默认私有 + 主动授权</td>
         </tr>
         <tr>
           <td><strong>Vibecoding 沉睡风险</strong></td>
           <td>Q3-Q4</td>
           <td><span class="risk-tag m">中</span></td>
-          <td>80% 教师可能不主动创编 · 把创编入口放主路径强引导 + 课程组牵头共建</td>
-        </tr>
-        <tr>
-          <td><strong>OCR 手写识别准确度</strong></td>
-          <td>Q3</td>
-          <td><span class="risk-tag m">中</span></td>
-          <td>客观题 100% / 主观题先做 70% 辅助 · 教师终审兜底</td>
+          <td>80% 教师可能不主动创编 · 创编入口放主路径强引导 + 课程组牵头</td>
         </tr>
         <tr>
           <td><strong>知识库耦合稳定性</strong></td>
           <td>Q3-Q4</td>
           <td><span class="risk-tag h">高</span></td>
-          <td>依赖 Coral 学科大脑稳定 · MCP 协议解耦 · 挂掉时走教师工作区兜底</td>
+          <td>依赖 Coral 学科大脑稳定 · MCP 解耦 · 挂掉走教师工作区兜底</td>
         </tr>
         <tr>
-          <td><strong>小雅"教师空间"补强</strong></td>
+          <td><strong>OCR 手写识别准确度</strong></td>
           <td>Q3</td>
           <td><span class="risk-tag m">中</span></td>
-          <td>小雅有"课程空间"无"教师空间" · 先内嵌课程空间 · 同步推动小雅补强</td>
-        </tr>
-        <tr>
-          <td><strong>自研高教龙虾内核</strong></td>
-          <td>2027</td>
-          <td><span class="risk-tag l">低</span></td>
-          <td>不在 Q3/Q4 路径 · 先用 OpenClaw 兜底 · Skills 兼容保留替换余地</td>
+          <td>客观题 100% / 主观题 70% 辅助 · 教师终审兜底</td>
         </tr>
       </tbody>
     </table>
@@ -1496,7 +1282,7 @@ footer .footer-meta span { display: flex; align-items: center; gap: 6px; }
     <span><i data-lucide="git-branch" style="width:11px;height:11px;stroke-width:2;"></i>V1 · Q3/Q4 产品路标</span>
     <span><i data-lucide="calendar" style="width:11px;height:11px;stroke-width:2;"></i>2026-05-12</span>
   </div>
-  <div>本文档为内部讨论稿 · 基于立项路标 + V0.2 技术可行性 + 用户价值最大化</div>
+  <div>本文档为内部讨论稿 · 基于现实演示阶段 · 工程化交付优先于场景丰富度</div>
 </footer>
 
 <script>
