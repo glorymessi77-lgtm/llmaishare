@@ -267,6 +267,40 @@ em { font-style: normal; }
 .l0-card .l0-name { font-size: 13px; font-weight: 800; color: var(--ink-900); margin-bottom: 4px; }
 .l0-card .l0-desc { font-size: 12px; color: var(--ink-500); line-height: 1.6; }
 
+/* 三大应用方向并列卡片 */
+.app-direction-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 16px 0 22px; }
+.app-card {
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  padding: 22px 24px; position: relative; overflow: hidden;
+}
+.app-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+.app-card.app-1::before { background: var(--gold); }
+.app-card.app-2::before { background: var(--blue); }
+.app-card.app-3::before { background: var(--green); }
+.app-num { font-size: 11px; letter-spacing: 2px; font-weight: 800; margin-bottom: 6px; }
+.app-1 .app-num { color: var(--gold-deep); }
+.app-2 .app-num { color: var(--blue); }
+.app-3 .app-num { color: var(--green); }
+.app-card h3 { font-size: 18px; font-weight: 900; color: var(--ink-900); margin-bottom: 8px; }
+.app-card .app-pos { font-size: 12.5px; color: var(--ink-500); line-height: 1.65; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed var(--line); }
+.app-card ul { list-style: none; padding: 0; margin: 0; }
+.app-card ul li { font-size: 12.5px; color: var(--ink-600); line-height: 1.7; padding: 5px 0 5px 16px; position: relative; }
+.app-card ul li::before { content: '→'; position: absolute; left: 0; top: 4px; font-weight: 900; font-size: 12px; }
+.app-1 ul li::before { color: var(--gold); }
+.app-2 ul li::before { color: var(--blue); }
+.app-3 ul li::before { color: var(--green); }
+.app-card ul li strong { color: var(--ink-900); font-weight: 700; }
+
+/* 教学/科研场景表 · 与 subj-grid 同风格但配色不同 */
+.scenario-grid { display: grid; grid-template-columns: 110px 1fr; gap: 0; margin: 12px 0 18px; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); }
+.scenario-grid > div { padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 12.5px; line-height: 1.7; }
+.scenario-grid .th { background: var(--ink-900); color: #fff; font-weight: 800; font-size: 12px; letter-spacing: 0.3px; }
+.scenario-grid .sc-name { font-weight: 800; background: #F8FAFC; font-size: 13px; }
+.scenario-grid.teach .sc-name { color: var(--blue); }
+.scenario-grid.research .sc-name { color: var(--green); }
+.scenario-grid .sc-desc { color: var(--ink-600); }
+.scenario-grid > div:nth-last-child(-n+2) { border-bottom: none; }
+
 /* 学科应用场景表 · 4 列(学科 / 问答 / 特色智能体 / 能力训练) */
 .subj-grid { display: grid; grid-template-columns: 110px 1.1fr 1.1fr 1fr; gap: 0; margin: 14px 0; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); }
 .subj-grid > div {
@@ -990,12 +1024,49 @@ em { font-style: normal; }
     </div>
 
     <div class="chapter-lead">
-      <strong>学科大模型不仅服务于教学,更核心的是学科级专业能力。</strong>面向学科建设、学科研究、学科应用三个方向,在每个学科里都能落到具体的<strong>学科级专业问答</strong>。
+      <strong>学科大模型应用覆盖三大方向,缺一不可:</strong>学科特色应用(基于学科资产的专业能力)、教学提效(覆盖备-教-学-评-研全流程)、科研提效(服务师生科研全流程)。<strong>三个方向都可满足</strong>,且共享同一套学科大脑知识底座与 XClaw 智能体创编平台。
     </div>
 
-    <h3 class="sub-title">三类学科智能体形态 · <em>不同学科的应用方向</em></h3>
+    <div class="app-direction-grid">
+      <div class="app-card app-1">
+        <div class="app-num">方向 ①</div>
+        <h3>学科特色应用</h3>
+        <p class="app-pos">基于学校学科资产,做出"懂这个学科"的专业能力</p>
+        <ul>
+          <li><strong>学科级专业问答</strong>(食品 / 医学 / 化学 / 法学 / 历史等)</li>
+          <li><strong>学科特色智能体</strong>(配方分析 / 病例诊断 / 法律文书 / 史料辨析)</li>
+          <li><strong>学科能力训练</strong>(临床推理 / 法律论证 / 史料分析 / 实验设计)</li>
+        </ul>
+      </div>
+      <div class="app-card app-2">
+        <div class="app-num">方向 ②</div>
+        <h3>教学提效</h3>
+        <p class="app-pos">覆盖备-教-学-评-研教学全流程,减负增效</p>
+        <ul>
+          <li><strong>智能备课</strong>(出题 / 教案 / 资源召回 / 知识图谱构建)</li>
+          <li><strong>智能授课</strong>(课堂互动 / 学情诊断 / 个性化路径)</li>
+          <li><strong>智能评价</strong>(批改 / 达成度分析 / 多维评估)</li>
+          <li><strong>智能学伴</strong>(7×24 答疑 / 错题强化 / 资源推荐)</li>
+          <li><strong>智能教研</strong>(经验沉淀 / 资源共建 / 教学反思)</li>
+        </ul>
+      </div>
+      <div class="app-card app-3">
+        <div class="app-num">方向 ③</div>
+        <h3>科研提效</h3>
+        <p class="app-pos">服务师生科研全流程,加速研究效率</p>
+        <ul>
+          <li><strong>文献智能检索</strong>(跨库联合 / 精准定位)</li>
+          <li><strong>文献研读辅助</strong>(摘要 / 知识脉络 / 深度解析)</li>
+          <li><strong>论文写作辅助</strong>(翻译 / 润色 / 综述 / 创新点)</li>
+          <li><strong>科研资源管理</strong>(笔记 / 综述 / 领域追踪)</li>
+          <li><strong>科研趋势分析</strong>(热点识别 / 跨学科关联)</li>
+        </ul>
+      </div>
+    </div>
 
-    <p>学科大模型的应用不止"问答"。围绕一个学科,可以衍生出<strong>三类智能体</strong>:学科级专业问答(查得准)、学科特色智能体(执行学科专项任务)、能力训练(培养学科思维)。下表举 8 个学科示例。</p>
+    <h3 class="sub-title">方向 ① · <em>学科特色应用</em>(三类学科智能体)</h3>
+
+    <p>围绕一个学科,可以衍生出<strong>三类智能体</strong>:学科级专业问答(查得准)、学科特色智能体(做得对)、能力训练(想得清)。下表举 8 个学科示例。</p>
 
     <div class="subj-grid">
       <div class="th">学科</div>
@@ -1045,10 +1116,62 @@ em { font-style: normal; }
     </div>
 
     <p style="margin-top:14px;padding:12px 16px;background:var(--gold-bg);border-radius:6px;color:var(--ink-900);">
-      <strong>三类智能体一同构成"学科应用层":</strong>问答解决"查得准",特色助手解决"做得对",能力训练解决"想得清"——基于学校学科资产,给出有出处、可溯源、专业级的服务。
+      <strong>三类智能体一同构成方向 ① 学科特色应用:</strong>问答解决"查得准",特色助手解决"做得对",能力训练解决"想得清"——基于学校学科资产,给出有出处、可溯源、专业级的服务。
     </p>
 
-    <h3 class="sub-title">三类人 · <em>各自怎么用</em></h3>
+    <h3 class="sub-title" style="margin-top:24px;">方向 ② · <em>教学提效应用</em>(教学全流程)</h3>
+
+    <p>嵌入教学<strong>备 / 教 / 学 / 评 / 研</strong>全流程,让 AI 承担机械性劳动,老师聚焦真正需要专业判断的教学设计创新。</p>
+
+    <div class="scenario-grid teach">
+      <div class="th">教学环节</div>
+      <div class="th">智能体 / 应用</div>
+
+      <div class="sc-name">智能备课</div>
+      <div class="sc-desc">智能出题(按知识点 / 难度 / 题型自动生成) · AI 教案生成(基于教学单元生成完整教案框架) · 备课资源召回(跨知识库召回相关素材) · 知识图谱生成(自动解析教材构建课程知识结构)</div>
+
+      <div class="sc-name">智能授课</div>
+      <div class="sc-desc">课堂互动实时分析 · 学情实时诊断 · 个性化学习路径规划 · 课堂重难点识别与推送</div>
+
+      <div class="sc-name">智能评价</div>
+      <div class="sc-desc">AI 智能批改(主客观题双轨) · 课程目标达成度分析 · 多维度过程性评价报告 · 学生能力画像</div>
+
+      <div class="sc-name">智能学伴</div>
+      <div class="sc-desc">7×24 学科答疑 · 苏格拉底式启发引导(避免直接给答案) · 错题自动关联知识点强化 · 个性化资源推荐 · 学习地图可视化</div>
+
+      <div class="sc-name">智能教研</div>
+      <div class="sc-desc">优秀教学经验数字化沉淀 · 校本资源共建共享 · 教学数据预警决策 · 教学反思与改进建议</div>
+    </div>
+
+    <h3 class="sub-title" style="margin-top:24px;">方向 ③ · <em>科研提效应用</em>(科研全流程)</h3>
+
+    <p>服务师生<strong>科研全流程</strong>,从文献检索到论文写作,从趋势分析到跨学科探索,显著缩短科研周期。</p>
+
+    <div class="scenario-grid research">
+      <div class="th">科研环节</div>
+      <div class="th">智能体 / 应用</div>
+
+      <div class="sc-name">文献检索</div>
+      <div class="sc-desc">跨库联合检索 · 精准语义定位 · 跨学科关联检索 · 引文网络追溯</div>
+
+      <div class="sc-name">文献研读</div>
+      <div class="sc-desc">文献自动摘要 · 知识脉络梳理 · 关键论点提取 · 论文深度解析</div>
+
+      <div class="sc-name">论文写作</div>
+      <div class="sc-desc">学术翻译(中英互译) · 论文润色与改写 · 综述自动生成 · 创新点挖掘与对照分析</div>
+
+      <div class="sc-name">科研管理</div>
+      <div class="sc-desc">个人文献库管理 · 综述与笔记一键整理 · 课题进展跟踪 · 领域文献定向追踪</div>
+
+      <div class="sc-name">趋势分析</div>
+      <div class="sc-desc">学科研究热点识别 · 跨学科知识关联分析 · 研究方向预判 · 引用影响力分析</div>
+    </div>
+
+    <p style="margin-top:14px;padding:12px 16px;background:#F8FAFC;border-left:3px solid var(--gold);border-radius:6px;color:var(--ink-900);">
+      <strong>三大方向共享同一套底座:</strong>都基于学科大脑的学校学科资产 + XClaw 智能体创编平台。<strong>不是三套系统,是一套平台支撑三个方向的应用</strong>——学校建设投入一次,学科 / 教学 / 科研价值同时释放。
+    </p>
+
+    <h3 class="sub-title" style="margin-top:24px;">三类人 · <em>各自怎么用</em></h3>
 
     <div class="role-grid">
       <div class="role-card r1">
