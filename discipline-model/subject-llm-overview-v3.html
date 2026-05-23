@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440, initial-scale=1.0">
+<title>学科大模型 · 产品全貌 V3 · 婷婷</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: #F8FAFC; color: #1a2740;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+.page { max-width: 1280px; margin: 0 auto; padding: 28px 24px 60px; }
+
+:root {
+  --ink-900: #0F172A;
+  --ink-800: #1E3A5F;
+  --ink-700: #1E40AF;
+  --ink-600: #334155;
+  --ink-500: #64748B;
+  --ink-400: #94A3B8;
+  --line: #E2E8F0;
+  --bg: #F8FAFC;
+  --card: #FFFFFF;
+  --gold: #C8A45C;
+  --gold-soft: #E6D4A4;
+  --gold-deep: #A17F3F;
+  --gold-bg: #FFF9E9;
+  --green: #047857;
+  --green-bg: #ECFDF5;
+  --purple: #7C3AED;
+  --purple-bg: #F5F3FF;
+  --blue: #1E40AF;
+  --blue-bg: #DBEAFE;
+}
+
+/* 字号系统 · 5 级简化 */
+.fs-hero  { font-size: 30px; }    /* 主标题 */
+.fs-h2    { font-size: 22px; }    /* 章节标题 */
+.fs-h3    { font-size: 18px; }    /* 段标题 */
+.fs-body  { font-size: 14px; }    /* 正文 */
+.fs-small { font-size: 12px; }    /* 小字 */
+
+/* 可编辑提示 */
+.edit-banner {
+  max-width: 1280px; margin: 14px auto 0; padding: 8px 24px;
+  background: var(--gold-bg); color: var(--gold-deep);
+  border: 1px solid var(--gold-soft); border-radius: 8px;
+  font-size: 12px; text-align: center;
+}
+.edit-banner strong { font-weight: 700; }
+[contenteditable="true"]:focus { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 3px; }
+
+/* 返回导航 */
+.nav-bar { max-width: 1280px; margin: 0 auto; padding: 12px 24px 0; }
+.nav-bar a { color: var(--ink-500); text-decoration: none; font-size: 12px; padding: 6px 14px; border: 1px solid var(--line); border-radius: 16px; transition: all 0.2s; }
+.nav-bar a:hover { background: var(--ink-900); color: #fff; border-color: var(--ink-900); }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 60%, #0F172A 100%);
+  border-radius: 14px; padding: 56px 56px 48px; color: #fff;
+  position: relative; overflow: hidden; margin-bottom: 24px;
+  box-shadow: 0 8px 40px rgba(15,23,42,0.15);
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 85% 30%, rgba(200,164,92,0.18) 0%, transparent 40%),
+              radial-gradient(circle at 10% 80%, rgba(30,64,175,0.22) 0%, transparent 45%);
+}
+.hero-inner { position: relative; }
+.hero .eyebrow { font-size: 12px; letter-spacing: 4px; font-weight: 700; color: var(--gold-soft); margin-bottom: 14px; }
+.hero h1 { font-size: 30px; font-weight: 900; letter-spacing: 0.5px; line-height: 1.3; margin-bottom: 14px; background: linear-gradient(135deg, #fff 0%, #E6D4A4 60%, #C8A45C 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero h2 { font-size: 14px; color: rgba(255,255,255,0.82); font-weight: 500; margin-bottom: 22px; line-height: 1.8; }
+.hero-divider { width: 56px; height: 2px; background: linear-gradient(90deg, var(--gold) 0%, transparent 100%); margin: 18px 0; }
+.hero-arch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 22px; }
+.hero-arch-card {
+  padding: 18px 20px; background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(200,164,92,0.25); border-radius: 8px;
+}
+.hero-arch-card .h-tag { font-size: 11px; letter-spacing: 2px; color: var(--gold); font-weight: 800; margin-bottom: 6px; }
+.hero-arch-card .h-name { font-size: 14px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+.hero-arch-card .h-desc { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.6; }
+.hero-meta { margin-top: 20px; font-size: 11px; color: rgba(255,255,255,0.5); display: flex; gap: 14px; }
+
+/* 章节 */
+.chapter {
+  background: var(--card); border-radius: 12px; border: 1px solid var(--line);
+  padding: 32px 36px; margin-bottom: 18px;
+}
+.chapter-head {
+  display: flex; align-items: baseline; gap: 12px; margin-bottom: 22px;
+  padding-bottom: 14px; border-bottom: 1px solid var(--line); position: relative;
+}
+.chapter-head::after { content: ''; position: absolute; left: 0; bottom: -1px; width: 60px; height: 2px; background: var(--gold); }
+.chapter-num { font-size: 11px; letter-spacing: 3px; font-weight: 800; color: var(--gold-deep); }
+.chapter-head h2 { font-size: 22px; font-weight: 800; color: var(--ink-900); letter-spacing: 0.3px; line-height: 1.35; }
+.chapter-head h2 em { color: var(--gold-deep); font-style: normal; font-weight: 800; }
+
+.chapter-lead {
+  font-size: 14px; color: var(--ink-500); line-height: 1.8; margin-bottom: 20px;
+  padding: 14px 18px; background: #F8FAFC; border-left: 3px solid var(--gold); border-radius: 4px;
+}
+.chapter-lead strong { color: var(--ink-900); font-weight: 700; }
+
+/* callout */
+.callout {
+  background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%);
+  color: #fff; border-radius: 12px; padding: 28px 36px;
+  position: relative; overflow: hidden; margin: 14px 0;
+}
+.callout::before {
+  content: '\201C'; position: absolute; top: -10px; left: 14px;
+  font-size: 130px; color: rgba(200,164,92,0.18); line-height: 1;
+  font-family: Georgia, serif; pointer-events: none;
+}
+.callout .ck-label { font-size: 11px; letter-spacing: 3px; color: var(--gold-soft); font-weight: 800; margin-bottom: 12px; position: relative; }
+.callout .ck-text { font-size: 18px; line-height: 1.8; position: relative; color: #fff; font-weight: 600; }
+.callout .ck-text em {
+  font-style: normal; font-weight: 800;
+  background: linear-gradient(90deg, var(--gold-soft), var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+
+/* 段标题 */
+.sub-title {
+  font-size: 18px; font-weight: 800; color: var(--ink-900);
+  margin: 24px 0 12px; padding-left: 12px; border-left: 3px solid var(--gold);
+}
+.sub-title em { color: var(--gold-deep); font-style: normal; }
+
+/* 正文 */
+p { font-size: 14px; color: var(--ink-600); line-height: 1.8; margin-bottom: 10px; }
+p strong { color: var(--ink-900); font-weight: 700; }
+em { font-style: normal; }
+
+/* 学校处境三步 (新增) */
+.context-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 16px 0; }
+.context-card {
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  padding: 20px 22px;
+}
+.context-card .c-step { font-size: 11px; letter-spacing: 2px; color: var(--gold-deep); font-weight: 800; margin-bottom: 8px; }
+.context-card .c-title { font-size: 16px; font-weight: 800; color: var(--ink-900); margin-bottom: 10px; }
+.context-card .c-text { font-size: 13px; color: var(--ink-600); line-height: 1.75; }
+.context-card .c-text strong { color: var(--ink-900); font-weight: 700; }
+
+/* 数据进入双轨 */
+.data-track { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+.data-card {
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  padding: 18px 22px; border-left: 4px solid var(--green);
+}
+.data-card.complex { border-left-color: var(--gold); background: linear-gradient(90deg, #FFFBEB 0%, #fff 60%); }
+.data-card .d-tag {
+  display: inline-block; padding: 3px 10px; border-radius: 10px;
+  background: var(--green-bg); color: var(--green);
+  font-size: 11px; font-weight: 800; margin-bottom: 8px;
+}
+.data-card.complex .d-tag { background: var(--gold-bg); color: var(--gold-deep); }
+.data-card h4 { font-size: 14px; font-weight: 800; color: var(--ink-900); margin-bottom: 6px; }
+.data-card p { font-size: 13px; color: var(--ink-600); margin-bottom: 0; }
+
+/* 三层架构 */
+.arch-diagram { margin: 20px 0; }
+.arch-layer {
+  background: #fff; border: 2px solid var(--line); border-radius: 10px;
+  padding: 18px 22px; margin-bottom: 12px; position: relative;
+  display: grid; grid-template-columns: 140px 1fr; gap: 18px; align-items: center;
+}
+.arch-layer.l3 { border-left: 5px solid var(--purple); background: linear-gradient(90deg, var(--purple-bg) 0%, #fff 35%); }
+.arch-layer.l2 { border-left: 5px solid var(--green); background: linear-gradient(90deg, var(--green-bg) 0%, #fff 35%); }
+.arch-layer.l1 { border-left: 5px solid var(--blue); background: linear-gradient(90deg, var(--blue-bg) 0%, #fff 35%); }
+.arch-tag { font-size: 12px; font-weight: 800; letter-spacing: 0.5px; }
+.l3 .arch-tag { color: var(--purple); }
+.l2 .arch-tag { color: var(--green); }
+.l1 .arch-tag { color: var(--blue); }
+.arch-tag-sub { font-size: 11px; color: var(--ink-500); margin-top: 3px; font-weight: 600; }
+.arch-name { font-size: 18px; font-weight: 900; color: var(--ink-900); margin-bottom: 4px; }
+.arch-desc { font-size: 13px; color: var(--ink-600); line-height: 1.7; }
+.arch-arrow { text-align: center; color: var(--gold); font-size: 18px; line-height: 1; margin: -2px 0; font-weight: 900; }
+
+/* 三大机制 */
+.mech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 16px 0; }
+.mech-card {
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  padding: 20px 22px; position: relative; overflow: hidden;
+}
+.mech-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-soft) 100%);
+}
+.mech-num { font-size: 11px; letter-spacing: 2px; color: var(--gold-deep); font-weight: 800; margin-bottom: 8px; }
+.mech-card h3 { font-size: 16px; font-weight: 900; color: var(--ink-900); margin-bottom: 10px; }
+.mech-card p { font-size: 13px; color: var(--ink-600); line-height: 1.75; margin-bottom: 0; }
+.mech-card p em { font-style: normal; color: var(--gold-deep); font-weight: 700; }
+
+/* 模块卡片 */
+.module-card {
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  padding: 0; margin: 14px 0; overflow: hidden; position: relative;
+}
+.module-card .mc-top {
+  display: grid; grid-template-columns: 76px 1fr; gap: 0; align-items: stretch;
+}
+.module-card .mc-numbox {
+  background: linear-gradient(135deg, var(--ink-900) 0%, var(--ink-800) 100%);
+  color: var(--gold); display: flex; align-items: center; justify-content: center;
+  font-size: 38px; font-weight: 900; line-height: 1; padding: 22px 0;
+}
+.module-card .mc-head { padding: 18px 26px 6px; border-bottom: 1px solid var(--line); }
+.module-card .mc-name { font-size: 18px; font-weight: 900; color: var(--ink-900); margin-bottom: 4px; }
+.module-card .mc-pos { font-size: 13px; color: var(--ink-500); line-height: 1.7; }
+.module-card .mc-pos strong { color: var(--ink-900); font-weight: 700; }
+.module-card .mc-body {
+  padding: 14px 26px 22px;
+  display: grid; grid-template-columns: 1fr 240px; gap: 22px;
+}
+.module-card .mc-features h4, .module-card .mc-stats h4 {
+  font-size: 12px; font-weight: 800; letter-spacing: 1.5px;
+  color: var(--gold-deep); margin-bottom: 10px;
+}
+.module-card .mc-feat-list { list-style: none; margin: 0; padding: 0; }
+.module-card .mc-feat-list li {
+  font-size: 13px; color: var(--ink-600); line-height: 1.65;
+  padding: 6px 0 6px 18px; position: relative; border-bottom: 1px dashed #F0F0F0;
+}
+.module-card .mc-feat-list li:last-child { border-bottom: none; }
+.module-card .mc-feat-list li::before {
+  content: '\25CF'; position: absolute; left: 0; top: 8px;
+  color: var(--gold); font-size: 7px; line-height: 1.5;
+}
+.module-card .mc-feat-list li strong { color: var(--ink-900); font-weight: 700; }
+.module-card .mc-stats {
+  background: linear-gradient(135deg, #F8FAFC 0%, #FFFBEB 100%);
+  border-left: 3px solid var(--gold); border-radius: 4px;
+  padding: 14px 16px; align-self: start;
+}
+.module-card .mc-stats-list { list-style: none; }
+.module-card .mc-stats-list li {
+  font-size: 12px; color: var(--ink-600); padding: 5px 0;
+  border-bottom: 1px solid rgba(200,164,92,0.18);
+  display: flex; align-items: baseline; gap: 8px;
+}
+.module-card .mc-stats-list li:last-child { border-bottom: none; }
+.module-card .mc-stats-list li .num {
+  font-size: 14px; font-weight: 900; color: var(--gold-deep); min-width: 54px;
+}
+
+/* xclaw 紫色变体 */
+.module-card.xc .mc-numbox { background: linear-gradient(135deg, var(--purple) 0%, #5B21B6 100%); color: #fff; }
+.module-card.xc .mc-stats { background: linear-gradient(135deg, #F8FAFC 0%, #F5F3FF 100%); border-left-color: var(--purple); }
+.module-card.xc .mc-features h4, .module-card.xc .mc-stats h4 { color: var(--purple); }
+.module-card.xc .mc-stats-list li .num { color: var(--purple); }
+.module-card.xc .mc-feat-list li::before { color: var(--purple); }
+.module-card.xc .mc-stats-list li { border-bottom-color: rgba(124,58,237,0.18); }
+
+/* L0 网格 */
+.l0-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 14px 0; }
+.l0-card {
+  background: #fff; border: 1px solid var(--line); border-radius: 8px;
+  padding: 14px 14px;
+}
+.l0-card .l0-num { font-size: 11px; font-weight: 800; color: var(--gold-deep); margin-bottom: 4px; }
+.l0-card .l0-name { font-size: 13px; font-weight: 800; color: var(--ink-900); margin-bottom: 4px; }
+.l0-card .l0-desc { font-size: 12px; color: var(--ink-500); line-height: 1.6; }
+
+/* 学科应用场景表 · 4 列(学科 / 问答 / 特色智能体 / 能力训练) */
+.subj-grid { display: grid; grid-template-columns: 110px 1.1fr 1.1fr 1fr; gap: 0; margin: 14px 0; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); }
+.subj-grid > div {
+  padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 12.5px; line-height: 1.7;
+}
+.subj-grid .th { background: var(--ink-900); color: #fff; font-weight: 800; font-size: 12px; letter-spacing: 0.3px; }
+.subj-grid .subj-name { font-weight: 800; color: var(--gold-deep); background: #F8FAFC; font-size: 13px; }
+.subj-grid .subj-desc { color: var(--ink-600); }
+.subj-grid .subj-agent { color: var(--ink-600); background: #FFFBEB; }
+.subj-grid .subj-train { color: var(--ink-600); background: #F0FDF4; }
+.subj-grid > div:nth-last-child(-n+4) { border-bottom: none; }
+
+/* 折叠展开 · 详细清单 */
+.expand-section { margin: 18px 0; }
+.expand-section > summary {
+  cursor: pointer; padding: 11px 20px;
+  background: var(--ink-900); color: #fff; border-radius: 8px;
+  font-size: 13px; font-weight: 700;
+  user-select: none; transition: background 0.2s;
+  display: inline-block; list-style: none;
+}
+.expand-section > summary:hover { background: var(--ink-800); }
+.expand-section > summary::-webkit-details-marker { display: none; }
+.expand-section > summary::before {
+  content: '▶'; margin-right: 10px; font-size: 10px;
+  display: inline-block;
+}
+.expand-section[open] > summary::before { content: '▼'; }
+.expand-section[open] > summary { background: var(--gold-deep); }
+.expand-content { margin-top: 16px; padding: 4px 0; }
+
+/* 三类人卡片 */
+.role-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 14px 0; }
+.role-card {
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  padding: 22px 24px;
+}
+.role-card.r1 { border-top: 4px solid var(--blue); }
+.role-card.r2 { border-top: 4px solid var(--green); }
+.role-card.r3 { border-top: 4px solid var(--gold); }
+.role-card .r-tag { font-size: 11px; letter-spacing: 2px; font-weight: 800; margin-bottom: 6px; }
+.role-card.r1 .r-tag { color: var(--blue); }
+.role-card.r2 .r-tag { color: var(--green); }
+.role-card.r3 .r-tag { color: var(--gold-deep); }
+.role-card h4 { font-size: 16px; font-weight: 900; color: var(--ink-900); margin-bottom: 10px; }
+.role-card p { font-size: 13px; color: var(--ink-600); line-height: 1.7; margin-bottom: 10px; }
+.role-card ul { list-style: none; padding: 0; margin: 0; }
+.role-card li { font-size: 12.5px; color: var(--ink-600); padding: 4px 0 4px 14px; position: relative; line-height: 1.65; }
+.role-card li::before { content: '\2192'; position: absolute; left: 0; top: 4px; color: var(--gold); font-weight: 900; }
+
+/* 验收四层 */
+.verify-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 14px 0; position: relative; }
+.verify-step {
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  padding: 18px 18px; position: relative;
+}
+.verify-step::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--gold);
+}
+.verify-num { font-size: 28px; font-weight: 900; color: var(--gold); line-height: 1; opacity: 0.35; margin-bottom: 8px; }
+.verify-step h4 { font-size: 15px; font-weight: 900; color: var(--ink-900); margin-bottom: 8px; }
+.verify-step p { font-size: 12.5px; color: var(--ink-600); line-height: 1.7; margin-bottom: 6px; }
+.verify-step .v-link { font-size: 11px; color: var(--gold-deep); font-weight: 700; padding: 3px 8px; background: var(--gold-bg); border-radius: 4px; display: inline-block; margin-top: 4px; }
+
+/* 优势条 */
+.adv-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 14px 0; }
+.adv-item {
+  background: #fff; border: 1px solid var(--line); border-radius: 8px;
+  padding: 16px 14px; text-align: center;
+}
+.adv-icon { font-size: 22px; color: var(--gold); margin-bottom: 6px; font-weight: 900; }
+.adv-title { font-size: 13px; font-weight: 800; color: var(--ink-900); margin-bottom: 4px; }
+.adv-desc { font-size: 11.5px; color: var(--ink-500); line-height: 1.6; }
+
+/* 演进概览 */
+.evo-list { margin: 12px 0 22px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.evo-row {
+  display: grid; grid-template-columns: 130px 230px 26px 1fr;
+  gap: 14px; padding: 13px 18px; border-bottom: 1px solid var(--line);
+  align-items: center; background: #fff;
+}
+.evo-row:last-child { border-bottom: none; }
+.evo-row:nth-child(odd) { background: #F8FAFC; }
+.evo-mod { font-size: 13px; font-weight: 800; color: var(--ink-900); }
+.evo-from { font-size: 12.5px; color: var(--ink-500); }
+.evo-arrow { font-size: 18px; color: var(--gold); font-weight: 900; text-align: center; }
+.evo-to { font-size: 12.5px; color: var(--ink-600); line-height: 1.7; }
+.evo-to strong { color: var(--gold-deep); font-weight: 800; }
+
+/* 边界清单表 */
+.boundary-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 12px 0 20px; font-size: 13px; }
+.boundary-table th { background: var(--ink-900); color: #fff; font-weight: 800; padding: 11px 14px; text-align: left; font-size: 12px; letter-spacing: 0.5px; }
+.boundary-table th:first-child { border-radius: 6px 0 0 0; width: 130px; }
+.boundary-table th:last-child { border-radius: 0 6px 0 0; }
+.boundary-table th.th-done { background: var(--green); }
+.boundary-table th.th-plan { background: var(--gold-deep); }
+.boundary-table td { padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; line-height: 1.7; color: var(--ink-600); }
+.boundary-table td:first-child { font-weight: 800; color: var(--ink-900); background: #F8FAFC; font-size: 13px; }
+.boundary-table td.col-done { background: #F0FDF4; }
+.boundary-table td.col-plan { background: #FFFBEB; }
+.boundary-table tbody tr:last-child td { border-bottom: none; }
+.boundary-table .td-empty { color: var(--ink-400); text-align: center; font-weight: 700; font-style: normal; }
+
+/* footer */
+.footer {
+  margin-top: 30px; padding: 22px; background: var(--ink-900); color: rgba(255,255,255,0.7);
+  border-radius: 10px; font-size: 12px; line-height: 1.85; text-align: center;
+}
+.footer strong { color: var(--gold-soft); font-weight: 700; }
+</style>
+</head>
+<body contenteditable="true" spellcheck="false">
+
+<div class="nav-bar" contenteditable="false">
+  <a href="./index.html">← 返回学科大模型文档中心</a>
+</div>
+
+<div class="edit-banner" contenteditable="false">
+  ✏️ <strong>本页支持在线编辑</strong> · 直接点击文字即可修改 / Ctrl+P 打印或导出 PDF
+</div>
+
+<div class="page">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">SUBJECT LARGE MODEL · PRODUCT OVERVIEW</div>
+      <h1>学科大模型</h1>
+      <h2>基于学校自己的学科数据,把通用大模型、学科大脑、智能体创编平台融为一体,让 AI 在具体学科上的专业表现显著优于通用模型,并支撑学校持续做出标志性学科成果的一套学科级 AI 解决方案。</h2>
+      <div class="hero-divider"></div>
+      <div class="hero-arch">
+        <div class="hero-arch-card">
+          <div class="h-tag">L1 · 通用模型底座</div>
+          <div class="h-name">国产大模型 + AI 能力引擎</div>
+          <div class="h-desc">主流大模型按任务智能调度,适配国产化算力,全私有化</div>
+        </div>
+        <div class="hero-arch-card">
+          <div class="h-tag">L2 · 学科知识中台</div>
+          <div class="h-name">学科大脑 · 让 AI 真正懂学科</div>
+          <div class="h-desc">把学校教材 / 文献 / 案例 / 政策装进去,让 AI 答得准、有出处</div>
+        </div>
+        <div class="hero-arch-card">
+          <div class="h-tag">L3 · 应用承载层</div>
+          <div class="h-name">XClaw · 学科智能体创编平台</div>
+          <div class="h-desc">学科骨干一句话搭出学科应用,发布到 Web 链接与小雅平台</div>
+        </div>
+      </div>
+      <div class="hero-meta">
+        <span>报告人 · 婷婷</span>
+        <span>版本 · V3</span>
+        <span>日期 · 2026-05-23</span>
+        <span>主题 · 产品全貌</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第一章·学校的处境 -->
+  <div class="chapter">
+    <div class="chapter-head">
+      <div>
+        <div class="chapter-num">CHAPTER 01</div>
+        <h2>从<em>学校的处境</em>说起</h2>
+      </div>
+    </div>
+
+    <p>讲清楚学科大模型,先看学校面前是个什么处境、有什么资产、要的是什么。用<strong>"学校怎么想"反推"我们怎么做"</strong>。</p>
+
+    <div class="context-grid">
+      <div class="context-card">
+        <div class="c-step">STEP 01 · 处境</div>
+        <div class="c-title">通用模型不懂"这个学科"</div>
+        <div class="c-text">通用大模型在<strong>具体学科</strong>上回答不准、不专业、没出处。食品学科问题、医学诊断、法学条文、历史考据……通用模型只能给"大概对的答案",学校需要"专业级的答案"。</div>
+      </div>
+      <div class="context-card">
+        <div class="c-step">STEP 02 · 资产</div>
+        <div class="c-title">学校有数据,也有场景</div>
+        <div class="c-text"><strong>教材、讲义、试题、案例、论文、政策、标准、文献</strong>——学校自己有完整学科资产,场景也明确(学科建设、学科研究、学科应用)。问题不在缺数据,在<strong>怎么把这些数据用起来</strong>。</div>
+      </div>
+      <div class="context-card">
+        <div class="c-step">STEP 03 · 要的</div>
+        <div class="c-title">要做出标志性学科成果</div>
+        <div class="c-text">学校真正要的不是"装个 AI",是<strong>做出标志性成果</strong>——可以演示、可以传播、可以上国家智慧教育平台、可以支撑评奖评优。能持续做出标志性成果的学科能力,才是学校愿意投入的。</div>
+      </div>
+    </div>
+
+    <h3 class="sub-title">数据怎么进来 · <em>两种处理方式</em></h3>
+    <div class="data-track">
+      <div class="data-card">
+        <div class="d-tag">结构清晰 · 拿来即用</div>
+        <h4>教材 / 讲义 / 标准答案 / 政策文件</h4>
+        <p>结构化的文本资料,扔进学科大脑就能用。系统自动完成解析、切分、向量化、入库。</p>
+      </div>
+      <div class="data-card complex">
+        <div class="d-tag">需要清洗 · 我们的服务</div>
+        <h4>扫描件 / 图片 / 音视频 / 口语化记录</h4>
+        <p>这类资料需要先清洗、标注、结构化——三引擎 OCR、ASR 转写、学科 know-how 萃取,<strong>这是我们提供的陪跑服务</strong>。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第二章·学科大模型是什么 -->
+  <div class="chapter">
+    <div class="chapter-head">
+      <div>
+        <div class="chapter-num">CHAPTER 02</div>
+        <h2>学科大模型 <em>是什么</em></h2>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="ck-label">一句话定义</div>
+      <div class="ck-text">
+        学科大模型,是基于学校自己的学科数据,把<em>通用大模型、学科大脑、智能体创编平台</em>融为一体,
+        让 AI 在具体学科上的专业表现显著优于通用模型,并支撑学校持续做出<em>标志性学科成果</em>的一套学科级 AI 解决方案。
+      </div>
+    </div>
+
+    <p style="margin-top:14px;"><strong>不是模型更强,是数据用得更好;</strong>不是新发明,是把三件东西拼到一起——价值不在"有这三样",在<strong>怎么把它们组合好</strong>。</p>
+
+    <h3 class="sub-title">三层架构 · <em>一体交付</em></h3>
+    <div class="arch-diagram">
+      <div class="arch-layer l3">
+        <div>
+          <div class="arch-tag">L3 · 应用承载层</div>
+          <div class="arch-tag-sub">END-USER APPLICATION</div>
+        </div>
+        <div>
+          <div class="arch-name">XClaw 智能体创编平台</div>
+          <div class="arch-desc">学科骨干一句话搭出能用的学科智能体,真正落到学科场景——学科问答、学科研究、教学应用。发布到 Web 链接 / 小雅平台。</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↑</div>
+      <div class="arch-layer l2">
+        <div>
+          <div class="arch-tag">L2 · 学科知识中台</div>
+          <div class="arch-tag-sub">SUBJECT BRAIN</div>
+        </div>
+        <div>
+          <div class="arch-name">学科大脑</div>
+          <div class="arch-desc">把学校自己的学科内容装进去——教材、讲义、文献、案例、政策、标准。覆盖知识接入 / 加工 / 治理 / 共建 / 应用 / 运营 / 底座 7 大能力域,让 AI 答得准、答得有出处、答得有边界。</div>
+        </div>
+      </div>
+      <div class="arch-arrow">↑</div>
+      <div class="arch-layer l1">
+        <div>
+          <div class="arch-tag">L1 · 通用模型底座</div>
+          <div class="arch-tag-sub">GENERAL LLM FOUNDATION</div>
+        </div>
+        <div>
+          <div class="arch-name">国产大模型 + AI 能力引擎(含 L0 8 大引擎)</div>
+          <div class="arch-desc">接入讯飞星火 / DeepSeek / 通义 / 文心 等主流大模型,按任务智能调度;6 大底层引擎统一支撑,全私有化部署,适配国产化算力。</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-title">学科大脑 <em>三驱动</em> · 让 AI 真正懂学科</h3>
+    <div class="mech-grid">
+      <div class="mech-card">
+        <div class="mech-num">DRIVER 01</div>
+        <h3>检索增强</h3>
+        <p>模型回答前,先去学科大脑调出学校资料——<em>等于开卷答题</em>。5 路混合检索(向量 + 全文 + FAQ + 图谱 + 摘要),答案可溯源到教材页码段落。</p>
+      </div>
+      <div class="mech-card">
+        <div class="mech-num">DRIVER 02</div>
+        <h3>图谱约束</h3>
+        <p>用学科知识图谱约束推理路径,<em>按这个学科的概念和关系来想问题</em>。融合向量库、全文检索、知识图谱三类底层引擎。</p>
+      </div>
+      <div class="mech-card">
+        <div class="mech-num">DRIVER 03</div>
+        <h3>评测闭环</h3>
+        <p>建一套学科评测集,<em>自动化 + 人工双轨打分</em>,答错的针对性优化。能力维度:知识覆盖准确度 / 逻辑推理 / 回答合规 / 引用溯源 / 表达质量。</p>
+      </div>
+    </div>
+
+    <p style="margin-top:14px;padding:12px 16px;background:var(--gold-bg);border-radius:6px;color:var(--ink-900);"><strong>都不靠改模型本身。</strong>主路径就是<strong>不训练模型,靠把学校数据用好</strong>——这是学科大模型的核心方法论。</p>
+
+    <h3 class="sub-title" style="margin-top:28px;">七大模块 · <em>体系化保障</em></h3>
+    <p>三驱动是 AI <strong>回答时的运行机制</strong>,但它跑得起来,靠的是学科大脑<strong>七大模块的完整体系做底盘</strong>——每个模块都是三驱动的支撑:</p>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px 18px;margin:12px 0 14px;padding:14px 18px;background:#F8FAFC;border-left:3px solid var(--blue);border-radius:6px;font-size:13px;line-height:1.75;color:var(--ink-600);">
+      <div><strong style="color:var(--ink-900);">① 知识接入</strong> → 有完整数据,检索增强才有源头</div>
+      <div><strong style="color:var(--ink-900);">② 知识加工</strong> → 数据结构化,图谱约束才有路径</div>
+      <div><strong style="color:var(--ink-900);">③ 质量治理</strong> → 数据干净,运行机制不被脏数据污染</div>
+      <div><strong style="color:var(--ink-900);">④ 共享共建</strong> → 数据持续丰富,模型懂得越来越多</div>
+      <div><strong style="color:var(--ink-900);">⑤ 知识应用</strong> → 三驱动的执行场</div>
+      <div><strong style="color:var(--ink-900);">⑥ 运营迭代</strong> → 评测闭环的持续进化引擎</div>
+      <div style="grid-column:span 2;"><strong style="color:var(--ink-900);">⑦ L0 技术底座</strong> → 支撑三驱动的运行环境(国产化算力 / 推理 / 检索 / 存储 / 安全)</div>
+    </div>
+    <p><strong>体系是底盘,机制是发动机,缺一不可。</strong>下面展开七大模块的具体能力。</p>
+  </div>
+
+  <!-- 第三章·学科大脑 7 大模块 -->
+  <div class="chapter">
+    <div class="chapter-head">
+      <div>
+        <div class="chapter-num">CHAPTER 03</div>
+        <h2>学科大脑 · <em>7 大能力模块</em></h2>
+      </div>
+    </div>
+
+    <div class="chapter-lead">
+      学科大脑是学科大模型的<strong>知识中台</strong>,覆盖从"原始资料进入"到"知识应用产出"的完整链路。7 大模块按能力流转顺序展开:<strong>知识接入 → 知识加工 → 质量与治理 → 共享共建 → 知识应用 → 运营与迭代 → L0 技术底座</strong>。
+    </div>
+
+    <!-- Module 1 -->
+    <div class="module-card">
+      <div class="mc-top">
+        <div class="mc-numbox">①</div>
+        <div class="mc-head">
+          <div class="mc-name">知识接入</div>
+          <div class="mc-pos"><strong>定位:</strong>把师生的各类教学科研资料便捷汇入知识库,资料拿来即用。是学科大脑能力链的入口。</div>
+        </div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-features">
+          <h4>核心功能</h4>
+          <ul class="mc-feat-list">
+            <li><strong>多格式文件接入:</strong>15 种主流格式——文档(PDF/Word/PPT/Excel/TXT/MD)、表格、图片、音视频,以及 FAQ 问答对专用接入</li>
+            <li><strong>多渠道接入方式:</strong>本地直传 / 对象存储 / 网页链接抓取 / 批量导入 4 种方式</li>
+            <li><strong>多模态采集与解析:</strong>扫描件、图片型 PDF 三引擎 OCR(标准 / 多模态视觉 / 本地化);课堂录音、讲座视频 ASR 转写</li>
+            <li><strong>学科原生接入增强:</strong>教材、教案、习题专用解析,自动识别章节、标记知识点</li>
+            <li><strong>批量与初始化:</strong>知识库批量创建、分类批量创建、资源批量上传</li>
+          </ul>
+        </div>
+        <div class="mc-stats">
+          <h4>关键能力</h4>
+          <ul class="mc-stats-list">
+            <li><span class="num">15+</span><span>文档格式</span></li>
+            <li><span class="num">4 种</span><span>接入渠道</span></li>
+            <li><span class="num">3 引擎</span><span>OCR 识别</span></li>
+            <li><span class="num">≤ 20MB</span><span>单文件</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Module 2 -->
+    <div class="module-card">
+      <div class="mc-top">
+        <div class="mc-numbox">②</div>
+        <div class="mc-head">
+          <div class="mc-name">知识加工</div>
+          <div class="mc-pos"><strong>定位:</strong>把原始资料自动加工成可被 AI 直接调用的学科知识资产,无需人工干预即可形成结构化知识。</div>
+        </div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-features">
+          <h4>核心功能</h4>
+          <ul class="mc-feat-list">
+            <li><strong>知识库自动构建:</strong>文件转换 → 文档分片 → 向量化 → 入库 全流程自动化,实时追踪构建状态</li>
+            <li><strong>文档分片(8 种模式):</strong>智能拆分 / 极速 OCR / 深度 OCR / 智能识别目录 / 按长度 / 按目录 / 按分隔符 / 按行</li>
+            <li><strong>知识抽取:</strong>自动提炼 4 类——学科术语 / 问答对 / 知识图谱节点 / 内容摘要</li>
+            <li><strong>采编结果人工干预:</strong>切分、抽取结果可视化管理,教师可对结果人工校正</li>
+            <li><strong>学科级语义解析:</strong>理科公式标准化 / 化学反应式规范 / 历史时序梳理</li>
+          </ul>
+        </div>
+        <div class="mc-stats">
+          <h4>关键能力</h4>
+          <ul class="mc-stats-list">
+            <li><span class="num">8 种</span><span>分片模式</span></li>
+            <li><span class="num">4 类</span><span>自动抽取</span></li>
+            <li><span class="num">5 种</span><span>分片参数</span></li>
+            <li><span class="num">100%</span><span>流程自动</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Module 3 -->
+    <div class="module-card">
+      <div class="mc-top">
+        <div class="mc-numbox">③</div>
+        <div class="mc-head">
+          <div class="mc-name">质量与治理</div>
+          <div class="mc-pos"><strong>定位:</strong>保障学科知识库内容干净、不冗余、不矛盾、合规、可追溯;让学科应答始终基于可信源头。</div>
+        </div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-features">
+          <h4>核心功能</h4>
+          <ul class="mc-feat-list">
+            <li><strong>通用质量治理:</strong>重复内容检测、知识纠错、内容冲突识别</li>
+            <li><strong>问答对治理:</strong>FAQ 自动抽取问答对,人工审核 + 编辑,提升问答命中率</li>
+            <li><strong>同义词治理:</strong>构建学科同义词词典,统一术语表达,不同问法都能命中</li>
+            <li><strong>敏感词与内容安全:</strong>敏感词正向替换 + 反向还原 + 白名单 + XSS 防护</li>
+            <li><strong>知识盘点与生命周期:</strong>过期识别 + 版本管理 + 操作留痕</li>
+            <li><strong>敏感信息脱敏:</strong>人名、证件号、联系方式自动识别脱敏</li>
+            <li><strong>高教治理智能体:</strong>面向教材、术语、试题、学情、论文的专项治理(完整版)</li>
+            <li><strong>学科 Vault 安全底座:</strong>AI 每次修改自动备份 / 可追溯 / 可恢复(完整版)</li>
+          </ul>
+        </div>
+        <div class="mc-stats">
+          <h4>关键能力</h4>
+          <ul class="mc-stats-list">
+            <li><span class="num">5 维</span><span>治理体系</span></li>
+            <li><span class="num">3 重</span><span>安全防护</span></li>
+            <li><span class="num">全留痕</span><span>版本管理</span></li>
+            <li><span class="num">合规</span><span>敏感脱敏</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Module 4 -->
+    <div class="module-card">
+      <div class="mc-top">
+        <div class="mc-numbox">④</div>
+        <div class="mc-head">
+          <div class="mc-name">共享共建</div>
+          <div class="mc-pos"><strong>定位:</strong>让知识在不同组织层级流转,师生共建集体学科资产;完整贴合高校组织架构,通用知识库 3 级,学科大脑 6 级。</div>
+        </div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-features">
+          <h4>核心功能</h4>
+          <ul class="mc-feat-list">
+            <li><strong>六级共享层次:</strong>个人 / 教研室·课程组 / 学院 / 校级 / 跨校联盟 / 公开广场</li>
+            <li><strong>多级权限管理:</strong>空间 / 分类 / 知识 三级精细权限</li>
+            <li><strong>分类目录与标签:</strong>多级分类目录 + 自定义多维标签体系</li>
+            <li><strong>师生共建审核流:</strong>"机审 + 一级人工审核"双重把关</li>
+            <li><strong>统一认证:</strong>SSO 单点登录 + OAuth2.0 + 学生/教师/管理员三角色分视图</li>
+            <li><strong>学科笔记系统:</strong>笔记与知识库双向关联,作为 RAG 检索上下文</li>
+            <li><strong>对话导入笔记:</strong>AI 对话有价值的回答一键转存为笔记</li>
+            <li><strong>跨平台调用与开放接口:</strong>知识库能力打包成 Skill 被第三方 Agent 调用</li>
+          </ul>
+        </div>
+        <div class="mc-stats">
+          <h4>关键能力</h4>
+          <ul class="mc-stats-list">
+            <li><span class="num">6 级</span><span>共享层次</span></li>
+            <li><span class="num">3 级</span><span>权限粒度</span></li>
+            <li><span class="num">SSO</span><span>+ OAuth2.0</span></li>
+            <li><span class="num">双向</span><span>笔记联动</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Module 5 -->
+    <div class="module-card">
+      <div class="mc-top">
+        <div class="mc-numbox">⑤</div>
+        <div class="mc-head">
+          <div class="mc-name">知识应用</div>
+          <div class="mc-pos"><strong>定位:</strong>基于学科知识库的<strong>学科级专业问答</strong>——食品学科问答、医学学科问答、化学/历史/法学学科问答,服务学科建设、学科研究与学科应用。</div>
+        </div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-features">
+          <h4>核心功能</h4>
+          <ul class="mc-feat-list">
+            <li><strong>学科智能问答:</strong>基于 RAG 的学科级专业问答,SSE 流式实时输出(延迟 ≤ 3 秒),Markdown 渲染</li>
+            <li><strong>多路混合检索:</strong>向量语义 + 全文关键词 + FAQ 精确匹配 + 摘要向量 + 知识图谱 5 路并行 + 重排</li>
+            <li><strong>全链路溯源:</strong>每个回答都标注来源,一键追溯到原文具体章节和段落</li>
+            <li><strong>多轮对话管理:</strong>会话独立管理,上下文保持(可配置历史保留轮数)</li>
+            <li><strong>对话配置中心:</strong>6 种对话参数 + 系统提示词自定义学科 AI 角色</li>
+            <li><strong>跨知识库对话:</strong>单会话绑定多个知识库,跨知识库联合问答</li>
+            <li><strong>幻觉兜底:</strong>检索不到可靠依据时如实告知不编造,高风险问题拒答</li>
+            <li><strong>学科建设/科研/教学 多方向应用:</strong>学科建设决策支持 / 学科研究文献检索与写作辅助 / 教学场景应用(智能问答 / 智能出题 / AI 备课)</li>
+            <li><strong>多终端支持:</strong>Web 管理端</li>
+            <li><strong>三角色界面:</strong>教师 / 学生 / 管理者 各自视角适配</li>
+          </ul>
+        </div>
+        <div class="mc-stats">
+          <h4>关键能力</h4>
+          <ul class="mc-stats-list">
+            <li><span class="num">5 路</span><span>混合检索</span></li>
+            <li><span class="num">≤ 3 秒</span><span>响应延迟</span></li>
+            <li><span class="num">≥ 10 t/s</span><span>SSE 速率</span></li>
+            <li><span class="num">90%+</span><span>问答准确率</span></li>
+            <li><span class="num">2000</span><span>并发用户</span></li>
+            <li><span class="num">页码级</span><span>溯源</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Module 6 -->
+    <div class="module-card">
+      <div class="mc-top">
+        <div class="mc-numbox">⑥</div>
+        <div class="mc-head">
+          <div class="mc-name">运营与迭代</div>
+          <div class="mc-pos"><strong>定位:</strong>让知识库越用越好,形成数字资产飞轮;师生使用过程本身就在为学科大脑添砖加瓦。</div>
+        </div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-features">
+          <h4>核心功能</h4>
+          <ul class="mc-feat-list">
+            <li><strong>数据统计看板:</strong>知识库数量、资源量、调用情况、解析成功率等核心指标</li>
+            <li><strong>多维度统计:</strong>知识库类型 / 资源类型 / 标签维度 / 活跃率 / 热门 TOP 排行</li>
+            <li><strong>使用量统计:</strong>会话数、问题数、时间序列趋势、问题范围分布</li>
+            <li><strong>三角色运营看板:</strong>教师 / 院系 / 校领导 三视角层层呈现知识资产(完整版)</li>
+            <li><strong>错误案例与知识缺口:</strong>自动收集回答不佳案例,定位知识缺口(完整版)</li>
+            <li><strong>数字资产飞轮:</strong>使用即建设,问答 / 修订 / 贡献自动入库(完整版)</li>
+            <li><strong>高教记忆系统:</strong>教师、学生、课题组、院系、学期 多维记忆(完整版)</li>
+            <li><strong>跨学期跨课程继承:</strong>上学期沉淀延续到新学期(完整版)</li>
+            <li><strong>模型微调与进化:</strong>基于学校数据微调专属模型(完整版)</li>
+            <li><strong>学科问答效果评测:</strong>5 大能力维度评测 + 双轨打分 + 版本化报告</li>
+          </ul>
+        </div>
+        <div class="mc-stats">
+          <h4>关键能力</h4>
+          <ul class="mc-stats-list">
+            <li><span class="num">3 视角</span><span>运营看板</span></li>
+            <li><span class="num">5 维</span><span>评测能力</span></li>
+            <li><span class="num">飞轮</span><span>使用即建设</span></li>
+            <li><span class="num">多学期</span><span>知识继承</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Module 7 -->
+    <div class="module-card">
+      <div class="mc-top">
+        <div class="mc-numbox">⑦</div>
+        <div class="mc-head">
+          <div class="mc-name">L0 技术底座</div>
+          <div class="mc-pos"><strong>定位:</strong>为整个学科大模型提供 AI 推理与数据处理底座;随主产品交付,不单独售卖。</div>
+        </div>
+      </div>
+      <div class="mc-body" style="grid-template-columns: 1fr;">
+        <div>
+          <h4 style="font-size:12px;font-weight:800;letter-spacing:1.5px;color:var(--gold-deep);margin-bottom:10px;">8 大底层引擎</h4>
+          <div class="l0-grid">
+            <div class="l0-card"><div class="l0-num">L0.1</div><div class="l0-name">大模型推理引擎</div><div class="l0-desc">多模型路由 + 国产化算力适配</div></div>
+            <div class="l0-card"><div class="l0-num">L0.2</div><div class="l0-name">向量化与重排</div><div class="l0-desc">按学科库选型,问答精准度核心</div></div>
+            <div class="l0-card"><div class="l0-num">L0.3</div><div class="l0-name">多路检索底座</div><div class="l0-desc">向量库 + 全文 + 知识图谱融合</div></div>
+            <div class="l0-card"><div class="l0-num">L0.4</div><div class="l0-name">文档解析与 OCR</div><div class="l0-desc">三引擎 OCR(云/视觉/本地)</div></div>
+            <div class="l0-card"><div class="l0-num">L0.5</div><div class="l0-name">异步任务调度</div><div class="l0-desc">大批量处理,失败重试</div></div>
+            <div class="l0-card"><div class="l0-num">L0.6</div><div class="l0-name">安全合规底座</div><div class="l0-desc">5 层安全保障</div></div>
+            <div class="l0-card"><div class="l0-num">L0.7</div><div class="l0-name">部署运维监控</div><div class="l0-desc">私有化 + 内网 + 国产化栈</div></div>
+            <div class="l0-card"><div class="l0-num">L0.8</div><div class="l0-name">数据存储底座</div><div class="l0-desc">向量库 / 图数据库 / 对象存储</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第四章·XClaw -->
+  <div class="chapter">
+    <div class="chapter-head">
+      <div>
+        <div class="chapter-num">CHAPTER 04</div>
+        <h2>XClaw · <em>自然语言智能体创编平台</em></h2>
+      </div>
+    </div>
+
+    <div class="chapter-lead">
+      XClaw 是学科大模型的<strong>应用承载层</strong>,让学科骨干和教师<strong>一句话搭出能用的学科智能体</strong>——食品学科问答助手、临床诊断助手、化学反应推理助手、文献综述助手。
+    </div>
+
+    <!-- XClaw 1 -->
+    <div class="module-card xc">
+      <div class="mc-top">
+        <div class="mc-numbox">①</div>
+        <div class="mc-head">
+          <div class="mc-name">XClaw 自然语言创编</div>
+          <div class="mc-pos"><strong>定位:</strong>核心创新区。学科骨干不需要理解工作流,一句话就能创编学科智能体或 Skill;XClaw 引擎自动理解意图、匹配学科、调度 Skill。</div>
+        </div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-features">
+          <h4>核心功能</h4>
+          <ul class="mc-feat-list">
+            <li><strong>一句话创编智能体:</strong>自然语言输入,XClaw 自动生成智能体配置(基础信息 / 提示词 / 模型 / 工具);右栏对话预览与节点编辑,可直接试跑、调优、发布</li>
+            <li><strong>一句话创编 Skill:</strong>触发 OpenClaw skill-creator 引擎,自动生成结构化 Skill 包;进度卡片实时展示创编进程</li>
+            <li><strong>提示词一键优化:</strong>通用改写 + 场景化改写两种模式</li>
+            <li><strong>XClaw 意图识别与 Skill 调度引擎:</strong>识别意图 → 匹配学科 → 调度 Skill 与知识库 → 生成配置</li>
+          </ul>
+        </div>
+        <div class="mc-stats">
+          <h4>关键能力</h4>
+          <ul class="mc-stats-list">
+            <li><span class="num">一句话</span><span>创编智能体</span></li>
+            <li><span class="num">一句话</span><span>创编 Skill</span></li>
+            <li><span class="num">零编程</span><span>骨干零门槛</span></li>
+            <li><span class="num">秒级</span><span>提示词优化</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- XClaw 2 -->
+    <div class="module-card xc">
+      <div class="mc-top">
+        <div class="mc-numbox">②</div>
+        <div class="mc-head">
+          <div class="mc-name">智能体可视化创编</div>
+          <div class="mc-pos"><strong>定位:</strong>面向需要精细控制的技术骨干,提供完整可视化配置入口与工作流编排能力。</div>
+        </div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-features">
+          <h4>核心功能</h4>
+          <ul class="mc-feat-list">
+            <li><strong>智能体基础配置:</strong>名称 / AI 头像 / 描述 / 多标签 / 角色权限</li>
+            <li><strong>提示词管理:</strong>System Prompt 编辑器 + Few-shot 示例 + PromptTry 即时试跑 + 版本快照与回滚</li>
+            <li><strong>模型配置:</strong>多模型选择 + 温度 / Top-P / Token 参数 + 校本模型接入</li>
+            <li><strong>知识库挂载:</strong>多库挂载 + Top-K / 阈值配置,与学科大脑对接</li>
+            <li><strong>工具 / 插件挂载:</strong>插件市场浏览 + 一键挂载 + 参数配置</li>
+            <li><strong>工作流模板与可视化画布:</strong>ReactFlow 节点拖拽 + 多版本切换</li>
+            <li><strong>16 节点工作流编排:</strong>6 类流控 + 4 类 AI 能力 + 6 类集成</li>
+            <li><strong>可视化调试与试运行:</strong>RAG 检索片段 / CoT 思考链 / Token 看板 / 调用链时序图</li>
+          </ul>
+        </div>
+        <div class="mc-stats">
+          <h4>关键能力</h4>
+          <ul class="mc-stats-list">
+            <li><span class="num">16 类</span><span>工作流节点</span></li>
+            <li><span class="num">可视化</span><span>画布编排</span></li>
+            <li><span class="num">全链路</span><span>调试可视化</span></li>
+            <li><span class="num">版本</span><span>快照 + 回滚</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- XClaw 3 -->
+    <div class="module-card xc">
+      <div class="mc-top">
+        <div class="mc-numbox">③</div>
+        <div class="mc-head">
+          <div class="mc-name">智能体共建广场</div>
+          <div class="mc-pos"><strong>定位:</strong>师生共建社区,智能体 / 工作流 / Skill 三类内容统一沉淀复用,形成集体智能资产。</div>
+        </div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-features">
+          <h4>核心功能</h4>
+          <ul class="mc-feat-list">
+            <li><strong>社区浏览与发现:</strong>三类内容统一展示,按学科 / 学段 / 教学场景 / 关键词 四维筛选</li>
+            <li><strong>三类共享操作:</strong>Skill 一键安装 / 智能体直接使用 + 派生 / 工作流复刻;版本快照绑定</li>
+            <li><strong>我的发布与互动:</strong>师生发布管理 / 上下架 / 社区互动(点赞 / 评论 / 使用统计)</li>
+          </ul>
+        </div>
+        <div class="mc-stats">
+          <h4>关键能力</h4>
+          <ul class="mc-stats-list">
+            <li><span class="num">3 类</span><span>共建内容</span></li>
+            <li><span class="num">4 维</span><span>筛选检索</span></li>
+            <li><span class="num">版本快照</span><span>挂载绑定</span></li>
+            <li><span class="num">集体</span><span>智能资产</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- XClaw 4 -->
+    <div class="module-card xc">
+      <div class="mc-top">
+        <div class="mc-numbox">④</div>
+        <div class="mc-head">
+          <div class="mc-name">智能体多端发布与治理</div>
+          <div class="mc-pos"><strong>定位:</strong>一份配置多端发布,智能体触达师生现有所有入口;协议导出对外开放,版本灰度保障线上稳定。</div>
+        </div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-features">
+          <h4>核心功能</h4>
+          <ul class="mc-feat-list">
+            <li><strong>多端发布:</strong>Web 链接发布 + 小雅平台深度对接 · 师生触达入口全覆盖</li>
+            <li><strong>协议导出:</strong>OpenAI Function 协议 + MCP Schema · 向第三方系统开放</li>
+            <li><strong>版本快照与灰度管理:</strong>应用整体快照 + 按学院/班级粒度灰度 + 一键回滚</li>
+          </ul>
+        </div>
+        <div class="mc-stats">
+          <h4>关键能力</h4>
+          <ul class="mc-stats-list">
+            <li><span class="num">2 端</span><span>Web + 小雅</span></li>
+            <li><span class="num">2 协议</span><span>Function + MCP</span></li>
+            <li><span class="num">组织树</span><span>灰度粒度</span></li>
+            <li><span class="num">一键</span><span>版本回滚</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- XClaw 5 -->
+    <div class="module-card xc">
+      <div class="mc-top">
+        <div class="mc-numbox">⑤</div>
+        <div class="mc-head">
+          <div class="mc-name">智能体平台运行底座</div>
+          <div class="mc-pos"><strong>定位:</strong>支撑 XClaw 全平台稳定运行的基础设施;随主产品交付,不单独售卖。</div>
+        </div>
+      </div>
+      <div class="mc-body">
+        <div class="mc-features">
+          <h4>核心功能</h4>
+          <ul class="mc-feat-list">
+            <li><strong>XClaw 引擎层:</strong>创编引擎与协议层 + xclaw_agent workflow 节点</li>
+            <li><strong>多租户多空间隔离:</strong>个人 / 团队 / 校级 数据隔离 + 空间灵活切换</li>
+            <li><strong>Agent 沙箱执行:</strong>会话独立 session + CPU/内存/超时 三层限额</li>
+            <li><strong>SSO 统一认证:</strong>Casdoor + JWT + PKCE + fifac 对接高校认证</li>
+            <li><strong>会话记忆与可观测性:</strong>OpenTelemetry + ELK + Prometheus 监控告警</li>
+          </ul>
+        </div>
+        <div class="mc-stats">
+          <h4>关键能力</h4>
+          <ul class="mc-stats-list">
+            <li><span class="num">多租户</span><span>行/库级隔离</span></li>
+            <li><span class="num">沙箱</span><span>资源限额</span></li>
+            <li><span class="num">SSO</span><span>统一认证</span></li>
+            <li><span class="num">全栈</span><span>可观测</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第五章·学科大模型用在哪里 -->
+  <div class="chapter">
+    <div class="chapter-head">
+      <div>
+        <div class="chapter-num">CHAPTER 05</div>
+        <h2>学科大模型 · <em>用在哪里</em></h2>
+      </div>
+    </div>
+
+    <div class="chapter-lead">
+      <strong>学科大模型不仅服务于教学,更核心的是学科级专业能力。</strong>面向学科建设、学科研究、学科应用三个方向,在每个学科里都能落到具体的<strong>学科级专业问答</strong>。
+    </div>
+
+    <h3 class="sub-title">三类学科智能体形态 · <em>不同学科的应用方向</em></h3>
+
+    <p>学科大模型的应用不止"问答"。围绕一个学科,可以衍生出<strong>三类智能体</strong>:学科级专业问答(查得准)、学科特色智能体(执行学科专项任务)、能力训练(培养学科思维)。下表举 8 个学科示例。</p>
+
+    <div class="subj-grid">
+      <div class="th">学科</div>
+      <div class="th">学科级专业问答(查得准)</div>
+      <div class="th">学科特色智能体(任务型)</div>
+      <div class="th">能力训练(培养思维)</div>
+
+      <div class="subj-name">食品学科</div>
+      <div class="subj-desc">食品安全标准 / 食品工艺 / 营养学 / 食品法规与认证</div>
+      <div class="subj-agent">食品配方分析助手 · 食品安全风险评估</div>
+      <div class="subj-train">食品工艺流程推演 · 食品检测方法实操</div>
+
+      <div class="subj-name">临床医学</div>
+      <div class="subj-desc">临床指南 / 诊断辅助 / 药物相互作用 / 病例对比</div>
+      <div class="subj-agent">标准化病人问诊助手 · 病例对照分析助手</div>
+      <div class="subj-train">临床鉴别诊断训练 · 病例推理训练</div>
+
+      <div class="subj-name">化学</div>
+      <div class="subj-desc">反应机理 / 化合物性质 / 合成路线 / 化学品安全</div>
+      <div class="subj-agent">反应机理推演助手 · 实验方案设计助手</div>
+      <div class="subj-train">反应机理推理训练 · 实验设计训练</div>
+
+      <div class="subj-name">法学</div>
+      <div class="subj-desc">法条解读 / 案例对比 / 司法解释 / 合规咨询</div>
+      <div class="subj-agent">法律文书写作助手 · 案例论证助手</div>
+      <div class="subj-train">法律论证训练 · 案例分析训练</div>
+
+      <div class="subj-name">历史</div>
+      <div class="subj-desc">史料分析 / 历史事件溯源 / 文献考据 / 史学方法</div>
+      <div class="subj-agent">史料辨析助手 · 历史脉络梳理助手</div>
+      <div class="subj-train">史料分析思辨训练 · 史学方法训练</div>
+
+      <div class="subj-name">农学</div>
+      <div class="subj-desc">作物种植 / 病虫害诊断 / 农业政策 / 育种方法</div>
+      <div class="subj-agent">病虫害诊断助手 · 育种方案分析助手</div>
+      <div class="subj-train">田间问题诊断训练 · 作物管理决策训练</div>
+
+      <div class="subj-name">经管</div>
+      <div class="subj-desc">经济政策 / 商业案例 / 宏观数据 / 财务准则</div>
+      <div class="subj-agent">商业案例分析助手 · 经济数据解读助手</div>
+      <div class="subj-train">经济模型应用训练 · 商业决策训练</div>
+
+      <div class="subj-name">教育学</div>
+      <div class="subj-desc">教育政策 / 教学法理论 / 教研问题 / 教育评估</div>
+      <div class="subj-agent">教案诊断助手 · 教研项目策划助手</div>
+      <div class="subj-train">教学设计训练 · 教育理论应用训练</div>
+    </div>
+
+    <p style="margin-top:14px;padding:12px 16px;background:var(--gold-bg);border-radius:6px;color:var(--ink-900);">
+      <strong>三类智能体一同构成"学科应用层":</strong>问答解决"查得准",特色助手解决"做得对",能力训练解决"想得清"——基于学校学科资产,给出有出处、可溯源、专业级的服务。
+    </p>
+
+    <h3 class="sub-title">三类人 · <em>各自怎么用</em></h3>
+
+    <div class="role-grid">
+      <div class="role-card r1">
+        <div class="r-tag">ROLE 01</div>
+        <h4>师生 · 用现成的能力</h4>
+        <p>用做好的学科应用、学科问答、教学场景。</p>
+        <ul>
+          <li>学科级专业问答(食品/医学/化学等)</li>
+          <li>智能体广场中现成的学科智能体</li>
+          <li>入口:Web 链接 + 小雅平台</li>
+          <li>学科笔记 + 对话沉淀</li>
+        </ul>
+      </div>
+      <div class="role-card r2">
+        <div class="r-tag">ROLE 02</div>
+        <h4>学科骨干 + 管理员 · 自己扩展</h4>
+        <p>用 XClaw 自己搭新的学科应用、维护学科大脑。</p>
+        <ul>
+          <li>XClaw 一句话创编新的学科智能体</li>
+          <li>XClaw 可视化编排复杂工作流</li>
+          <li>学科大脑后台维护知识库内容</li>
+          <li>共享共建审核 / 知识盘点 / 评测配置</li>
+        </ul>
+      </div>
+      <div class="role-card r3">
+        <div class="r-tag">ROLE 03</div>
+        <h4>我们 · 启动期陪跑做样板</h4>
+        <p>前期陪跑做出样板,后期学校自己能持续扩展。</p>
+        <ul>
+          <li>学科数据梳理与 know-how 萃取</li>
+          <li>做第一批学科应用样板</li>
+          <li>建评测闭环</li>
+          <li>跑通"数据 → 应用 → 评测"全链路</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 第六章·验收四层 -->
+  <div class="chapter">
+    <div class="chapter-head">
+      <div>
+        <div class="chapter-num">CHAPTER 06</div>
+        <h2>验收 · <em>四层递进</em></h2>
+      </div>
+    </div>
+
+    <p>学校验收学科大模型,不是单看技术指标,而是<strong>四层递进</strong>——先有效果,才谈得上传播;能传播、能被承认,才谈得上上平台和报奖。</p>
+
+    <div class="verify-grid">
+      <div class="verify-step">
+        <div class="verify-num">01</div>
+        <h4>效果层 · 地基</h4>
+        <p>评测对比,同一批问题两种答法摆一起看。</p>
+        <span class="v-link">对应:学科评测闭环</span>
+      </div>
+      <div class="verify-step">
+        <div class="verify-num">02</div>
+        <h4>传播层</h4>
+        <p>能演示的标志性学科应用,能被同行学校看到。</p>
+        <span class="v-link">对应:Web 链接 + 小雅平台发布</span>
+      </div>
+      <div class="verify-step">
+        <div class="verify-num">03</div>
+        <h4>平台层</h4>
+        <p>上国家智慧教育平台的形态和资质。</p>
+        <span class="v-link">对应:业务系统门户</span>
+      </div>
+      <div class="verify-step">
+        <div class="verify-num">04</div>
+        <h4>荣誉层</h4>
+        <p>支撑学校报评奖评优,转化为学科建设标志。</p>
+        <span class="v-link">对应:标志性学科成果</span>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:18px;">
+      <div class="ck-label">金句</div>
+      <div class="ck-text">先有<em>效果</em>,才谈得上<em>传播</em>;能传播、能被承认,才谈得上<em>上平台</em>和<em>报奖</em>。</div>
+    </div>
+  </div>
+
+  <!-- 第七章·五大优势 -->
+  <div class="chapter">
+    <div class="chapter-head">
+      <div>
+        <div class="chapter-num">CHAPTER 07</div>
+        <h2>学科大模型的<em>五大优势</em></h2>
+      </div>
+    </div>
+
+    <div class="adv-grid">
+      <div class="adv-item">
+        <div class="adv-icon">①</div>
+        <div class="adv-title">学科 know-how 萃取</div>
+        <div class="adv-desc">把"怎么教、怎么研、判断对错"翻译成模型能用的结构</div>
+      </div>
+      <div class="adv-item">
+        <div class="adv-icon">②</div>
+        <div class="adv-title">评测闭环</div>
+        <div class="adv-desc">让"比通用模型好"可量化、可验收、可持续</div>
+      </div>
+      <div class="adv-item">
+        <div class="adv-icon">③</div>
+        <div class="adv-title">学校自己能扩展</div>
+        <div class="adv-desc">交付持续生长的能力,不是固定场景</div>
+      </div>
+      <div class="adv-item">
+        <div class="adv-icon">④</div>
+        <div class="adv-title">全私有化</div>
+        <div class="adv-desc">本地化部署,数据不出校,适配国产化算力</div>
+      </div>
+      <div class="adv-item">
+        <div class="adv-icon">⑤</div>
+        <div class="adv-title">教育场景陪跑</div>
+        <div class="adv-desc">懂标志性成果怎么做、怎么上平台报奖</div>
+      </div>
+    </div>
+
+    <p style="margin-top:14px;padding:12px 16px;background:#F8FAFC;border-radius:6px;">
+      <strong style="color:var(--ink-900);">价值不在"我们模型更强",而在"我们把学校数据用得最好"。</strong>
+    </p>
+  </div>
+
+  <!-- 第八章·边界清单 -->
+  <div class="chapter">
+    <div class="chapter-head">
+      <div>
+        <div class="chapter-num">CHAPTER 08</div>
+        <h2>做到什么程度 · <em>边界清单</em></h2>
+      </div>
+    </div>
+
+    <div class="chapter-lead">
+      <strong>边界说明:</strong>「已实现」= 当前已交付可用的能力;「规划中」= 后续版本规划的能力。
+    </div>
+
+    <h3 class="sub-title">学科大脑 · <em>从基础能力到学科级深度能力</em></h3>
+    <p>每个模块都从"基础能力"升级到"学科级深度能力"——这是学科大脑作为"学科级 AI 解决方案"的核心差异。</p>
+    <div class="evo-list">
+      <div class="evo-row">
+        <div class="evo-mod">① · 知识接入</div>
+        <div class="evo-from">通用文档多格式接入</div>
+        <div class="evo-arrow">→</div>
+        <div class="evo-to"><strong>学科原生解析</strong>(教材 / 教案 / 习题专用解析 + 章节识别 + 知识点标记)</div>
+      </div>
+      <div class="evo-row">
+        <div class="evo-mod">② · 知识加工</div>
+        <div class="evo-from">通用语义切分 + 部分抽取</div>
+        <div class="evo-arrow">→</div>
+        <div class="evo-to"><strong>学科级语义解析 + 自动质量自检</strong>(公式标准化 / 反应式规范 / 切片质量检查 / 相似问题抽取)</div>
+      </div>
+      <div class="evo-row">
+        <div class="evo-mod">③ · 质量治理</div>
+        <div class="evo-from">基础敏感词治理</div>
+        <div class="evo-arrow">→</div>
+        <div class="evo-to"><strong>自动化全链路内容治理</strong>(数据清洗 + 一致性检测 + 同义词 + 问答对 + 自动摘要 + 敏感脱敏 + 安全 Vault)</div>
+      </div>
+      <div class="evo-row">
+        <div class="evo-mod">④ · 共享共建</div>
+        <div class="evo-from">三级知识库共享</div>
+        <div class="evo-arrow">→</div>
+        <div class="evo-to"><strong>六级共享 + 师生共建审核闭环</strong>(扩展跨校联盟 + 公开广场 + 机审 + 人工把关)</div>
+      </div>
+      <div class="evo-row">
+        <div class="evo-mod">⑤ · 知识应用</div>
+        <div class="evo-from">通用智能问答</div>
+        <div class="evo-arrow">→</div>
+        <div class="evo-to"><strong>学科级深度问答 + 三角色个性化</strong>(苏格拉底引导 + 教师 / 学生 / 管理者 视角)</div>
+      </div>
+      <div class="evo-row">
+        <div class="evo-mod">⑥ · 运营迭代</div>
+        <div class="evo-from">基础数据统计</div>
+        <div class="evo-arrow">→</div>
+        <div class="evo-to"><strong>数字资产飞轮 + 高教记忆 + 自进化</strong>(三角色看板 + 知识缺口 + 跨学期继承 + 模型微调)</div>
+      </div>
+      <div class="evo-row">
+        <div class="evo-mod">⑦ · L0 底座</div>
+        <div class="evo-from">标准 L0 引擎</div>
+        <div class="evo-arrow">→</div>
+        <div class="evo-to"><strong>国产化深度适配 + 完整运维监控</strong></div>
+      </div>
+    </div>
+
+    <h3 class="sub-title" style="margin-top:24px;">XClaw · <em>从星辰原有能力到自然语言学科应用</em></h3>
+    <div class="evo-list">
+      <div class="evo-row">
+        <div class="evo-mod">① · 自然语言创编</div>
+        <div class="evo-from">星辰提示词式配置</div>
+        <div class="evo-arrow">→</div>
+        <div class="evo-to"><strong>一句话创编智能体 / Skill</strong> + XClaw 意图识别与 Skill 调度引擎</div>
+      </div>
+      <div class="evo-row">
+        <div class="evo-mod">② · 可视化创编</div>
+        <div class="evo-from">基础节点编排</div>
+        <div class="evo-arrow">→</div>
+        <div class="evo-to"><strong>完整工作流可视化编排 + 可视化调试</strong>(16 节点 + CoT 思考链 + 调用链时序图)· 已落地</div>
+      </div>
+      <div class="evo-row">
+        <div class="evo-mod">③ · 智能体共建广场</div>
+        <div class="evo-from">— 无社区</div>
+        <div class="evo-arrow">→</div>
+        <div class="evo-to"><strong>智能体 / 工作流 / Skill 三类共建生态</strong>(社区 + 派生 + 复刻 + 版本快照)</div>
+      </div>
+      <div class="evo-row">
+        <div class="evo-mod">④ · 多端发布治理</div>
+        <div class="evo-from">通用渠道发布</div>
+        <div class="evo-arrow">→</div>
+        <div class="evo-to"><strong>Web 链接 + 小雅平台 + 组织树灰度</strong>(小雅平台深度对接 + 协议导出)</div>
+      </div>
+      <div class="evo-row">
+        <div class="evo-mod">⑤ · 平台运行底座</div>
+        <div class="evo-from">多租户 + 沙箱 + SSO</div>
+        <div class="evo-arrow">→</div>
+        <div class="evo-to"><strong>完整运行环境</strong>(可观测性 + 会话记忆 + 多空间隔离)· 已落地</div>
+      </div>
+    </div>
+
+    <details class="expand-section">
+      <summary>📋 展开详细对照清单 · 看每个模块的具体已实现项 vs 规划项</summary>
+      <div class="expand-content">
+
+    <h3 class="sub-title" style="margin-top:8px;">学科大脑 <em>7 大模块</em> · 已实现 vs 规划中(细节对照)</h3>
+
+    <table class="boundary-table">
+      <thead>
+        <tr>
+          <th>模块</th>
+          <th class="th-done">已实现</th>
+          <th class="th-plan">规划中</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>① · 知识接入</td>
+          <td class="col-done">多格式文件接入(15+) / 多渠道接入(4 种) / 三引擎 OCR / 资源管理 / 批量导入与初始化</td>
+          <td class="col-plan">学科原生接入增强(教材 / 教案 / 习题专用解析 + 章节识别 + 知识点标记)</td>
+        </tr>
+        <tr>
+          <td>② · 知识加工</td>
+          <td class="col-done">知识库自动构建(解析 → 切分 → 向量化 → 入库)/ 文档分片(8 种模式)/ 部分知识抽取</td>
+          <td class="col-plan">切片质量自动检查 / 相似问题自动抽取 / 学科级语义解析(公式标准化 / 化学反应式 / 历史时序)</td>
+        </tr>
+        <tr>
+          <td>③ · 质量与治理</td>
+          <td class="col-done">敏感词处理(正向替换 + 反向还原)/ 白名单管理 / XSS 安全防护 / 知识图谱构建</td>
+          <td class="col-plan">数据自动清洗 / 内容一致性检测 / 敏感信息脱敏 / 自动生成摘要 / 高教治理智能体 / 学科 Vault 安全底座</td>
+        </tr>
+        <tr>
+          <td>④ · 共享共建</td>
+          <td class="col-done">三级知识库(个人 / 团队 / 校级)/ 成员协作 / 分类目录 / 多维标签 / SSO + OAuth2.0 / 笔记系统 / Coral-skill 开放接口</td>
+          <td class="col-plan">六级共享层次(扩展跨校联盟 + 公开广场)/ 师生共建审核流(机审 + 人工)/ 笔记-知识库双向联动深化</td>
+        </tr>
+        <tr>
+          <td>⑤ · 知识应用</td>
+          <td class="col-done">流式问答 / 多轮对话 / 5 路混合检索 + 重排 / 跨知识库对话 / Web 管理端 / 全链路溯源</td>
+          <td class="col-plan">学科思考能力(苏格拉底式引导)/ 三角色界面(教师 / 学生 / 管理者)/ 教学场景应用深化</td>
+        </tr>
+        <tr>
+          <td>⑥ · 运营与迭代</td>
+          <td class="col-done">数据统计看板 / 多维度统计 / 使用量统计</td>
+          <td class="col-plan">三角色运营看板 / 错误案例与知识缺口 / 高教运营智能体 / 数字资产飞轮 / 高教记忆系统 / 跨学期跨课程继承 / 模型微调进化</td>
+        </tr>
+        <tr>
+          <td>⑦ · L0 技术底座</td>
+          <td class="col-done">8 大引擎基础实现(推理 / 向量化重排 / 多路检索 / 文档解析与 OCR / 异步调度 / 安全合规 / 数据存储)</td>
+          <td class="col-plan">部署运维监控完整版 / 国产化栈深度适配</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-title">XClaw <em>5 段</em> · 已实现 vs 规划中</h3>
+
+    <table class="boundary-table">
+      <thead>
+        <tr>
+          <th>段</th>
+          <th class="th-done">已实现</th>
+          <th class="th-plan">规划中</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>① · XClaw 自然语言创编</td>
+          <td class="col-done td-empty">—</td>
+          <td class="col-plan">一句话创编智能体 / 一句话创编 Skill / XClaw 意图识别与 Skill 调度引擎 / 提示词一键优化</td>
+        </tr>
+        <tr>
+          <td>② · 智能体可视化创编</td>
+          <td class="col-done">智能体配置 / 提示词管理 / 模型配置 / 知识库挂载 / 工具挂载 / 工作流模板与画布 / 16 节点编排 / 可视化调试</td>
+          <td class="col-plan td-empty">—</td>
+        </tr>
+        <tr>
+          <td>③ · 智能体共建广场</td>
+          <td class="col-done td-empty">—</td>
+          <td class="col-plan">社区浏览与发现 / 三类共享操作(Skill 安装 / 智能体派生 / 工作流复刻)/ 我的发布与互动</td>
+        </tr>
+        <tr>
+          <td>④ · 多端发布与治理</td>
+          <td class="col-done">多端发布(Web 链接 / 小雅平台 / API / MCP)/ 版本快照与管理</td>
+          <td class="col-plan">小雅平台深度对接 / Web 链接发布 / 协议导出(OpenAI Function + MCP Schema)/ 按组织树灰度</td>
+        </tr>
+        <tr>
+          <td>⑤ · 平台运行底座</td>
+          <td class="col-done">XClaw 引擎/ 多租户多空间 / Agent 沙箱/ SSO / 会话记忆 / 可观测性</td>
+          <td class="col-plan td-empty">—</td>
+        </tr>
+      </tbody>
+    </table>
+
+      </div>
+    </details>
+
+  </div>
+
+  <!-- footer -->
+  <div class="footer" contenteditable="false">
+    <strong>学科大模型 · 产品全貌 V3</strong> &nbsp;|&nbsp;
+    报告人 婷婷 · iFlytek 高教 &nbsp;|&nbsp;
+    覆盖 学校处境 / 三层架构 / 学科大脑 7 大模块 / XClaw 5 段 / 应用场景 / 三类人 / 验收四层 / 五大优势 &nbsp;|&nbsp;
+    2026-05-23
+  </div>
+</div>
+
+</body>
+</html>
