@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>江南大学 AI 助学 · 学习场景分析报告 V2 · 婷婷</title>
+<meta name="viewport" content="width=1440, initial-scale=1">
+<style>
+  :root {
+    --c-ink:        #0F1F3D;
+    --c-ink-2:      #1E40AF;
+    --c-ink-3:      #2D4A7F;
+    --c-text:       #1E293B;
+    --c-text-2:     #475569;
+    --c-text-3:     #64748B;
+    --c-text-4:     #94A3B8;
+    --c-text-5:     #CBD5E1;
+
+    --c-bg:         #FFFFFF;
+    --c-bg-soft:    #F8FAFC;
+    --c-bg-card:    #FCFCFD;
+    --c-bg-paper:   #FBFAF6;
+    --c-bg-cream:   #FAF6EC;
+
+    --c-border:        #E2E8F0;
+    --c-border-light:  #F1F5F9;
+    --c-border-strong: #CBD5E1;
+
+    --c-gold:       #C8A45C;
+    --c-gold-deep:  #A8843D;
+    --c-gold-soft:  #F5EBD0;
+    --c-gold-line:  #E7D29B;
+
+    --c-red:        #B91C1C;
+    --c-amber:      #92400E;
+    --c-amber-bg:   #FEF3C7;
+    --c-green:      #166534;
+
+    --font-sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", "Noto Sans CJK SC", sans-serif;
+    --font-mono: "SF Mono", "JetBrains Mono", "Menlo", "Consolas", monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 14px; }
+  body {
+    background: var(--c-bg-soft);
+    color: var(--c-text);
+    font-family: var(--font-sans);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--c-gold-soft); }
+
+  .page { width: 1320px; margin: 0 auto; background: var(--c-bg); }
+
+  /* ====================================================================== */
+  /* COVER · 封面                                                             */
+  /* ====================================================================== */
+  .cover {
+    padding: 88px 88px 80px;
+    position: relative;
+    background:
+      linear-gradient(180deg, #FCFAF3 0%, #FFFFFF 60%),
+      var(--c-bg);
+    border-bottom: 1px solid var(--c-border);
+  }
+  .cover::before {
+    content: "";
+    position: absolute; top: 88px; left: 88px;
+    width: 56px; height: 4px; background: var(--c-gold);
+  }
+  .cover-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.25em; color: var(--c-gold-deep);
+    font-weight: 700; margin-top: 28px; margin-bottom: 24px;
+  }
+  .cover-title {
+    font-size: 52px; font-weight: 700; color: var(--c-ink);
+    line-height: 1.18; letter-spacing: -1px; max-width: 900px;
+  }
+  .cover-sub {
+    margin-top: 24px;
+    font-size: 18px; color: var(--c-text-2); line-height: 1.7; max-width: 900px;
+    font-weight: 400;
+  }
+  .cover-meta {
+    margin-top: 56px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--c-border);
+    border-bottom: 1px solid var(--c-border);
+  }
+  .cover-meta .item {
+    padding: 20px 24px 20px 0;
+    border-right: 1px solid var(--c-border-light);
+  }
+  .cover-meta .item:last-child { border-right: 0; }
+  .cover-meta .k {
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: 0.16em; color: var(--c-text-4);
+    font-weight: 700; text-transform: uppercase;
+  }
+  .cover-meta .v {
+    font-size: 15px; color: var(--c-ink); font-weight: 600;
+    margin-top: 6px;
+  }
+  .cover-abstract {
+    margin-top: 56px; padding: 28px 32px;
+    background: var(--c-bg-paper);
+    border-left: 3px solid var(--c-gold);
+  }
+  .cover-abstract .label {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.18em; color: var(--c-gold-deep);
+    font-weight: 700; margin-bottom: 12px;
+  }
+  .cover-abstract p {
+    font-size: 14.5px; color: var(--c-text-2); line-height: 1.85;
+  }
+  .cover-abstract p + p { margin-top: 10px; }
+  .cover-abstract b { color: var(--c-ink); font-weight: 700; }
+
+  /* ====================================================================== */
+  /* TOC · 目录                                                               */
+  /* ====================================================================== */
+  .toc {
+    padding: 72px 88px;
+    border-bottom: 1px solid var(--c-border);
+    background: var(--c-bg);
+  }
+  .toc-label {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.25em; color: var(--c-gold-deep);
+    font-weight: 700; margin-bottom: 24px;
+  }
+  .toc-title {
+    font-size: 28px; font-weight: 700; color: var(--c-ink);
+    margin-bottom: 36px; letter-spacing: -0.3px;
+  }
+  .toc-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; }
+  .toc-item {
+    display: grid; grid-template-columns: 56px 1fr auto;
+    align-items: baseline;
+    padding: 16px 0; border-bottom: 1px dashed var(--c-border);
+    text-decoration: none; color: var(--c-text);
+    transition: color 0.2s, padding-left 0.2s;
+  }
+  .toc-item:hover { color: var(--c-ink-2); padding-left: 8px; }
+  .toc-no {
+    font-family: var(--font-mono); font-size: 16px; font-weight: 700;
+    color: var(--c-gold-deep);
+  }
+  .toc-name { font-size: 16px; font-weight: 600; color: var(--c-ink); }
+  .toc-name .sub { font-size: 13px; color: var(--c-text-3); font-weight: 400; margin-left: 12px; }
+  .toc-page { font-family: var(--font-mono); font-size: 12px; color: var(--c-text-3); }
+
+  /* ====================================================================== */
+  /* SECTION · 通用章节                                                       */
+  /* ====================================================================== */
+  .section { padding: 80px 88px; border-bottom: 1px solid var(--c-border); }
+  .section:last-child { border-bottom: 0; }
+
+  .sec-head {
+    display: grid; grid-template-columns: 84px 1fr;
+    gap: 0; align-items: start;
+    padding-bottom: 32px; margin-bottom: 40px;
+    border-bottom: 2px solid var(--c-ink);
+  }
+  .sec-no {
+    font-family: var(--font-mono);
+    font-size: 56px; font-weight: 700; line-height: 1;
+    color: var(--c-gold);
+    letter-spacing: -0.04em;
+  }
+  .sec-titleblock { padding-top: 8px; }
+  .sec-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.18em; color: var(--c-gold-deep);
+    font-weight: 700; margin-bottom: 8px;
+  }
+  .sec-title {
+    font-size: 28px; font-weight: 700; color: var(--c-ink);
+    letter-spacing: -0.3px; line-height: 1.3;
+  }
+  .sec-desc {
+    margin-top: 12px; font-size: 14px; color: var(--c-text-3);
+    max-width: 800px; line-height: 1.7;
+  }
+
+  /* ====================================================================== */
+  /* I. KPI + 结论                                                            */
+  /* ====================================================================== */
+  .kpi-strip {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    border: 1px solid var(--c-border);
+    background: var(--c-bg-card);
+  }
+  .kpi {
+    padding: 28px 28px;
+    border-right: 1px solid var(--c-border-light);
+    position: relative;
+  }
+  .kpi:last-child { border-right: 0; }
+  .kpi::before {
+    content: "";
+    position: absolute; top: 0; left: 0;
+    width: 24px; height: 2px; background: var(--c-gold);
+  }
+  .kpi-label {
+    font-family: var(--font-mono);
+    font-size: 10px; color: var(--c-text-3); letter-spacing: 0.12em;
+    font-weight: 700; text-transform: uppercase;
+  }
+  .kpi-num {
+    font-family: var(--font-mono);
+    font-size: 42px; font-weight: 700; color: var(--c-ink);
+    line-height: 1.05; margin-top: 14px;
+    font-feature-settings: "tnum" on;
+  }
+  .kpi-num .unit { font-size: 16px; color: var(--c-text-3); font-weight: 400; margin-left: 4px; font-family: var(--font-sans); }
+  .kpi-note { font-size: 12px; color: var(--c-text-3); margin-top: 10px; line-height: 1.55; }
+
+  .conclusion {
+    margin-top: 48px;
+    background: var(--c-bg-cream);
+    border-left: 3px solid var(--c-gold);
+    padding: 36px 40px;
+  }
+  .conclusion-label {
+    font-family: var(--font-mono);
+    font-size: 11px; letter-spacing: 0.18em; color: var(--c-gold-deep);
+    font-weight: 700; margin-bottom: 24px;
+  }
+  .conclusion-item {
+    padding: 20px 0;
+    border-bottom: 1px dashed var(--c-gold-line);
+    display: grid; grid-template-columns: 40px 1fr;
+    gap: 24px;
+  }
+  .conclusion-item:last-child { border-bottom: 0; padding-bottom: 0; }
+  .conclusion-item:first-child { padding-top: 0; }
+  .conclusion-no {
+    font-family: var(--font-mono); font-size: 22px; font-weight: 700;
+    color: var(--c-gold-deep);
+  }
+  .conclusion-text {
+    font-size: 15.5px; color: var(--c-text); line-height: 1.9;
+  }
+  .conclusion-text b { color: var(--c-ink); font-weight: 700; }
+  .conclusion-text em {
+    font-style: normal;
+    background: linear-gradient(transparent 62%, var(--c-gold-soft) 62%, var(--c-gold-soft) 92%, transparent 92%);
+    padding: 0 2px;
+  }
+
+  /* ====================================================================== */
+  /* II. 场景卡片                                                              */
+  /* ====================================================================== */
+  .sc-overview {
+    display: grid; grid-template-columns: repeat(9, 1fr); gap: 8px;
+    margin-bottom: 40px; padding: 24px; background: var(--c-bg-soft);
+    border: 1px solid var(--c-border);
+  }
+  .sc-chip {
+    padding: 14px 10px; text-align: center; background: var(--c-bg);
+    border: 1px solid var(--c-border); border-radius: 2px;
+    position: relative;
+  }
+  .sc-chip .icon {
+    font-family: var(--font-mono); font-size: 18px; font-weight: 400;
+    color: var(--c-ink); margin-bottom: 4px;
+  }
+  .sc-chip .name { font-size: 11px; color: var(--c-text-2); line-height: 1.3; min-height: 28px; }
+  .sc-chip .n {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+    color: var(--c-ink-2); margin-top: 6px;
+  }
+  .sc-chip.core { border-color: var(--c-gold); background: #FFFCF5; }
+  .sc-chip.core::after {
+    content: "CORE"; position: absolute; top: 4px; right: 4px;
+    font-family: var(--font-mono); font-size: 8px; color: var(--c-gold-deep);
+    font-weight: 700; letter-spacing: 0.08em;
+  }
+
+  .sub-head {
+    display: flex; align-items: baseline; gap: 16px; margin-bottom: 24px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--c-border);
+  }
+  .sub-head .roman {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+    color: var(--c-gold-deep); letter-spacing: 0.1em;
+  }
+  .sub-head .t { font-size: 18px; font-weight: 700; color: var(--c-ink); }
+  .sub-head .d { margin-left: auto; font-size: 12px; color: var(--c-text-3); }
+
+  .scenarios-grid { display: grid; gap: 28px; }
+  .sc-card {
+    border: 1px solid var(--c-border);
+    background: var(--c-bg);
+    position: relative;
+  }
+  .sc-card.featured::before {
+    content: ""; position: absolute; left: -1px; top: -1px; bottom: -1px;
+    width: 3px; background: var(--c-gold);
+  }
+  .sc-card-head {
+    display: grid; grid-template-columns: 72px 1fr auto;
+    gap: 24px; padding: 28px 32px 24px;
+    border-bottom: 1px solid var(--c-border-light); align-items: flex-start;
+  }
+  .sc-icon {
+    width: 64px; height: 64px; border-radius: 2px;
+    background: var(--c-ink); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-family: var(--font-mono);
+  }
+  .sc-rank {
+    font-family: var(--font-mono); font-size: 11px; color: var(--c-gold-deep);
+    letter-spacing: 0.15em; font-weight: 700;
+  }
+  .sc-name {
+    font-size: 22px; font-weight: 700; color: var(--c-ink);
+    margin-top: 6px; letter-spacing: -0.2px;
+  }
+  .sc-intent { margin-top: 10px; font-size: 14px; color: var(--c-text-2); line-height: 1.7; max-width: 720px; }
+  .sc-stat { text-align: right; padding-top: 4px; }
+  .sc-pct {
+    font-family: var(--font-mono); font-size: 36px; font-weight: 700;
+    color: var(--c-ink); line-height: 1; font-feature-settings: "tnum" on;
+  }
+  .sc-pct .u { font-size: 18px; color: var(--c-text-3); font-weight: 400; font-family: var(--font-sans); }
+  .sc-count { font-size: 12px; color: var(--c-text-3); margin-top: 6px; font-family: var(--font-mono); }
+
+  .sc-card-body { display: grid; grid-template-columns: 1fr 300px; }
+  .sc-examples { padding: 28px 32px; border-right: 1px solid var(--c-border-light); }
+  .sc-side { padding: 28px; background: var(--c-bg-soft); }
+
+  .ex-formgroup { margin-bottom: 24px; }
+  .ex-formgroup:last-child { margin-bottom: 0; }
+  .ex-form-head {
+    display: flex; align-items: baseline; gap: 12px;
+    margin-bottom: 10px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--c-border-light);
+  }
+  .ex-form-tag {
+    display: inline-block;
+    padding: 3px 10px; border-radius: 2px;
+    font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+    letter-spacing: 0.12em;
+  }
+  .ex-form-tag.A { background: #EAF0FB; color: var(--c-ink-2); }
+  .ex-form-tag.B { background: var(--c-gold-soft); color: var(--c-gold-deep); }
+  .ex-form-tag.C { background: var(--c-ink); color: #fff; }
+  .ex-form-name { font-size: 13px; font-weight: 600; color: var(--c-text); }
+  .ex-form-n { font-family: var(--font-mono); font-size: 12px; color: var(--c-text-3); margin-left: auto; }
+
+  .ex-list { display: flex; flex-direction: column; gap: 8px; }
+  .ex-item {
+    display: grid; grid-template-columns: 22px 1fr 80px; gap: 12px;
+    padding: 10px 14px; background: var(--c-bg-soft);
+    border-radius: 2px; align-items: baseline;
+    border-left: 2px solid transparent;
+  }
+  .ex-item.A { border-left-color: var(--c-ink-2); }
+  .ex-item.B { border-left-color: var(--c-gold); }
+  .ex-item.C { border-left-color: var(--c-ink); }
+  .ex-no { font-family: var(--font-mono); font-size: 10px; color: var(--c-text-4); font-weight: 600; }
+  .ex-text { font-size: 13px; color: var(--c-text); line-height: 1.7; white-space: pre-wrap; }
+  .ex-text.long {
+    max-height: 7em; overflow: hidden; position: relative; cursor: pointer;
+    font-size: 12px; color: var(--c-text-2);
+  }
+  .ex-text.long::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.8em;
+    background: linear-gradient(transparent, var(--c-bg-soft) 85%);
+  }
+  .ex-text.long.expand { max-height: none; }
+  .ex-text.long.expand::after { display: none; }
+  .ex-text + .ex-imgdesc {
+    margin-top: 6px; font-size: 11px; color: var(--c-text-3);
+    padding-left: 14px; border-left: 2px dashed var(--c-text-5);
+    line-height: 1.5;
+  }
+  .ex-course { font-size: 11px; color: var(--c-text-3); text-align: right; font-family: var(--font-mono); font-feature-settings: "tnum" on; }
+
+  .side-block { margin-bottom: 24px; }
+  .side-block:last-child { margin-bottom: 0; }
+  .side-label {
+    font-family: var(--font-mono);
+    font-size: 10px; color: var(--c-text-3); letter-spacing: 0.14em;
+    font-weight: 700; margin-bottom: 10px;
+  }
+  .side-text { font-size: 13px; color: var(--c-text-2); line-height: 1.75; }
+  .side-text.warn { color: var(--c-amber); }
+  .course-bars { display: flex; flex-direction: column; gap: 8px; }
+  .course-bar {
+    display: grid; grid-template-columns: 96px 1fr 28px; gap: 8px;
+    align-items: center; font-size: 12px;
+  }
+  .course-bar .name { color: var(--c-text-2); }
+  .course-bar .track {
+    height: 6px; background: #E8EEF6; border-radius: 999px;
+    position: relative; overflow: hidden;
+  }
+  .course-bar .fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, var(--c-ink-2), var(--c-ink));
+    border-radius: 999px;
+  }
+  .course-bar .n { font-family: var(--font-mono); font-size: 12px; color: var(--c-text-2); text-align: right; font-feature-settings: "tnum" on; }
+
+  /* form mini badges in side */
+  .side-forms { display: flex; flex-direction: column; gap: 8px; }
+  .side-form-row {
+    display: grid; grid-template-columns: 80px 1fr 28px;
+    gap: 8px; align-items: center;
+  }
+  .side-form-row .tag {
+    font-family: var(--font-mono); font-size: 9px; font-weight: 700;
+    letter-spacing: 0.1em; padding: 3px 6px; text-align: center; border-radius: 1px;
+  }
+  .side-form-row .tag.A { background: #EAF0FB; color: var(--c-ink-2); }
+  .side-form-row .tag.B { background: var(--c-gold-soft); color: var(--c-gold-deep); }
+  .side-form-row .tag.C { background: var(--c-ink); color: #fff; }
+  .side-form-row .track { height: 6px; background: #F1F5F9; border-radius: 999px; position: relative; overflow: hidden; }
+  .side-form-row .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; }
+  .side-form-row .fill.A { background: var(--c-ink-2); }
+  .side-form-row .fill.B { background: var(--c-gold); }
+  .side-form-row .fill.C { background: var(--c-ink); }
+  .side-form-row .n { font-family: var(--font-mono); font-size: 11px; color: var(--c-text-2); text-align: right; }
+
+  /* minor card 紧凑版 */
+  .minor-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 20px; }
+  .minor-card {
+    border: 1px solid var(--c-border); padding: 22px 22px;
+    background: var(--c-bg-card); position: relative;
+  }
+  .minor-card::before {
+    content: ""; position: absolute; left: -1px; top: -1px; bottom: -1px;
+    width: 2px; background: var(--c-border-strong);
+  }
+  .m-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+  .m-name { font-size: 14px; font-weight: 700; color: var(--c-ink); }
+  .m-pct { font-family: var(--font-mono); font-size: 12px; color: var(--c-text-3); }
+  .m-intent { font-size: 12px; color: var(--c-text-2); line-height: 1.65; margin-bottom: 12px; min-height: 4.5em; }
+  .m-eg {
+    font-size: 12px; color: var(--c-text); padding: 10px 12px;
+    background: var(--c-bg-soft); border-left: 2px solid var(--c-gold);
+    line-height: 1.6;
+  }
+  .m-eg .img-tag {
+    display: inline-block; padding: 1px 6px; border-radius: 2px;
+    background: var(--c-ink); color: #fff;
+    font-family: var(--font-mono); font-size: 9px; font-weight: 700;
+    letter-spacing: 0.08em; margin-right: 6px; vertical-align: middle;
+  }
+
+  /* ====================================================================== */
+  /* III. 输入形式分类                                                          */
+  /* ====================================================================== */
+  .form-summary {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+    border: 1px solid var(--c-border); margin-bottom: 40px;
+  }
+  .form-card {
+    padding: 36px 36px 32px;
+    border-right: 1px solid var(--c-border-light);
+    position: relative;
+  }
+  .form-card:last-child { border-right: 0; }
+  .form-card .bar {
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  }
+  .form-card.A .bar { background: var(--c-ink-2); }
+  .form-card.B .bar { background: var(--c-gold); }
+  .form-card.C .bar { background: var(--c-ink); }
+  .form-card .id {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em;
+    font-weight: 700;
+  }
+  .form-card.A .id { color: var(--c-ink-2); }
+  .form-card.B .id { color: var(--c-gold-deep); }
+  .form-card.C .id { color: var(--c-ink); }
+  .form-card .title { font-size: 22px; font-weight: 700; color: var(--c-ink); margin-top: 12px; letter-spacing: -0.2px; }
+  .form-card .sub { font-size: 13px; color: var(--c-text-2); margin-top: 8px; line-height: 1.65; }
+  .form-card .num {
+    font-family: var(--font-mono);
+    font-size: 56px; font-weight: 700; color: var(--c-ink);
+    margin-top: 28px; line-height: 1; font-feature-settings: "tnum" on;
+  }
+  .form-card .num .u { font-size: 18px; color: var(--c-text-3); font-weight: 400; font-family: var(--font-sans); margin-left: 4px; }
+  .form-card .count {
+    font-family: var(--font-mono); font-size: 12px; color: var(--c-text-3); margin-top: 8px;
+  }
+  .form-card .detail {
+    font-size: 12.5px; color: var(--c-text-3); line-height: 1.7;
+    margin-top: 20px; padding-top: 16px;
+    border-top: 1px dashed var(--c-border);
+  }
+
+  /* form examples 详细展示 */
+  .form-detail-block { margin-bottom: 56px; }
+  .form-detail-block:last-child { margin-bottom: 0; }
+  .form-d-head {
+    display: grid; grid-template-columns: 80px 1fr auto;
+    gap: 24px; padding: 24px 28px; align-items: center;
+    border: 1px solid var(--c-border);
+  }
+  .form-d-head.A { background: linear-gradient(90deg, #EAF0FB 0%, #FFFFFF 100%); border-color: #B5C7E5; }
+  .form-d-head.B { background: linear-gradient(90deg, var(--c-gold-soft) 0%, #FFFFFF 100%); border-color: var(--c-gold-line); }
+  .form-d-head.C { background: linear-gradient(90deg, #E0E5EE 0%, #FFFFFF 100%); border-color: var(--c-border-strong); }
+  .form-d-head .badge {
+    width: 64px; height: 64px; border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 26px; font-weight: 700;
+  }
+  .form-d-head.A .badge { background: var(--c-ink-2); color: #fff; }
+  .form-d-head.B .badge { background: var(--c-gold); color: #fff; }
+  .form-d-head.C .badge { background: var(--c-ink); color: #fff; }
+  .form-d-head .title { font-size: 22px; font-weight: 700; color: var(--c-ink); letter-spacing: -0.2px; }
+  .form-d-head .desc { font-size: 13px; color: var(--c-text-2); margin-top: 6px; line-height: 1.65; }
+  .form-d-head .stat-block { text-align: right; }
+  .form-d-head .stat-block .n { font-family: var(--font-mono); font-size: 28px; font-weight: 700; color: var(--c-ink); line-height: 1; }
+  .form-d-head .stat-block .label { font-size: 11px; color: var(--c-text-3); margin-top: 4px; font-family: var(--font-mono); }
+
+  .form-d-body {
+    padding: 24px 28px;
+    background: var(--c-bg-card);
+    border: 1px solid var(--c-border); border-top: 0;
+  }
+  .form-d-list { display: flex; flex-direction: column; gap: 10px; }
+  .form-d-item {
+    display: grid; grid-template-columns: 32px 1fr 110px;
+    gap: 14px; padding: 12px 16px;
+    border: 1px solid var(--c-border-light);
+    background: var(--c-bg);
+    align-items: baseline;
+  }
+  .form-d-item .no { font-family: var(--font-mono); font-size: 11px; color: var(--c-text-4); font-weight: 600; }
+  .form-d-item .content { color: var(--c-text); font-size: 13px; line-height: 1.65; white-space: pre-wrap; }
+  .form-d-item .content.long { max-height: 6em; overflow: hidden; position: relative; cursor: pointer; font-size: 12px; color: var(--c-text-2); }
+  .form-d-item .content.long.expand { max-height: none; }
+  .form-d-item .content.long::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.6em; background: linear-gradient(transparent, var(--c-bg) 85%); }
+  .form-d-item .content.long.expand::after { display: none; }
+  .form-d-item .imgdesc { font-size: 11px; color: var(--c-text-3); margin-top: 6px; padding: 8px 10px; background: var(--c-bg-paper); border-left: 2px solid var(--c-gold); }
+  .form-d-item .imgdesc::before { content: "图片内容: "; color: var(--c-gold-deep); font-weight: 700; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; }
+  .form-d-item .tag-block { text-align: right; font-size: 11px; color: var(--c-text-3); }
+  .form-d-item .tag-block .scenario { font-family: var(--font-mono); font-weight: 600; color: var(--c-ink-2); }
+  .form-d-item .tag-block .course { font-size: 10px; color: var(--c-text-4); margin-top: 4px; }
+
+  /* 测试造数据指南 */
+  .test-guide {
+    margin-top: 40px;
+    background: var(--c-ink); color: #E6ECF7;
+    padding: 36px 40px;
+  }
+  .test-guide .title {
+    font-size: 18px; color: #fff; margin-bottom: 24px; font-weight: 700;
+    display: flex; align-items: baseline; gap: 12px;
+  }
+  .test-guide .title::before {
+    content: ""; width: 24px; height: 2px; background: var(--c-gold);
+  }
+  .test-guide-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .test-card {
+    border-left: 2px solid var(--c-gold);
+    padding: 4px 0 4px 20px;
+  }
+  .test-card .key { font-family: var(--font-mono); font-size: 11px; color: var(--c-gold); letter-spacing: 0.12em; font-weight: 700; }
+  .test-card .t { font-size: 15px; color: #fff; font-weight: 600; margin-top: 8px; }
+  .test-card .d { font-size: 12.5px; color: #B5C2D9; line-height: 1.75; margin-top: 8px; }
+  .test-card ul { list-style: none; margin-top: 10px; }
+  .test-card li {
+    font-size: 12px; color: #CFD7E6; padding: 4px 0 4px 14px;
+    position: relative; line-height: 1.55;
+  }
+  .test-card li::before { content: "›"; position: absolute; left: 0; color: var(--c-gold); }
+
+  /* ====================================================================== */
+  /* IV. 交叉矩阵                                                              */
+  /* ====================================================================== */
+  .matrix {
+    border: 1px solid var(--c-border); background: var(--c-bg-card);
+    overflow-x: auto;
+  }
+  .matrix table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  .matrix th, .matrix td {
+    padding: 14px 18px; font-size: 13px; text-align: center;
+    border-right: 1px solid var(--c-border-light);
+    border-bottom: 1px solid var(--c-border-light);
+  }
+  .matrix th { background: var(--c-bg-soft); font-weight: 600; color: var(--c-text-2); font-size: 12px; letter-spacing: 0.04em; }
+  .matrix th.row-h { text-align: left; min-width: 200px; }
+  .matrix td.row-l { text-align: left; font-weight: 500; color: var(--c-text); background: var(--c-bg-soft); }
+  .matrix td.row-l .icon { font-family: var(--font-mono); color: var(--c-gold-deep); font-weight: 700; margin-right: 8px; display: inline-block; min-width: 16px; }
+  .matrix td.cell {
+    font-family: var(--font-mono); font-feature-settings: "tnum" on;
+    font-weight: 700; font-size: 14px;
+  }
+  .matrix td.cell.zero { color: var(--c-text-5); font-weight: 400; }
+  .matrix td.cell.h-A { background: rgba(30,64,175,0.06); color: var(--c-ink-2); }
+  .matrix td.cell.h-A.hi { background: rgba(30,64,175,0.18); }
+  .matrix td.cell.h-A.peak { background: var(--c-ink-2); color: #fff; }
+  .matrix td.cell.h-B { background: rgba(200,164,92,0.10); color: var(--c-gold-deep); }
+  .matrix td.cell.h-B.hi { background: rgba(200,164,92,0.28); }
+  .matrix td.cell.h-B.peak { background: var(--c-gold); color: #fff; }
+  .matrix td.cell.h-C { background: rgba(15,31,61,0.08); color: var(--c-ink); }
+  .matrix td.cell.h-C.hi { background: rgba(15,31,61,0.25); }
+  .matrix td.cell.h-C.peak { background: var(--c-ink); color: #fff; }
+  .matrix td.total {
+    background: var(--c-ink); color: #fff; font-family: var(--font-mono);
+    font-weight: 700;
+  }
+  .matrix tr:last-child td { border-bottom: 0; }
+  .matrix th:last-child, .matrix td:last-child { border-right: 0; }
+
+  .matrix-legend { display: flex; gap: 20px; align-items: center; padding: 16px 24px; font-size: 12px; color: var(--c-text-3); border-top: 1px solid var(--c-border); background: var(--c-bg-soft); }
+  .matrix-legend .item { display: flex; gap: 8px; align-items: center; }
+  .matrix-legend .sw { width: 20px; height: 10px; border-radius: 2px; }
+
+  .matrix-insight {
+    margin-top: 32px; padding: 28px 32px;
+    background: var(--c-bg-paper); border-left: 3px solid var(--c-gold);
+  }
+  .matrix-insight .t { font-size: 14px; font-weight: 700; color: var(--c-ink); margin-bottom: 12px; }
+  .matrix-insight ul { list-style: none; }
+  .matrix-insight li { font-size: 13px; color: var(--c-text); line-height: 1.85; padding-left: 22px; position: relative; }
+  .matrix-insight li::before { content: "—"; position: absolute; left: 0; color: var(--c-gold); }
+  .matrix-insight b { color: var(--c-ink); font-weight: 700; }
+
+  /* ====================================================================== */
+  /* V. 高频原话                                                               */
+  /* ====================================================================== */
+  .topfreq { border: 1px solid var(--c-border); }
+  .topfreq table { width: 100%; border-collapse: collapse; }
+  .topfreq th {
+    padding: 14px 24px; background: var(--c-bg-soft); text-align: left;
+    font-family: var(--font-mono); font-size: 11px; color: var(--c-text-3); letter-spacing: 0.1em;
+    font-weight: 700; border-bottom: 1px solid var(--c-border); text-transform: uppercase;
+  }
+  .topfreq th.r-rank { width: 60px; text-align: center; }
+  .topfreq th.r-n { width: 100px; text-align: right; }
+  .topfreq td {
+    padding: 16px 24px; border-bottom: 1px solid var(--c-border-light);
+    font-size: 13.5px; color: var(--c-text); line-height: 1.65;
+    vertical-align: top;
+  }
+  .topfreq tr:last-child td { border-bottom: 0; }
+  .topfreq td.rank { text-align: center; font-family: var(--font-mono); color: var(--c-text-3); font-weight: 700; }
+  .topfreq td.q { color: var(--c-text); white-space: pre-wrap; max-width: 900px; }
+  .topfreq td.n { text-align: right; font-family: var(--font-mono); font-weight: 700; color: var(--c-ink-2); font-feature-settings: "tnum" on; }
+
+  /* ====================================================================== */
+  /* VI. 产品建议                                                              */
+  /* ====================================================================== */
+  .reco {
+    background: var(--c-ink); color: #E6ECF7; padding: 48px 56px;
+    position: relative;
+  }
+  .reco::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--c-gold);
+  }
+  .reco-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--c-gold); font-weight: 700; margin-bottom: 14px; }
+  .reco-title { font-size: 26px; color: #fff; font-weight: 700; margin-bottom: 36px; letter-spacing: -0.2px; }
+  .reco-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 40px; }
+  .reco-item { border-left: 2px solid var(--c-gold); padding: 4px 0 4px 24px; }
+  .reco-item .num { font-family: var(--font-mono); font-size: 11px; color: var(--c-gold); letter-spacing: 0.12em; font-weight: 700; }
+  .reco-item .t { font-size: 17px; color: #fff; font-weight: 700; margin-top: 8px; letter-spacing: -0.1px; }
+  .reco-item .d { font-size: 13px; color: #B5C2D9; line-height: 1.85; margin-top: 10px; }
+
+  /* ====================================================================== */
+  /* 附录                                                                      */
+  /* ====================================================================== */
+  .appendix {
+    background: var(--c-bg-paper); border: 1px solid var(--c-gold-line);
+    padding: 32px 36px; font-size: 13px; color: var(--c-text-2); line-height: 1.85;
+  }
+  .appendix .t { font-size: 13px; font-weight: 700; color: var(--c-ink); margin-bottom: 8px; letter-spacing: 0.04em; margin-top: 18px; }
+  .appendix .t:first-child { margin-top: 0; }
+  .appendix code { font-family: var(--font-mono); font-size: 12px; background: #fff; padding: 1px 6px; border-radius: 2px; color: var(--c-ink-2); }
+
+  /* ====================================================================== */
+  /* Footer                                                                   */
+  /* ====================================================================== */
+  .footer {
+    padding: 40px 88px; background: var(--c-ink); color: #B5C2D9;
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: center; font-size: 12px;
+  }
+  .footer .brand { color: #fff; font-weight: 600; }
+  .footer .brand .mark { color: var(--c-gold); margin-right: 8px; }
+  .footer .right { text-align: right; line-height: 1.65; }
+  .footer .right .line2 { font-family: var(--font-mono); color: #8896B0; }
+
+  /* Print friendly */
+  @media print {
+    .section { padding: 32px; }
+    body { background: #fff; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ====================================================================== -->
+  <!-- 封面                                                                    -->
+  <!-- ====================================================================== -->
+  <section class="cover">
+    <div class="cover-eyebrow">SCENARIO INSIGHT REPORT · 场景洞察报告</div>
+    <h1 class="cover-title">江南大学 AI 助学<br>学习场景与输入形式分析</h1>
+    <p class="cover-sub">
+      基于江南大学小雅平台 SDK 端 272 条真实学生问答(2026-03 ~ 05)的深度场景拆解。
+      回答两个产品决策必须的问题:<b>学生在 AI 助学里究竟在问什么</b>,以及<b>他们用什么形式把问题输入进来</b>。
+    </p>
+
+    <div class="cover-meta">
+      <div class="item"><div class="k">REPORT VERSION</div><div class="v">V2 · 终版结构</div></div>
+      <div class="item"><div class="k">AUTHOR</div><div class="v">段婷婷 · AI 教学产品部</div></div>
+      <div class="item"><div class="k">DATE</div><div class="v">2026-05-27</div></div>
+      <div class="item"><div class="k">FILED UNDER</div><div class="v">小雅平台知识库 / 场景评测</div></div>
+    </div>
+
+    <div class="cover-abstract">
+      <div class="label">EXECUTIVE SUMMARY · 摘要</div>
+      <p>
+        从 272 条原始问答中过滤掉快捷反馈按钮(50.4%)/用户抵触发言(10.7%)/平台操作问题(6.2%)/章节定位(0.7%),
+        最终凝练出 <b>78 条纯学习问答</b>,归入 <b>9 大学习场景</b>。其中 <b>TOP5 场景覆盖 93.6%</b>:
+        S1 推导计算追问(28.2%) · S6 整道题讲解(24.4%) · S3 原理追问(14.1%) · S4 概念定义(14.1%) · S2 答案核对(12.8%)。
+      </p>
+      <p>
+        学生用 AI 助学的核心动作是<b>解题陪练</b>(推导 + 题目 + 答案 = 65.4%),不是听课。
+        从输入形式看:<b>纯文本 60.3% / 粘贴选择题 24.4% / 上传图片 15.4%</b>,
+        过半数输入是 ≤15 字的极短问句——AI 助学的能力上限,本质上是上下文感知能力的上限。
+      </p>
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- 目录                                                                    -->
+  <!-- ====================================================================== -->
+  <section class="toc">
+    <div class="toc-label">TABLE OF CONTENTS · 目录</div>
+    <div class="toc-title">六个章节,从全貌到细节</div>
+    <div class="toc-list">
+      <a href="#sec-1" class="toc-item"><div class="toc-no">I</div><div class="toc-name">全景速览 <span class="sub">3 条核心结论</span></div><div class="toc-page">04</div></a>
+      <a href="#sec-2" class="toc-item"><div class="toc-no">II</div><div class="toc-name">学习场景全图谱 <span class="sub">9 大场景</span></div><div class="toc-page">06</div></a>
+      <a href="#sec-3" class="toc-item"><div class="toc-no">III</div><div class="toc-name">学生输入形式分类 <span class="sub">3 大类 · 给测试用</span></div><div class="toc-page">12</div></a>
+      <a href="#sec-4" class="toc-item"><div class="toc-no">IV</div><div class="toc-name">场景 × 输入形式 交叉矩阵 <span class="sub">造数据精度</span></div><div class="toc-page">16</div></a>
+      <a href="#sec-5" class="toc-item"><div class="toc-no">V</div><div class="toc-name">高频原话与课程差异 <span class="sub">重复出现 ≥2 次</span></div><div class="toc-page">18</div></a>
+      <a href="#sec-6" class="toc-item"><div class="toc-no">VI</div><div class="toc-name">产品建议 <span class="sub">6 条收敛动作</span></div><div class="toc-page">20</div></a>
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- I. 全景速览                                                              -->
+  <!-- ====================================================================== -->
+  <section class="section" id="sec-1">
+    <div class="sec-head">
+      <div class="sec-no">I</div>
+      <div class="sec-titleblock">
+        <div class="sec-eyebrow">CHAPTER · 01</div>
+        <h2 class="sec-title">全景速览</h2>
+        <p class="sec-desc">五个关键指标 + 三条结论,30 秒看懂这份数据。</p>
+      </div>
+    </div>
+
+    <div class="kpi-strip">
+      <div class="kpi">
+        <div class="kpi-label">原始样本</div>
+        <div class="kpi-num">272<span class="unit">条</span></div>
+        <div class="kpi-note">2026-03 ~ 05 · SDK 端 · 4 门课</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">纯学习问答</div>
+        <div class="kpi-num">78<span class="unit">条</span></div>
+        <div class="kpi-note">占总样本 28.7%(剔除按钮/抵触/平台)</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">学习场景</div>
+        <div class="kpi-num">9<span class="unit">大类</span></div>
+        <div class="kpi-note">TOP5 覆盖 93.6% 的学习问答</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">最高频场景</div>
+        <div class="kpi-num">28.2<span class="unit">%</span></div>
+        <div class="kpi-note">S1 推导计算追问(22 条)</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">短问句占比</div>
+        <div class="kpi-num">60.3<span class="unit">%</span></div>
+        <div class="kpi-note">≤ 15 字 · 多为"下一步怎么来的"</div>
+      </div>
+    </div>
+
+    <div class="conclusion">
+      <div class="conclusion-label">KEY FINDINGS · 核心结论</div>
+      <div class="conclusion-item">
+        <div class="conclusion-no">01</div>
+        <div class="conclusion-text">
+          学生用 AI 助学的核心动作只有一个:<b>解题陪练</b>。<em>S1 推导计算 + S6 题目讲解 + S2 答案核对</em>三项合计 <b>65.4%</b>,
+          学生不是来听课,是<b>卡住时找 AI 解围</b>——把题目原文或卡住的步骤抛过来,要 AI 把缺失的中间环节补回来。
+        </div>
+      </div>
+      <div class="conclusion-item">
+        <div class="conclusion-no">02</div>
+        <div class="conclusion-text">
+          学生的<b>输入极度碎片化</b>:60.3% 是 15 字以内的短句("下一步怎么来的""这是怎么算的""哪里错了"),
+          严重依赖 AI 自己拼上下文(当前 PPT/题目/课程章节)。<em>AI 助学的能力上限,本质是上下文感知的上限</em>。
+        </div>
+      </div>
+      <div class="conclusion-item">
+        <div class="conclusion-no">03</div>
+        <div class="conclusion-text">
+          输入形式呈现明显<b>三分天下</b>结构:<em>纯文本 60% / 粘贴题目 24% / 上传图片 15%</em>,
+          且与场景强绑定——S6 整道题讲解 100% 是粘贴选择题、S1 推导计算 23% 来自上传图片。
+          测试造数据必须按此比例与场景配对,才能复刻真实流量。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- II. 学习场景全图谱                                                       -->
+  <!-- ====================================================================== -->
+  <section class="section" id="sec-2">
+    <div class="sec-head">
+      <div class="sec-no">II</div>
+      <div class="sec-titleblock">
+        <div class="sec-eyebrow">CHAPTER · 02</div>
+        <h2 class="sec-title">学习场景全图谱</h2>
+        <p class="sec-desc">9 大场景概览图 + 5 个核心场景大卡片(每张卡片含学生原话按"输入形式"分组陈列) + 4 个长尾场景。</p>
+      </div>
+    </div>
+
+    <div class="sc-overview" id="sc-overview"></div>
+
+    <div class="sub-head">
+      <div class="roman">II.A</div>
+      <div class="t">五大核心场景(覆盖 93.6%)</div>
+      <div class="d">每张卡片右侧标注该场景的输入形式分布</div>
+    </div>
+
+    <div class="scenarios-grid" id="featured-grid"></div>
+
+    <div class="sub-head" style="margin-top:48px;">
+      <div class="roman">II.B</div>
+      <div class="t">四个长尾场景</div>
+      <div class="d">条数虽少,但代表了可拓展的能力边界</div>
+    </div>
+    <div class="minor-grid" id="minor-grid"></div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- III. 输入形式分类                                                         -->
+  <!-- ====================================================================== -->
+  <section class="section" id="sec-3">
+    <div class="sec-head">
+      <div class="sec-no">III</div>
+      <div class="sec-titleblock">
+        <div class="sec-eyebrow">CHAPTER · 03</div>
+        <h2 class="sec-title">学生输入形式分类</h2>
+        <p class="sec-desc">把学生的真实输入按"纯文本 / 粘贴选择题 / 上传图片"做三分类,给测试造数据用。每类都附带辨识规则、真实示例(含图片描述)、造数据指引。</p>
+      </div>
+    </div>
+
+    <div class="form-summary" id="form-summary"></div>
+
+    <div id="form-details"></div>
+
+    <!-- 测试造数据指南 -->
+    <div class="test-guide">
+      <div class="title">为测试造数据用的快速指引</div>
+      <div class="test-guide-grid">
+        <div class="test-card">
+          <div class="key">FORM · A · 60%</div>
+          <div class="t">纯文本测试集</div>
+          <div class="d">学生短句直接输入,无图无公式。重点考察 AI 能否从"当前学习上下文"自动补全语境。</div>
+          <ul>
+            <li>覆盖 8 个学习场景(除 S6 题目讲解外全有)</li>
+            <li>长度集中在 2–30 字</li>
+            <li>典型句:"答案""推导""哪里错了""为什么 a=2j"</li>
+          </ul>
+        </div>
+        <div class="test-card">
+          <div class="key">FORM · B · 24%</div>
+          <div class="t">粘贴选择题测试集</div>
+          <div class="d">学生从课件复制整道题(含 ABCD 选项 + ￼ 占位符 + "选完了/下一题"界面残留)。考察 AI 对题目结构的识别与逐项解析能力。</div>
+          <ul>
+            <li>100% 落在 S6 整道题讲解场景</li>
+            <li>长度 80–200 字</li>
+            <li>必含:题干 + 4 选项 + 残留 UI 文本</li>
+          </ul>
+        </div>
+        <div class="test-card">
+          <div class="key">FORM · C · 15%</div>
+          <div class="t">上传图片测试集</div>
+          <div class="d">学生上传题目截图/课件截图,文字只输入极短追问。考察 AI 的 OCR/公式识别 + 图文联动理解。</div>
+          <ul>
+            <li>散落在 S1/S2/S3/S4/S5/S9 六个场景</li>
+            <li>文字长度 2–25 字</li>
+            <li>必须配合图片(物理题截图 / 推导公式截图)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- IV. 场景 × 输入形式 矩阵                                                  -->
+  <!-- ====================================================================== -->
+  <section class="section" id="sec-4">
+    <div class="sec-head">
+      <div class="sec-no">IV</div>
+      <div class="sec-titleblock">
+        <div class="sec-eyebrow">CHAPTER · 04</div>
+        <h2 class="sec-title">场景 × 输入形式 交叉矩阵</h2>
+        <p class="sec-desc">一张表回答:测试每个场景时,各输入形式各应造多少条数据,才能复刻真实流量结构。</p>
+      </div>
+    </div>
+
+    <div class="matrix" id="matrix"></div>
+
+    <div class="matrix-insight">
+      <div class="t">三条结构性观察</div>
+      <ul>
+        <li><b>S6 整道题讲解 = 纯粘贴题目场景</b>:19/19 条 100% 是粘贴选择题原文,没有任何纯文本或上传图片的输入。如果要单独测 S6,只需准备 B 类测试集。</li>
+        <li><b>S1 推导计算 = 文本+图混合场景</b>:22 条里 17 条纯文本(短问句"下一步怎么来的")+ 5 条上传图片(粘贴推导截图问"哪里错了")。<em>S1 是 AI 助学最复杂的场景</em>,既要懂短问句的语境补全,又要懂图片里的公式。</li>
+        <li><b>纯文本场景集中在中段</b>:S1/S2/S3/S4/S7/S8 六个场景里纯文本占绝对主导(≥80%),这部分是 AI 助学的"日常流量",需要稳定回答短问句的能力。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- V. 高频原话                                                              -->
+  <!-- ====================================================================== -->
+  <section class="section" id="sec-5">
+    <div class="sec-head">
+      <div class="sec-no">V</div>
+      <div class="sec-titleblock">
+        <div class="sec-eyebrow">CHAPTER · 05</div>
+        <h2 class="sec-title">高频原话与重复模式</h2>
+        <p class="sec-desc">同一句问句被不同学生/不同时间重复输入 ≥ 2 次的清单。这些是 AI 助学每天都会遇到的"高频流量",必须保证回答稳定。</p>
+      </div>
+    </div>
+    <div class="topfreq"><table id="topfreq-table"></table></div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- VI. 产品建议                                                              -->
+  <!-- ====================================================================== -->
+  <section class="section" id="sec-6">
+    <div class="sec-head">
+      <div class="sec-no">VI</div>
+      <div class="sec-titleblock">
+        <div class="sec-eyebrow">CHAPTER · 06</div>
+        <h2 class="sec-title">产品建议</h2>
+        <p class="sec-desc">基于场景与输入形式双重信号,给出 6 条产品收敛建议。</p>
+      </div>
+    </div>
+    <div class="reco">
+      <div class="reco-eyebrow">RECOMMENDATIONS · 收敛动作</div>
+      <h3 class="reco-title">面向"解题陪练"的能力收敛</h3>
+      <div class="reco-list">
+        <div class="reco-item">
+          <div class="num">RECO · 01</div>
+          <div class="t">把 S1/S6/S3 定义为"基础能力线"</div>
+          <div class="d">推导追问、题目讲解、为什么追问占 67%,这三项是 AI 助学不能崩的最低标准。算法侧需建立这三类的回归测试集和效果指标。</div>
+        </div>
+        <div class="reco-item">
+          <div class="num">RECO · 02</div>
+          <div class="t">强化"当前页面上下文"感知</div>
+          <div class="d">60% 短问句依赖上下文。需要打通"学生当前看的 PPT 第几页/题目正文/章节"作为系统提示词的固定输入,而不是让学生反复粘贴。</div>
+        </div>
+        <div class="reco-item">
+          <div class="num">RECO · 03</div>
+          <div class="t">S2 答案核对引入"引导式回答"策略</div>
+          <div class="d">"答案是啥""求答案"这类纯要答案的输入应触发反问式回应("你卡在哪一步?"),避免 AI 沦为答案册,减少教学副作用。</div>
+        </div>
+        <div class="reco-item">
+          <div class="num">RECO · 04</div>
+          <div class="t">S6 题目讲解能力沉淀为"选择题解析器"</div>
+          <div class="d">大物 Ⅰ 学生稳定用粘贴题目的用法,可固化为一个独立子能力:输入题干自动识别选项 → 逐项分析 → 给出正确答案与原理。</div>
+        </div>
+        <div class="reco-item">
+          <div class="num">RECO · 05</div>
+          <div class="t">补齐图文联动的多模态能力</div>
+          <div class="d">15% 的输入是"上传图片 + 极短追问",AI 必须能从图片中识别公式/题目/示意图,并与文字追问联动回答。建议把 OCR + 公式识别 + 图文 QA 作为算法测试的必考项。</div>
+        </div>
+        <div class="reco-item">
+          <div class="num">RECO · 06</div>
+          <div class="t">复用为江大场景金标准库</div>
+          <div class="d">这 78 条真实问答 + 9 类场景 + 3 类输入形式标签可直接沉淀到金标准库 / 场景评测分区,作为后续算法迭代/客户演示/能力评测的基线。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- 附录                                                                    -->
+  <!-- ====================================================================== -->
+  <section class="section">
+    <div class="sec-head">
+      <div class="sec-no">A</div>
+      <div class="sec-titleblock">
+        <div class="sec-eyebrow">APPENDIX · 附录</div>
+        <h2 class="sec-title">方法与口径说明</h2>
+      </div>
+    </div>
+    <div class="appendix">
+      <div class="t">数据口径</div>
+      原始数据来自江南大学小雅平台 SDK 端 AI 助学的 7 个"常见问题"导出 + 7 个"未解决问题"导出,合并去重后得到 <b>272 条独立问答</b>,时间跨度 2026-03 ~ 2026-05。学科分布:大学物理 Ⅰ(1) <code>109 条</code> · 大学物理 Ⅱ <code>79 条</code> · 大学物理 Ⅲ <code>58 条</code> · 高等数学 Ⅱ(2) <code>26 条</code>。
+
+      <div class="t">学习场景识别</div>
+      第一步剔除非学习场景:① 快捷反馈按钮("懂了,继续"/"还不懂"共 130 条) ② 用户抵触/辱骂(29 条) ③ 平台操作问题(17 条) ④ 章节定位(2 条)。第二步对剩余样本按关键词规则二次分类(题目特征 / 推导 / 答案 / 为什么 / 概念 / 区别 / 总结 / 展开 / 应用),并人工校验黑名单关键词,最终得到 <b>78 条纯学习问答</b>。
+
+      <div class="t">输入形式识别</div>
+      综合"问题"列特征 + "完整对话内容"列上下文判定。判别规则:① 含 ABCD 选项或长 ≥60 字 + ￼ 占位符 → <b>B 粘贴选择题</b>;② 对话中 AI 明确提到"这张图片是…" → <b>C 上传图片</b>;③ 其余归 <b>A 纯文本</b>(并入"含课件图上下文"和"含公式符号"两个边缘类)。
+
+      <div class="t">置信度</div>
+      规则法存在 ~5% 的边界判断不确定性(主要发生在 S3/S4 之间),但 TOP3 场景(S1/S6/S3)分类边界清晰,可直接用于产品决策。完整原始 JSON 与分类结果保存在 <code>场景评测/问答数据/_learning_with_form.json</code>。
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- Footer                                                                  -->
+  <!-- ====================================================================== -->
+  <div class="footer">
+    <div class="brand"><span class="mark">●</span>讯飞高教 · 小雅平台知识库 · 场景评测</div>
+    <div class="right">
+      <div>段婷婷 · AI 教学产品部</div>
+      <div class="line2">V2 · 2026-05-27 · 江南大学场景金标准</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const DATA = {"total_learning": 78, "total_all": 272, "form_groups": [{"key": "A_纯文本", "name": "纯文本输入", "sub": "学生直接键盘输入,无图无公式", "detail": "占比最高,以\"≤15 字短问句\"为主,严重依赖 AI 对当前学习上下文的自感知", "color": "#1E40AF", "count": 47, "pct": 60.3, "examples": [{"问题": "答案不对", "场景": "S2_答案核对", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "答案是什么", "场景": "S2_答案核对", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "求答案", "场景": "S2_答案核对", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "最后一步积分过程", "场景": "S1_推导计算", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "这三个条件中的第二个怎么得到的", "场景": "S1_推导计算", "课程": "高等数学Ⅱ(2)", "图片描述": ""}, {"问题": "f(y,z)是什么意思为什么这样表达", "场景": "S3_原理追问", "课程": "高等数学Ⅱ(2)", "图片描述": ""}, {"问题": "体积咋求", "场景": "S4_概念定义", "课程": "高等数学Ⅱ(2)", "图片描述": ""}, {"问题": "这题答案", "场景": "S2_答案核对", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "此处计算结果为0是如何得出的", "场景": "S1_推导计算", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "此处积分符号是什么意思", "场景": "S1_推导计算", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "详细展开坐标转换那步", "场景": "S8_深入讲解", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "什么叫“保守内力”", "场景": "S4_概念定义", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "总结本课内容", "场景": "S7_全局把握", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "那角速度为什么不是dv/l", "场景": "S3_原理追问", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "右下dv/dt的变换结果为什么不是(dv)^2/l*dtheta", "场景": "S3_原理追问", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "此处积分方程是如何推倒得出的", "场景": "S1_推导计算", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "为什么分析电场力做功和电场线方向有关", "场景": "S3_原理追问", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "在分析电场力做功时，为什么和电场线方向有关", "场景": "S3_原理追问", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "就上面这道题啊", "场景": "S4_概念定义", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "为什么和电场线方向有关", "场景": "S3_原理追问", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "解释一下（3）", "场景": "S8_深入讲解", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "怎样能够改变角动量", "场景": "S4_概念定义", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "施加转动方向的力不能改变角动量吗？", "场景": "S4_概念定义", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "那为什么D选项不对", "场景": "S2_答案核对", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "跷跷板的转动惯量怎么推导得到", "场景": "S1_推导计算", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "这个转动惯量是怎么来的？背的？", "场景": "S1_推导计算", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "解释一下最后一个式子里（1/3ML）**2是怎么来的", "场景": "S1_推导计算", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "这是怎么算的", "场景": "S1_推导计算", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "这些公式是怎么推导的？", "场景": "S1_推导计算", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "为什么a1=ar-a而不是a-ar", "场景": "S3_原理追问", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "答案是啥", "场景": "S2_答案核对", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "那也应该是-8啊为什么是4", "场景": "S3_原理追问", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "后面怎么推出来的", "场景": "S1_推导计算", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "为什么a=2j", "场景": "S3_原理追问", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "哪里错了", "场景": "S1_推导计算", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "你就是个逗比 an是靠a算出来的", "场景": "S1_推导计算", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "微分基本公式", "场景": "S4_概念定义", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "d括号里面两个变量 怎么算", "场景": "S1_推导计算", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "为什么我算出根号十，没这答案", "场景": "S1_推导计算", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "位置矢量", "场景": "S4_概念定义", "课程": "大学物理Ⅰ(1)", "图片描述": ""}]}, {"key": "B_粘贴选择题", "name": "粘贴选择题原文", "sub": "把整道含 ABCD 选项的选择题原文复制到对话框", "detail": "输入长度 80–200 字,含 ￼ 占位符与\"选完了/下一题/问问AI\"等界面残留;全部来自大物Ⅰ,与 S6 场景一一对应", "color": "#C8A45C", "count": 19, "pct": 24.4, "examples": [{"问题": "对于电介质的极化，以下说法正确的是（ ）\n\nA.\n高频电场下，有极分子电介质的取向极化可能跟不上电场变化\nB.\n无极分子电介质的位移极化在各种频率电场下都能发生\nC.\n电介质极化程度可以用极化电荷面密度衡量\nD.\n极化电荷产生的电场与外加电场方向相反\n￼\n选完了 (Enter)\n￼\n下一题\n￼\n￼\n问问AI", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "斜面固定，倾角￼，一质量为￼的物体从光滑斜面上从静止开始沿着斜面下降，则在￼末重力的功率为[]\n\n￼\n\n￼\nA. \n￼\n￼\nB. \n￼", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "质量为￼的质点在几个作用力下作半径为￼、角速度为￼的匀速率圆周运动，在任意时间段￼内，合力所做的功为[]\n\n￼\nA. \n￼\n￼\nB. \n￼\n￼\nC. \n如果时间是圆周运动半周期的奇数倍，则为￼；如果时间是圆周运动半周期的偶数倍，则为￼\n￼\nD. \n不确定", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "若质点角动量守恒，可能出现的情况包括（ ）\n\nA.\n质点做变速圆周运动\nB.\n质点做匀速直线运动（对直线外某点）\nC.\n质点绕固定点做螺旋线运动且满足一定条件\nD.\n质点的角动量大小不变但方向改变\n￼\n选完了 (Enter)\n￼\n下一题\n￼\n￼\n问", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "根据刚体定轴转动的角动量公式，下列哪些情况会使刚体角动量发生变化（ ）\n\nA.\n改变刚体的质量分布\nB.\n调整刚体的转动角速度\nC.\n更换刚体的转动轴\nD.\n给刚体施加沿转动方向的外力\n￼\n选完了 (Enter)\n￼\n￼\n问问AI", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "的是（ ）\n\nA.\n转动惯量J与刚体的质量分布有关\nB.\n角速度￼大，刚体的角动量一定越大\nC.\n角动量L的方向与角速度￼的方向相同\nD.\n当刚体质量增加时，转动惯量J一定增大", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "根据质点角动量定义，可知（ ）\n\nA.\n质点绕固定点做圆周运动时，角动量大小不变\nB.\n质点做匀速直线运动，对直线外一点的角动量大小不变\nC.\n改变质点的运动方向，角动量一定改变\nD.\n改变质点的质量，角动量一定改变\n￼\n选完了 (Enter)\n￼\n下一题\n￼\n￼\n问问AI", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "在力学中，常见的力有重力、弹力和摩擦力等，下列说法正确的是（ ）\n\nA.\n弹簧的弹力大小遵循胡克定律，方向与形变方向相反\nB.\n重力加速度\n�\ng的大小与地理位置有关，一般在赤道处较小，在两极处较大\nC.\n最大静摩擦力略大于滑动摩擦力\nD.\n当两个物体之间的弹力为零时，它们之间一定不存在摩擦力", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "一质量为m的物体在惯性系中受到合外力￼的作用，根据牛顿第二定律和力学相对论原理，以下说法正确的是（ ）\n\nA.\n物体的加速度￼，方向与￼相同\nB.\n在另一惯性系中观察，物体的加速度不变\nC.\n若合外力￼随时间变化，物体的加速度也随时间变化\nD.\n当物体速度接近光速时，牛顿第二定律不再适用", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "关于自然坐标系中的速度，下列说法正确的有\n\nA.\n速度的大小等于速率\nB.\n速度方向始终沿轨迹的切线方向\nC.\n速度的变化只与速率变化有关\nD.\n速度是矢量", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "在圆周运动中，下列关于线量和角量关系的表述，正确的有（ ）\n\nA.\n线速度，方向沿圆周切线方向\nB.\n向心加速度，方向指向圆心\nC.\n切向加速度，反映线速度大小的变化\nD.\n角量描述适用于所有圆周运动，线量描述只适用于部分圆周运动", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "一质点以角速度、角加速度做半径为的圆周运动，下列说法正确的是（ ）\n\nA.\n当时，质点做匀速圆周运动\nB.\n线速度变化包括大小变化和方向变化\nC.\n线加速度大小\nD.\n角加速度\nα\nα越大，线速度大小变化越快", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "一质点以角加速度做圆周运动，已知时角速度，则（ ）\n\nA.\n角速度随时间均匀增加\nB.\nt = 2s时的角速度为\nC.\n角速度的变化率随时间增大\nD.\n角加速度方向始终不变", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "在自然坐标系中，法向加速度的特点包括\n\nA.\n方向指向曲率中心\nB.\n与速度方向垂直\nC.\n只改变速度的方向\nD.\n与速率无关", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "下列关于圆周运动角量的描述，正确的是（ ）\n\nA.\n角加速度是描述角速度变化快慢的物理量\nB.\n匀速圆周运动的角加速度为零\nC.\n角位移的大小与运动路径无关\nD.\n角速度的方向沿圆周切线方向", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "关于质点的位置矢量和位移，下列说法正确的是（ ）\n\nA.\n位置矢量是描述质点在某时刻位置的物理量\nB.\n位移是位置矢量的增量\nC.\n某段时间内位移为零，质点一定静止不动\nD.\n位置矢量的大小和位移大小可能相等", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "一质点做曲线运动，关于其速度和加速度，下列说法正确的是（ ）\n\nA.\n速度方向一定沿曲线切线方向\nB.\n加速度方向一定指向曲线凹侧\nC.\n速度大小和方向都可能变化\nD.\n加速度大小和方向都可能不变", "场景": "S6_题目讲解", "课程": "大学物理Ⅰ(1)", "图片描述": ""}]}, {"key": "C_上传图片", "name": "上传图片 + 文字提问", "sub": "学生上传题目截图/课件截图,文字框只输入简短追问", "detail": "AI 对话明确出现\"这张图片是…\";输入文字通常只有 2–8 字(\"答案\"\"推导\"\"下一步怎么来的\"),完全依赖图片承载题目信息", "color": "#0F1F3D", "count": 12, "pct": 15.4, "examples": [{"问题": "答案", "场景": "S2_答案核对", "课程": "大学物理Ⅱ", "图片描述": "这张图片是一道关于质点动力学的习题。"}, {"问题": "下一步怎么来的", "场景": "S1_推导计算", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "举例说明其中的自内向外到底是哪个方向", "场景": "S9_应用举例", "课程": "大学物理Ⅱ", "图片描述": "这张图片中的内容涉及到电场强度通量的概念。"}, {"问题": "此处dx是如何求得的", "场景": "S1_推导计算", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "推导", "场景": "S1_推导计算", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "那这边跷跷板的转动惯量呢", "场景": "S4_概念定义", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "这个积分式子怎么得出来的", "场景": "S1_推导计算", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "这些公式代表什么", "场景": "S4_概念定义", "课程": "大学物理Ⅰ(1)", "图片描述": "这张图片展示了三种常见电容器的电容公式，它们分别是平行板电容器、圆柱形电容器和球形电容器。"}, {"问题": "埃普西隆0代表什么", "场景": "S4_概念定义", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "为什么那个a=2j", "场景": "S3_原理追问", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "a的平方是4怎么来的", "场景": "S1_推导计算", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "平均速率和平均速度分别用什么表示", "场景": "S5_对比辨析", "课程": "大学物理Ⅰ(1)", "图片描述": ""}]}], "cross_matrix": [{"key": "S1_推导计算", "name": "推导计算追问", "icon": "∫", "total": 22, "A_纯文本": 17, "B_粘贴选择题": 0, "C_上传图片": 5}, {"key": "S6_题目讲解", "name": "整道题讲解", "icon": "✎", "total": 19, "A_纯文本": 0, "B_粘贴选择题": 19, "C_上传图片": 0}, {"key": "S3_原理追问", "name": "原理追问(为什么)", "icon": "?", "total": 11, "A_纯文本": 10, "B_粘贴选择题": 0, "C_上传图片": 1}, {"key": "S4_概念定义", "name": "概念/术语理解", "icon": "Aa", "total": 11, "A_纯文本": 8, "B_粘贴选择题": 0, "C_上传图片": 3}, {"key": "S2_答案核对", "name": "答案核对/对选项", "icon": "✓", "total": 10, "A_纯文本": 9, "B_粘贴选择题": 0, "C_上传图片": 1}, {"key": "S8_深入讲解", "name": "深入讲解(再讲一遍)", "icon": "∞", "total": 2, "A_纯文本": 2, "B_粘贴选择题": 0, "C_上传图片": 0}, {"key": "S5_对比辨析", "name": "对比辨析", "icon": "⇆", "total": 1, "A_纯文本": 0, "B_粘贴选择题": 0, "C_上传图片": 1}, {"key": "S7_全局把握", "name": "总结/重点", "icon": "☰", "total": 1, "A_纯文本": 1, "B_粘贴选择题": 0, "C_上传图片": 0}, {"key": "S9_应用举例", "name": "应用/举例/物理意义", "icon": "⌘", "total": 1, "A_纯文本": 0, "B_粘贴选择题": 0, "C_上传图片": 1}], "scenarios": [{"key": "S1_推导计算", "name": "推导计算追问", "intent": "看课件/做题时卡在某一步,问\"这一步怎么来的、那一步怎么算\"", "pain": "学生跟不上推导节奏,中间环节断链", "value": "把\"老师在黑板上一笔带过的步骤\"补回来 → AI 比老师更耐心", "icon": "∫", "count": 22, "pct": 28.2, "examples_by_form": {"A_纯文本": [{"问题": "最后一步积分过程", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "这三个条件中的第二个怎么得到的", "课程": "高等数学Ⅱ(2)", "图片描述": ""}, {"问题": "此处计算结果为0是如何得出的", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "此处积分符号是什么意思", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "此处积分方程是如何推倒得出的", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "跷跷板的转动惯量怎么推导得到", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "这个转动惯量是怎么来的？背的？", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "解释一下最后一个式子里（1/3ML）**2是怎么来的", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "这是怎么算的", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "这些公式是怎么推导的？", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "后面怎么推出来的", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "哪里错了", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "你就是个逗比 an是靠a算出来的", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "d括号里面两个变量 怎么算", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "为什么我算出根号十，没这答案", "课程": "大学物理Ⅰ(1)", "图片描述": ""}], "B_粘贴选择题": [], "C_上传图片": [{"问题": "下一步怎么来的", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "此处dx是如何求得的", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "推导", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "这个积分式子怎么得出来的", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "a的平方是4怎么来的", "课程": "大学物理Ⅰ(1)", "图片描述": ""}]}, "by_course": {"大学物理Ⅱ": 6, "高等数学Ⅱ(2)": 1, "大学物理Ⅲ": 6, "大学物理Ⅰ(1)": 9}}, {"key": "S6_题目讲解", "name": "整道题讲解", "intent": "把整道选择题(含 ABCD 选项)原文粘贴给 AI,要 AI 帮判断/讲解", "pain": "不会做、不敢问老师、答案没解析", "value": "题目当场解析,4 个选项逐项分析 → 替代答案册", "icon": "✎", "count": 19, "pct": 24.4, "examples_by_form": {"A_纯文本": [], "B_粘贴选择题": [{"问题": "对于电介质的极化，以下说法正确的是（ ）\n\nA.\n高频电场下，有极分子电介质的取向极化可能跟不上电场变化\nB.\n无极分子电介质的位移极化在各种频率电场下都能发生\nC.\n电介质极化程度可以用极化电荷面密度衡量\nD.\n极化电荷产生的电场与外加电场方向相反\n￼\n选完了 (Enter)\n￼\n下一题\n￼\n￼\n问问AI", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "斜面固定，倾角￼，一质量为￼的物体从光滑斜面上从静止开始沿着斜面下降，则在￼末重力的功率为[]\n\n￼\n\n￼\nA. \n￼\n￼\nB. \n￼", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "质量为￼的质点在几个作用力下作半径为￼、角速度为￼的匀速率圆周运动，在任意时间段￼内，合力所做的功为[]\n\n￼\nA. \n￼\n￼\nB. \n￼\n￼\nC. \n如果时间是圆周运动半周期的奇数倍，则为￼；如果时间是圆周运动半周期的偶数倍，则为￼\n￼\nD. \n不确定", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "若质点角动量守恒，可能出现的情况包括（ ）\n\nA.\n质点做变速圆周运动\nB.\n质点做匀速直线运动（对直线外某点）\nC.\n质点绕固定点做螺旋线运动且满足一定条件\nD.\n质点的角动量大小不变但方向改变\n￼\n选完了 (Enter)\n￼\n下一题\n￼\n￼\n问", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "根据刚体定轴转动的角动量公式，下列哪些情况会使刚体角动量发生变化（ ）\n\nA.\n改变刚体的质量分布\nB.\n调整刚体的转动角速度\nC.\n更换刚体的转动轴\nD.\n给刚体施加沿转动方向的外力\n￼\n选完了 (Enter)\n￼\n￼\n问问AI", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "的是（ ）\n\nA.\n转动惯量J与刚体的质量分布有关\nB.\n角速度￼大，刚体的角动量一定越大\nC.\n角动量L的方向与角速度￼的方向相同\nD.\n当刚体质量增加时，转动惯量J一定增大", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "根据质点角动量定义，可知（ ）\n\nA.\n质点绕固定点做圆周运动时，角动量大小不变\nB.\n质点做匀速直线运动，对直线外一点的角动量大小不变\nC.\n改变质点的运动方向，角动量一定改变\nD.\n改变质点的质量，角动量一定改变\n￼\n选完了 (Enter)\n￼\n下一题\n￼\n￼\n问问AI", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "在力学中，常见的力有重力、弹力和摩擦力等，下列说法正确的是（ ）\n\nA.\n弹簧的弹力大小遵循胡克定律，方向与形变方向相反\nB.\n重力加速度\n�\ng的大小与地理位置有关，一般在赤道处较小，在两极处较大\nC.\n最大静摩擦力略大于滑动摩擦力\nD.\n当两个物体之间的弹力为零时，它们之间一定不存在摩擦力", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "一质量为m的物体在惯性系中受到合外力￼的作用，根据牛顿第二定律和力学相对论原理，以下说法正确的是（ ）\n\nA.\n物体的加速度￼，方向与￼相同\nB.\n在另一惯性系中观察，物体的加速度不变\nC.\n若合外力￼随时间变化，物体的加速度也随时间变化\nD.\n当物体速度接近光速时，牛顿第二定律不再适用", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "关于自然坐标系中的速度，下列说法正确的有\n\nA.\n速度的大小等于速率\nB.\n速度方向始终沿轨迹的切线方向\nC.\n速度的变化只与速率变化有关\nD.\n速度是矢量", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "在圆周运动中，下列关于线量和角量关系的表述，正确的有（ ）\n\nA.\n线速度，方向沿圆周切线方向\nB.\n向心加速度，方向指向圆心\nC.\n切向加速度，反映线速度大小的变化\nD.\n角量描述适用于所有圆周运动，线量描述只适用于部分圆周运动", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "一质点以角速度、角加速度做半径为的圆周运动，下列说法正确的是（ ）\n\nA.\n当时，质点做匀速圆周运动\nB.\n线速度变化包括大小变化和方向变化\nC.\n线加速度大小\nD.\n角加速度\nα\nα越大，线速度大小变化越快", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "一质点以角加速度做圆周运动，已知时角速度，则（ ）\n\nA.\n角速度随时间均匀增加\nB.\nt = 2s时的角速度为\nC.\n角速度的变化率随时间增大\nD.\n角加速度方向始终不变", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "在自然坐标系中，法向加速度的特点包括\n\nA.\n方向指向曲率中心\nB.\n与速度方向垂直\nC.\n只改变速度的方向\nD.\n与速率无关", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "下列关于圆周运动角量的描述，正确的是（ ）\n\nA.\n角加速度是描述角速度变化快慢的物理量\nB.\n匀速圆周运动的角加速度为零\nC.\n角位移的大小与运动路径无关\nD.\n角速度的方向沿圆周切线方向", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "关于质点的位置矢量和位移，下列说法正确的是（ ）\n\nA.\n位置矢量是描述质点在某时刻位置的物理量\nB.\n位移是位置矢量的增量\nC.\n某段时间内位移为零，质点一定静止不动\nD.\n位置矢量的大小和位移大小可能相等", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "一质点做曲线运动，关于其速度和加速度，下列说法正确的是（ ）\n\nA.\n速度方向一定沿曲线切线方向\nB.\n加速度方向一定指向曲线凹侧\nC.\n速度大小和方向都可能变化\nD.\n加速度大小和方向都可能不变", "课程": "大学物理Ⅰ(1)", "图片描述": ""}], "C_上传图片": []}, "by_course": {"大学物理Ⅰ(1)": 19}}, {"key": "S3_原理追问", "name": "原理追问(为什么)", "intent": "对某个公式/结论提出\"为什么是这样、为什么不是那样\"", "pain": "教材只给结论不给推理,学生想知道\"凭什么\"", "value": "打破\"知其然不知其所以然\" → 培养物理直觉", "icon": "?", "count": 11, "pct": 14.1, "examples_by_form": {"A_纯文本": [{"问题": "f(y,z)是什么意思为什么这样表达", "课程": "高等数学Ⅱ(2)", "图片描述": ""}, {"问题": "那角速度为什么不是dv/l", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "右下dv/dt的变换结果为什么不是(dv)^2/l*dtheta", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "为什么分析电场力做功和电场线方向有关", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "在分析电场力做功时，为什么和电场线方向有关", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "为什么和电场线方向有关", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "为什么a1=ar-a而不是a-ar", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "那也应该是-8啊为什么是4", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "为什么a=2j", "课程": "大学物理Ⅰ(1)", "图片描述": ""}], "B_粘贴选择题": [], "C_上传图片": [{"问题": "为什么那个a=2j", "课程": "大学物理Ⅰ(1)", "图片描述": ""}]}, "by_course": {"高等数学Ⅱ(2)": 1, "大学物理Ⅱ": 2, "大学物理Ⅲ": 4, "大学物理Ⅰ(1)": 4}}, {"key": "S4_概念定义", "name": "概念/术语理解", "intent": "问某个名词是什么、什么意思、怎么理解(例如\"什么叫保守内力\")", "pain": "名词太多记不住、定义抽象", "value": "随手查名词,不用翻教材索引 → 概念词典", "icon": "Aa", "count": 11, "pct": 14.1, "examples_by_form": {"A_纯文本": [{"问题": "体积咋求", "课程": "高等数学Ⅱ(2)", "图片描述": ""}, {"问题": "什么叫“保守内力”", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "就上面这道题啊", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "怎样能够改变角动量", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "施加转动方向的力不能改变角动量吗？", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "微分基本公式", "课程": "大学物理Ⅰ(1)", "图片描述": ""}, {"问题": "位置矢量", "课程": "大学物理Ⅰ(1)", "图片描述": ""}], "B_粘贴选择题": [], "C_上传图片": [{"问题": "那这边跷跷板的转动惯量呢", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "这些公式代表什么", "课程": "大学物理Ⅰ(1)", "图片描述": "这张图片展示了三种常见电容器的电容公式，它们分别是平行板电容器、圆柱形电容器和球形电容器。"}, {"问题": "埃普西隆0代表什么", "课程": "大学物理Ⅰ(1)", "图片描述": ""}]}, "by_course": {"高等数学Ⅱ(2)": 1, "大学物理Ⅱ": 1, "大学物理Ⅲ": 5, "大学物理Ⅰ(1)": 4}}, {"key": "S2_答案核对", "name": "答案核对/对选项", "intent": "直接要答案、问\"答案对不对\"、追问\"D 选项为什么不对\"", "pain": "想偷懒拿答案 / 自己算的和标准答案不一致", "value": "⚠️ 双刃剑——核对有价值,但纯要答案会助长惰性", "icon": "✓", "count": 10, "pct": 12.8, "examples_by_form": {"A_纯文本": [{"问题": "答案不对", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "答案是什么", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "求答案", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "这题答案", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "那为什么D选项不对", "课程": "大学物理Ⅲ", "图片描述": ""}, {"问题": "答案是啥", "课程": "大学物理Ⅰ(1)", "图片描述": ""}], "B_粘贴选择题": [], "C_上传图片": [{"问题": "答案", "课程": "大学物理Ⅱ", "图片描述": "这张图片是一道关于质点动力学的习题。"}]}, "by_course": {"大学物理Ⅲ": 3, "大学物理Ⅱ": 4, "大学物理Ⅰ(1)": 3}}, {"key": "S8_深入讲解", "name": "深入讲解(再讲一遍)", "intent": "让 AI 把某一步、某个公式\"再讲一遍、详细展开\"", "pain": "第一遍没听懂,需要换个角度再讲", "value": "不限次数追问,AI 不会嫌烦 → 弥补课堂时间限制", "icon": "∞", "count": 2, "pct": 2.6, "examples_by_form": {"A_纯文本": [{"问题": "详细展开坐标转换那步", "课程": "大学物理Ⅱ", "图片描述": ""}, {"问题": "解释一下（3）", "课程": "大学物理Ⅲ", "图片描述": ""}], "B_粘贴选择题": [], "C_上传图片": []}, "by_course": {"大学物理Ⅱ": 1, "大学物理Ⅲ": 1}}, {"key": "S5_对比辨析", "name": "对比辨析", "intent": "问两个相近概念的区别(如\"平均速率和平均速度分别用什么表示\")", "pain": "相似概念混淆", "value": "横向对比厘清边界", "icon": "⇆", "count": 1, "pct": 1.3, "examples_by_form": {"A_纯文本": [], "B_粘贴选择题": [], "C_上传图片": [{"问题": "平均速率和平均速度分别用什么表示", "课程": "大学物理Ⅰ(1)", "图片描述": ""}]}, "by_course": {"大学物理Ⅰ(1)": 1}}, {"key": "S7_全局把握", "name": "总结/重点", "intent": "让 AI 总结本课内容/划重点", "pain": "看完一节没抓住主线", "value": "快速建立章节心智地图", "icon": "☰", "count": 1, "pct": 1.3, "examples_by_form": {"A_纯文本": [{"问题": "总结本课内容", "课程": "大学物理Ⅱ", "图片描述": ""}], "B_粘贴选择题": [], "C_上传图片": []}, "by_course": {"大学物理Ⅱ": 1}}, {"key": "S9_应用举例", "name": "应用/举例/物理意义", "intent": "问\"举例说明\"\"物理意义是什么\"\"实际中怎么用\"", "pain": "光记公式不知道用在哪", "value": "把抽象数学拉回物理直觉", "icon": "⌘", "count": 1, "pct": 1.3, "examples_by_form": {"A_纯文本": [], "B_粘贴选择题": [], "C_上传图片": [{"问题": "举例说明其中的自内向外到底是哪个方向", "课程": "大学物理Ⅱ", "图片描述": "这张图片中的内容涉及到电场强度通量的概念。"}]}, "by_course": {"大学物理Ⅱ": 1}}], "top_frequent": [{"问题": "一质点以角加速度做圆周运动，已知时角速度，则（ ）\n\nA.\n角速度随时间均匀增加\nB.\nt = 2s时的角速度为\nC.\n角速度的变化率随时间增大\nD.\n角加速度方向始终不变", "次数": 3}, {"问题": "答案不对", "次数": 2}, {"问题": "为什么和电场线方向有关", "次数": 2}, {"问题": "施加转动方向的力不能改变角动量吗？", "次数": 2}, {"问题": "那为什么D选项不对", "次数": 2}, {"问题": "答案是啥", "次数": 2}, {"问题": "哪里错了", "次数": 2}, {"问题": "你就是个逗比 an是靠a算出来的", "次数": 2}], "summary": {"total_all": 272, "a_btn_pct": 50.4, "b_resist_pct": 10.7, "c_platform_pct": 6.2, "pure_learning_pct": 28.7}};
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+const FORM_KEYS = ['A_纯文本', 'B_粘贴选择题', 'C_上传图片'];
+const FORM_TAG  = { 'A_纯文本':'A', 'B_粘贴选择题':'B', 'C_上传图片':'C' };
+const COURSE_ORDER = ['大学物理Ⅰ(1)', '大学物理Ⅱ', '大学物理Ⅲ', '高等数学Ⅱ(2)'];
+
+// ============ 场景全景图 ============
+function renderOverview() {
+  const featured = ['S1_推导计算','S6_题目讲解','S3_原理追问','S4_概念定义','S2_答案核对'];
+  let html = '';
+  for (const s of DATA.scenarios) {
+    const isCore = featured.includes(s.key);
+    html += `
+      <div class="sc-chip${isCore ? ' core' : ''}">
+        <div class="icon">${esc(s.icon)}</div>
+        <div class="name">${esc(s.name)}</div>
+        <div class="n">${s.count}</div>
+      </div>
+    `;
+  }
+  document.getElementById('sc-overview').innerHTML = html;
+}
+
+// ============ 场景大卡片 ============
+function renderScenarioCard(s, idx) {
+  // 按形式分组陈列示例
+  let exHtml = '';
+  for (const fk of FORM_KEYS) {
+    const items = s.examples_by_form[fk] || [];
+    if (!items.length) continue;
+    const tag = FORM_TAG[fk];
+    const formName = DATA.form_groups.find(g => g.key === fk).name;
+
+    // 每组最多展示 4 条
+    const preview = items.slice(0, 4);
+    const rest = items.slice(4);
+
+    exHtml += `
+      <div class="ex-formgroup">
+        <div class="ex-form-head">
+          <span class="ex-form-tag ${tag}">FORM · ${tag}</span>
+          <span class="ex-form-name">${esc(formName)}</span>
+          <span class="ex-form-n">${items.length} 条</span>
+        </div>
+        <div class="ex-list">
+          ${preview.map((ex, i) => renderExample(ex, i, tag)).join('')}
+          ${rest.length ? `
+            <div class="ex-rest" style="display:none">${rest.map((ex,i) => renderExample(ex, preview.length+i, tag)).join('')}</div>
+            <div class="ex-more" onclick="toggleRest(this)" style="text-align:center; padding:8px; font-size:12px; color:var(--c-text-3); cursor:pointer; border:1px dashed var(--c-border); margin-top:8px;">展开剩余 ${rest.length} 条</div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  // 输入形式分布(右侧 mini bar)
+  const totalForm = FORM_KEYS.reduce((sum, fk) => sum + ((s.examples_by_form[fk] || []).length), 0);
+  let formBars = '';
+  for (const fk of FORM_KEYS) {
+    const n = (s.examples_by_form[fk] || []).length;
+    const pct = totalForm ? (n/totalForm*100) : 0;
+    const tag = FORM_TAG[fk];
+    formBars += `
+      <div class="side-form-row">
+        <span class="tag ${tag}">FORM ${tag}</span>
+        <span class="track"><span class="fill ${tag}" style="width:${pct}%"></span></span>
+        <span class="n">${n}</span>
+      </div>
+    `;
+  }
+
+  // 课程分布
+  let courseBars = '';
+  const total = Object.values(s.by_course).reduce((a,b)=>a+b, 0);
+  for (const c of COURSE_ORDER) {
+    if (!s.by_course[c]) continue;
+    const n = s.by_course[c];
+    const pct = total ? (n/total*100) : 0;
+    courseBars += `
+      <div class="course-bar">
+        <div class="name">${esc(c)}</div>
+        <div class="track"><div class="fill" style="width:${pct}%"></div></div>
+        <div class="n">${n}</div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="sc-card featured">
+      <div class="sc-card-head">
+        <div class="sc-icon">${esc(s.icon)}</div>
+        <div>
+          <div class="sc-rank">SCENARIO · ${String(idx+1).padStart(2,'0')} · ${esc(s.key.split('_')[0])}</div>
+          <div class="sc-name">${esc(s.name)}</div>
+          <div class="sc-intent">${esc(s.intent)}</div>
+        </div>
+        <div class="sc-stat">
+          <div class="sc-pct">${s.pct}<span class="u">%</span></div>
+          <div class="sc-count">${s.count} / 78 条</div>
+        </div>
+      </div>
+      <div class="sc-card-body">
+        <div class="sc-examples">${exHtml}</div>
+        <div class="sc-side">
+          <div class="side-block">
+            <div class="side-label">输入形式分布</div>
+            <div class="side-forms">${formBars}</div>
+          </div>
+          <div class="side-block">
+            <div class="side-label">学生痛点</div>
+            <div class="side-text">${esc(s.pain)}</div>
+          </div>
+          <div class="side-block">
+            <div class="side-label">AI 助学价值</div>
+            <div class="side-text${s.key === 'S2_答案核对' ? ' warn' : ''}">${esc(s.value)}</div>
+          </div>
+          <div class="side-block">
+            <div class="side-label">课程分布</div>
+            <div class="course-bars">${courseBars}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderExample(ex, i, tag) {
+  const q = ex['问题'] || '';
+  const isLong = q.length > 60;
+  const longCls = isLong ? ' long' : '';
+  const imgHtml = ex['图片描述'] ? `<div class="ex-imgdesc">${esc(ex['图片描述'])}</div>` : '';
+  return `
+    <div class="ex-item ${tag}">
+      <span class="ex-no">${String(i+1).padStart(2,'0')}</span>
+      <div>
+        <div class="ex-text${longCls}" onclick="this.classList.toggle('expand')">${esc(q)}</div>
+        ${imgHtml}
+      </div>
+      <span class="ex-course">${esc(ex['课程'])}</span>
+    </div>
+  `;
+}
+
+function toggleRest(el) {
+  const rest = el.previousElementSibling;
+  if (rest.style.display === 'none') { rest.style.display = 'contents'; el.textContent = '收起'; }
+  else { rest.style.display = 'none'; el.textContent = '展开剩余 ' + rest.children.length + ' 条'; }
+}
+
+const featuredKeys = ['S1_推导计算','S6_题目讲解','S3_原理追问','S4_概念定义','S2_答案核对'];
+const featured = DATA.scenarios.filter(s => featuredKeys.includes(s.key));
+const minor    = DATA.scenarios.filter(s => !featuredKeys.includes(s.key));
+
+document.getElementById('featured-grid').innerHTML = featured.map((s, i) => renderScenarioCard(s, i)).join('');
+
+// ============ 长尾场景 ============
+function renderMinor(s) {
+  // 取第一个有内容的形式作为示例
+  let eg = null, egForm = null;
+  for (const fk of FORM_KEYS) {
+    const items = s.examples_by_form[fk];
+    if (items && items.length) { eg = items[0]; egForm = FORM_TAG[fk]; break; }
+  }
+  if (!eg) return '';
+  const hasImg = egForm === 'C';
+  return `
+    <div class="minor-card">
+      <div class="m-head">
+        <div class="m-name">${esc(s.name)}</div>
+        <div class="m-pct">${s.count} 条 · ${s.pct}%</div>
+      </div>
+      <div class="m-intent">${esc(s.intent)}</div>
+      <div class="m-eg">
+        ${hasImg ? '<span class="img-tag">+图</span>' : ''}
+        "${esc(eg['问题'])}"
+        ${eg['图片描述'] ? `<div style="margin-top:6px; font-size:11px; color:var(--c-text-3);">${esc(eg['图片描述'])}</div>` : ''}
+      </div>
+    </div>
+  `;
+}
+document.getElementById('minor-grid').innerHTML = minor.map(renderMinor).join('');
+
+// ============ III. 输入形式分类卡片 ============
+function renderFormSummary() {
+  let html = '';
+  for (const fg of DATA.form_groups) {
+    const tag = FORM_TAG[fg.key];
+    html += `
+      <div class="form-card ${tag}">
+        <div class="bar"></div>
+        <div class="id">FORM · ${tag} · 输入形式 ${tag}</div>
+        <div class="title">${esc(fg.name)}</div>
+        <div class="sub">${esc(fg.sub)}</div>
+        <div class="num">${fg.pct}<span class="u">%</span></div>
+        <div class="count">${fg.count} / 78 条</div>
+        <div class="detail">${esc(fg.detail)}</div>
+      </div>
+    `;
+  }
+  document.getElementById('form-summary').innerHTML = html;
+}
+renderFormSummary();
+
+function renderFormDetails() {
+  let html = '';
+  for (const fg of DATA.form_groups) {
+    const tag = FORM_TAG[fg.key];
+    const items = fg.examples.slice(0, 10); // 每个形式展示前 10 条
+
+    let listHtml = '';
+    items.forEach((ex, i) => {
+      const q = ex['问题'] || '';
+      const isLong = q.length > 70;
+      const longCls = isLong ? ' long' : '';
+      const imgHtml = ex['图片描述'] ? `<div class="imgdesc">${esc(ex['图片描述'])}</div>` : '';
+      listHtml += `
+        <div class="form-d-item">
+          <span class="no">${String(i+1).padStart(2,'0')}</span>
+          <div>
+            <div class="content${longCls}" onclick="this.classList.toggle('expand')">${esc(q)}</div>
+            ${imgHtml}
+          </div>
+          <div class="tag-block">
+            <div class="scenario">${esc(ex['场景'].replace('_', '·'))}</div>
+            <div class="course">${esc(ex['课程'])}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    const moreCount = fg.examples.length - items.length;
+    if (moreCount > 0) listHtml += `<div style="text-align:center; padding:12px; font-size:12px; color:var(--c-text-3);">… 还有 ${moreCount} 条未展示,见 _learning_with_form.json</div>`;
+
+    html += `
+      <div class="form-detail-block">
+        <div class="form-d-head ${tag}">
+          <div class="badge">${tag}</div>
+          <div>
+            <div class="title">${esc(fg.name)}</div>
+            <div class="desc">${esc(fg.sub)} · ${esc(fg.detail)}</div>
+          </div>
+          <div class="stat-block">
+            <div class="n">${fg.count}</div>
+            <div class="label">${fg.pct}% · ${fg.count}/78</div>
+          </div>
+        </div>
+        <div class="form-d-body">
+          <div class="form-d-list">${listHtml}</div>
+        </div>
+      </div>
+    `;
+  }
+  document.getElementById('form-details').innerHTML = html;
+}
+renderFormDetails();
+
+// ============ IV. 矩阵 ============
+function renderMatrix() {
+  let html = '<table>';
+  html += '<thead><tr><th class="row-h">学习场景</th>';
+  for (const fg of DATA.form_groups) {
+    const tag = FORM_TAG[fg.key];
+    html += `<th>FORM · ${tag}<br><span style="font-weight:400; color:var(--c-text-4); font-size:11px;">${esc(fg.name)}</span></th>`;
+  }
+  html += '<th>合计</th></tr></thead><tbody>';
+
+  for (const row of DATA.cross_matrix) {
+    html += `<tr><td class="row-l"><span class="icon">${esc(row.icon)}</span>${esc(row.name)}</td>`;
+    for (const fg of DATA.form_groups) {
+      const v = row[fg.key] || 0;
+      const tag = FORM_TAG[fg.key];
+      let cls = `cell h-${tag}`;
+      if (v === 0) cls += ' zero';
+      else if (v === row.total && row.total >= 5) cls += ' peak';  // 该场景全部来自此形式
+      else if (v >= row.total * 0.5) cls += ' hi';
+      html += `<td class="${cls}">${v || '·'}</td>`;
+    }
+    html += `<td class="total">${row.total}</td></tr>`;
+  }
+
+  // 合计行
+  html += '<tr><td class="row-l"><b>形式合计</b></td>';
+  for (const fg of DATA.form_groups) {
+    html += `<td class="total">${fg.count}</td>`;
+  }
+  html += `<td class="total">${DATA.total_learning}</td></tr>`;
+  html += '</tbody></table>';
+
+  html += `
+    <div class="matrix-legend">
+      <span>密度色阶:</span>
+      <div class="item"><span class="sw" style="background:rgba(30,64,175,0.06)"></span> 低</div>
+      <div class="item"><span class="sw" style="background:rgba(30,64,175,0.18)"></span> 中</div>
+      <div class="item"><span class="sw" style="background:#1E40AF"></span> 高(>50% / 全部)</div>
+      <span style="margin-left:32px; color:var(--c-text-4);">空白单元格用 · 表示</span>
+    </div>
+  `;
+  document.getElementById('matrix').innerHTML = html;
+}
+renderMatrix();
+
+// ============ V. 高频原话 ============
+function renderTopFreq() {
+  let html = '<thead><tr><th class="r-rank">RANK</th><th>学生原话</th><th class="r-n">重复次数</th></tr></thead><tbody>';
+  DATA.top_frequent.forEach((r, i) => {
+    html += `
+      <tr>
+        <td class="rank">#${String(i+1).padStart(2,'0')}</td>
+        <td class="q">${esc(r['问题'])}</td>
+        <td class="n">× ${r['次数']}</td>
+      </tr>
+    `;
+  });
+  html += '</tbody>';
+  document.getElementById('topfreq-table').innerHTML = html;
+}
+renderTopFreq();
+
+renderOverview();
+</script>
+</body>
+</html>
