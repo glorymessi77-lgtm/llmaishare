@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>小雅 AI 助学 · 高数 / 概率论 知识库测评用例集 V1 · 婷婷</title>
+<meta name="viewport" content="width=1440, initial-scale=1">
+<style>
+  :root {
+    --c-ink:        #0F1F3D;
+    --c-ink-2:      #1E40AF;
+    --c-ink-3:      #2D4A7F;
+    --c-text:       #1E293B;
+    --c-text-2:     #475569;
+    --c-text-3:     #64748B;
+    --c-text-4:     #94A3B8;
+    --c-text-5:     #CBD5E1;
+    --c-bg:         #FFFFFF;
+    --c-bg-soft:    #F8FAFC;
+    --c-bg-card:    #FCFCFD;
+    --c-bg-paper:   #FBFAF6;
+    --c-bg-cream:   #FAF6EC;
+    --c-border:        #E2E8F0;
+    --c-border-light:  #F1F5F9;
+    --c-border-strong: #CBD5E1;
+    --c-gold:       #C8A45C;
+    --c-gold-deep:  #A8843D;
+    --c-gold-soft:  #F5EBD0;
+    --c-gold-line:  #E7D29B;
+    --c-amber:      #92400E;
+    --c-amber-bg:   #FEF3C7;
+    --c-green:      #166534;
+    --c-green-bg:   #DCFCE7;
+    --c-red:        #B91C1C;
+    --c-red-bg:     #FEF2F2;
+    --font-sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
+    --font-mono: "SF Mono", "JetBrains Mono", "Menlo", "Consolas", monospace;
+    --font-math: "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--c-bg-soft); color: var(--c-text); font-family: var(--font-sans); line-height: 1.7; -webkit-font-smoothing: antialiased; font-size: 14px; }
+  ::selection { background: var(--c-gold-soft); }
+  .page { width: 1320px; margin: 0 auto; background: var(--c-bg); }
+
+  /* ============ COVER ============ */
+  .cover {
+    padding: 88px 88px 72px;
+    background: linear-gradient(180deg, #FCFAF3 0%, #FFFFFF 60%), var(--c-bg);
+    border-bottom: 1px solid var(--c-border);
+    position: relative;
+  }
+  .cover::before { content: ""; position: absolute; top: 88px; left: 88px; width: 56px; height: 4px; background: var(--c-gold); }
+  .cover-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.25em; color: var(--c-gold-deep); font-weight: 700; margin-top: 28px; margin-bottom: 24px; }
+  .cover-title { font-size: 48px; font-weight: 700; color: var(--c-ink); line-height: 1.18; letter-spacing: -1px; max-width: 1000px; }
+  .cover-sub { margin-top: 24px; font-size: 17px; color: var(--c-text-2); line-height: 1.75; max-width: 920px; }
+  .cover-stats { margin-top: 56px; display: grid; grid-template-columns: repeat(6, 1fr); border-top: 1px solid var(--c-border); border-bottom: 1px solid var(--c-border); }
+  .cover-stats .item { padding: 24px 20px 24px 0; border-right: 1px solid var(--c-border-light); }
+  .cover-stats .item:last-child { border-right: 0; }
+  .cover-stats .k { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--c-text-4); font-weight: 700; }
+  .cover-stats .v { font-family: var(--font-mono); font-size: 28px; color: var(--c-ink); font-weight: 700; margin-top: 8px; line-height: 1; }
+  .cover-stats .v .u { font-size: 13px; color: var(--c-text-3); font-weight: 400; font-family: var(--font-sans); margin-left: 4px; }
+  .cover-stats .desc { font-size: 12px; color: var(--c-text-3); margin-top: 6px; line-height: 1.5; }
+
+  .cover-abstract { margin-top: 48px; padding: 28px 32px; background: var(--c-bg-paper); border-left: 3px solid var(--c-gold); }
+  .cover-abstract .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--c-gold-deep); font-weight: 700; margin-bottom: 12px; }
+  .cover-abstract p { font-size: 14.5px; color: var(--c-text-2); line-height: 1.85; }
+  .cover-abstract p + p { margin-top: 10px; }
+  .cover-abstract b { color: var(--c-ink); font-weight: 700; }
+
+  .cover-meta-row { margin-top: 32px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding: 20px 0; border-top: 1px solid var(--c-border); }
+  .cover-meta-row .item { font-size: 13px; }
+  .cover-meta-row .k { color: var(--c-text-4); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; font-weight: 700; }
+  .cover-meta-row .v { color: var(--c-ink); font-weight: 600; margin-top: 4px; }
+
+  /* ============ 测评说明区 ============ */
+  .intro { padding: 64px 88px; border-bottom: 1px solid var(--c-border); background: var(--c-bg); }
+  .intro-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; margin-top: 28px; }
+  .intro-card { padding: 24px 28px; border: 1px solid var(--c-border); background: var(--c-bg-card); }
+  .intro-card .id { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; font-weight: 700; }
+  .intro-card.A .id { color: var(--c-ink-2); }
+  .intro-card.B .id { color: var(--c-gold-deep); }
+  .intro-card.C .id { color: var(--c-ink); }
+  .intro-card .t { font-size: 17px; font-weight: 700; color: var(--c-ink); margin-top: 8px; }
+  .intro-card .d { font-size: 12.5px; color: var(--c-text-2); line-height: 1.75; margin-top: 10px; }
+  .intro-card .meta { margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--c-border); font-size: 11px; color: var(--c-text-3); font-family: var(--font-mono); }
+
+  .sec-head {
+    display: grid; grid-template-columns: 88px 1fr; gap: 0; align-items: start;
+    padding-bottom: 32px; margin-bottom: 40px; border-bottom: 2px solid var(--c-ink);
+  }
+  .sec-no { font-family: var(--font-mono); font-size: 60px; font-weight: 700; line-height: 1; color: var(--c-gold); letter-spacing: -0.04em; }
+  .sec-titleblock { padding-top: 8px; }
+  .sec-eyebrow { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--c-gold-deep); font-weight: 700; margin-bottom: 8px; }
+  .sec-title { font-size: 28px; font-weight: 700; color: var(--c-ink); letter-spacing: -0.3px; line-height: 1.3; }
+  .sec-desc { margin-top: 12px; font-size: 14px; color: var(--c-text-3); max-width: 800px; line-height: 1.7; }
+
+  .section { padding: 72px 88px; border-bottom: 1px solid var(--c-border); }
+  .section:last-child { border-bottom: 0; }
+
+  /* ============ 课程 chapter 头 ============ */
+  .course-head {
+    margin-bottom: 40px;
+    background: var(--c-ink); color: #fff;
+    padding: 32px 40px;
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: center;
+    position: relative;
+  }
+  .course-head::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--c-gold); }
+  .course-head .ttl { font-size: 24px; font-weight: 700; letter-spacing: -0.2px; }
+  .course-head .sub { font-size: 13px; color: #B5C2D9; margin-top: 6px; font-family: var(--font-mono); letter-spacing: 0.04em; }
+  .course-head .right { text-align: right; }
+  .course-head .right .n { font-family: var(--font-mono); font-size: 36px; font-weight: 700; color: var(--c-gold); line-height: 1; }
+  .course-head .right .lbl { font-size: 11px; color: #B5C2D9; margin-top: 6px; font-family: var(--font-mono); letter-spacing: 0.1em; }
+
+  /* ============ 测评用例卡片 ============ */
+  .case-grid { display: grid; gap: 32px; }
+  .case {
+    border: 1px solid var(--c-border);
+    background: var(--c-bg-card);
+    position: relative;
+  }
+  .case::before {
+    content: ""; position: absolute; left: -1px; top: -1px; bottom: -1px; width: 4px;
+  }
+  .case.fA::before { background: var(--c-ink-2); }
+  .case.fB::before { background: var(--c-gold); }
+  .case.fC::before { background: var(--c-ink); }
+
+  .case-head {
+    padding: 24px 32px 20px;
+    border-bottom: 1px solid var(--c-border-light);
+    display: grid; grid-template-columns: 1fr auto; align-items: center;
+  }
+  .case-head .left { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .case-id {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 700;
+    color: var(--c-ink); padding: 4px 10px; background: var(--c-bg-soft); border: 1px solid var(--c-border);
+    border-radius: 2px; letter-spacing: 0.06em;
+  }
+  .case-tag {
+    display: inline-block; padding: 3px 10px; border-radius: 2px;
+    font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .case-tag.course { background: var(--c-bg-cream); color: var(--c-amber); }
+  .case-tag.scenario { background: #EAF0FB; color: var(--c-ink-2); }
+  .case-tag.form.fA { background: rgba(30,64,175,0.1); color: var(--c-ink-2); }
+  .case-tag.form.fB { background: var(--c-gold-soft); color: var(--c-gold-deep); }
+  .case-tag.form.fC { background: var(--c-ink); color: #fff; }
+  .case-topic { font-size: 17px; font-weight: 700; color: var(--c-ink); margin-top: 8px; flex-basis: 100%; }
+  .case-head .right .difficulty { font-family: var(--font-mono); font-size: 10px; color: var(--c-text-3); letter-spacing: 0.12em; }
+  .case-head .right .stars { font-size: 14px; color: var(--c-gold); margin-top: 4px; letter-spacing: 2px; }
+
+  .case-body {
+    padding: 0;
+    display: grid; grid-template-columns: 1fr 1fr;
+  }
+  .case-input { padding: 28px 32px; border-right: 1px solid var(--c-border-light); }
+  .case-expected { padding: 28px 32px; background: var(--c-bg-soft); }
+
+  .block-label {
+    font-family: var(--font-mono); font-size: 10px; color: var(--c-text-3);
+    letter-spacing: 0.14em; font-weight: 700; margin-bottom: 12px; text-transform: uppercase;
+  }
+
+  .context-strip {
+    padding: 10px 14px; background: var(--c-bg-cream); border-left: 2px solid var(--c-gold);
+    font-size: 12px; color: var(--c-amber); margin-bottom: 14px; line-height: 1.65;
+  }
+  .context-strip b { color: var(--c-amber); font-weight: 700; }
+
+  .student-bubble {
+    border: 1px solid var(--c-border); padding: 16px 18px;
+    background: #fff; border-radius: 4px;
+    font-size: 14px; color: var(--c-text); line-height: 1.75;
+    position: relative;
+  }
+  .student-bubble::before {
+    content: "学生输入";
+    position: absolute; top: -10px; left: 16px;
+    background: var(--c-ink-2); color: #fff;
+    font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+    padding: 2px 8px; letter-spacing: 0.1em;
+  }
+  .student-bubble.B::before { background: var(--c-gold); content: "粘贴文本"; }
+  .student-bubble.C::before { background: var(--c-ink); content: "文字提问"; }
+  .student-bubble pre {
+    font-family: var(--font-mono); font-size: 12.5px; color: var(--c-text);
+    white-space: pre-wrap; line-height: 1.7; margin: 0;
+  }
+
+  .case-image-wrap {
+    margin-top: 24px; border: 1px solid var(--c-border); padding: 18px; background: #fff;
+    position: relative;
+  }
+  .case-image-wrap::before {
+    content: "学生上传图片";
+    position: absolute; top: -10px; left: 16px;
+    background: var(--c-ink); color: #fff;
+    font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+    padding: 2px 8px; letter-spacing: 0.1em;
+  }
+  .case-image-wrap .img-caption {
+    font-size: 11px; color: var(--c-text-3); margin-top: 10px; text-align: center;
+    font-family: var(--font-mono); letter-spacing: 0.04em;
+  }
+  .case-image-wrap svg {
+    display: block; margin: 0 auto; max-width: 100%;
+  }
+
+  /* SVG 教材题目截图样式 */
+  .tk-title { font-family: var(--font-sans); font-size: 13px; font-weight: 700; fill: var(--c-ink); }
+  .tk-body  { font-family: var(--font-math); font-size: 12px; fill: var(--c-text); }
+  .tk-mono  { font-family: var(--font-mono); font-size: 12px; fill: var(--c-text); }
+  .tk-eq    { font-family: var(--font-math); font-size: 14px; fill: var(--c-ink); font-style: italic; }
+  .tk-label { font-family: var(--font-sans); font-size: 10px; fill: var(--c-text-3); }
+  .tk-frame { fill: #fff; stroke: var(--c-text-5); stroke-width: 1; }
+  .tk-header { fill: var(--c-bg-soft); stroke: var(--c-text-5); stroke-width: 1; }
+  .tk-divider { stroke: var(--c-border); stroke-width: 1; stroke-dasharray: 3 3; }
+  .tk-arrow { stroke: var(--c-ink); stroke-width: 1.5; fill: none; }
+
+  /* 期望/评测区 */
+  .expected-block { margin-bottom: 22px; }
+  .expected-block:last-child { margin-bottom: 0; }
+  .expected-title {
+    font-size: 13px; font-weight: 700; color: var(--c-ink); margin-bottom: 10px;
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .expected-title::before {
+    content: ""; width: 4px; height: 12px; background: var(--c-gold); display: inline-block;
+  }
+  .expected-list {
+    list-style: none; padding: 0;
+  }
+  .expected-list li {
+    padding: 6px 0 6px 24px; position: relative;
+    font-size: 13px; color: var(--c-text-2); line-height: 1.75;
+  }
+  .expected-list li::before {
+    content: attr(data-no);
+    position: absolute; left: 0; top: 6px;
+    font-family: var(--font-mono); font-size: 10px; font-weight: 700; color: var(--c-gold-deep);
+  }
+  .expected-list li b { color: var(--c-ink); font-weight: 700; }
+
+  .pitfall {
+    margin-top: 14px; padding: 12px 16px;
+    background: var(--c-red-bg); border-left: 2px solid var(--c-red);
+    font-size: 12px; color: var(--c-red); line-height: 1.7;
+  }
+  .pitfall b { font-weight: 700; }
+
+  .eval-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 6px;
+  }
+  .eval-pill {
+    padding: 8px 10px; background: var(--c-bg); border: 1px solid var(--c-border);
+    border-radius: 2px; text-align: center;
+  }
+  .eval-pill .k { font-family: var(--font-mono); font-size: 10px; color: var(--c-text-3); letter-spacing: 0.08em; }
+  .eval-pill .v { font-size: 12px; color: var(--c-ink); font-weight: 700; margin-top: 4px; }
+
+  /* ============ TOC ============ */
+  .toc-block { padding: 56px 88px; border-bottom: 1px solid var(--c-border); background: var(--c-bg-paper); }
+  .toc-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.25em; color: var(--c-gold-deep); font-weight: 700; margin-bottom: 16px; }
+  .toc-title { font-size: 24px; font-weight: 700; color: var(--c-ink); margin-bottom: 28px; }
+  .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; }
+  .toc-column .col-label {
+    font-family: var(--font-mono); font-size: 11px; color: var(--c-amber);
+    letter-spacing: 0.16em; font-weight: 700; padding-bottom: 8px;
+    border-bottom: 1px solid var(--c-gold-line); margin-bottom: 4px;
+  }
+  .toc-item {
+    display: grid; grid-template-columns: 96px 1fr 80px; gap: 8px;
+    padding: 10px 0; border-bottom: 1px dashed var(--c-border);
+    text-decoration: none; color: var(--c-text); align-items: baseline;
+    transition: padding-left 0.2s;
+  }
+  .toc-item:hover { padding-left: 8px; color: var(--c-ink-2); }
+  .toc-item .id { font-family: var(--font-mono); font-size: 11px; color: var(--c-gold-deep); font-weight: 700; letter-spacing: 0.08em; }
+  .toc-item .name { font-size: 13.5px; font-weight: 500; color: var(--c-ink); }
+  .toc-item .tag { font-family: var(--font-mono); font-size: 10px; color: var(--c-text-3); text-align: right; letter-spacing: 0.08em; }
+
+  /* ============ 附录 ============ */
+  .appendix { background: var(--c-bg-paper); border: 1px solid var(--c-gold-line); padding: 32px 36px; font-size: 13px; color: var(--c-text-2); line-height: 1.85; }
+  .appendix .t { font-size: 13px; font-weight: 700; color: var(--c-ink); margin-bottom: 8px; letter-spacing: 0.04em; margin-top: 18px; }
+  .appendix .t:first-child { margin-top: 0; }
+  .appendix code { font-family: var(--font-mono); font-size: 12px; background: #fff; padding: 1px 6px; border-radius: 2px; color: var(--c-ink-2); }
+
+  /* ============ Footer ============ */
+  .footer { padding: 40px 88px; background: var(--c-ink); color: #B5C2D9; display: grid; grid-template-columns: 1fr auto; align-items: center; font-size: 12px; }
+  .footer .brand { color: #fff; font-weight: 600; }
+  .footer .brand .mark { color: var(--c-gold); margin-right: 8px; }
+  .footer .right { text-align: right; line-height: 1.65; }
+  .footer .right .line2 { font-family: var(--font-mono); color: #8896B0; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ====================================================================== -->
+  <!-- COVER                                                                   -->
+  <!-- ====================================================================== -->
+  <section class="cover">
+    <div class="cover-eyebrow">EVALUATION TEST SUITE · 知识库测评用例集</div>
+    <h1 class="cover-title">小雅 AI 助学 · 高数 / 概率论<br>知识库测评用例集</h1>
+    <p class="cover-sub">
+      把<b>江南大学 5 大核心学习场景</b>(推导计算 / 题目讲解 / 原理追问 / 概念定义 / 答案核对)
+      迁移到<b>高等数学</b>与<b>概率论与数理统计</b>两门课,
+      按"纯文本 / 粘贴选择题 / 上传图片" <b>3 大输入形式</b>设计 <b>18 个完整测评用例</b>,每个用例含学生原话、配套图片、预期回答、评测维度。
+    </p>
+
+    <div class="cover-stats">
+      <div class="item"><div class="k">COURSES</div><div class="v">2<span class="u">门</span></div><div class="desc">高数 + 概率论</div></div>
+      <div class="item"><div class="k">SCENARIOS</div><div class="v">5<span class="u">大</span></div><div class="desc">S1/S2/S3/S4/S6</div></div>
+      <div class="item"><div class="k">INPUT FORMS</div><div class="v">3<span class="u">类</span></div><div class="desc">A 纯文本 · B 粘贴 · C 上传图</div></div>
+      <div class="item"><div class="k">TEST CASES</div><div class="v">18<span class="u">条</span></div><div class="desc">9 个/课 · 完整可执行</div></div>
+      <div class="item"><div class="k">IMAGES</div><div class="v">8<span class="u">张</span></div><div class="desc">SVG 真实题目截图</div></div>
+      <div class="item"><div class="k">SOURCE</div><div class="v">100<span class="u">%</span></div><div class="desc">同济/浙大教材真题</div></div>
+    </div>
+
+    <div class="cover-abstract">
+      <div class="label">EVALUATION METHODOLOGY · 测评方法</div>
+      <p>
+        测评用例的设计遵循"<b>江大真实流量结构</b>"原则——每个场景 × 输入形式的组合,
+        都对应江南大学小雅 SDK 端真实出现过的学生行为模式。例如 <b>S6 题目讲解 100% 是 B 粘贴选择题</b>,
+        因此本测评中 S6 也只有 B 形式;<b>S1 推导计算 23% 来自上传图片</b>,本测评同时设计 A/C 两种形式。
+      </p>
+      <p>
+        每个用例包含 6 个字段:<b>① 上下文 ② 学生输入文本 ③ 配套图片(C 类) ④ 预期回答方向 ⑤ 评测维度 ⑥ 常见陷阱</b>。
+        测试团队按用例 ID(如 H-S1-A、P-S6-B)执行,逐项打分,聚合得到模型在该课程知识库上的综合得分。
+      </p>
+    </div>
+
+    <div class="cover-meta-row">
+      <div class="item"><div class="k">AUTHOR</div><div class="v">段婷婷 · AI 教学产品部</div></div>
+      <div class="item"><div class="k">VERSION</div><div class="v">V1 · 首版测评包</div></div>
+      <div class="item"><div class="k">DATE</div><div class="v">2026-05-27</div></div>
+      <div class="item"><div class="k">FILED UNDER</div><div class="v">小雅平台知识库 / 场景评测</div></div>
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- 测评说明                                                                 -->
+  <!-- ====================================================================== -->
+  <section class="intro">
+    <div class="sec-head">
+      <div class="sec-no">0</div>
+      <div class="sec-titleblock">
+        <div class="sec-eyebrow">PREAMBLE · 测评说明</div>
+        <h2 class="sec-title">三类输入形式 · 三套测试集</h2>
+        <p class="sec-desc">测评团队按输入形式分别批量执行,每类的测试侧重点不同。</p>
+      </div>
+    </div>
+
+    <div class="intro-grid">
+      <div class="intro-card A">
+        <div class="id">FORM · A · 60.3%</div>
+        <div class="t">纯文本测试集</div>
+        <div class="d">学生短句直接输入(2–30 字),无图无公式。考察 AI 能否从"当前学习上下文"自动补全语境,并保持回答的简洁性与准确性。</div>
+        <div class="meta">本测评 8 个用例 · 覆盖 S1/S2/S3/S4</div>
+      </div>
+      <div class="intro-card B">
+        <div class="id">FORM · B · 24.4%</div>
+        <div class="t">粘贴选择题测试集</div>
+        <div class="d">学生从课件复制整道题(含 ABCD 选项 + 界面残留)。考察 AI 对题目结构的识别、逐项分析能力、正确答案给定与原理讲解。</div>
+        <div class="meta">本测评 2 个用例 · 仅 S6 场景</div>
+      </div>
+      <div class="intro-card C">
+        <div class="id">FORM · C · 15.4%</div>
+        <div class="t">上传图片测试集</div>
+        <div class="d">学生上传题目截图,文字仅输入极短追问(2–15 字)。考察 AI 的 OCR、公式识别、图文联动理解、以及对图片"上下文+短文字"的综合推理。</div>
+        <div class="meta">本测评 8 个用例 · 覆盖 S1/S2/S3/S4</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- TOC                                                                     -->
+  <!-- ====================================================================== -->
+  <section class="toc-block">
+    <div class="toc-label">TABLE OF CASES · 18 个测评用例目录</div>
+    <h2 class="toc-title">按课程 + 场景 + 输入形式索引</h2>
+    <div class="toc-grid">
+      <div class="toc-column">
+        <div class="col-label">高等数学(H)· 9 个用例</div>
+        <a href="#H-S1-A" class="toc-item"><span class="id">H-S1-A</span><span class="name">推导计算追问 · 分部积分中间步骤</span><span class="tag">A 纯文本</span></a>
+        <a href="#H-S1-C" class="toc-item"><span class="id">H-S1-C</span><span class="name">推导计算追问 · 三角代换为什么选 tanθ</span><span class="tag">C 上传图</span></a>
+        <a href="#H-S2-A" class="toc-item"><span class="id">H-S2-A</span><span class="name">答案核对 · 定积分面积值争议</span><span class="tag">A 纯文本</span></a>
+        <a href="#H-S2-C" class="toc-item"><span class="id">H-S2-C</span><span class="name">答案核对 · 多元极值漏判二阶条件</span><span class="tag">C 上传图</span></a>
+        <a href="#H-S3-A" class="toc-item"><span class="id">H-S3-A</span><span class="name">原理追问 · 罗尔定理为什么要 f(a)=f(b)</span><span class="tag">A 纯文本</span></a>
+        <a href="#H-S3-C" class="toc-item"><span class="id">H-S3-C</span><span class="name">原理追问 · sin x − x 为什么是三阶无穷小</span><span class="tag">C 上传图</span></a>
+        <a href="#H-S4-A" class="toc-item"><span class="id">H-S4-A</span><span class="name">概念定义 · 方向导数 vs 偏导数</span><span class="tag">A 纯文本</span></a>
+        <a href="#H-S4-C" class="toc-item"><span class="id">H-S4-C</span><span class="name">概念定义 · 连续/可导/可微关系</span><span class="tag">C 上传图</span></a>
+        <a href="#H-S6-B" class="toc-item"><span class="id">H-S6-B</span><span class="name">题目讲解 · 级数收敛选择题(粘贴)</span><span class="tag">B 粘贴</span></a>
+      </div>
+      <div class="toc-column">
+        <div class="col-label">概率论与数理统计(P)· 9 个用例</div>
+        <a href="#P-S1-A" class="toc-item"><span class="id">P-S1-A</span><span class="name">推导计算追问 · 全概率公式 Σ 怎么来</span><span class="tag">A 纯文本</span></a>
+        <a href="#P-S1-C" class="toc-item"><span class="id">P-S1-C</span><span class="name">推导计算追问 · 二维正态边缘密度配方</span><span class="tag">C 上传图</span></a>
+        <a href="#P-S2-A" class="toc-item"><span class="id">P-S2-A</span><span class="name">答案核对 · 贝叶斯算 0.0196 vs 0.02</span><span class="tag">A 纯文本</span></a>
+        <a href="#P-S2-C" class="toc-item"><span class="id">P-S2-C</span><span class="name">答案核对 · 假设检验结论方向反了</span><span class="tag">C 上传图</span></a>
+        <a href="#P-S3-A" class="toc-item"><span class="id">P-S3-A</span><span class="name">原理追问 · 大数定律为什么要独立同分布</span><span class="tag">A 纯文本</span></a>
+        <a href="#P-S3-C" class="toc-item"><span class="id">P-S3-C</span><span class="name">原理追问 · 中心极限为什么收敛到标准正态</span><span class="tag">C 上传图</span></a>
+        <a href="#P-S4-A" class="toc-item"><span class="id">P-S4-A</span><span class="name">概念定义 · 协方差 vs 相关系数</span><span class="tag">A 纯文本</span></a>
+        <a href="#P-S4-C" class="toc-item"><span class="id">P-S4-C</span><span class="name">概念定义 · f(x) 与 F(x) 关系</span><span class="tag">C 上传图</span></a>
+        <a href="#P-S6-B" class="toc-item"><span class="id">P-S6-B</span><span class="name">题目讲解 · 期望方差性质多选(粘贴)</span><span class="tag">B 粘贴</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- 高等数学                                                                  -->
+  <!-- ====================================================================== -->
+  <section class="section">
+    <div class="course-head">
+      <div>
+        <div class="ttl">高等数学 · Advanced Mathematics</div>
+        <div class="sub">参考教材:同济大学《高等数学》第七版(上下册) · 含 S1–S4 + S6 五大场景</div>
+      </div>
+      <div class="right">
+        <div class="n">9</div>
+        <div class="lbl">CASES</div>
+      </div>
+    </div>
+
+    <div class="case-grid">
+
+      <!-- ===== H-S1-A ===== -->
+      <div class="case fA" id="H-S1-A">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">H-S1-A</span>
+            <span class="case-tag course">高等数学</span>
+            <span class="case-tag scenario">S1 推导计算</span>
+            <span class="case-tag form fA">FORM · A 纯文本</span>
+            <div class="case-topic">分部积分公式中"v 从 dv 怎么变出来"</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★☆</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生正在看 PPT:<b>不定积分 ∫xeˣ dx 的分部积分推导</b>。屏幕显示:
+              "设 u=x, dv=eˣ dx, 则 du=dx, v=eˣ"。学生不理解为什么 dv=eˣ dx 就可以写出 v=eˣ。
+            </div>
+            <div class="student-bubble">那一步 dv 怎么变成 v 的?</div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心(决定及格线)</div>
+              <ul class="expected-list">
+                <li data-no="①">点出 <b>v 是 dv 的不定积分</b>(反导数运算),即 v = ∫ dv</li>
+                <li data-no="②">具体写出 dv = eˣ dx ⇒ v = ∫eˣ dx = eˣ (在分部积分中可省略 +C)</li>
+                <li data-no="③">说明这是<b>微分与不定积分的互逆关系</b>,呼应学生之前学过的"求微分→求原函数"</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="④">解释为什么"积分常数 C 可省略"——分部积分公式两边都含 C,会相互抵消</li>
+                <li data-no="⑤">推荐学生反向验证:对 v=eˣ 求微分,看是否得回 dv=eˣ dx</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 直接说"v=eˣ 是因为 eˣ 的导数还是 eˣ"——这没回答"dv 到 v 的逻辑",只解释了具体值。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">ACCURACY</div><div class="v">概念准确</div></div>
+              <div class="eval-pill"><div class="k">COMPLETE</div><div class="v">步骤完整</div></div>
+              <div class="eval-pill"><div class="k">BREVITY</div><div class="v">控制 200 字内</div></div>
+              <div class="eval-pill"><div class="k">CONTEXT</div><div class="v">复用 PPT 数据</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== H-S1-C ===== -->
+      <div class="case fC" id="H-S1-C">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">H-S1-C</span>
+            <span class="case-tag course">高等数学</span>
+            <span class="case-tag scenario">S1 推导计算</span>
+            <span class="case-tag form fC">FORM · C 上传图</span>
+            <div class="case-topic">三角代换为什么选 x = tan θ 而不是 sin θ</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★★</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生在做不定积分作业,上传了教材<b>例 6 三角代换法</b>的截图,文字框只问"这一步为什么 x=tanθ?"。考察 AI 能否从图片识别题型并解释代换选择。
+            </div>
+            <div class="student-bubble C">这一步为什么 x=tanθ?</div>
+
+            <div class="case-image-wrap">
+              <svg width="560" height="280" viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
+                <rect class="tk-header" x="0.5" y="0.5" width="559" height="32"/>
+                <text class="tk-title" x="20" y="22">例 6  求 ∫ dx / (1 + x²)^(3/2)  · 同济高数 P.215</text>
+                <rect class="tk-frame" x="0.5" y="32.5" width="559" height="247"/>
+                <text class="tk-eq"   x="30" y="64">解 ：设  x = tan θ  ,  − π/2 &lt; θ &lt; π/2 ,</text>
+                <text class="tk-eq"   x="30" y="92">     则  dx = sec²θ  dθ  ,  1 + x² = sec²θ .</text>
+                <line class="tk-divider" x1="30" y1="106" x2="530" y2="106"/>
+                <text class="tk-eq"   x="30" y="134">     ∫ dx / (1+x²)^(3/2)  =  ∫ sec²θ dθ / sec³θ</text>
+                <text class="tk-eq"   x="30" y="162">                              =  ∫ cos θ  dθ  =  sin θ + C .</text>
+                <line class="tk-divider" x1="30" y1="176" x2="530" y2="176"/>
+                <text class="tk-eq"   x="30" y="204">     由  x = tan θ  得  sin θ = x / √(1 + x²) ,</text>
+                <text class="tk-eq"   x="30" y="232">     故  ∫ dx / (1+x²)^(3/2) = x / √(1+x²) + C  .</text>
+                <text class="tk-label" x="530" y="270" text-anchor="end">─ 教材截图示意 ─</text>
+              </svg>
+              <div class="img-caption">IMG · H-S1-C · 三角代换求积分(同济高数下册 P.215)</div>
+            </div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①">从图中识别积分形式 <b>∫dx/(1+x²)^(3/2)</b>,以及代换 x = tan θ 的关键步骤</li>
+                <li data-no="②">解释为什么选 tan θ:<b>三角恒等式 1 + tan²θ = sec²θ</b>,使 (1+x²)^(3/2) 简化为 sec³θ,与 dx=sec²θdθ 完美约掉</li>
+                <li data-no="③">明确说明<b>"被积函数含 1+x²(根式)→ 选 tan θ"</b>是固定模式之一</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="④">对比若用 x=sin θ:1 + sin²θ 不能化为完全平方,分母无法简化</li>
+                <li data-no="⑤">总结三种三角代换适用场景:√(a²−x²)→x=a sin θ,√(a²+x²)→x=a tan θ,√(x²−a²)→x=a sec θ</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 只重复"x=tan θ 所以 1+x²=sec²θ",但没解释<b>为什么是 tan 不是 sin</b>。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">OCR</div><div class="v">题目识别</div></div>
+              <div class="eval-pill"><div class="k">REASONING</div><div class="v">选型理由</div></div>
+              <div class="eval-pill"><div class="k">COMPARISON</div><div class="v">对比 sin θ</div></div>
+              <div class="eval-pill"><div class="k">EXTEND</div><div class="v">三类代换总结</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== H-S2-A ===== -->
+      <div class="case fA" id="H-S2-A">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">H-S2-A</span>
+            <span class="case-tag course">高等数学</span>
+            <span class="case-tag scenario">S2 答案核对</span>
+            <span class="case-tag form fA">FORM · A 纯文本</span>
+            <div class="case-topic">定积分面积值 π/4 还是 π/2 的争议</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★★</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生当前页面是练习题 <b>计算 ∫₀¹ √(1−x²) dx</b>。学生自己用换元 x=sin θ 算出 π/4,但所看的答案册显示 π/2,怀疑自己错了。<b>实际上正确答案确实是 π/4</b>,学生看的答案册可能题号对错或题目记错。
+            </div>
+            <div class="student-bubble">我算的是 π/4,答案是 π/2,哪里错了</div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①"><b>不盲目附和"你算错了"</b>——先反问或独立验算原题:∫₀¹ √(1−x²) dx 几何意义是单位圆第一象限面积 = π/4</li>
+                <li data-no="②">明确告诉学生<b>"π/4 是正确答案"</b>,而非附和"应该是 π/2"</li>
+                <li data-no="③">引导学生<b>核对答案册的题号或题目</b>——可能是 ∫₋₁¹ √(1−x²) dx(= π/2) 看混了</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="④">用几何意义辅助说明:积分上限 1 是上半圆右半部分 → 1/4 圆面积 = π·1²/4</li>
+                <li data-no="⑤">让学生发图/拍照确认题目,避免凭印象</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 看到"答案是 π/2"就顺着学生说"你应该算成 π/2",直接给错误推导——这是教学事故。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">VERIFY</div><div class="v">独立验算</div></div>
+              <div class="eval-pill"><div class="k">CONFIDENCE</div><div class="v">坚持正确</div></div>
+              <div class="eval-pill"><div class="k">QUESTION</div><div class="v">反问引导</div></div>
+              <div class="eval-pill"><div class="k">NON-SYCOPHANCY</div><div class="v">不附和错误</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== H-S2-C ===== -->
+      <div class="case fC" id="H-S2-C">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">H-S2-C</span>
+            <span class="case-tag course">高等数学</span>
+            <span class="case-tag scenario">S2 答案核对</span>
+            <span class="case-tag form fC">FORM · C 上传图</span>
+            <div class="case-topic">多元函数极值漏判二阶充分条件</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★★★</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生上传自己手写的<b>多元函数极值解答</b>截图,只问"答案对吗"。学生求出驻点 (1,1) 和函数值 −3,但<b>没有用 Hessian 矩阵判断极大/极小</b>,属于解答不完整。
+            </div>
+            <div class="student-bubble C">答案对吗</div>
+
+            <div class="case-image-wrap">
+              <svg width="560" height="280" viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
+                <rect class="tk-header" x="0.5" y="0.5" width="559" height="32"/>
+                <text class="tk-title" x="20" y="22">学生手稿 · 第 8 题 求 f(x,y) 的极值</text>
+                <rect class="tk-frame" x="0.5" y="32.5" width="559" height="247"/>
+                <text class="tk-eq"   x="30" y="60">题 ： f(x, y) = x² + xy + y² − 3x − 3y , 求极值 .</text>
+                <line class="tk-divider" x1="30" y1="74" x2="530" y2="74"/>
+                <text class="tk-eq"   x="30" y="102">解 ：∂f/∂x = 2x + y − 3 = 0     ......(1)</text>
+                <text class="tk-eq"   x="30" y="130">      ∂f/∂y = x + 2y − 3 = 0     ......(2)</text>
+                <text class="tk-eq"   x="30" y="158">联立 (1)(2) ,  解得  x = 1,  y = 1 .</text>
+                <text class="tk-eq"   x="30" y="186">代入 ：f(1, 1) = 1 + 1 + 1 − 3 − 3 = −3 .</text>
+                <text class="tk-eq"   x="30" y="220" style="font-weight:700; fill:#B91C1C;">∴  极值为 −3  ✓</text>
+                <text class="tk-label" x="530" y="270" text-anchor="end">─ 学生用蓝笔写,在末尾打了对勾 ─</text>
+              </svg>
+              <div class="img-caption">IMG · H-S2-C · 多元函数极值学生手稿(同济高数下册 P.103 例题改编)</div>
+            </div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①"><b>验算驻点计算正确</b>:解 2x+y−3=0 与 x+2y−3=0,得 x=y=1,函数值 −3 数值无误</li>
+                <li data-no="②"><b>明确指出"答案不完整"</b>:只找到驻点不代表是极值,必须用<b>二阶充分条件(Hessian 矩阵)</b>判断</li>
+                <li data-no="③">补充判断:H = [[2,1],[1,2]],det H = 3 &gt; 0 且 f_xx=2 &gt; 0 → <b>(1,1) 是极小值点</b>,极小值 = −3</li>
+                <li data-no="④">给出标准完整答案:"f(x,y) 在 (1,1) 取得极小值,极小值为 −3"</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="⑤">解释 Hessian 判别法的几何含义(局部曲率方向)</li>
+                <li data-no="⑥">提醒学生:多元极值题答完一定要补"极大/极小"的判断,这是丢分的高频点</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 看到学生写"答案 −3 ✓"就回复"答案正确",忽略缺失的二阶条件——这违背教学严谨性。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">OCR</div><div class="v">手稿识别</div></div>
+              <div class="eval-pill"><div class="k">GAP-DETECT</div><div class="v">识别缺漏</div></div>
+              <div class="eval-pill"><div class="k">COMPLETE</div><div class="v">补全步骤</div></div>
+              <div class="eval-pill"><div class="k">PEDAGOGY</div><div class="v">教学严谨</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== H-S3-A ===== -->
+      <div class="case fA" id="H-S3-A">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">H-S3-A</span>
+            <span class="case-tag course">高等数学</span>
+            <span class="case-tag scenario">S3 原理追问</span>
+            <span class="case-tag form fA">FORM · A 纯文本</span>
+            <div class="case-topic">罗尔定理为什么要求 f(a) = f(b)</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★★</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生在第三章<b>微分中值定理</b>章节,刚学完罗尔定理"若 f 在 [a,b] 连续,在 (a,b) 可导,f(a)=f(b),则存在 ξ ∈ (a,b) 使 f'(ξ)=0"。学生对"f(a)=f(b)"这个看起来很强的条件不理解。
+            </div>
+            <div class="student-bubble">罗尔定理为什么要求 f(a)=f(b)?</div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①"><b>几何直观:f(a)=f(b) 意味着函数两端等高</b>,中间的"山顶/谷底"必定有水平切线</li>
+                <li data-no="②"><b>反例证明必要性</b>:若去掉这个条件,如 f(x)=x 在 [0,1] 上,两端不等高,处处斜率 1,没有 f'(ξ)=0 的点</li>
+                <li data-no="③">联系拉格朗日中值定理:拉格朗日是罗尔的推广,把"水平切线"放宽为"平行于端点连线的切线",此时不要求 f(a)=f(b)</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="④">用最值原理证明思路:连续函数在闭区间有最值,若最值在内部取到,该点导数 =0;若最值在端点取到,由 f(a)=f(b) 推出函数恒常,处处 f'=0</li>
+                <li data-no="⑤">举生活化比喻:"上山再下山,中途必有最高点"</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 只重复定理结论或证明步骤,不解释"为什么需要这个条件"——没回答"为什么"问的"凭什么"。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">INTUITION</div><div class="v">几何直观</div></div>
+              <div class="eval-pill"><div class="k">COUNTER-EX</div><div class="v">反例有效</div></div>
+              <div class="eval-pill"><div class="k">CONNECT</div><div class="v">联系后续定理</div></div>
+              <div class="eval-pill"><div class="k">DEPTH</div><div class="v">本质而非重复</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== H-S3-C ===== -->
+      <div class="case fC" id="H-S3-C">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">H-S3-C</span>
+            <span class="case-tag course">高等数学</span>
+            <span class="case-tag scenario">S3 原理追问</span>
+            <span class="case-tag form fC">FORM · C 上传图</span>
+            <div class="case-topic">为什么 sin x − x 是 x 的三阶无穷小不是二阶</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★★</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生上传<b>教材"无穷小的阶"定义截图</b>,看到 sin x = x − x³/6 + o(x³) 的泰勒展开,不理解为什么 sin x − x 被归类为"x 的三阶无穷小"。
+            </div>
+            <div class="student-bubble C">为什么 sin x − x 是三阶不是二阶?</div>
+
+            <div class="case-image-wrap">
+              <svg width="560" height="300" viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg">
+                <rect class="tk-header" x="0.5" y="0.5" width="559" height="32"/>
+                <text class="tk-title" x="20" y="22">定义 2.5  无穷小的阶  · 同济高数上册 P.59</text>
+                <rect class="tk-frame" x="0.5" y="32.5" width="559" height="267"/>
+                <text class="tk-body" x="30" y="60">设  α  ,  β  是同一变化过程中的无穷小, 且  α ≠ 0  .</text>
+                <line class="tk-divider" x1="30" y1="74" x2="530" y2="74"/>
+                <text class="tk-eq"   x="30" y="100">    若  lim ( β / α ) = 0  ,  称 β 是比 α 高阶的无穷小 ;</text>
+                <text class="tk-eq"   x="30" y="124">    若  lim ( β / α ) = ∞ ,  称 β 是比 α 低阶的无穷小 ;</text>
+                <text class="tk-eq"   x="30" y="148">    若  lim ( β / α ) = c ≠ 0 , 称 β 与 α 是同阶无穷小 .</text>
+                <line class="tk-divider" x1="30" y1="162" x2="530" y2="162"/>
+                <text class="tk-body" x="30" y="188" style="font-weight:700;">特别地,若  lim ( β / αᵏ ) = c ≠ 0  ,  称  β  是  α  的 k 阶无穷小 .</text>
+                <line class="tk-divider" x1="30" y1="206" x2="530" y2="206"/>
+                <text class="tk-body" x="30" y="232">例 ：当  x → 0  时, 由泰勒展开</text>
+                <text class="tk-eq"   x="30" y="258">           sin x  =  x  −  x³/6  +  o(x³) ,</text>
+                <text class="tk-eq"   x="30" y="284">     故  sin x − x  ~  − x³/6 ,  关于  x  的阶为 ?</text>
+              </svg>
+              <div class="img-caption">IMG · H-S3-C · 无穷小阶的定义(同济高数上册 P.59)</div>
+            </div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①">从图中识别<b>"k 阶无穷小的定义" lim(β/αᵏ)=c≠0</b>,以及 sin x 的泰勒展开</li>
+                <li data-no="②">明确套定义验证:<b>lim(x→0) (sin x − x)/x³ = −1/6</b>,是有限非零常数</li>
+                <li data-no="③">对比验证 k=2 不成立:lim (sin x − x)/x² = lim (−x³/6)/x² = lim (−x/6) = 0,趋于 0 → 是<b>"高于二阶"</b>而非"二阶"</li>
+                <li data-no="④">结论:sin x − x 是 x 的 <b>三阶无穷小</b>(满足 k=3 时极限非零;k=2 时极限为 0)</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="⑤">把"阶"的直观解释告知学生:阶越高,无穷小"趋于零的速度越快"</li>
+                <li data-no="⑥">列出常用三阶无穷小:sin x − x、tan x − x、arctan x − x 都是 x 的三阶无穷小</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 直接说"因为泰勒展开里最低次是 x³"——没扣定义本身,缺少严格验证。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">OCR</div><div class="v">定义识别</div></div>
+              <div class="eval-pill"><div class="k">RIGOR</div><div class="v">套定义验证</div></div>
+              <div class="eval-pill"><div class="k">COMPARE</div><div class="v">k=2/k=3 对比</div></div>
+              <div class="eval-pill"><div class="k">EXTEND</div><div class="v">常用三阶表</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== H-S4-A ===== -->
+      <div class="case fA" id="H-S4-A">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">H-S4-A</span>
+            <span class="case-tag course">高等数学</span>
+            <span class="case-tag scenario">S4 概念定义</span>
+            <span class="case-tag form fA">FORM · A 纯文本</span>
+            <div class="case-topic">方向导数和偏导数的区别</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★☆</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生在第九章<b>多元函数微分学</b>,刚学完方向导数概念,但和之前学的偏导数容易混淆。
+            </div>
+            <div class="student-bubble">方向导数和偏导数有什么区别</div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①"><b>本质关系:偏导数是方向导数的特殊情形</b>——偏导数 ∂f/∂x 等价于沿 x 轴正方向(单位向量 (1,0))的方向导数</li>
+                <li data-no="②"><b>几何意义对比</b>:偏导数=曲面在两个坐标方向的切线斜率(各 1 个),方向导数=任意方向的切线斜率(无穷多个)</li>
+                <li data-no="③">公式联系:函数可微时, ∂f/∂l = ∇f · l = f_x · cos α + f_y · cos β,其中 l=(cos α, cos β) 是方向单位向量</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="④">举例:f(x,y)=x²+y² 在 (1,1) 处,∂f/∂x=2, ∂f/∂y=2;沿 (1,1)/√2 方向的方向导数 = 2√2(大于偏导数)</li>
+                <li data-no="⑤">引出梯度:∇f 给出"方向导数最大的方向"和"最大值大小"</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 只解释定义没说清"包含关系",或者混淆"偏导数存在不一定方向导数存在"。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">ACCURACY</div><div class="v">关系准确</div></div>
+              <div class="eval-pill"><div class="k">GEOMETRY</div><div class="v">几何意义</div></div>
+              <div class="eval-pill"><div class="k">EXAMPLE</div><div class="v">实例计算</div></div>
+              <div class="eval-pill"><div class="k">EXTEND</div><div class="v">引出梯度</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== H-S4-C ===== -->
+      <div class="case fC" id="H-S4-C">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">H-S4-C</span>
+            <span class="case-tag course">高等数学</span>
+            <span class="case-tag scenario">S4 概念定义</span>
+            <span class="case-tag form fC">FORM · C 上传图</span>
+            <div class="case-topic">连续 / 可导 / 可微 三者关系</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★★</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生上传<b>教材"一元函数三大性质关系图"</b>,看不懂为什么"可微 ⇔ 可导"但"可导 ⇒ 连续"是单向的。
+            </div>
+            <div class="student-bubble C">这三个概念是什么关系</div>
+
+            <div class="case-image-wrap">
+              <svg width="560" height="280" viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
+                <rect class="tk-header" x="0.5" y="0.5" width="559" height="32"/>
+                <text class="tk-title" x="20" y="22">图 2.7  一元函数三大性质关系  · 同济高数上册 P.93</text>
+                <rect class="tk-frame" x="0.5" y="32.5" width="559" height="247"/>
+
+                <!-- 三个圆 -->
+                <ellipse cx="120" cy="140" rx="70" ry="34" fill="#EAF0FB" stroke="#1E40AF" stroke-width="1.5"/>
+                <text class="tk-eq" x="120" y="146" text-anchor="middle" style="font-style:normal; font-weight:700;">可微</text>
+
+                <ellipse cx="280" cy="140" rx="70" ry="34" fill="#FFFCF5" stroke="#C8A45C" stroke-width="1.5"/>
+                <text class="tk-eq" x="280" y="146" text-anchor="middle" style="font-style:normal; font-weight:700;">可导</text>
+
+                <ellipse cx="440" cy="140" rx="70" ry="34" fill="#F8FAFC" stroke="#475569" stroke-width="1.5"/>
+                <text class="tk-eq" x="440" y="146" text-anchor="middle" style="font-style:normal; font-weight:700;">连续</text>
+
+                <!-- 箭头 -->
+                <path d="M 190 140 L 210 140" class="tk-arrow" marker-end="url(#arr)"/>
+                <path d="M 210 140 L 190 140" class="tk-arrow" marker-end="url(#arr)"/>
+                <text class="tk-label" x="200" y="128" text-anchor="middle" style="font-weight:700; fill:#1E40AF;">⇔</text>
+
+                <path d="M 350 140 L 370 140" class="tk-arrow" marker-end="url(#arr)"/>
+                <text class="tk-label" x="360" y="128" text-anchor="middle" style="font-weight:700; fill:#C8A45C;">⇒</text>
+                <text class="tk-label" x="360" y="158" text-anchor="middle" style="fill:#B91C1C;">⇍</text>
+
+                <defs>
+                  <marker id="arr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+                    <polygon points="0 0, 6 3, 0 6" fill="#0F1F3D"/>
+                  </marker>
+                </defs>
+
+                <!-- 反例 -->
+                <text class="tk-body" x="30" y="220" style="font-weight:700;">反例 ：y = |x|  在 x = 0 处</text>
+                <text class="tk-body" x="30" y="240">      ✓ 连续 (左右极限相等)</text>
+                <text class="tk-body" x="30" y="260">      ✗ 不可导 (左导数 = −1, 右导数 = +1)</text>
+              </svg>
+              <div class="img-caption">IMG · H-S4-C · 一元函数三大性质关系图(同济高数上册 P.93)</div>
+            </div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①">从图中识别三个概念:<b>可微 ⇔ 可导 ⇒ 连续</b>(注意箭头方向)</li>
+                <li data-no="②">明确<b>"一元函数中可微和可导等价"</b>,与多元函数不同——多元函数里可微强于可导(各偏导存在)</li>
+                <li data-no="③">解释为什么"可导 ⇒ 连续":若 f 在 x₀ 可导,则 lim(Δx→0) Δy = lim (Δy/Δx)·Δx = f'(x₀)·0 = 0 → 连续</li>
+                <li data-no="④">用图中反例 <b>y=|x| 在 x=0</b> 说明"连续不一定可导":左右导数不等</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="⑤">补充"连续不一定可导"的极端反例:Weierstrass 函数(处处连续处处不可导)</li>
+                <li data-no="⑥">提示学生:这个关系图在多元函数会变化,届时要重新审视</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 把"可微⇔可导"误说成"可微⇒可导(单向)",或把多元情形的关系套到一元图上。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">OCR</div><div class="v">图示识别</div></div>
+              <div class="eval-pill"><div class="k">SCOPE</div><div class="v">一元/多元区分</div></div>
+              <div class="eval-pill"><div class="k">PROOF</div><div class="v">推导说明</div></div>
+              <div class="eval-pill"><div class="k">COUNTER-EX</div><div class="v">反例联动</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== H-S6-B ===== -->
+      <div class="case fB" id="H-S6-B">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">H-S6-B</span>
+            <span class="case-tag course">高等数学</span>
+            <span class="case-tag scenario">S6 题目讲解</span>
+            <span class="case-tag form fB">FORM · B 粘贴选择题</span>
+            <div class="case-topic">级数收敛性 · 必收敛的级数</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★★★</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生在做<b>无穷级数</b>章节练习,把整道选择题原文从课件复制到对话框(含 ABCD 选项 + "选完了/下一题/问问AI"界面残留)。考察 AI 对题目结构的识别、逐项分析与正确答案给定。
+            </div>
+            <div class="student-bubble B">
+<pre>设级数 Σaₙ 收敛, 则下列级数中必定收敛的是 (    )
+
+A.  Σ (aₙ)²
+B.  Σ |aₙ|
+C.  Σ aₙ / n
+D.  Σ (−1)ⁿ aₙ
+
+选完了 (Enter)
+下一题
+
+问问AI</pre>
+            </div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①"><b>识别题型</b>:级数收敛性判别 · 反例题</li>
+                <li data-no="②"><b>逐项分析</b>:
+                  A 错 — 反例 aₙ=(−1)ⁿ/√n,Σaₙ 由 Leibniz 收敛,但 Σ(aₙ)²=Σ 1/n 发散
+                </li>
+                <li data-no="③">B 错 — 反例同上,Σaₙ 收敛但 Σ|aₙ|=Σ 1/√n 发散(条件收敛 vs 绝对收敛区别)</li>
+                <li data-no="④"><b>C 正确</b> — 由 Abel 判别法:Σaₙ 收敛,{1/n} 单调有界,故 Σaₙ/n 收敛</li>
+                <li data-no="⑤">D 错 — 反例 aₙ=(−1)ⁿ/n,Σaₙ 收敛,但 Σ(−1)ⁿaₙ = Σ 1/n 发散</li>
+                <li data-no="⑥"><b>给出答案:C</b></li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="⑦">补充阿贝尔判别法的完整描述</li>
+                <li data-no="⑧">提醒学生:级数题"必"字开头的多用反例排除,不要凭直觉</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 忽略界面残留文字(选完了/下一题/问问AI),把整段当题面;或直接给答案不分析选项;或选 B(绝对值收敛的错觉)。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">PARSE</div><div class="v">题面提取</div></div>
+              <div class="eval-pill"><div class="k">ENUM</div><div class="v">逐项分析</div></div>
+              <div class="eval-pill"><div class="k">COUNTER</div><div class="v">反例正确</div></div>
+              <div class="eval-pill"><div class="k">FINAL</div><div class="v">答案明确</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- 概率论                                                                  -->
+  <!-- ====================================================================== -->
+  <section class="section">
+    <div class="course-head">
+      <div>
+        <div class="ttl">概率论与数理统计 · Probability & Statistics</div>
+        <div class="sub">参考教材:浙江大学 盛骤 等《概率论与数理统计》第四版 · 含 S1–S4 + S6 五大场景</div>
+      </div>
+      <div class="right">
+        <div class="n">9</div>
+        <div class="lbl">CASES</div>
+      </div>
+    </div>
+
+    <div class="case-grid">
+
+      <!-- ===== P-S1-A ===== -->
+      <div class="case fA" id="P-S1-A">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">P-S1-A</span>
+            <span class="case-tag course">概率论</span>
+            <span class="case-tag scenario">S1 推导计算</span>
+            <span class="case-tag form fA">FORM · A 纯文本</span>
+            <div class="case-topic">全概率公式那个 Σ 怎么来的</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★★</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生在第一章<b>条件概率</b>章节,看到公式 P(A) = Σᵢ P(Bᵢ)P(A|Bᵢ),不理解"为什么是求和"。
+            </div>
+            <div class="student-bubble">全概率公式那个 Σ 怎么来的</div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①">明确<b>"完备事件组" {Bᵢ}</b> 的前提:① 互不相容 BᵢBⱼ=∅(i≠j) ② 并集 ∪Bᵢ = Ω</li>
+                <li data-no="②">推导:A = A ∩ Ω = A ∩ (∪Bᵢ) = ∪(A ∩ Bᵢ),即把 A 拆解成在各 Bᵢ 上的部分</li>
+                <li data-no="③">由 {Bᵢ} 互不相容,则 {A∩Bᵢ} 也互不相容,故 <b>P(A) = Σ P(A∩Bᵢ)</b>(可列可加性)</li>
+                <li data-no="④">再用条件概率定义 P(A∩Bᵢ) = P(Bᵢ)·P(A|Bᵢ),代入得全概率公式</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="⑤">几何直观:把 Ω 切成几块 Bᵢ(像切饼),A 落在每块里的概率相加</li>
+                <li data-no="⑥">配生活例子:三家工厂供应零件,每家次品率不同,问总次品率</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 直接套公式不讲推导,或忽略"完备事件组"的两个前提条件。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">RIGOR</div><div class="v">推导严谨</div></div>
+              <div class="eval-pill"><div class="k">PREMISE</div><div class="v">前提说清</div></div>
+              <div class="eval-pill"><div class="k">INTUITION</div><div class="v">几何切饼</div></div>
+              <div class="eval-pill"><div class="k">EXAMPLE</div><div class="v">生活实例</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== P-S1-C ===== -->
+      <div class="case fC" id="P-S1-C">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">P-S1-C</span>
+            <span class="case-tag course">概率论</span>
+            <span class="case-tag scenario">S1 推导计算</span>
+            <span class="case-tag form fC">FORM · C 上传图</span>
+            <div class="case-topic">二维正态分布边缘密度推导中的配方步骤</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★★★★</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生上传<b>二维正态分布边缘密度推导</b>截图,卡在指数项的<b>配方化简</b>步骤,问"积分这一步怎么化简的"。
+            </div>
+            <div class="student-bubble C">积分这一步怎么化简的?</div>
+
+            <div class="case-image-wrap">
+              <svg width="560" height="320" viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+                <rect class="tk-header" x="0.5" y="0.5" width="559" height="32"/>
+                <text class="tk-title" x="20" y="22">例 3.10  二维正态分布的边缘密度  · 浙大概率论 P.96</text>
+                <rect class="tk-frame" x="0.5" y="32.5" width="559" height="287"/>
+                <text class="tk-body" x="30" y="60">设 (X, Y) ~ N(μ₁, μ₂, σ₁², σ₂², ρ) , 求 X 的边缘密度.</text>
+                <line class="tk-divider" x1="30" y1="74" x2="530" y2="74"/>
+                <text class="tk-eq"   x="30" y="102">解 ：fX(x)  =  ∫₋∞^∞  f(x, y)  dy</text>
+                <text class="tk-eq"   x="30" y="138">     =  1 / (2π σ₁ σ₂ √(1−ρ²))  ·</text>
+                <text class="tk-eq"   x="30" y="166">        ∫₋∞^∞  exp { − Q(x,y) / [ 2(1−ρ²) ] }  dy</text>
+                <text class="tk-body" x="30" y="186" style="fill:#94A3B8;">  其中  Q(x,y) = (x−μ₁)²/σ₁² − 2ρ(x−μ₁)(y−μ₂)/(σ₁σ₂) + (y−μ₂)²/σ₂²</text>
+                <line class="tk-divider" x1="30" y1="200" x2="530" y2="200"/>
+                <text class="tk-eq"   x="30" y="226" style="font-weight:700; fill:#1E40AF;">     配方 ：令  t = (y − μ₂) / σ₂  −  ρ (x − μ₁) / σ₁ ,  ?</text>
+                <text class="tk-eq"   x="30" y="254">     则  Q(x,y)  =  (1−ρ²)(x−μ₁)²/σ₁²  +  t² ?</text>
+                <line class="tk-divider" x1="30" y1="270" x2="530" y2="270"/>
+                <text class="tk-eq"   x="30" y="296">     化为 ：fX(x) = ... · exp{−(x−μ₁)²/(2σ₁²)} · ∫ e^(−t²/2) dt .</text>
+              </svg>
+              <div class="img-caption">IMG · P-S1-C · 二维正态边缘密度推导(浙大概率论第四版 P.96)</div>
+            </div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①">识别图中二维正态密度 + 边缘密度积分形式 + 二次型 Q(x,y)</li>
+                <li data-no="②"><b>配方核心思想</b>:把 Q(x,y) 中关于 y 的部分凑成完全平方 (y − ...)²,使 x 项独立分离</li>
+                <li data-no="③">具体配方过程:对 y 求二次项 (y−μ₂)²/σ₂² 配方,引入新变量 t = (y−μ₂)/σ₂ − ρ(x−μ₁)/σ₁</li>
+                <li data-no="④">代换变量 t,Q(x,y) = (1−ρ²)(x−μ₁)²/σ₁² + t²,把 x 与 t 解耦</li>
+                <li data-no="⑤">使用<b>标准正态积分</b> ∫₋∞^∞ e^(−t²/2) dt = √(2π) 完成 t 的积分</li>
+                <li data-no="⑥"><b>结论:fX(x) = N(μ₁, σ₁²)</b>,即二维正态的边缘是一维正态</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 跳过配方的具体形式,只说"配方后变成可积形式"——学生需要看到 t 怎么构造的。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">OCR</div><div class="v">公式识别</div></div>
+              <div class="eval-pill"><div class="k">ALGEBRA</div><div class="v">配方过程</div></div>
+              <div class="eval-pill"><div class="k">RIGOR</div><div class="v">变量代换</div></div>
+              <div class="eval-pill"><div class="k">RESULT</div><div class="v">边缘分布结论</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== P-S2-A ===== -->
+      <div class="case fA" id="P-S2-A">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">P-S2-A</span>
+            <span class="case-tag course">概率论</span>
+            <span class="case-tag scenario">S2 答案核对</span>
+            <span class="case-tag form fA">FORM · A 纯文本</span>
+            <div class="case-topic">贝叶斯算 0.0196,答案 0.02,差这么多?</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★☆</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生在做<b>贝叶斯公式</b>经典题(癌症筛查阳性后真患癌的概率),自己算出 0.0196,看答案册写 0.02 怀疑错了。实际上 <b>0.0196 ≈ 0.02</b> 是同一答案的不同精度,答案册保留了两位。
+            </div>
+            <div class="student-bubble">我算出来 0.0196, 但答案是 0.02, 差这么多?</div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①"><b>不附和"错了"</b>——指出 0.0196 与 0.02 实际数值非常接近(差异 &lt; 0.001)</li>
+                <li data-no="②">推断:答案册可能保留两位小数(四舍五入 0.0196 ≈ 0.02),或学生题目数据与标答略有差异</li>
+                <li data-no="③"><b>反问学生用了哪些数据</b>:P(B)、P(A|B)、P(A|B̄),逐一核对</li>
+                <li data-no="④">让学生贴出原题或自己的计算过程,排查精度差异来源</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="⑤">解释贝叶斯公式题对数据精度敏感(分母含小概率事件),计算时建议保留 4 位</li>
+                <li data-no="⑥">提醒学生:看答案册时注意"约等于"符号</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 直接说"你算错了应该是 0.02"——这是对学生的误判,0.0196 是正确答案。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">PRECISION</div><div class="v">识别精度差</div></div>
+              <div class="eval-pill"><div class="k">QUESTION</div><div class="v">反问数据</div></div>
+              <div class="eval-pill"><div class="k">CONFIDENCE</div><div class="v">坚持验证</div></div>
+              <div class="eval-pill"><div class="k">NON-SYC</div><div class="v">不盲从答案册</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== P-S2-C ===== -->
+      <div class="case fC" id="P-S2-C">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">P-S2-C</span>
+            <span class="case-tag course">概率论</span>
+            <span class="case-tag scenario">S2 答案核对</span>
+            <span class="case-tag form fC">FORM · C 上传图</span>
+            <div class="case-topic">假设检验结论方向反了</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★★★</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生上传自己<b>假设检验题手稿</b>,计算步骤都对,但<b>结论方向写反了</b>(|z|=1.25 &lt; 1.96 应该是"不拒绝 H₀",学生写成"拒绝 H₀")。
+            </div>
+            <div class="student-bubble C">我拒绝 H₀ 对吗</div>
+
+            <div class="case-image-wrap">
+              <svg width="560" height="310" viewBox="0 0 560 310" xmlns="http://www.w3.org/2000/svg">
+                <rect class="tk-header" x="0.5" y="0.5" width="559" height="32"/>
+                <text class="tk-title" x="20" y="22">学生手稿 · 第 5 题 双侧 z 检验</text>
+                <rect class="tk-frame" x="0.5" y="32.5" width="559" height="277"/>
+                <text class="tk-eq"   x="30" y="60">题 ：σ = 2,  n = 25,  x̄ = 10.5,  α = 0.05.</text>
+                <text class="tk-eq"   x="30" y="84">      检验  H₀ ：μ = 10    vs    H₁ ：μ ≠ 10 .</text>
+                <line class="tk-divider" x1="30" y1="98" x2="530" y2="98"/>
+                <text class="tk-eq"   x="30" y="126">解 ：检验统计量  z  =  ( x̄ − μ₀ ) / ( σ / √n )</text>
+                <text class="tk-eq"   x="30" y="154">                     =  ( 10.5 − 10 ) / ( 2 / √25 )</text>
+                <text class="tk-eq"   x="30" y="182">                     =  0.5 / 0.4  =  1.25  .  ✓</text>
+                <line class="tk-divider" x1="30" y1="196" x2="530" y2="196"/>
+                <text class="tk-eq"   x="30" y="224">     临界值  z_{α/2}  =  z_{0.025}  =  1.96 .</text>
+                <text class="tk-eq"   x="30" y="252">     ∵  | z | = 1.25  &lt;  1.96 ,</text>
+                <text class="tk-eq"   x="30" y="284" style="font-weight:700; fill:#B91C1C;">     ∴  拒绝  H₀ .  ?</text>
+              </svg>
+              <div class="img-caption">IMG · P-S2-C · 假设检验学生手稿(浙大概率论第四版 P.197 例题改编)</div>
+            </div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①"><b>验证计算步骤正确</b>:z=1.25 数值无误,临界值 1.96 也对</li>
+                <li data-no="②"><b>明确指出结论方向错误</b>:|z|=1.25 &lt; 1.96 意味着<b>"未落入拒绝域",应该是"不拒绝 H₀"而不是"拒绝 H₀"</b></li>
+                <li data-no="③">解释拒绝域逻辑:双侧检验拒绝域是 |z| ≥ z_{α/2},只有当 |z|≥1.96 才能拒绝</li>
+                <li data-no="④">给出正确结论:"由于 |z|=1.25 &lt; 1.96,不能拒绝 H₀,即在 α=0.05 下没有充分证据否认 μ=10"</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="⑤">提醒"不拒绝 H₀"不等于"接受 H₀",只是证据不足</li>
+                <li data-no="⑥">直观记忆法:|z| 越大越容易拒绝,因为越偏离 μ₀</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 看到学生写"拒绝 H₀ ?" 后说"对"——这违背统计严谨性。或没指出方向反了,只夸"过程对"。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">OCR</div><div class="v">手稿识别</div></div>
+              <div class="eval-pill"><div class="k">LOGIC</div><div class="v">识别方向错</div></div>
+              <div class="eval-pill"><div class="k">CORRECT</div><div class="v">明确纠正</div></div>
+              <div class="eval-pill"><div class="k">CARE</div><div class="v">语义严谨</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== P-S3-A ===== -->
+      <div class="case fA" id="P-S3-A">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">P-S3-A</span>
+            <span class="case-tag course">概率论</span>
+            <span class="case-tag scenario">S3 原理追问</span>
+            <span class="case-tag form fA">FORM · A 纯文本</span>
+            <div class="case-topic">大数定律为什么要求独立同分布</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★★★</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生学到第五章<b>大数定律与中心极限定理</b>,刚看完辛钦大数定律的条件"X₁, X₂, ... 独立同分布且 EX 存在",不理解为什么必须同时要"独立"和"同分布"。
+            </div>
+            <div class="student-bubble">大数定律为什么要求独立同分布?</div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①"><b>独立性的作用</b>:保证 Var(X̄) = σ²/n → 0(若强相关,方差不消失,X̄ 不收敛)</li>
+                <li data-no="②"><b>同分布的作用</b>:保证 E(X̄)=μ 始终不变,有明确的"收敛目标"(若分布不同,E 不固定,不知道收敛到哪)</li>
+                <li data-no="③"><b>反例 1(不独立)</b>:X₁=X₂=...=X,完全相关,X̄=X 不收敛到 EX(除非 X 本身退化)</li>
+                <li data-no="④"><b>反例 2(不同分布)</b>:Xₙ 方差递增(σₙ²=n),则 Var(X̄)=(Σσᵢ²)/n² 不收敛到 0</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="⑤">补充:更强的<b>切比雪夫大数定律可放宽到"独立、方差有界"</b>,不需要同分布(留个伏笔)</li>
+                <li data-no="⑥">联系实际:民意调查为什么要求"随机抽样"——独立性的现实体现</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 只说"是条件之一"没解释作用;或反例选不当。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">REASONING</div><div class="v">作用拆解</div></div>
+              <div class="eval-pill"><div class="k">COUNTER</div><div class="v">两类反例</div></div>
+              <div class="eval-pill"><div class="k">EXTEND</div><div class="v">放宽条件版本</div></div>
+              <div class="eval-pill"><div class="k">REAL-WORLD</div><div class="v">现实联系</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== P-S3-C ===== -->
+      <div class="case fC" id="P-S3-C">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">P-S3-C</span>
+            <span class="case-tag course">概率论</span>
+            <span class="case-tag scenario">S3 原理追问</span>
+            <span class="case-tag form fC">FORM · C 上传图</span>
+            <div class="case-topic">中心极限为什么收敛到标准正态</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★★★</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生上传<b>中心极限定理</b>定理截图,只问"为什么收敛到标准正态?"。考察 AI 能否从图片理解标准化过程并解释收敛的本质。
+            </div>
+            <div class="student-bubble C">为什么收敛到标准正态?</div>
+
+            <div class="case-image-wrap">
+              <svg width="560" height="320" viewBox="0 0 560 320" xmlns="http://www.w3.org/2000/svg">
+                <rect class="tk-header" x="0.5" y="0.5" width="559" height="32"/>
+                <text class="tk-title" x="20" y="22">定理 5.2  林德伯格 − 列维 中心极限定理  · 浙大概率论 P.139</text>
+                <rect class="tk-frame" x="0.5" y="32.5" width="559" height="287"/>
+                <text class="tk-body" x="30" y="62">设 X₁ , X₂ , ⋯ 独立同分布, E(Xᵢ) = μ , D(Xᵢ) = σ² &gt; 0 ,</text>
+                <text class="tk-body" x="30" y="84">则当 n → ∞ 时, 随机变量</text>
+                <line class="tk-divider" x1="30" y1="98" x2="530" y2="98"/>
+                <text class="tk-eq"   x="30" y="130" style="font-weight:700;">      Yₙ  =  ( Σ Xᵢ  −  n μ )  /  ( σ √n )</text>
+                <line class="tk-divider" x1="30" y1="146" x2="530" y2="146"/>
+                <text class="tk-body" x="30" y="172">依分布收敛到标准正态分布 N(0, 1) , 即</text>
+                <text class="tk-eq"   x="30" y="200">      lim_{n→∞}  P( Yₙ ≤ x )  =  Φ(x) ,    ∀ x ∈ ℝ .</text>
+                <line class="tk-divider" x1="30" y1="216" x2="530" y2="216"/>
+
+                <!-- 直方图示意 -->
+                <text class="tk-label" x="30" y="244" style="font-weight:700;">直方图示意: 随 n 增大趋向钟形 ↓</text>
+                <g transform="translate(60,260)">
+                  <text class="tk-label" x="0" y="-2">n=1</text>
+                  <rect x="0" y="0" width="50" height="40" fill="#E8EEF6" stroke="#94A3B8"/>
+                </g>
+                <g transform="translate(220,260)">
+                  <text class="tk-label" x="0" y="-2">n=5</text>
+                  <path d="M 0 40 L 10 30 L 20 15 L 30 8 L 40 15 L 50 30 L 60 40 Z" fill="#CBDAEC" stroke="#94A3B8"/>
+                </g>
+                <g transform="translate(400,260)">
+                  <text class="tk-label" x="0" y="-2">n=30 ≈ N(0,1)</text>
+                  <path d="M 0 40 Q 30 -10 60 40 Z" fill="#1E40AF" opacity="0.7" stroke="#1E40AF"/>
+                </g>
+              </svg>
+              <div class="img-caption">IMG · P-S3-C · 林德伯格-列维中心极限定理(浙大概率论第四版 P.139)</div>
+            </div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①">识别图中的<b>标准化变量 Yₙ = (ΣXᵢ − nμ)/(σ√n)</b> 及收敛结论</li>
+                <li data-no="②"><b>解释为什么"减 nμ"</b>:让和的期望中心化为 0(因 E(ΣXᵢ) = nμ)</li>
+                <li data-no="③"><b>解释为什么"除 σ√n"</b>:让和的方差标准化为 1(因 Var(ΣXᵢ) = nσ²,故 √Var = σ√n)</li>
+                <li data-no="④">中心化 + 标准化后,极限分布的均值=0,方差=1 → <b>必然是 N(0,1)</b> 形态</li>
+                <li data-no="⑤">本质:大量独立小扰动叠加,无论原分布如何(只要方差有限),标准化后都趋向钟形——这是"中心极限"的核心</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="⑥">用特征函数(Fourier 变换)的角度简述证明思路:特征函数的极限是 e^(−t²/2)</li>
+                <li data-no="⑦">联系实际:身高、测量误差、考试分数等都近似正态,这就是中心极限定理的现实印证</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 只说"是定理结论",不解释"为什么是 N(0,1) 而不是其他";或忘了说标准化的作用。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">OCR</div><div class="v">公式识别</div></div>
+              <div class="eval-pill"><div class="k">EXPLAIN</div><div class="v">标准化解释</div></div>
+              <div class="eval-pill"><div class="k">INTUITION</div><div class="v">钟形直觉</div></div>
+              <div class="eval-pill"><div class="k">DEPTH</div><div class="v">特征函数视角</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== P-S4-A ===== -->
+      <div class="case fA" id="P-S4-A">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">P-S4-A</span>
+            <span class="case-tag course">概率论</span>
+            <span class="case-tag scenario">S4 概念定义</span>
+            <span class="case-tag form fA">FORM · A 纯文本</span>
+            <div class="case-topic">协方差和相关系数差啥</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★☆</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生在第四章<b>随机变量的数字特征</b>,把协方差 Cov(X,Y) 和相关系数 ρ_{XY} 弄混了。
+            </div>
+            <div class="student-bubble">协方差和相关系数差啥</div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①">协方差 <b>Cov(X,Y) = E[(X−EX)(Y−EY)]</b>,有量纲(等于 X 单位 × Y 单位),数值大小受单位影响</li>
+                <li data-no="②">相关系数 <b>ρ = Cov(X,Y) / (σ_X σ_Y)</b>,把协方差用各自标准差归一化,<b>无量纲,值域 [−1, 1]</b></li>
+                <li data-no="③"><b>核心差异</b>:协方差只看"正/负/零"的方向(正相关/负相关/无线性关系),不能比较强弱;相关系数标准化后可<b>横向比较强度</b></li>
+                <li data-no="④">举例:身高(cm)和体重(kg)的协方差,如果身高改用 m,数值会缩小 100 倍,但 ρ 不变</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="⑤">提醒"ρ=0 不等于独立",只是没有线性关系(可能有非线性相关)</li>
+                <li data-no="⑥">|ρ|=1 ⇔ X、Y 严格线性相关</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 只给两个公式不讲本质差异,或漏掉"量纲"这个关键点。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">DIMENSION</div><div class="v">量纲对比</div></div>
+              <div class="eval-pill"><div class="k">RANGE</div><div class="v">值域差异</div></div>
+              <div class="eval-pill"><div class="k">EXAMPLE</div><div class="v">单位换算例</div></div>
+              <div class="eval-pill"><div class="k">PITFALL</div><div class="v">ρ=0 不等独立</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== P-S4-C ===== -->
+      <div class="case fC" id="P-S4-C">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">P-S4-C</span>
+            <span class="case-tag course">概率论</span>
+            <span class="case-tag scenario">S4 概念定义</span>
+            <span class="case-tag form fC">FORM · C 上传图</span>
+            <div class="case-topic">f(x) 和 F(x) 有啥不一样</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★★</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生上传<b>"概率密度 f(x) 与分布函数 F(x) 关系图"</b>,看到一条钟形曲线和一条 S 形曲线并列,问两者有啥不一样。
+            </div>
+            <div class="student-bubble C">f(x) 和 F(x) 有啥不一样</div>
+
+            <div class="case-image-wrap">
+              <svg width="560" height="280" viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg">
+                <rect class="tk-header" x="0.5" y="0.5" width="559" height="32"/>
+                <text class="tk-title" x="20" y="22">图 2.4  连续型随机变量 · f(x) 与 F(x) 的关系  · 浙大概率论 P.42</text>
+                <rect class="tk-frame" x="0.5" y="32.5" width="559" height="247"/>
+
+                <!-- 左图: 密度函数 f(x) -->
+                <g transform="translate(40, 60)">
+                  <text class="tk-label" x="100" y="0" text-anchor="middle" style="font-weight:700;">概率密度  f(x)</text>
+                  <line x1="0" y1="170" x2="200" y2="170" stroke="#475569" stroke-width="1"/>
+                  <line x1="100" y1="20" x2="100" y2="180" stroke="#475569" stroke-width="1"/>
+                  <path d="M 0 170 Q 60 168 75 150 Q 95 80 100 50 Q 105 80 125 150 Q 140 168 200 170" fill="#EAF0FB" stroke="#1E40AF" stroke-width="2"/>
+                  <text class="tk-label" x="200" y="184" text-anchor="end">x</text>
+                  <text class="tk-label" x="2" y="30">f</text>
+                </g>
+
+                <!-- 右图: 分布函数 F(x) -->
+                <g transform="translate(310, 60)">
+                  <text class="tk-label" x="100" y="0" text-anchor="middle" style="font-weight:700;">分布函数  F(x)</text>
+                  <line x1="0" y1="170" x2="200" y2="170" stroke="#475569" stroke-width="1"/>
+                  <line x1="100" y1="20" x2="100" y2="180" stroke="#475569" stroke-width="1"/>
+                  <path d="M 0 170 Q 50 168 80 140 Q 100 100 120 50 Q 150 30 200 28" fill="none" stroke="#C8A45C" stroke-width="2.5"/>
+                  <line x1="0" y1="170" x2="200" y2="170" stroke="#C8A45C" stroke-width="1" stroke-dasharray="2 2" opacity="0.4"/>
+                  <line x1="0" y1="28" x2="200" y2="28" stroke="#C8A45C" stroke-width="1" stroke-dasharray="2 2" opacity="0.4"/>
+                  <text class="tk-label" x="200" y="184" text-anchor="end">x</text>
+                  <text class="tk-label" x="2" y="30">F</text>
+                  <text class="tk-label" x="-6" y="32" text-anchor="end">1</text>
+                  <text class="tk-label" x="-6" y="174" text-anchor="end">0</text>
+                </g>
+
+                <text class="tk-eq" x="280" y="262" text-anchor="middle" style="font-weight:700;">F(x) = ∫₋∞^x  f(t)  dt          f(x) = F'(x)</text>
+              </svg>
+              <div class="img-caption">IMG · P-S4-C · 密度函数与分布函数关系图(浙大概率论第四版 P.42)</div>
+            </div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①">识别图中两条曲线:<b>左侧 f(x) 钟形(密度);右侧 F(x) S 形(分布函数)</b></li>
+                <li data-no="②">两者关系:<b>F(x) 是 f(x) 在 (−∞, x] 的积分</b>,f(x) 是 F(x) 的导数(连续点处)</li>
+                <li data-no="③">本质差异:<b>f(x) 描述"概率的密度分布"(某点附近的可能性强度),F(x) 描述"X ≤ x 的累积概率"</b></li>
+                <li data-no="④">性质对比:f(x) 非负、积分=1,但可大于 1(概率密度 ≠ 概率);F(x) 单调不减、值域 [0,1]、x→∞ 趋向 1</li>
+                <li data-no="⑤">几何意义:f(x) 是"瞬时变化率",F(x) 是"截至 x 的累积量"——类比物理速度与位移</li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="⑥">提醒:计算 P(a &lt; X ≤ b) 既可用 F(b)−F(a),也可用 ∫ₐᵇ f(x)dx,两者等价</li>
+                <li data-no="⑦">提醒连续型 X 时 P(X=a)=0,所以 P(a&lt;X≤b)=P(a≤X≤b)</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> 说"f(x) 是 P(X=x)"——这是离散型的概念,连续型必须强调"密度"非"概率值"。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">OCR</div><div class="v">图示识别</div></div>
+              <div class="eval-pill"><div class="k">RELATION</div><div class="v">积分/求导关系</div></div>
+              <div class="eval-pill"><div class="k">PROPERTY</div><div class="v">性质对比</div></div>
+              <div class="eval-pill"><div class="k">PITFALL</div><div class="v">密度 ≠ 概率</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== P-S6-B ===== -->
+      <div class="case fB" id="P-S6-B">
+        <div class="case-head">
+          <div class="left">
+            <span class="case-id">P-S6-B</span>
+            <span class="case-tag course">概率论</span>
+            <span class="case-tag scenario">S6 题目讲解</span>
+            <span class="case-tag form fB">FORM · B 粘贴选择题</span>
+            <div class="case-topic">期望与方差性质 · 多选题</div>
+          </div>
+          <div class="right"><div class="difficulty">DIFFICULTY</div><div class="stars">★★★</div></div>
+        </div>
+        <div class="case-body">
+          <div class="case-input">
+            <div class="block-label">学生上下文</div>
+            <div class="context-strip">
+              学生在<b>数字特征</b>章节练习,粘贴整道<b>多选题</b>原文,含选项 + 界面残留。考察 AI 对独立性下期望方差性质的应用。
+            </div>
+            <div class="student-bubble B">
+<pre>设 X , Y 相互独立, 且 E(X)=2, E(Y)=3, D(X)=1, D(Y)=2,
+则下列说法正确的是 (    )
+
+A.  E(XY) = 5
+B.  E(X + Y) = 5
+C.  D(X + Y) = 3
+D.  D(XY) = 2
+
+选完了 (Enter)
+下一题
+
+问问AI</pre>
+            </div>
+          </div>
+          <div class="case-expected">
+            <div class="block-label">预期回答要点</div>
+            <div class="expected-block">
+              <div class="expected-title">必答核心</div>
+              <ul class="expected-list">
+                <li data-no="①"><b>识别题型</b>:多选题 · 期望方差性质应用(独立性)</li>
+                <li data-no="②"><b>A 错</b>:X、Y 独立 ⇒ E(XY) = EX·EY = 2×3 = 6,不是 5</li>
+                <li data-no="③"><b>B 正确</b>:期望线性性,E(X+Y) = EX + EY = 2 + 3 = 5(此性质<b>不依赖独立性</b>)</li>
+                <li data-no="④"><b>C 正确</b>:X、Y 独立 ⇒ D(X+Y) = DX + DY = 1 + 2 = 3</li>
+                <li data-no="⑤"><b>D 错</b>:D(XY) 公式复杂,需用 D(XY) = E(XY)² − [E(XY)]²,需要更多信息(比如 EX²、EY²),不能直接得 2</li>
+                <li data-no="⑥"><b>答案:BC(多选)</b></li>
+              </ul>
+            </div>
+            <div class="expected-block">
+              <div class="expected-title">加分项</div>
+              <ul class="expected-list">
+                <li data-no="⑦">强调"独立性的作用":让 E(XY)=EX·EY 和 D(X+Y)=DX+DY 这两个简化成立</li>
+                <li data-no="⑧">提醒:期望线性 EX+EY 永远对,方差加和性 DX+DY <b>仅对独立(或不相关)</b>成立</li>
+              </ul>
+            </div>
+            <div class="pitfall"><b>常见陷阱:</b> ① 只选 B 漏选 C;② 选 A 误以为 E(XY)=EX+EY;③ 把界面残留的"选完了"当题面。</div>
+
+            <div class="block-label" style="margin-top:18px;">评测维度</div>
+            <div class="eval-grid">
+              <div class="eval-pill"><div class="k">PARSE</div><div class="v">多选识别</div></div>
+              <div class="eval-pill"><div class="k">ENUM</div><div class="v">四项分析</div></div>
+              <div class="eval-pill"><div class="k">INDEP</div><div class="v">独立性应用</div></div>
+              <div class="eval-pill"><div class="k">FINAL</div><div class="v">答案 BC</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================================== -->
+  <!-- 附录                                                                    -->
+  <!-- ====================================================================== -->
+  <section class="section">
+    <div class="sec-head">
+      <div class="sec-no">A</div>
+      <div class="sec-titleblock">
+        <div class="sec-eyebrow">APPENDIX · 测评执行说明</div>
+        <h2 class="sec-title">测评方法 · 数据来源 · 执行流程</h2>
+      </div>
+    </div>
+    <div class="appendix">
+      <div class="t">用例 ID 编码规则</div>
+      <code>课程代码-场景代码-输入形式代码</code>。课程:H = 高等数学 / P = 概率论与数理统计。场景:S1 推导计算 / S2 答案核对 / S3 原理追问 / S4 概念定义 / S6 题目讲解。形式:A 纯文本 / B 粘贴选择题 / C 上传图片。例如 <code>H-S1-A</code> = 高数·推导计算·纯文本输入。
+
+      <div class="t">数据来源</div>
+      场景分类基于 <b>江南大学小雅平台 SDK 端 2026-03 ~ 05 共 272 条真实问答</b>的统计结果。题目素材选自:① 同济大学《高等数学》第七版(上下册);② 浙江大学 盛骤 等《概率论与数理统计》第四版;③ 部分手稿题为学生答题常见错例的还原。8 张图片均为 SVG 内联渲染的"教材题目截图"样式,内容真实可执行测评。
+
+      <div class="t">执行流程</div>
+      ① 测试团队按 18 个用例 ID 顺序执行,把"学生输入文本"+(对 C 类)"配套图片"作为模型输入。② 模型生成回答后,对照<b>"预期回答要点 · 必答核心"</b>逐项打分(必答项满分占 70%,加分项占 30%)。③ 检查<b>"常见陷阱"</b>是否被触发(触发扣分)。④ 按<b>"评测维度"</b>四个标签输出得分。⑤ 18 个用例得分聚合,得到模型在该课程知识库上的综合得分。
+
+      <div class="t">置信度</div>
+      用例覆盖五大核心场景 + 三大输入形式的全部有效组合,可作为<b>知识库测评的最小完整集</b>。后续可在此基础上扩充:每个组合 2-3 个用例(目前 1 个),把覆盖率从场景级提升到知识点级。
+
+      <div class="t">关联文件</div>
+      原始数据 <code>场景评测/问答数据/_learning_with_form.json</code> · 场景分析报告 <code>场景评测/小雅平台_江南大学AI助学学习场景分析_V2.html</code> · 本测评包 <code>场景评测/小雅平台_高数概率论知识库测评用例集_V1.html</code>。
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="brand"><span class="mark">●</span>讯飞高教 · 小雅平台知识库 · 场景评测</div>
+    <div class="right">
+      <div>段婷婷 · AI 教学产品部</div>
+      <div class="line2">V1 · 2026-05-27 · 知识库测评首版</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
