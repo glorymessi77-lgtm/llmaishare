@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>小雅平台 · V3.0.2 验收 + V3.0.3 评审 综合分析 V1</title>
+<style>
+:root {
+  --c-base: #7C3AED;
+  --c-base-soft: #ede9fe;
+  --c-base-bg: #f5f3ff;
+  --c-text-1: #0f172a;
+  --c-text-2: #334155;
+  --c-text-3: #64748b;
+  --c-border: #e2e8f0;
+  --c-border-light: #f1f5f9;
+  --c-front: #2563eb;
+  --c-front-bg: #eff6ff;
+  --c-mid: #0284c7;
+  --c-mid-bg: #f0f9ff;
+  --gold: #C8A45C;
+  --gold-deep: #A17F3F;
+  --gold-bg: #FFF9E9;
+  --green: #047857;
+  --green-bg: #ecfdf5;
+  --orange: #d97706;
+  --orange-bg: #fff8f0;
+  --red: #dc2626;
+  --red-bg: #fef2f2;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(180deg, #fafbff 0%, #f5f7fb 100%);
+  color: var(--c-text-1);
+  line-height: 1.7;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+.container { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+
+/* Hero */
+.hero {
+  padding: 56px 0 36px;
+  background: linear-gradient(135deg, #fafbff 0%, #ffffff 60%, #f5f3ff 100%);
+  border-bottom: 1px solid var(--c-border-light);
+}
+.hero h1 {
+  font-size: 32px; font-weight: 900; color: var(--c-text-1);
+  letter-spacing: -0.5px; margin-bottom: 8px;
+}
+.hero h1 .accent { color: var(--c-base); }
+.hero .sub {
+  font-size: 15px; color: var(--c-text-3);
+  max-width: 800px; line-height: 1.85;
+}
+.hero .meta {
+  display: inline-flex; gap: 14px; margin-top: 14px; padding: 8px 18px;
+  background: #fff; border: 1px solid var(--c-border); border-radius: 24px;
+  font-size: 12.5px; font-weight: 700; color: var(--c-text-2);
+  flex-wrap: wrap; box-shadow: 0 2px 10px rgba(15,23,42,0.04);
+}
+
+/* Sections */
+.section { margin: 32px 0; }
+.section-title {
+  font-size: 22px; font-weight: 800; color: var(--c-text-1);
+  margin: 28px 0 14px; padding-left: 14px;
+  border-left: 4px solid var(--c-base);
+  display: flex; align-items: center; gap: 10px;
+}
+.section-num {
+  display: inline-block; padding: 2px 10px; background: var(--c-base); color: #fff;
+  border-radius: 6px; font-size: 12px; font-weight: 800;
+}
+.section-sub { font-size: 13px; color: var(--c-text-3); margin: -8px 0 18px 18px; }
+
+/* Version comparison */
+.ver-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px;
+}
+.ver-card {
+  background: #fff; border-radius: 16px; padding: 24px 26px;
+  border: 1px solid var(--c-border);
+  box-shadow: 0 4px 16px rgba(15,23,42,0.04);
+  position: relative; overflow: hidden;
+}
+.ver-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+}
+.ver-card.v302::before { background: linear-gradient(90deg, var(--green), #10b981); }
+.ver-card.v303::before { background: linear-gradient(90deg, var(--c-base), #6366f1); }
+.ver-card .ver-label {
+  font-size: 12px; font-weight: 800; letter-spacing: 1.5px;
+  color: var(--c-text-3); margin-bottom: 6px;
+}
+.ver-card.v302 .ver-label { color: var(--green); }
+.ver-card.v303 .ver-label { color: var(--c-base); }
+.ver-card .ver-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.ver-card .ver-desc { font-size: 12.5px; color: var(--c-text-3); margin-bottom: 18px; }
+.ver-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  padding: 16px 0; border-top: 1px solid var(--c-border-light);
+}
+.ver-stat .num { font-size: 26px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+.ver-stat .lbl { font-size: 11.5px; color: var(--c-text-3); font-weight: 600; }
+.ver-card.v302 .num.ok { color: var(--green); }
+.ver-card.v302 .num.ko { color: var(--red); }
+.ver-card.v303 .num.ok { color: var(--c-base); }
+.ver-card.v303 .num.ko { color: var(--red); }
+.num.total { color: var(--c-text-1); }
+.num.rate { font-size: 22px; }
+.ver-progress {
+  margin-top: 10px; height: 10px; background: #f1f5f9; border-radius: 5px; overflow: hidden;
+  display: flex;
+}
+.ver-progress .seg-ok {}
+.ver-progress .seg-mid {}
+.ver-progress .seg-ko {}
+.v302 .ver-progress .seg-ok { background: var(--green); }
+.v302 .ver-progress .seg-ko { background: var(--red); }
+.v303 .ver-progress .seg-ok { background: var(--c-base); }
+.v303 .ver-progress .seg-mid { background: var(--c-text-3); }
+.v303 .ver-progress .seg-ko { background: var(--red); }
+.ver-progress-legend {
+  margin-top: 8px; display: flex; gap: 14px; font-size: 11.5px; color: var(--c-text-3);
+}
+.ver-progress-legend .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: 1px; }
+
+/* Table */
+.tbl-wrap {
+  background: #fff; border-radius: 12px; border: 1px solid var(--c-border);
+  overflow: hidden; margin-bottom: 16px;
+  box-shadow: 0 2px 10px rgba(15,23,42,0.04);
+}
+table.t { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.t th {
+  background: linear-gradient(135deg, var(--c-base) 0%, #6366f1 100%);
+  color: #fff; padding: 12px 14px; text-align: left;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+}
+table.t td {
+  padding: 11px 14px; border-bottom: 1px solid var(--c-border-light);
+  color: var(--c-text-2); vertical-align: middle;
+}
+table.t td.num-cell { text-align: right; font-variant-numeric: tabular-nums; }
+table.t td.center { text-align: center; }
+table.t tr:nth-child(even) td { background: #fafbff; }
+table.t tr:last-child td { border-bottom: 0; }
+table.t tr.row-best td { background: #ecfdf5; font-weight: 600; }
+table.t tr.row-warn td { background: #fff8f0; }
+table.t tr.row-bad td { background: #fef2f2; }
+.bar {
+  display: inline-block; height: 7px; background: var(--c-border-light); border-radius: 4px;
+  overflow: hidden; vertical-align: middle; width: 100px; margin-right: 8px;
+}
+.bar > span { display: inline-block; height: 100%; }
+.bar .b-ok { background: var(--green); }
+.bar .b-mid { background: var(--gold); }
+.bar .b-ko { background: var(--red); }
+
+.pill {
+  display: inline-block; padding: 3px 10px; border-radius: 12px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
+}
+.pill-ok { background: var(--green-bg); color: var(--green); border: 1px solid #a7f3d0; }
+.pill-warn { background: var(--orange-bg); color: var(--orange); border: 1px solid #fde68a; }
+.pill-bad { background: var(--red-bg); color: var(--red); border: 1px solid #fecaca; }
+
+/* Insight box */
+.insight {
+  margin: 14px 0; padding: 16px 20px; border-radius: 12px;
+  background: linear-gradient(135deg, #f5f3ff 0%, #fff 100%);
+  border-left: 3px solid var(--c-base);
+  font-size: 13px; line-height: 1.85; color: var(--c-text-2);
+}
+.insight b { color: var(--c-text-1); }
+.insight .accent { color: var(--c-base); font-weight: 800; }
+.insight.warn { background: linear-gradient(135deg, #fff8f0 0%, #fff 100%); border-left-color: var(--orange); }
+.insight.warn b { color: #92400e; }
+.insight.bad { background: linear-gradient(135deg, #fef2f2 0%, #fff 100%); border-left-color: var(--red); }
+.insight.bad b { color: #991b1b; }
+
+/* Detail Card list */
+.detail-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+@media (max-width: 980px) { .detail-grid { grid-template-columns: 1fr; } }
+.detail-card {
+  background: #fff; border: 1px solid var(--c-border); border-radius: 12px;
+  padding: 18px 22px;
+}
+.detail-card .dc-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 12px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--c-border-light);
+}
+.detail-card .dc-title { font-size: 14.5px; font-weight: 800; color: var(--c-text-1); }
+.detail-card .dc-count { font-size: 12px; color: var(--c-text-3); }
+.detail-card.bad .dc-title { color: var(--red); }
+.detail-card.warn .dc-title { color: var(--orange); }
+.task-list { list-style: none; padding: 0; margin: 0; }
+.task-list li {
+  padding: 7px 0; font-size: 12.5px; color: var(--c-text-2); line-height: 1.65;
+  border-bottom: 1px dashed var(--c-border-light);
+}
+.task-list li:last-child { border-bottom: 0; }
+.task-list li .task-scene { display: inline-block; padding: 1px 6px; background: var(--c-base-soft); color: var(--c-base); border-radius: 3px; font-size: 10.5px; margin-right: 6px; font-weight: 700; }
+.task-list li .task-note { font-size: 11.5px; color: var(--c-text-3); margin-left: 4px; font-style: italic; }
+
+/* Strategy boxes */
+.strategy {
+  background: #fff; border-radius: 14px; padding: 22px 26px;
+  border: 2px solid var(--c-base); margin-top: 20px;
+  box-shadow: 0 6px 24px rgba(124,58,237,0.08);
+}
+.strategy h3 {
+  font-size: 17px; font-weight: 800; color: var(--c-base);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+}
+.strategy ol { padding-left: 24px; }
+.strategy ol li { padding: 6px 0; font-size: 13px; line-height: 1.85; color: var(--c-text-2); }
+.strategy ol li b { color: var(--c-text-1); }
+
+.footer {
+  margin-top: 50px; padding: 24px 0 36px; text-align: center;
+  color: var(--c-text-3); font-size: 12px;
+  border-top: 1px solid var(--c-border-light);
+}
+.footer .doc-meta { display: inline-flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.footer .doc-meta span { padding: 3px 10px; background: var(--c-border-light); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="container">
+    <h1>小雅平台 · <span class="accent">V3.0.2 验收 + V3.0.3 评审</span> · 综合分析</h1>
+    <p class="sub">基于 V3.0.2 产品验收报告(108 任务)和 V3.0.3 产品任务计划表(99 任务),按场景 + 产品经理双维度交叉分析完成情况,识别堵点和遗留问题。</p>
+    <div class="meta">
+      <span>📅 2026-05-28</span>
+      <span>📊 V3.0.2: 108 验收</span>
+      <span>📋 V3.0.3: 99 评审</span>
+      <span>👤 撰稿:段婷婷</span>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+
+<!-- ========================= 双版本总览 ========================= -->
+<section class="section">
+  <h2 class="section-title"><span class="section-num">01</span>双版本总览</h2>
+  <div class="ver-grid">
+
+    <!-- V3.0.2 -->
+    <div class="ver-card v302">
+      <div class="ver-label">V3.0.2 · 已完成 · 产品验收</div>
+      <div class="ver-title">验收通过率 84.3%</div>
+      <div class="ver-desc">108 条任务 · 91 已通过 · 17 未通过(含 "-" 和 空)</div>
+      <div class="ver-stats">
+        <div class="ver-stat"><div class="num total">108</div><div class="lbl">总任务</div></div>
+        <div class="ver-stat"><div class="num ok">91</div><div class="lbl">已通过</div></div>
+        <div class="ver-stat"><div class="num ko">17</div><div class="lbl">未通过</div></div>
+        <div class="ver-stat"><div class="num rate" style="color:var(--green);">84.3%</div><div class="lbl">通过率</div></div>
+      </div>
+      <div class="ver-progress">
+        <div class="seg-ok" style="width:84.3%;"></div>
+        <div class="seg-ko" style="width:15.7%;"></div>
+      </div>
+      <div class="ver-progress-legend">
+        <span><span class="dot" style="background:var(--green);"></span>已通过 91</span>
+        <span><span class="dot" style="background:var(--red);"></span>未通过 17</span>
+      </div>
+    </div>
+
+    <!-- V3.0.3 -->
+    <div class="ver-card v303">
+      <div class="ver-label">V3.0.3 · 进行中 · 产品评审</div>
+      <div class="ver-title">评审完成率 78.8%</div>
+      <div class="ver-desc">99 条任务 · 39 已评审 · 39 无需评审 · 21 待评审</div>
+      <div class="ver-stats">
+        <div class="ver-stat"><div class="num total">99</div><div class="lbl">总任务</div></div>
+        <div class="ver-stat"><div class="num ok">39</div><div class="lbl">已评审</div></div>
+        <div class="ver-stat"><div class="num" style="color:var(--c-text-3);">39</div><div class="lbl">无需评审</div></div>
+        <div class="ver-stat"><div class="num ko">21</div><div class="lbl">待评审</div></div>
+      </div>
+      <div class="ver-progress">
+        <div class="seg-ok" style="width:39.4%;"></div>
+        <div class="seg-mid" style="width:39.4%;"></div>
+        <div class="seg-ko" style="width:21.2%;"></div>
+      </div>
+      <div class="ver-progress-legend">
+        <span><span class="dot" style="background:var(--c-base);"></span>已评审 39</span>
+        <span><span class="dot" style="background:var(--c-text-3);"></span>无需评审 39</span>
+        <span><span class="dot" style="background:var(--red);"></span>待评审 21</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <b>核心结论:</b>V3.0.2 整体验收通过率 <span class="accent">84.3%</span>(主要堵点在课程建设)· V3.0.3 评审完成率 <span class="accent">78.8%</span>(主要堵点在学习与学业评价)· <b>两个版本共同堵点 PM:杨晓丽 + 邱月</b>,场景上 <b>课程建设与管理 + 学习与学业评价</b> 持续承压。
+  </div>
+</section>
+
+<!-- ========================= 02 按场景维度 ========================= -->
+<section class="section">
+  <h2 class="section-title"><span class="section-num">02</span>按场景维度 · 双版本对照</h2>
+  <p class="section-sub">同一场景在 V3.0.2 已验收 vs V3.0.3 评审进度的对照,看哪个场景是持续堵点</p>
+
+  <div class="tbl-wrap">
+    <table class="t">
+      <thead>
+        <tr>
+          <th style="width:18%;">场景</th>
+          <th style="width:8%;" class="center">V3.0.2 总数</th>
+          <th style="width:22%;">V3.0.2 验收</th>
+          <th style="width:8%;" class="center">V3.0.3 总数</th>
+          <th style="width:22%;">V3.0.3 评审</th>
+          <th>状态</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-best">
+          <td><b>教务管理</b></td>
+          <td class="center">9</td>
+          <td><span class="bar"><span class="b-ok" style="width:100%;"></span></span>9 通过 / 0 未通过</td>
+          <td class="center">6</td>
+          <td><span class="bar"><span class="b-ok" style="width:100%;"></span></span>6 完成 / 0 待评审</td>
+          <td><span class="pill pill-ok">双版本全通过</span></td>
+        </tr>
+        <tr>
+          <td><b>综合业务</b></td>
+          <td class="center">9</td>
+          <td><span class="bar"><span class="b-ok" style="width:100%;"></span></span>9 通过 / 0 未通过</td>
+          <td class="center">15</td>
+          <td><span class="bar"><span class="b-ok" style="width:80%;"></span><span class="b-ko" style="width:20%;"></span></span>12 完成 / 3 待评审</td>
+          <td><span class="pill pill-ok">良好</span></td>
+        </tr>
+        <tr>
+          <td><b>数据洞察</b></td>
+          <td class="center">—</td>
+          <td><span style="color:var(--c-text-3);">V3.0.2 未涉及</span></td>
+          <td class="center">27</td>
+          <td><span class="bar"><span class="b-ok" style="width:89%;"></span><span class="b-ko" style="width:11%;"></span></span>24 完成 / 3 待评审</td>
+          <td><span class="pill pill-ok">V3.0.3 新场景</span></td>
+        </tr>
+        <tr class="row-warn">
+          <td><b>课程建设与管理</b></td>
+          <td class="center">64</td>
+          <td><span class="bar"><span class="b-ok" style="width:81%;"></span><span class="b-ko" style="width:19%;"></span></span>52 通过 / <b style="color:var(--red);">12 未通过</b></td>
+          <td class="center">31</td>
+          <td><span class="bar"><span class="b-ok" style="width:77%;"></span><span class="b-ko" style="width:23%;"></span></span>24 完成 / <b style="color:var(--red);">7 待评审</b></td>
+          <td><span class="pill pill-warn">持续堵点</span></td>
+        </tr>
+        <tr class="row-bad">
+          <td><b>学习与学业评价</b></td>
+          <td class="center">26</td>
+          <td><span class="bar"><span class="b-ok" style="width:81%;"></span><span class="b-ko" style="width:19%;"></span></span>21 通过 / <b style="color:var(--red);">5 未通过</b></td>
+          <td class="center">19</td>
+          <td><span class="bar"><span class="b-ok" style="width:58%;"></span><span class="b-ko" style="width:42%;"></span></span>11 完成 / <b style="color:var(--red);">8 待评审</b></td>
+          <td><span class="pill pill-bad">最大堵点</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight bad">
+    <b>🔴 场景层面最大堵点 — 学习与学业评价</b>:V3.0.2 留下 5 条未上线(知识点讲解智能体 / SPOC 课程目标达成度 / 课程任务支持任务引擎 等),V3.0.3 又新增 8 条待评审(全部"核心逻辑待补充") · <b>SPOC 核心闭环正在持续延期</b>,需要重点拉通。
+  </div>
+</section>
+
+<!-- ========================= 03 按 PM 维度 ========================= -->
+<section class="section">
+  <h2 class="section-title"><span class="section-num">03</span>按产品经理维度 · 双版本对照</h2>
+  <p class="section-sub">每位 PM 在 V3.0.2 验收 vs V3.0.3 评审 的完成率对比,识别个人持续堵点</p>
+
+  <div class="tbl-wrap">
+    <table class="t">
+      <thead>
+        <tr>
+          <th style="width:14%;">PM</th>
+          <th style="width:7%;" class="center">V3.0.2 总数</th>
+          <th style="width:24%;">V3.0.2 验收通过率</th>
+          <th style="width:7%;" class="center">V3.0.3 总数</th>
+          <th style="width:24%;">V3.0.3 评审完成率</th>
+          <th>综合评价</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-best">
+          <td><b>马鸣珂 mkma2</b></td>
+          <td class="center">25</td>
+          <td><span class="bar"><span class="b-ok" style="width:92%;"></span><span class="b-ko" style="width:8%;"></span></span>92% (23 通过)</td>
+          <td class="center">16</td>
+          <td><span class="bar"><span class="b-ok" style="width:100%;"></span></span><b style="color:var(--green);">100%</b> (16 完成)</td>
+          <td><span class="pill pill-ok">优秀 · 全完成</span></td>
+        </tr>
+        <tr class="row-best">
+          <td><b>张能 nengzhang</b></td>
+          <td class="center">46</td>
+          <td><span class="bar"><span class="b-ok" style="width:87%;"></span><span class="b-ko" style="width:13%;"></span></span>87% (40 通过)</td>
+          <td class="center">29</td>
+          <td><span class="bar"><span class="b-ok" style="width:90%;"></span><span class="b-ko" style="width:10%;"></span></span>90% (26 完成)</td>
+          <td><span class="pill pill-ok">稳定良好</span></td>
+        </tr>
+        <tr>
+          <td>程小鸥 xocheng</td>
+          <td class="center">3</td>
+          <td><span class="bar"><span class="b-ok" style="width:33%;"></span><span class="b-ko" style="width:67%;"></span></span>33% (1 通过)</td>
+          <td class="center">2</td>
+          <td><span class="bar"><span class="b-ok" style="width:100%;"></span></span>100% (2 完成)</td>
+          <td><span class="pill pill-warn">样本小</span></td>
+        </tr>
+        <tr>
+          <td>郭瑞亮 rlguo</td>
+          <td class="center">—</td>
+          <td><span style="color:var(--c-text-3);">V3.0.2 未涉及</span></td>
+          <td class="center">3</td>
+          <td><span class="bar"><span class="b-ok" style="width:100%;"></span></span>100% (3 完成)</td>
+          <td><span class="pill pill-ok">新加入</span></td>
+        </tr>
+        <tr class="row-warn">
+          <td><b>杨晓丽 xlyang2</b></td>
+          <td class="center">12</td>
+          <td><span class="bar"><span class="b-ok" style="width:75%;"></span><span class="b-ko" style="width:25%;"></span></span>75% (9 通过)</td>
+          <td class="center">32</td>
+          <td><span class="bar"><span class="b-ok" style="width:69%;"></span><span class="b-ko" style="width:31%;"></span></span>69% (22 完成)</td>
+          <td><span class="pill pill-warn">持续堵点</span></td>
+        </tr>
+        <tr class="row-warn">
+          <td>徐彤彤 ttxu22</td>
+          <td class="center">—</td>
+          <td><span style="color:var(--c-text-3);">V3.0.2 未涉及</span></td>
+          <td class="center">5</td>
+          <td><span class="bar"><span class="b-ok" style="width:60%;"></span><span class="b-ko" style="width:40%;"></span></span>60% (3 完成)</td>
+          <td><span class="pill pill-warn">V3.0.3 新加</span></td>
+        </tr>
+        <tr class="row-bad">
+          <td><b>邱月 yueqiu3</b></td>
+          <td class="center">20</td>
+          <td><span class="bar"><span class="b-ok" style="width:80%;"></span><span class="b-ko" style="width:20%;"></span></span>80% (16 通过)</td>
+          <td class="center">12</td>
+          <td><span class="bar"><span class="b-ok" style="width:50%;"></span><span class="b-ko" style="width:50%;"></span></span><b style="color:var(--red);">50%</b> (6 完成)</td>
+          <td><span class="pill pill-bad">完成率最低</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight bad">
+    <b>🔴 PM 层面最大堵点 — 邱月 yueqiu3</b>:V3.0.2 已遗留 4 条未通过(智能出题 / 课程任务任务引擎 / AI 试卷识题 / 总评成绩 等),V3.0.3 又有 6 条待评审(全部"核心逻辑待补充") · <b>所有待办都集中在 学习与学业评价</b> 场景。
+  </div>
+  <div class="insight warn">
+    <b>🟡 第二堵点 — 杨晓丽 xlyang2</b>:V3.0.2 留下 3 条未上线(课程内容复制 / 智能化构建图谱 / 图谱复制引用),V3.0.3 又有 10 条待评审(占 V3.0.3 未评审 47.6%)· 集中在 <b>课程图谱 / 标签管理 / 数据洞察</b> 三块。
+  </div>
+</section>
+
+<!-- ========================= 04 V3.0.2 未通过明细 ========================= -->
+<section class="section">
+  <h2 class="section-title"><span class="section-num">04</span>V3.0.2 未通过明细 · 17 条</h2>
+  <p class="section-sub">未上线 / 未验收 / 部分上线的任务清单 — 这些是给 V3.0.3 留的"债"</p>
+
+  <div class="detail-grid">
+    <div class="detail-card bad">
+      <div class="dc-head">
+        <div class="dc-title">课程建设与管理 · 12 条</div>
+        <div class="dc-count">未上线为主</div>
+      </div>
+      <ul class="task-list">
+        <li><b>Task203</b> 四层 AI 架构 · 张能 <span class="task-note">部分上线 · 学科大模型未接入 ⚠</span></li>
+        <li><b>Task172</b> 智能体创编平台 ↔ 教学平台集成 · 程小鸥 <span class="task-note">未上线</span></li>
+        <li><b>Task175</b> 接入智能体创编平台 · 程小鸥 <span class="task-note">未上线</span></li>
+        <li><b>Task171</b> 智能化构建图谱 · 杨晓丽 <span class="task-note">未上线</span></li>
+        <li><b>Task097</b> 图谱复制、引用 · 杨晓丽 <span class="task-note">未上线</span></li>
+        <li><b>Task315</b> 复制课程内容(原课程引用) · 杨晓丽 <span class="task-note">仅冒烟,未验收</span></li>
+        <li><b>Task001</b> 文档预览多供应商切换 · 张能 <span class="task-note">未上线 · 暂改配置</span></li>
+        <li><b>Task003</b> 文档类资源在线编辑 · 张能 <span class="task-note">未上线</span></li>
+        <li><b>Task305</b> 在线文档(SPOC 原笔记) · 张能 <span class="task-note">未上线</span></li>
+        <li><b>Task035</b> 课程资源组织和管理 · 张能 <span class="task-note">同 Task307 已知问题</span></li>
+        <li><b>Task139</b> 智能出题 · 邱月 <span class="task-note">之前同步 · 本次未验收</span></li>
+        <li><b>Task276</b> AI 试卷识题 · 邱月 <span class="task-note">未上线</span></li>
+      </ul>
+    </div>
+
+    <div class="detail-card warn">
+      <div class="dc-head">
+        <div class="dc-title">学习与学业评价 · 5 条</div>
+        <div class="dc-count">SPOC 核心闭环延期</div>
+      </div>
+      <ul class="task-list">
+        <li><b>Task111</b> SPOC 课程目标达成度 · 张能 <span class="task-note">测试中 · 未达验收条件</span></li>
+        <li><b>Task157</b> 知识点讲解智能体 · 马鸣珂 <span class="task-note">未上线</span></li>
+        <li><b>Task259</b> 课程任务支持任务引擎 · 邱月 <span class="task-note">未上线</span></li>
+        <li><b>Task374</b> 总评成绩对接卷库 · 邱月 <span class="task-note">研发任务无需验收</span></li>
+        <li><b>Task435</b> 批阅智能体支持 Coze · 马鸣珂 <span class="task-note">未在任务列表</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="insight warn" style="margin-top: 20px;">
+    <b>⚠ 重大功能未上线:</b><br>
+    ① <b>学科大模型未真正接入小雅</b>(Task203 仅部分上线)— 给汪总 V26 评审承诺要做的事还没兑现<br>
+    ② <b>XClaw / 智能体创编平台未接入教学平台</b>(Task172/175)— XClaw 接入小雅的承诺也未兑现
+  </div>
+</section>
+
+<!-- ========================= 05 V3.0.3 待评审明细 ========================= -->
+<section class="section">
+  <h2 class="section-title"><span class="section-num">05</span>V3.0.3 待评审明细 · 21 条</h2>
+  <p class="section-sub">PRD 完成度直接影响评审是否能开始,这 21 条目前进度卡在 PM 侧</p>
+
+  <div class="detail-grid">
+    <div class="detail-card bad">
+      <div class="dc-head">
+        <div class="dc-title">🔴 杨晓丽 · 10 条</div>
+        <div class="dc-count">完成率 69%</div>
+      </div>
+      <ul class="task-list">
+        <li><span class="task-scene">课程</span>自定义图谱 <span class="task-note">细节待完善</span></li>
+        <li><span class="task-scene">课程</span>标签管理和资源打标签 <span class="task-note">细节待完善</span></li>
+        <li><span class="task-scene">课程</span>课程图谱从个人图谱库引用 <span class="task-note">细节待完善</span></li>
+        <li><span class="task-scene">课程</span>公开与发布:课程资源包内容更新 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="task-scene">课程</span>备授课目录 302 版本遗留功能 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="task-scene">课程</span>标签在 SPOC 课程中的应用 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="task-scene">综合</span>个人图谱管理 <span class="task-note">细节待完善</span></li>
+        <li><span class="task-scene">数据</span>AI 问数,对话式数据分析(小雅 2.0) <span class="task-note">PRD 未填</span></li>
+        <li><span class="task-scene">数据</span>教学数据统计(MOOC) <span class="task-note">PRD 未填</span></li>
+        <li><span class="task-scene">数据</span>AI 运行数据(MOOC) <span class="task-note">PRD 未填</span></li>
+      </ul>
+    </div>
+
+    <div class="detail-card bad">
+      <div class="dc-head">
+        <div class="dc-title">🔴 邱月 · 6 条</div>
+        <div class="dc-count">完成率 50% · 全在学习评价</div>
+      </div>
+      <ul class="task-list">
+        <li><span class="task-scene">学习</span>AI 任务团子反复生成 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="task-scene">学习</span>AI 任务团子生成资源 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="task-scene">学习</span>SPOC 课程题库 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="task-scene">学习</span>课程任务下沉和引用 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="task-scene">学习</span>题目/任务标签与课程标签打通 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="task-scene">学习</span>AI 应用的内容举报补全 <span class="task-note">PRD 未填</span></li>
+      </ul>
+    </div>
+
+    <div class="detail-card warn">
+      <div class="dc-head">
+        <div class="dc-title">🟡 张能 · 3 条</div>
+        <div class="dc-count">完成率 90%</div>
+      </div>
+      <ul class="task-list">
+        <li><span class="task-scene">课程</span>SPOC 和 MOOC 复用课程内容资源 <span class="task-note">细节待完善</span></li>
+        <li><span class="task-scene">学习</span>SPOC 和 MOOC 学习逻辑统一(图谱个性化) <span class="task-note">细节待完善</span></li>
+        <li><span class="task-scene">学习</span>总评成绩(MOOC 适配 SPOC) <span class="task-note">PRD 未填</span></li>
+      </ul>
+    </div>
+
+    <div class="detail-card warn">
+      <div class="dc-head">
+        <div class="dc-title">🟡 徐彤彤 · 2 条</div>
+        <div class="dc-count">完成率 60% · 跟 XClaw 强相关</div>
+      </div>
+      <ul class="task-list">
+        <li><span class="task-scene">综合</span>XClaw 学情数据查询 Skill / 已有 Skill 复用 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="task-scene">综合</span>三单客户场景数据集 <span class="task-note">核心逻辑待补充</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="insight">
+    <b>PRD 状态分析:</b>21 条待评审 中 — <b style="color:var(--red);">9 条核心逻辑待补充</b>(高风险)/ <b style="color:var(--orange);">7 条细节待完善</b>(中等)/ <b style="color:var(--c-text-3);">5 条 PRD 未填</b>(高风险) · 主要责任在 PM 侧产出 PRD。
+  </div>
+</section>
+
+<!-- ========================= 06 推进策略 ========================= -->
+<section class="section">
+  <h2 class="section-title"><span class="section-num">06</span>推进策略 · 给婷婷的建议</h2>
+
+  <div class="strategy">
+    <h3>🎯 立即行动(本周内)</h3>
+    <ol>
+      <li><b>邱月专场评审</b> — 把她 6 条全部"核心逻辑待补充"的 PRD 集中 1 次评审(2-3 小时),拉通 SPOC 核心闭环</li>
+      <li><b>催杨晓丽 数据洞察 3 条 PRD</b>(全部未填)— AI 问数 / 教学数据统计 / AI 运行数据,这 3 条阻塞数据洞察场景</li>
+      <li><b>对齐学科大模型 + XClaw 接入小雅 进度</b> — V3.0.2 留下的 Task203 / Task172 / Task175 必须在 V3.0.3 内闭环,否则汪总评审承诺没法兑现</li>
+    </ol>
+  </div>
+
+  <div class="strategy" style="border-color: var(--orange);">
+    <h3 style="color: var(--orange);">⚠ 持续跟催(2 周内)</h3>
+    <ol>
+      <li><b>杨晓丽 课程图谱 / 标签 模块 7 条</b> — 集中 1-2 次评审会议拉通(细节待完善 + 核心逻辑待补充)</li>
+      <li><b>张能 SPOC/MOOC 统一改造 3 条</b> — 跟随 SPOC/MOOC 统一改造主线一起评审</li>
+      <li><b>徐彤彤 XClaw 相关 2 条</b> — 跟 XClaw 评审一起做,确保学情数据 Skill 跑通</li>
+      <li><b>V3.0.2 已知问题 22 条</b>(已通过但有备注)— 排到 V3.0.3 修复列表,避免技术债滚雪球</li>
+    </ol>
+  </div>
+
+  <div class="strategy" style="border-color: var(--c-text-3);">
+    <h3 style="color: var(--c-text-3);">📋 长期管理动作</h3>
+    <ol>
+      <li><b>团队分工调整</b> — 杨晓丽 + 邱月 长期堵点,考虑分担部分模块给其他 PM(如张能在课程模块表现稳定)</li>
+      <li><b>PRD 模板化</b> — "核心逻辑待补充"和"PRD 未填"占未评审 67%,建议出 PRD 标准模板让 PM 不再漏写核心逻辑</li>
+      <li><b>建立场景 OKR</b> — 学习与学业评价场景持续低分,可以单独立 OKR 由邱月 + 张能 双 PM 共担</li>
+    </ol>
+  </div>
+</section>
+
+</div>
+
+<div class="footer">
+  <div class="doc-meta">
+    <span>📅 2026-05-28</span>
+    <span>📋 V1 · V3.0.2 + V3.0.3 综合分析</span>
+    <span>👤 撰稿:段婷婷</span>
+    <span>📊 数据源:V3.0.2 验收报告 + A01 产品任务计划表</span>
+  </div>
+</div>
+
+</body>
+</html>
