@@ -504,11 +504,109 @@ table.t tr.row-bad td { background: #fef2f2; }
   </div>
 </section>
 
-<!-- ========================= 05 V3.0.3 待评审明细 ========================= -->
+<!-- ========================= 05 V3.0.3 评审计划 ========================= -->
 <section class="section">
-  <h2 class="section-title"><span class="section-num">05</span>V3.0.3 待评审明细 · 21 条</h2>
-  <p class="section-sub">PRD 完成度直接影响评审是否能开始,这 21 条目前进度卡在 PM 侧</p>
+  <h2 class="section-title"><span class="section-num">05</span>V3.0.3 评审计划</h2>
+  <p class="section-sub">21 条待评审任务分级处理:9 条 V3.0.3 必须 · 2 条孙校待定 · 10 条 V3.0.4 后置</p>
 
+  <!-- 分级数字卡 -->
+  <div class="ver-grid" style="grid-template-columns: 1fr 1fr 1fr; margin-top: 0;">
+    <div class="ver-card v303">
+      <div class="ver-label" style="color: var(--red);">V3.0.3 必须评审</div>
+      <div class="ver-title" style="color: var(--red);">9 条</div>
+      <div class="ver-desc">本周内完成评审 · 进 V3.0.3 上线</div>
+      <div style="margin-top: 12px; font-size: 12px; color: var(--c-text-3); line-height: 1.75;">
+        <b>邱月</b> 3 条(融合必须)· <b>杨晓丽</b> 5 条 · <b>张能</b> 1 条
+      </div>
+    </div>
+    <div class="ver-card v303">
+      <div class="ver-label" style="color: var(--orange);">孙校待定</div>
+      <div class="ver-title" style="color: var(--orange);">2 条</div>
+      <div class="ver-desc">需孙校 1V1 拍板方向</div>
+      <div style="margin-top: 12px; font-size: 12px; color: var(--c-text-3); line-height: 1.75;">
+        <b>邱月</b> · AI 任务团子反复生成 / 生成资源
+      </div>
+    </div>
+    <div class="ver-card v303">
+      <div class="ver-label" style="color: var(--c-text-3);">V3.0.4 后置</div>
+      <div class="ver-title" style="color: var(--c-text-3);">10 条</div>
+      <div class="ver-desc">本期不评审 · 转 V3.0.4</div>
+      <div style="margin-top: 12px; font-size: 12px; color: var(--c-text-3); line-height: 1.75;">
+        <b>杨晓丽</b> 5 条 · <b>张能</b> 2 条 · <b>徐彤彤</b> 2 条 · <b>邱月</b> 1 条
+      </div>
+    </div>
+  </div>
+
+  <!-- 评审会议安排 -->
+  <h3 style="font-size:16px; font-weight:800; color:var(--c-text-1); margin:28px 0 12px; padding-left:10px; border-left:3px solid var(--c-base);">评审会议安排 · 5/28 — 5/29</h3>
+  <div class="tbl-wrap">
+    <table class="t">
+      <thead>
+        <tr>
+          <th style="width:14%;">时间</th>
+          <th style="width:18%;">会议主题</th>
+          <th style="width:8%;" class="center">任务数</th>
+          <th>评审任务清单</th>
+          <th style="width:18%;">参会人</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="row-bad">
+          <td><b>5/28 晚<br>(今晚)</b></td>
+          <td><b>邱月 · SPOC 题库 + 任务融合 专场(上半场)</b></td>
+          <td class="center">2 条</td>
+          <td>
+            <span class="pill pill-bad" style="margin-right:4px;">Task405</span> SPOC 课程题库<br>
+            <span class="pill pill-bad" style="margin-right:4px;">Task408</span> 课程任务下沉和引用
+          </td>
+          <td>邱月(主) + 张能 + 测试</td>
+        </tr>
+        <tr class="row-bad">
+          <td><b>5/29 上午<br>(明早)</b></td>
+          <td><b>张能 · SPOC ↔ MOOC 资源融合</b></td>
+          <td class="center">1 条</td>
+          <td>
+            <span class="pill pill-bad" style="margin-right:4px;">Task029</span> SPOC 和 MOOC 复用课程内容资源
+          </td>
+          <td>张能(主) + 邱月 + 杨晓丽</td>
+        </tr>
+        <tr class="row-bad">
+          <td><b>5/29 上午<br>(明早)</b></td>
+          <td><b>邱月 · 题目标签融合 专场(下半场)</b></td>
+          <td class="center">1 条</td>
+          <td>
+            <span class="pill pill-bad" style="margin-right:4px;">Task516</span> 题目/任务标签与课程标签打通
+          </td>
+          <td>邱月(主) + 张能 + 杨晓丽</td>
+        </tr>
+        <tr class="row-bad">
+          <td><b>5/29 下午<br>(明天)</b></td>
+          <td><b>杨晓丽 · 课程图谱 + 标签 + 课程发布 专场</b></td>
+          <td class="center">5 条</td>
+          <td>
+            <span class="pill pill-bad" style="margin-right:4px;">Task325</span> 自定义图谱<br>
+            <span class="pill pill-bad" style="margin-right:4px;">Task387</span> 标签管理和资源打标签<br>
+            <span class="pill pill-bad" style="margin-right:4px;">Task420</span> 公开与发布:课程资源包内容更新<br>
+            <span class="pill pill-bad" style="margin-right:4px;">Task518</span> 备授课目录 302 版本遗留功能<br>
+            <span class="pill pill-bad" style="margin-right:4px;">Task519</span> 标签在 SPOC 课程中的应用
+          </td>
+          <td>杨晓丽(主) + 张能 + 测试</td>
+        </tr>
+        <tr class="row-warn">
+          <td><b>独立轨道<br>待孙校档期</b></td>
+          <td><b>孙校 1V1 · AI 任务团子方向 决策</b></td>
+          <td class="center">2 条</td>
+          <td>
+            <span class="pill pill-warn" style="margin-right:4px;">Task389</span> AI 任务团子反复生成<br>
+            <span class="pill pill-warn" style="margin-right:4px;">Task390</span> AI 任务团子生成资源
+          </td>
+          <td>邱月 + 孙校</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="font-size:16px; font-weight:800; color:var(--c-text-1); margin:28px 0 12px; padding-left:10px; border-left:3px solid var(--c-base);">待评审任务明细 · 按 PM 分类</h3>
   <div class="detail-grid">
     <div class="detail-card bad">
       <div class="dc-head">
@@ -516,16 +614,16 @@ table.t tr.row-bad td { background: #fef2f2; }
         <div class="dc-count">完成率 69%</div>
       </div>
       <ul class="task-list">
-        <li><span class="task-scene">课程</span>自定义图谱 <span class="task-note">细节待完善</span></li>
-        <li><span class="task-scene">课程</span>标签管理和资源打标签 <span class="task-note">细节待完善</span></li>
-        <li><span class="task-scene">课程</span>课程图谱从个人图谱库引用 <span class="task-note">细节待完善</span></li>
-        <li><span class="task-scene">课程</span>公开与发布:课程资源包内容更新 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">课程</span>备授课目录 302 版本遗留功能 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">课程</span>标签在 SPOC 课程中的应用 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">综合</span>个人图谱管理 <span class="task-note">细节待完善</span></li>
-        <li><span class="task-scene">数据</span>AI 问数,对话式数据分析(小雅 2.0) <span class="task-note">PRD 未填</span></li>
-        <li><span class="task-scene">数据</span>教学数据统计(MOOC) <span class="task-note">PRD 未填</span></li>
-        <li><span class="task-scene">数据</span>AI 运行数据(MOOC) <span class="task-note">PRD 未填</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">课程</span>Task325 自定义图谱 <span class="task-note">细节待完善</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">课程</span>Task387 标签管理和资源打标签 <span class="task-note">细节待完善</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">课程</span>Task420 公开与发布:课程资源包内容更新 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">课程</span>Task518 备授课目录 302 版本遗留功能 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">课程</span>Task519 标签在 SPOC 课程中的应用 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">课程</span>Task410 课程图谱从个人图谱库引用 <span class="task-note">细节待完善</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">综合</span>Task069 个人图谱管理 <span class="task-note">细节待完善</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">数据</span>Task116 AI 问数,对话式数据分析(小雅 2.0) <span class="task-note">PRD 未填</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">数据</span>Task317 教学数据统计(MOOC) <span class="task-note">PRD 未填</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">数据</span>Task321 AI 运行数据(MOOC) <span class="task-note">PRD 未填</span></li>
       </ul>
     </div>
 
@@ -535,12 +633,12 @@ table.t tr.row-bad td { background: #fef2f2; }
         <div class="dc-count">完成率 50% · 全在学习评价</div>
       </div>
       <ul class="task-list">
-        <li><span class="task-scene">学习</span>AI 任务团子反复生成 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">学习</span>AI 任务团子生成资源 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">学习</span>SPOC 课程题库 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">学习</span>课程任务下沉和引用 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">学习</span>题目/任务标签与课程标签打通 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">学习</span>AI 应用的内容举报补全 <span class="task-note">PRD 未填</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">学习</span>Task405 SPOC 课程题库 <span class="task-note">核心逻辑待补充 · 融合必须</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">学习</span>Task408 课程任务下沉和引用 <span class="task-note">核心逻辑待补充 · 融合必须</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">学习</span>Task516 题目/任务标签与课程标签打通 <span class="task-note">核心逻辑待补充 · 融合必须</span></li>
+        <li><span class="pill pill-warn" style="margin-right:4px;">孙校待定</span><span class="task-scene">学习</span>Task389 AI 任务团子反复生成 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="pill pill-warn" style="margin-right:4px;">孙校待定</span><span class="task-scene">学习</span>Task390 AI 任务团子生成资源 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">学习</span>Task524 AI 应用的内容举报补全 <span class="task-note">PRD 未填</span></li>
       </ul>
     </div>
 
@@ -550,9 +648,9 @@ table.t tr.row-bad td { background: #fef2f2; }
         <div class="dc-count">完成率 90%</div>
       </div>
       <ul class="task-list">
-        <li><span class="task-scene">课程</span>SPOC 和 MOOC 复用课程内容资源 <span class="task-note">细节待完善</span></li>
-        <li><span class="task-scene">学习</span>SPOC 和 MOOC 学习逻辑统一(图谱个性化) <span class="task-note">细节待完善</span></li>
-        <li><span class="task-scene">学习</span>总评成绩(MOOC 适配 SPOC) <span class="task-note">PRD 未填</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">课程</span>Task029 SPOC 和 MOOC 复用课程内容资源 <span class="task-note">细节待完善</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">学习</span>Task291 SPOC 和 MOOC 学习逻辑统一(图谱个性化) <span class="task-note">细节待完善</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">学习</span>Task320 总评成绩(MOOC 适配 SPOC) <span class="task-note">PRD 未填</span></li>
       </ul>
     </div>
 
@@ -562,8 +660,8 @@ table.t tr.row-bad td { background: #fef2f2; }
         <div class="dc-count">完成率 60% · 跟 XClaw 强相关</div>
       </div>
       <ul class="task-list">
-        <li><span class="task-scene">综合</span>XClaw 学情数据查询 Skill / 已有 Skill 复用 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">综合</span>三单客户场景数据集 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">综合</span>Task503 XClaw 学情数据查询 Skill / 已有 Skill 复用 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">综合</span>Task515 三单客户场景数据集 <span class="task-note">核心逻辑待补充</span></li>
       </ul>
     </div>
   </div>
@@ -577,14 +675,14 @@ table.t tr.row-bad td { background: #fef2f2; }
         <div class="dc-count">SPOC 核心闭环</div>
       </div>
       <ul class="task-list">
-        <li><span class="task-scene">邱月</span>AI 任务团子反复生成 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">邱月</span>AI 任务团子生成资源 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">邱月</span>SPOC 课程题库 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">邱月</span>课程任务下沉和引用 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">邱月</span>题目/任务标签与课程标签打通 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">邱月</span>AI 应用的内容举报补全 <span class="task-note">PRD 未填</span></li>
-        <li><span class="task-scene">张能</span>SPOC 和 MOOC 学习逻辑统一(图谱个性化) <span class="task-note">细节待完善</span></li>
-        <li><span class="task-scene">张能</span>总评成绩(MOOC 适配 SPOC) <span class="task-note">PRD 未填</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">邱月</span>Task405 SPOC 课程题库 <span class="task-note">核心逻辑待补充 · 融合必须</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">邱月</span>Task408 课程任务下沉和引用 <span class="task-note">核心逻辑待补充 · 融合必须</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">邱月</span>Task516 题目/任务标签与课程标签打通 <span class="task-note">核心逻辑待补充 · 融合必须</span></li>
+        <li><span class="pill pill-warn" style="margin-right:4px;">孙校待定</span><span class="task-scene">邱月</span>Task389 AI 任务团子反复生成 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="pill pill-warn" style="margin-right:4px;">孙校待定</span><span class="task-scene">邱月</span>Task390 AI 任务团子生成资源 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">邱月</span>Task524 AI 应用的内容举报补全 <span class="task-note">PRD 未填</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">张能</span>Task291 SPOC 和 MOOC 学习逻辑统一(图谱个性化) <span class="task-note">细节待完善</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">张能</span>Task320 总评成绩(MOOC 适配 SPOC) <span class="task-note">PRD 未填</span></li>
       </ul>
     </div>
 
@@ -594,13 +692,13 @@ table.t tr.row-bad td { background: #fef2f2; }
         <div class="dc-count">图谱 + 标签 + 课程资源</div>
       </div>
       <ul class="task-list">
-        <li><span class="task-scene">杨晓丽</span>自定义图谱 <span class="task-note">细节待完善</span></li>
-        <li><span class="task-scene">杨晓丽</span>标签管理和资源打标签 <span class="task-note">细节待完善</span></li>
-        <li><span class="task-scene">杨晓丽</span>课程图谱从个人图谱库引用 <span class="task-note">细节待完善</span></li>
-        <li><span class="task-scene">杨晓丽</span>公开与发布:课程资源包内容更新 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">杨晓丽</span>备授课目录 302 版本遗留功能 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">杨晓丽</span>标签在 SPOC 课程中的应用 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">张能</span>SPOC 和 MOOC 复用课程内容资源 <span class="task-note">细节待完善</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">杨晓丽</span>Task325 自定义图谱 <span class="task-note">细节待完善</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">杨晓丽</span>Task387 标签管理和资源打标签 <span class="task-note">细节待完善</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">杨晓丽</span>Task420 公开与发布:课程资源包内容更新 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">杨晓丽</span>Task518 备授课目录 302 版本遗留功能 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">杨晓丽</span>Task519 标签在 SPOC 课程中的应用 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="pill pill-bad" style="margin-right:4px;">V3.0.3</span><span class="task-scene">张能</span>Task029 SPOC 和 MOOC 复用课程内容资源 <span class="task-note">细节待完善</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">杨晓丽</span>Task410 课程图谱从个人图谱库引用 <span class="task-note">细节待完善</span></li>
       </ul>
     </div>
 
@@ -610,9 +708,9 @@ table.t tr.row-bad td { background: #fef2f2; }
         <div class="dc-count">图谱 + XClaw Skill</div>
       </div>
       <ul class="task-list">
-        <li><span class="task-scene">杨晓丽</span>个人图谱管理 <span class="task-note">细节待完善</span></li>
-        <li><span class="task-scene">徐彤彤</span>XClaw 学情数据查询 Skill / 已有 Skill 复用 <span class="task-note">核心逻辑待补充</span></li>
-        <li><span class="task-scene">徐彤彤</span>三单客户场景数据集 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">杨晓丽</span>Task069 个人图谱管理 <span class="task-note">细节待完善</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">徐彤彤</span>Task503 XClaw 学情数据查询 Skill / 已有 Skill 复用 <span class="task-note">核心逻辑待补充</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">徐彤彤</span>Task515 三单客户场景数据集 <span class="task-note">核心逻辑待补充</span></li>
       </ul>
     </div>
 
@@ -622,9 +720,9 @@ table.t tr.row-bad td { background: #fef2f2; }
         <div class="dc-count">全部 PRD 未填</div>
       </div>
       <ul class="task-list">
-        <li><span class="task-scene">杨晓丽</span>AI 问数,对话式数据分析(小雅 2.0) <span class="task-note">PRD 未填</span></li>
-        <li><span class="task-scene">杨晓丽</span>教学数据统计(MOOC) <span class="task-note">PRD 未填</span></li>
-        <li><span class="task-scene">杨晓丽</span>AI 运行数据(MOOC) <span class="task-note">PRD 未填</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">杨晓丽</span>Task116 AI 问数,对话式数据分析(小雅 2.0) <span class="task-note">PRD 未填</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">杨晓丽</span>Task317 教学数据统计(MOOC) <span class="task-note">PRD 未填</span></li>
+        <li><span class="pill" style="margin-right:4px; background:#f1f5f9; color:var(--c-text-3); border:1px solid var(--c-border);">V3.0.4</span><span class="task-scene">杨晓丽</span>Task321 AI 运行数据(MOOC) <span class="task-note">PRD 未填</span></li>
       </ul>
     </div>
   </div>
