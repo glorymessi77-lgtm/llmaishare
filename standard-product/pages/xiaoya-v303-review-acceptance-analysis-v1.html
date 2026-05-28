@@ -235,7 +235,7 @@ table.t tr.row-bad td { background: #fef2f2; }
 <section class="hero">
   <div class="container">
     <h1>小雅平台 · <span class="accent">V3.0.2 验收 + V3.0.3 评审</span> · 综合分析</h1>
-    <p class="sub">基于 V3.0.2 产品验收报告(108 任务)和 V3.0.3 产品任务计划表(99 任务),按场景 + 产品经理双维度交叉分析完成情况,识别堵点和遗留问题。</p>
+    <p class="sub">基于 V3.0.2 产品验收报告(108 任务)和 V3.0.3 产品任务计划表(99 任务),按场景 + 产品经理双维度交叉分析完成情况,识别共性问题与遗留任务,作为 V3.0.3 团队推进依据。</p>
     <div class="meta">
       <span>📅 2026-05-28</span>
       <span>📊 V3.0.2: 108 验收</span>
@@ -569,39 +569,31 @@ table.t tr.row-bad td { background: #fef2f2; }
   </div>
 
   <div class="insight">
-    <b>PRD 状态分析:</b>21 条待评审 中 — <b style="color:var(--red);">9 条核心逻辑待补充</b>(高风险)/ <b style="color:var(--orange);">7 条细节待完善</b>(中等)/ <b style="color:var(--c-text-3);">5 条 PRD 未填</b>(高风险) · 主要责任在 PM 侧产出 PRD。
+    <b>PRD 状态分析:</b>21 条待评审 中 — <b style="color:var(--red);">9 条核心逻辑待补充</b>(高风险)/ <b style="color:var(--orange);">7 条细节待完善</b>(中等)/ <b style="color:var(--c-text-3);">5 条 PRD 未填</b>(高风险) · 需 PM 侧优先补齐 PRD 才能进入评审。
   </div>
 </section>
 
 <!-- ========================= 06 推进策略 ========================= -->
 <section class="section">
-  <h2 class="section-title"><span class="section-num">06</span>推进策略 · 给婷婷的建议</h2>
+  <h2 class="section-title"><span class="section-num">06</span>V3.0.3 团队待办</h2>
+  <p class="section-sub">基于上述分析,本期评审 → 上线 期间团队需要共同推进的待办清单 · 按优先级分级</p>
 
   <div class="strategy">
-    <h3>🎯 立即行动(本周内)</h3>
+    <h3>🎯 P0 · 本周必做</h3>
     <ol>
-      <li><b>邱月专场评审</b> — 把她 6 条全部"核心逻辑待补充"的 PRD 集中 1 次评审(2-3 小时),拉通 SPOC 核心闭环</li>
-      <li><b>催杨晓丽 数据洞察 3 条 PRD</b>(全部未填)— AI 问数 / 教学数据统计 / AI 运行数据,这 3 条阻塞数据洞察场景</li>
-      <li><b>对齐学科大模型 + XClaw 接入小雅 进度</b> — V3.0.2 留下的 Task203 / Task172 / Task175 必须在 V3.0.3 内闭环,否则汪总评审承诺没法兑现</li>
+      <li><b>学习与学业评价场景 · PRD 集中评审</b> — 6 条"核心逻辑待补充"PRD(AI 任务团子 ×2 / SPOC 课程题库 / 课程任务下沉 / 标签打通 / 内容举报)集中 1 次评审会议拉通,打通 SPOC 核心闭环</li>
+      <li><b>数据洞察场景 · 补齐 3 条 PRD</b> — AI 问数 / 教学数据统计(MOOC) / AI 运行数据(MOOC),目前 PRD 状态均为"未填",阻塞场景启动</li>
+      <li><b>学科大模型 + XClaw 接入小雅 闭环</b> — V3.0.2 遗留的 Task203 学科大模型接入 / Task172 智能体创编平台集成 / Task175 平台接入,V3.0.3 内必须完成,呼应学科大模型评审承诺</li>
     </ol>
   </div>
 
   <div class="strategy" style="border-color: var(--orange);">
-    <h3 style="color: var(--orange);">⚠ 持续跟催(2 周内)</h3>
+    <h3 style="color: var(--orange);">⚠ P1 · 2 周内推进</h3>
     <ol>
-      <li><b>杨晓丽 课程图谱 / 标签 模块 7 条</b> — 集中 1-2 次评审会议拉通(细节待完善 + 核心逻辑待补充)</li>
-      <li><b>张能 SPOC/MOOC 统一改造 3 条</b> — 跟随 SPOC/MOOC 统一改造主线一起评审</li>
-      <li><b>徐彤彤 XClaw 相关 2 条</b> — 跟 XClaw 评审一起做,确保学情数据 Skill 跑通</li>
-      <li><b>V3.0.2 已知问题 22 条</b>(已通过但有备注)— 排到 V3.0.3 修复列表,避免技术债滚雪球</li>
-    </ol>
-  </div>
-
-  <div class="strategy" style="border-color: var(--c-text-3);">
-    <h3 style="color: var(--c-text-3);">📋 长期管理动作</h3>
-    <ol>
-      <li><b>团队分工调整</b> — 杨晓丽 + 邱月 长期堵点,考虑分担部分模块给其他 PM(如张能在课程模块表现稳定)</li>
-      <li><b>PRD 模板化</b> — "核心逻辑待补充"和"PRD 未填"占未评审 67%,建议出 PRD 标准模板让 PM 不再漏写核心逻辑</li>
-      <li><b>建立场景 OKR</b> — 学习与学业评价场景持续低分,可以单独立 OKR 由邱月 + 张能 双 PM 共担</li>
+      <li><b>课程建设与管理 · 图谱与标签 7 条评审</b> — 自定义图谱 / 标签管理 / 课程图谱引用 / 课程资源包更新 / 302 遗留 / 标签 SPOC 应用 等,建议 1-2 次评审会议集中拉通</li>
+      <li><b>SPOC ↔ MOOC 统一改造 3 条</b> — 课程内容资源复用 / 学习逻辑统一(基于图谱个性化) / 总评成绩适配,跟随主线一起评审</li>
+      <li><b>XClaw / Skill 联动 2 条</b> — XClaw 学情数据查询 Skill 复用 / 三单客户场景数据集,与 XClaw 主评审同步进行</li>
+      <li><b>V3.0.2 已知问题 22 条 · 排入 V3.0.3 修复列表</b> — 包括解析速度慢 / UI 问题 / 权限未打通 / 教务管理 Task294 性能问题 等,避免技术债务持续累积</li>
     </ol>
   </div>
 </section>
