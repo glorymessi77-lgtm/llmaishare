@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440,initial-scale=1">
+<title>V3.0.4 用户故事整合方案 · PM 工作分配</title>
+<style>
+:root{
+  --gray-0:#FFFFFF;--gray-1:#F2F5F7;--gray-2:#C2C7CC;--gray-3:#A9B0B8;
+  --gray-5:#7B838C;--gray-6:#626A73;--gray-7:#4B535C;--gray-9:#272C33;--gray-10:#12151A;
+  --blue-1:#E6F6FF;--blue-6:#0077FF;--blue-7:#005ED9;
+  --green-1:#EBF7F1;--green-6:#23B283;--green-7:#158C68;
+  --red-1:#FFF2F0;--red-6:#F53B3B;--red-7:#CF272D;
+  --orange-1:#FFF4E6;--orange-6:#FC7819;--orange-7:#D6590B;
+  --geekblue-1:#F0F5FF;--geekblue-6:#3658FF;
+  --border:rgba(18,21,26,0.08);--border-strong:rgba(18,21,26,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--gray-0);color:var(--gray-10);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.65;font-size:14px}
+body{max-width:1240px;margin:0 auto;padding:0 32px 80px}
+
+.topbar{position:sticky;top:0;z-index:50;background:var(--gray-0);border-bottom:1px solid var(--border);padding:14px 0;margin:0 -32px;padding-left:32px;padding-right:32px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.topbar a{color:var(--gray-7);text-decoration:none;padding:4px 8px;border-radius:4px}
+.topbar a:hover{color:var(--blue-6);background:var(--blue-1)}
+.topbar .nav{display:flex;gap:4px;flex-wrap:wrap}
+.topbar .brand{font-weight:600;color:var(--gray-10)}
+
+.hero{padding:48px 0 32px;border-bottom:1px solid var(--border)}
+.eyebrow{font-size:12px;color:var(--blue-6);margin-bottom:14px;font-weight:500;letter-spacing:.05em}
+.eyebrow .v{display:inline-block;background:var(--blue-6);color:#fff;padding:2px 10px;font-size:11px;border-radius:4px;margin-left:8px;font-weight:600}
+.eyebrow .new{display:inline-block;background:var(--orange-6);color:#fff;padding:2px 10px;font-size:11px;border-radius:4px;margin-left:6px;font-weight:600}
+h1{font-size:30px;line-height:1.3;font-weight:600;color:var(--gray-10);max-width:980px;margin-bottom:14px}
+.lead{font-size:15px;line-height:1.75;color:var(--gray-7);max-width:920px;margin-bottom:20px}
+.lead strong{color:var(--gray-10)}
+.meta{display:flex;gap:32px;font-size:13px;color:var(--gray-6);padding-top:18px;border-top:1px solid var(--border);flex-wrap:wrap}
+.meta dt{color:var(--gray-5);font-size:11px;margin-bottom:3px}
+.meta dd{color:var(--gray-9);font-weight:500}
+
+.stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:22px 0}
+.stat{padding:18px 20px;background:var(--gray-1);border-radius:8px;border-left:3px solid var(--blue-6)}
+.stat.p0{border-left-color:var(--red-6)}
+.stat.p1{border-left-color:var(--orange-6)}
+.stat.story{border-left-color:var(--green-6)}
+.stat.epic{border-left-color:var(--geekblue-6)}
+.stat .num{font-size:28px;font-weight:600;color:var(--blue-6);line-height:1;margin-bottom:6px;font-family:Menlo,monospace}
+.stat.p0 .num{color:var(--red-6)}
+.stat.p1 .num{color:var(--orange-6)}
+.stat.story .num{color:var(--green-6)}
+.stat.epic .num{color:var(--geekblue-6)}
+.stat .lbl{font-size:12px;color:var(--gray-6)}
+
+.toc{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0 0;padding:18px 0;border-top:1px solid var(--border)}
+.toc a{display:flex;gap:10px;text-decoration:none;color:var(--gray-7);padding:6px 0;font-size:13px}
+.toc a:hover{color:var(--blue-6)}
+.toc a span{color:var(--gray-3);font-weight:600;font-size:11px;min-width:24px;font-family:Menlo,monospace}
+
+section{padding:48px 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+h2{font-size:22px;font-weight:600;color:var(--gray-10)}
+.sec-num{font-size:11px;color:var(--gray-5);font-weight:600;letter-spacing:.1em;font-family:Menlo,monospace}
+h3{font-size:16px;font-weight:600;color:var(--gray-10);margin:24px 0 12px}
+p{margin-bottom:10px;color:var(--gray-7);font-size:14px;line-height:1.75}
+strong{color:var(--gray-10);font-weight:600}
+em{font-style:normal;color:var(--blue-7);font-weight:500}
+code{background:var(--gray-1);padding:1px 6px;border-radius:4px;font-family:Menlo,monospace;font-size:12px;color:var(--gray-9)}
+
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+th{background:var(--gray-1);font-weight:600;font-size:12px;color:var(--gray-9);padding:10px 12px;text-align:left;border-bottom:1px solid var(--border-strong)}
+td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--gray-7)}
+tr:last-child td{border-bottom:none}
+td.p0{color:var(--red-6);font-weight:600}
+td.p1{color:var(--orange-6);font-weight:600}
+td.migrate{color:var(--gray-5);font-style:italic;text-decoration:line-through}
+
+.callout{padding:14px 18px;margin:12px 0;background:var(--gray-1);border-radius:8px;border-left:3px solid var(--gray-5);font-size:13.5px;color:var(--gray-7);line-height:1.7}
+.callout .label{font-size:11px;color:var(--gray-6);font-weight:600;margin-bottom:6px}
+.callout.info{background:var(--blue-1);border-left-color:var(--blue-6)}
+.callout.info .label{color:var(--blue-6)}
+.callout.warn{background:var(--orange-1);border-left-color:var(--orange-6)}
+.callout.warn .label{color:var(--orange-7)}
+.callout.danger{background:var(--red-1);border-left-color:var(--red-6)}
+.callout.danger .label{color:var(--red-7)}
+.callout.ok{background:var(--green-1);border-left-color:var(--green-6)}
+.callout.ok .label{color:var(--green-7)}
+
+/* Epic Section */
+.epic-section{margin:20px 0;padding:22px 24px;background:var(--gray-0);border:1px solid var(--border-strong);border-radius:8px}
+.epic-section .epic-tag{display:inline-block;background:var(--blue-6);color:#fff;padding:3px 10px;font-size:11px;font-weight:600;border-radius:4px;margin-right:10px;font-family:Menlo,monospace}
+.epic-section .epic-title{display:inline;font-size:17px;font-weight:600;color:var(--gray-10)}
+.epic-section .epic-stat{display:inline-block;margin-left:12px;font-size:12px;color:var(--gray-6);font-family:Menlo,monospace}
+.epic-section .epic-owner{display:inline-block;margin-left:12px;padding:4px 12px;background:var(--blue-6);color:#fff;font-size:12px;font-weight:600;border-radius:4px;vertical-align:middle}
+.epic-section .epic-owner b{font-weight:400;opacity:0.8;margin-right:4px}
+
+.topic-card{margin:18px 0;padding:20px 24px;background:linear-gradient(135deg,rgba(252,120,25,0.06) 0%,rgba(255,255,255,0) 100%);border:1px solid var(--orange-6);border-radius:8px;border-left:5px solid var(--orange-6)}
+.topic-card .topic-tag{display:inline-block;background:var(--orange-6);color:#fff;padding:3px 10px;font-size:11px;font-weight:600;border-radius:4px;font-family:Menlo,monospace;margin-bottom:10px}
+.topic-card h4{font-size:17px;font-weight:600;color:var(--gray-10);margin:6px 0 10px}
+.topic-card .topic-owner{display:inline-block;margin-right:14px;padding:4px 12px;background:var(--gray-0);color:var(--orange-7);font-size:13px;font-weight:600;border-radius:4px;border:1px solid var(--orange-6)}
+.topic-card .topic-version{display:inline-block;padding:4px 12px;background:var(--gray-1);color:var(--gray-7);font-size:12.5px;border-radius:4px;font-family:Menlo,monospace}
+.topic-card .topic-desc{font-size:13.5px;color:var(--gray-7);line-height:1.75;margin-top:10px}
+.topic-card .topic-desc b{color:var(--gray-10)}
+
+/* Story 卡片 · 增加 P0/P1 拆分 */
+.story{margin:14px 0;padding:16px 20px;background:var(--gray-1);border-radius:8px}
+.story.empty{background:var(--gray-1);opacity:0.6}
+.story-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.story-id{font-family:Menlo,monospace;font-size:11px;font-weight:600;color:var(--blue-6);background:var(--blue-1);padding:3px 9px;border-radius:4px}
+.story-name{font-size:14.5px;font-weight:600;color:var(--gray-10);flex:1;min-width:200px;margin-left:10px}
+.story-pri{display:flex;gap:6px;align-items:center}
+.story-pri .pi{padding:2px 8px;font-size:11px;font-weight:600;border-radius:4px;font-family:Menlo,monospace}
+.story-pri .pi.p0{background:var(--red-1);color:var(--red-7)}
+.story-pri .pi.p1{background:var(--orange-1);color:var(--orange-7)}
+.story-pri .pi.empty{background:var(--gray-1);color:var(--gray-5)}
+
+.story-pm{font-size:11.5px;color:var(--gray-6);background:var(--gray-0);padding:3px 9px;border-radius:4px;border:1px solid var(--border)}
+
+.task-split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.task-block{padding:10px 14px;background:var(--gray-0);border-radius:6px;font-size:12.5px}
+.task-block .tb-label{font-size:10.5px;font-weight:600;margin-bottom:6px;letter-spacing:.05em}
+.task-block.p0 .tb-label{color:var(--red-7)}
+.task-block.p1 .tb-label{color:var(--orange-7)}
+.task-block ul{padding-left:18px;margin:0;color:var(--gray-7)}
+.task-block li{margin:3px 0;line-height:1.55}
+.task-block li code{font-size:11px;background:var(--gray-1);padding:1px 5px;color:var(--blue-7);font-weight:500}
+.task-block.empty{color:var(--gray-5);font-style:italic;padding:14px}
+
+.task-migrate{margin-top:8px;padding:8px 12px;background:var(--orange-1);border-radius:6px;font-size:11.5px;color:var(--orange-7)}
+.task-migrate b{color:var(--orange-7);font-weight:600;margin-right:4px}
+.task-migrate code{background:rgba(252,120,25,0.15);color:var(--orange-7);font-size:10.5px}
+
+.story-empty-note{padding:12px 16px;background:var(--gray-1);border:1px dashed var(--gray-3);border-radius:6px;font-size:13px;color:var(--gray-6);text-align:center}
+
+/* 变更标识 */
+.tag-new{display:inline-block;background:var(--green-6);color:#fff;font-size:10px;padding:1px 7px;border-radius:3px;margin-left:6px;font-weight:600}
+.tag-changed{display:inline-block;background:var(--blue-6);color:#fff;font-size:10px;padding:1px 7px;border-radius:3px;margin-left:6px;font-weight:600}
+.tag-migrate{display:inline-block;background:var(--orange-6);color:#fff;font-size:10px;padding:1px 7px;border-radius:3px;margin-left:6px;font-weight:600}
+
+footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:12px;color:var(--gray-6);flex-wrap:wrap;gap:14px}
+footer .sig{color:var(--gray-9);font-weight:600}
+
+@media (max-width:980px){
+  .stat-grid,.toc{grid-template-columns:repeat(2,1fr)}
+  .task-split{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="./index.html" class="brand">← AI 教学产品分享</a> <span style="margin-left:8px;color:#7B838C;font-weight:normal">· 小雅平台 / V3.0.4 用户故事</span>
+  <div class="nav">
+    <a href="#owner-map">PM 责任总览</a>
+    <a href="#stats">数据总览</a>
+    <a href="#story-principles">用户故事原则</a>
+    <a href="#epics">16 故事分配</a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="eyebrow">V3.0.4 PM 工作分配 · 2026.06.05 <span class="v">发布版</span></div>
+  <h1>V3.0.4 用户故事整合方案 · PM 工作分配</h1>
+  <p class="lead">这份文档是<strong>给 5 位 PM(张能 / 杨晓丽 / 邱月 / 马鸣珂 / 徐彤彤)的工作分配单</strong>。62 个 Task 按"用户故事 + Epic"组织成<strong>16 个活跃故事 + 7 个 Epic</strong>。每个 Epic 定一个<em>总体负责人</em>,负责该 Epic 内多个故事的<strong>统一评审组织</strong>(7 个 Epic = 7 场评审会)。每个故事单独定一个<em>第一责任人</em>,负责该故事的 PRD 主笔 + 验收对接。</p>
+
+  <div class="stat-grid">
+    <div class="stat"><div class="num">62</div><div class="lbl">V3.0.4 任务总数</div></div>
+    <div class="stat p0"><div class="num">27</div><div class="lbl">P0 任务(必上)</div></div>
+    <div class="stat p1"><div class="num">34</div><div class="lbl">P1 任务(可推)</div></div>
+    <div class="stat story"><div class="num">16</div><div class="lbl">活跃故事</div></div>
+    <div class="stat epic"><div class="num">7</div><div class="lbl">Epic 数</div></div>
+  </div>
+
+  <dl class="meta">
+    <div><dt>数据源</dt><dd>3.0 产品任务管理 (4).xlsx · A01 表 · 0605 优先级</dd></div>
+    <div><dt>目标读者</dt><dd>张能 / 杨晓丽 / 邱月 / 马鸣珂 / 徐彤彤</dd></div>
+    <div><dt>使用</dt><dd>各 PM 按自己第一责任人的故事写 PRD</dd></div>
+    <div><dt>作者</dt><dd>婷婷 · 2026-06-05</dd></div>
+  </dl>
+
+  <nav class="toc">
+    <a href="#owner-map"><span>01</span>PM 责任分配总览</a>
+    <a href="#stats"><span>02</span>数据总览</a>
+    <a href="#story-principles"><span>02b</span>用户故事原则(备注)</a>
+    <a href="#epics"><span>03</span>16 故事 × P0/P1 分配</a>
+  </nav>
+</header>
+
+
+<!-- ============ 01 PM 责任分配总览 ============ -->
+<section id="owner-map">
+  <div class="sec-head"><h2>01 · PM 责任分配总览</h2><span class="sec-num">OWNERSHIP</span></div>
+
+  <div class="callout info">
+    <div class="label">两层第一责任人 · 职责定义</div>
+    <p><strong>Epic 总体负责人</strong>(Epic 第一责任人)— 负责该 Epic 内所有用户故事的<strong>统一评审组织</strong>:</p>
+    <ul style="padding-left:20px;margin:8px 0">
+      <li><strong>统一评审组织</strong> — 把 Epic 内多个故事打包成一次或几次评审会,而不是每个故事单独评审</li>
+      <li><strong>Epic 节奏把控</strong> — 协调多个故事的 PRD 写作进度 / 评审排期 / 上线节奏</li>
+      <li><strong>跨故事依赖协调</strong> — 处理 Epic 内多个故事之间的依赖、冲突、资源调度</li>
+      <li><strong>Epic 整体对外汇报</strong> — 老板/客户问该 Epic 进展找他</li>
+    </ul>
+    <p style="margin-top:10px"><strong>故事第一责任人</strong>(Story 第一责任人)— 负责单个用户故事的具体执行:</p>
+    <ul style="padding-left:20px;margin:8px 0">
+      <li><strong>PRD 主笔人</strong> — 负责该故事 6W 完整描述</li>
+      <li><strong>验收对接人</strong> — 测试通过后跟客户/上线对接</li>
+      <li><strong>出问题先找谁</strong> — 团队成员问该故事细节都找他</li>
+    </ul>
+    <p style="margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">协同 PM 不是替代,是<u>"该故事内某些 Task 的执行者"</u>。第一责任人要主动协调他们,但责任不分摊。<br>
+    <strong>Epic 总体负责人和故事第一责任人可以是同一人,也可以是不同人</strong>(如 E5 总体马鸣珂,U11 故事第一责任人是杨晓丽,马鸣珂仍组织 U10+U11 整体评审)。</p>
+  </div>
+
+  <h3>Epic 总体负责人速查(7 个 Epic)</h3>
+  <p style="font-size:13px;color:var(--gray-6);margin:0 0 10px"><strong>每位 Epic 总体负责人负责组织该 Epic 内所有用户故事的统一评审</strong> — 这意味着邱月组织 U04 一次评审 / 杨晓丽组织 U01+U02 一次评审、U06+U07+U08+U09 一次评审 / 张能组织 U03 一次评审、U13+U14+U15+U16 一次评审 / 马鸣珂组织 U10+U11 一次评审 / 徐彤彤组织 U18+U19 一次评审 = 共 <strong>7 场 Epic 级评审会</strong>。</p>
+
+  <table>
+    <thead><tr><th>Epic</th><th>主题</th><th>Epic 第一责任人</th><th>含 Stories</th><th>P0 / P1</th></tr></thead>
+    <tbody>
+      <tr><td><strong>E1</strong></td><td>智慧课程建设(备课)</td><td><strong>杨晓丽</strong></td><td>U01 / U02</td><td class="p0">P0=6 / P1=2</td></tr>
+      <tr><td><strong>E2</strong></td><td>教学活动管理(任务团子)</td><td><strong>邱月</strong></td><td>U04</td><td class="p0">P0=3</td></tr>
+      <tr><td><strong>E3</strong></td><td>智慧课堂运营(课堂现场)</td><td><strong>张能</strong></td><td>U03</td><td class="p1">P1=4</td></tr>
+      <tr><td><strong>E4</strong></td><td>学情数据洞察</td><td><strong>杨晓丽</strong></td><td>U06 / U07 / U08 / U09</td><td class="p0">P0=5 / P1=16</td></tr>
+      <tr><td><strong>E5</strong></td><td>MOOC + SPOC 学习链路</td><td><strong>马鸣珂</strong></td><td>U10 / U11</td><td class="p0">P0=5 / P1=5</td></tr>
+      <tr><td><strong>E6</strong></td><td>平台底座与多端体验</td><td><strong>张能</strong></td><td>U13 / U14 / U15 / U16</td><td class="p0">P0=6 / P1=6</td></tr>
+      <tr><td><strong>E7</strong></td><td>AI 基座能力</td><td><strong>徐彤彤</strong></td><td>U18 / U19(+ U17)</td><td class="p0">P0=2 / P1=1</td></tr>
+    </tbody>
+  </table>
+
+  <h3>每位 PM 的责任清单</h3>
+
+  <table>
+    <thead><tr><th>PM</th><th>Epic 第一责任人</th><th>故事第一责任人</th><th>P0 任务总数</th><th>P1 任务总数</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>张能 nengzhang</strong></td>
+        <td>E3 智慧课堂运营 · E6 平台底座与多端</td>
+        <td><strong>4 故事:</strong>U03 / U13 / U14 / U16</td>
+        <td class="p0">4</td>
+        <td class="p1">10</td>
+      </tr>
+      <tr>
+        <td><strong>杨晓丽 xlyang2</strong></td>
+        <td>E1 智慧课程建设 · E4 学情数据洞察</td>
+        <td><strong>8 故事:</strong>U01 / U02 / U06 / U07 / U08 / U09 / U11 / U15</td>
+        <td class="p0">15</td>
+        <td class="p1">21</td>
+      </tr>
+      <tr>
+        <td><strong>邱月 yueqiu3</strong></td>
+        <td>E2 教学活动管理</td>
+        <td><strong>1 故事:</strong>U04 任务团子智能化</td>
+        <td class="p0">3</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <td><strong>马鸣珂 mkma2</strong></td>
+        <td>E5 MOOC + SPOC 学习链路</td>
+        <td><strong>2 故事:</strong>U10 / U18</td>
+        <td class="p0">4</td>
+        <td class="p1">3</td>
+      </tr>
+      <tr>
+        <td><strong>徐彤彤 ttxu22</strong></td>
+        <td>E7 AI 基座能力</td>
+        <td><strong>1 故事:</strong>U19 能力训练 Skill</td>
+        <td class="p0">1</td>
+        <td>0</td>
+      </tr>
+      
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 备注 · 用户故事的目标和原则 ============ -->
+<section id="story-principles">
+  <div class="sec-head"><h2>备注 · 用户故事的目标和原则</h2><span class="sec-num">PRINCIPLES</span></div>
+
+  <p style="color:var(--gray-6);font-size:13.5px;margin-bottom:14px">这一节是<u>前置方法论备注</u> — PM 在看下面的 16 个故事卡之前,请先用这个标准对照自己负责的故事,自查 6W 是否完整。后续 V3.0.5 / 新故事的整合也沿用这套方法论。</p>
+
+  <h3>用户故事的目标 · 标准格式</h3>
+  <div class="callout info">
+    <div class="label">3 段式标准描述</div>
+    <p style="font-size:15px;line-height:1.9"><strong>作为</strong> <em>[角色]</em>(教师 / 学生 / 管理员 / 教务处 / 第三方督导)<br>
+    <strong>我希望</strong> <em>[可观察的目标]</em>(具体能做什么,不是功能名)<br>
+    <strong>以便</strong> <em>[获得的价值]</em>(为什么对我有用)</p>
+    <p style="margin-top:10px;color:var(--gray-6);font-size:12.5px"><b>反例:</b>"AI 任务团子模块功能升级"(功能视角,不是用户视角)<br>
+    <b>正例:</b>"教师用 AI 组织任务团子,学生通过闯关完成学习,降低教师反复组织作业测练的成本"(用户视角)</p>
+  </div>
+
+  <h3>6 大整合原则(写 PRD 时自查)</h3>
+
+  <table>
+    <thead><tr><th style="width:28%">原则</th><th>核心要求</th><th>判断口诀</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>① 用户场景统一</strong></td>
+        <td>同用户 + 同场景 + 同目标 = 一个故事</td>
+        <td>"4 个 Task 拆 4 个 PRD 还是合 1 个?"</td>
+      </tr>
+      <tr>
+        <td><strong>② 目标驱动</strong></td>
+        <td>故事标题写"用户目标",不是"功能模块名"</td>
+        <td>"模块升级"=错 / "教师做 X 获得 Y"=对</td>
+      </tr>
+      <tr>
+        <td><strong>③ 横切类剥离</strong></td>
+        <td>跨场景的体验/底座/合规独立成横切 Epic</td>
+        <td>"暗色模式 / 登录 / 多语言 / 部署"分出去</td>
+      </tr>
+      <tr>
+        <td><strong>④ 依赖项挂载</strong></td>
+        <td>底座能力作为独立 Epic,业务故事引用不重写</td>
+        <td>PRD 里写"<em>依赖 E7 AI 基座</em>",别重复底座描述</td>
+      </tr>
+      <tr>
+        <td><strong>⑤ Minor fix 合并</strong></td>
+        <td>注 XY2.5-xxxxx 的小调整合并到主故事,不单列</td>
+        <td>"8 个看板 minor fix 全合 U06,不要拆 8 个故事"</td>
+      </tr>
+      <tr>
+        <td><strong>⑥ 6W 完整性自查</strong></td>
+        <td>每个故事必须回答 6 个问题(下面表格)</td>
+        <td>"少一个 W = 故事不完整,要么拆要么合"</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>6W 标准 PRD 自查表</h3>
+
+  <table>
+    <thead><tr><th style="width:14%">维度</th><th>核心问题</th><th style="width:42%">案例 · U04 任务团子智能化</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Who</strong></td><td>谁用?</td><td>教师(主)+ 学生(辅)</td></tr>
+      <tr><td><strong>Why</strong></td><td>为什么?</td><td>用 AI 降低出题/批改成本,游戏化激发学生学习</td></tr>
+      <tr><td><strong>What</strong></td><td>要什么?</td><td>AI 生成任务团子内容、反复迭代、闯关、纳入成绩</td></tr>
+      <tr><td><strong>Where</strong></td><td>在哪?</td><td>课程空间 → 作业任务模块</td></tr>
+      <tr><td><strong>When</strong></td><td>什么时候?</td><td>教师备课时建,学生学习时做,期末考核计分</td></tr>
+      <tr><td><strong>How</strong></td><td>验收标准?</td><td>AI 一次生成 ≥3 类内容、支持微调、闯关条件可配置、成绩可纳入总评</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5 个 PM 常踩的坑(写 PRD 前对照检查)</h3>
+
+  <table>
+    <thead><tr><th style="width:25%">坑</th><th>❌ 错</th><th>✅ 对</th></tr></thead>
+    <tbody>
+      <tr><td><strong>故事拆得过细</strong></td><td>"AI 任务团子生成" + "AI 任务团子微调" = 2 个故事</td><td>合并为"任务团子智能化"(同一目标 = 一个故事)</td></tr>
+      <tr><td><strong>故事合得过粗</strong></td><td>"教师建课" = 一个故事</td><td>拆成 U01 资产引用 + U02 图谱深化(能独立体验闭环 = 一个故事)</td></tr>
+      <tr><td><strong>横切类塞进业务故事</strong></td><td>"MOOC 学习链路 + 暗色模式" 一个故事</td><td>暗色独立成 U13(跨场景体验 ≠ 业务故事)</td></tr>
+      <tr><td><strong>PRD 反复写底座</strong></td><td>每个故事 PRD 里都重复"AI 基座"描述</td><td>用"依赖 E7"引用,正文不重复</td></tr>
+      <tr><td><strong>故事描述用功能名</strong></td><td>"AI 任务团子模块功能升级"</td><td>"教师用 AI 组织任务团子,学生通过闯关完成学习"(目标视角)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 03 16 个活跃故事 ============ -->
+<section id="epics">
+  <div class="sec-head"><h2>03 · 16 个活跃故事(按 Epic 分组)</h2><span class="sec-num">STORIES</span></div>
+
+  <p>每个故事卡片显示:<strong>P0 任务(优先评审)</strong> + <strong>P1 任务(后续)</strong> + <strong>已迁 V3.0.5 任务</strong>(便于 PM 跟进未来版本)。</p>
+
+  <!-- Epic 1 -->
+  <div class="epic-section">
+    <span class="epic-tag">EPIC 1</span><span class="epic-title">智慧课程建设(备课)</span>
+    <span class="epic-stat">2 故事 · P0=6 / P1=2</span>
+    <span class="epic-owner"><b>总体负责人</b>杨晓丽</span>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U01</span>
+        <span class="story-name">跨课程资产引用建课</span>
+        <span class="story-pri"><span class="pi p0">P0 × 4</span><span class="pi p1">P1 × 2</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>杨晓丽<span style="margin:0 4px;color:var(--gray-5)">·</span>协同:张能</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block p0">
+          <div class="tb-label">P0 任务(V3.0.4 必上)</div>
+          <ul>
+            <li><code>Task133</code> 建课时从个人资源库选择</li>
+            <li><code>Task141</code> 数字人互动形象接入(讯飞智作+腾讯)</li>
+            <li><code>Task325</code> 自定义图谱(支撑图谱迁移)</li>
+            <li><code>Task387</code> 标签管理 · 自定义分类</li>
+          </ul>
+        </div>
+        <div class="task-block p1">
+          <div class="tb-label">P1 任务</div>
+          <ul>
+            <li><code>Task410</code> 课程图谱从个人图谱库引用</li>
+            <li><code>Task411</code> 跨课程知识库流转机制</li>
+          </ul>
+        </div>
+      </div>
+      <div class="task-migrate"><b>→ V3.0.5:</b><code>Task413</code> 跨课程 AI 应用流转机制</div>
+    </div>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U02</span>
+        <span class="story-name">课程图谱深化(节点级 AI 讲解 + 掌握度)</span>
+        <span class="story-pri"><span class="pi p0">P0 × 2</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>杨晓丽</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block p0">
+          <div class="tb-label">P0 任务(V3.0.4 必上)</div>
+          <ul>
+            <li><code>Task094</code> 图谱节点掌握度计算</li>
+            <li><code>Task520</code> 图谱节点"为我讲解知识点"</li>
+          </ul>
+        </div>
+        <div class="task-block empty">无 P1 任务</div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="epic-section">
+    <span class="epic-tag">EPIC 2</span><span class="epic-title">教学活动管理(任务团子)</span>
+    <span class="epic-stat">1 故事 · P0=3(全 P0,焦点最清晰)</span>
+    <span class="epic-owner"><b>总体负责人</b>邱月</span>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U04</span>
+        <span class="story-name">任务团子智能化(AI 生成 + 成绩接入)</span>
+        <span class="story-pri"><span class="pi p0">P0 × 3</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>邱月</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block p0">
+          <div class="tb-label">P0 任务(V3.0.4 必上)</div>
+          <ul>
+            <li><code>Task389</code> AI 任务团子反复生成</li>
+            <li><code>Task390</code> AI 任务团子生成资源</li>
+            <li><code>Task391</code> 总评成绩接入任务团子</li>
+          </ul>
+        </div>
+        <div class="task-block empty">无 P1 任务</div>
+      </div>
+      <div class="task-migrate"><b>→ V3.0.5:</b><code>Task399</code> 任务团子达成闯关(原 P0 推迟)</div>
+    </div>
+
+    
+  </div>
+
+  
+  <div class="epic-section">
+    <span class="epic-tag">EPIC 3</span><span class="epic-title">智慧课堂运营(课堂现场)</span>
+    <span class="epic-stat">1 故事 · P0=0 / P1=4(整 Epic 可推 V3.0.5)</span>
+    <span class="epic-owner"><b>总体负责人</b>张能</span>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U03</span>
+        <span class="story-name">课堂活动增强(签到/提问/排行榜/学生助教)</span>
+        <span class="story-pri"><span class="pi p1">P1 × 4</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>张能</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block empty">无 P0 任务</div>
+        <div class="task-block p1">
+          <div class="tb-label">P1 任务(全部)</div>
+          <ul>
+            <li><code>Task449</code> 定位签到</li>
+            <li><code>Task426</code> 课堂提问</li>
+            <li><code>Task427</code> 按班查看排行榜小组</li>
+            <li><code>Task475</code> 课程支持学生做助教</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout warn" style="margin:8px 0 0;padding:8px 12px;font-size:12px">⚠ E3 整 Epic 全 P1 任务,V3.0.4 后期再做;可考虑整体推到 V3.0.5</div>
+    </div>
+  </div>
+
+  
+  <div class="epic-section">
+    <span class="epic-tag">EPIC 4</span><span class="epic-title">学情数据洞察</span>
+    <span class="epic-stat">4 故事 · P0=5 / P1=16</span>
+    <span class="epic-owner"><b>总体负责人</b>杨晓丽</span>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U06</span>
+        <span class="story-name">课程画像 / 看板指标升级</span>
+        <span class="story-pri"><span class="pi p0">P0 × 2</span><span class="pi p1">P1 × 9</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>杨晓丽<span style="margin:0 4px;color:var(--gray-5)">·</span>协同:张能</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block p0">
+          <div class="tb-label">P0 任务(V3.0.4 必上)</div>
+          <ul>
+            <li><code>Task568</code> 课程内看板图谱+任务团子统计</li>
+            <li><code>Task569</code> 管理空间图谱+任务团子统计</li>
+          </ul>
+        </div>
+        <div class="task-block p1">
+          <div class="tb-label">P1 任务(分批做)</div>
+          <ul>
+            <li><code>Task464</code> 数据看板增加 AI 指标</li>
+            <li><code>Task467</code> 管理端图谱统计</li>
+            <li><code>Task470</code> 课程图谱统计</li>
+            <li><code>Task482</code> 看板含义相对值显示</li>
+            <li><code>Task487</code> 排行榜班级名过长</li>
+            <li><code>Task488</code> AI+应用看板含第三方</li>
+            <li><code>Task489</code> 管理端建设应用查询</li>
+            <li><code>Task491</code> 课程画像缺习题数</li>
+            <li><code>Task314</code> 建设进展数据字段</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U07</span>
+        <span class="story-name">AI 问数对话式数据分析</span>
+        <span class="story-pri"><span class="pi p0">P0 × 1</span><span class="pi p1">P1 × 2</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>杨晓丽</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block p0">
+          <div class="tb-label">P0 任务</div>
+          <ul><li><code>Task116</code> AI 问数对话式分析</li></ul>
+        </div>
+        <div class="task-block p1">
+          <div class="tb-label">P1 任务</div>
+          <ul>
+            <li><code>Task465</code> 对话式查询图表切换</li>
+            <li><code>Task466</code> 优化数据评估指标</li>
+          </ul>
+        </div>
+      </div>
+      <div class="task-migrate"><b>→ V3.0.5:</b><code>Task503</code> XClaw 学情数据查询 Skill</div>
+    </div>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U08</span>
+        <span class="story-name">教学预警(教师 + 学习过程)</span>
+        <span class="story-pri"><span class="pi p0">P0 × 2</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>杨晓丽<span style="margin:0 4px;color:var(--gray-5)">·</span>协同:张能</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block p0">
+          <div class="tb-label">P0 任务(V3.0.4 必上)</div>
+          <ul>
+            <li><code>Task123</code> 教师预警</li>
+            <li><code>Task304</code> 总评成绩学习过程预警</li>
+          </ul>
+        </div>
+        <div class="task-block empty">无 P1 任务</div>
+      </div>
+    </div>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U09</span>
+        <span class="story-name">教学数据报告(年报/学期/校内外)</span>
+        <span class="story-pri"><span class="pi p1">P1 × 5</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>杨晓丽<span style="margin:0 4px;color:var(--gray-5)">·</span>协同:张能</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block empty">无 P0 任务</div>
+        <div class="task-block p1">
+          <div class="tb-label">P1 任务(全部)</div>
+          <ul>
+            <li><code>Task424</code> 教师/学生年报学期报告</li>
+            <li><code>Task494</code> 管理端学期报告页</li>
+            <li><code>Task423</code> 新增校外师生统计</li>
+            <li><code>Task469</code> 切换教务/非教务</li>
+            <li><code>Task441</code> 成绩导出模板</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="epic-section">
+    <span class="epic-tag">EPIC 5</span><span class="epic-title">MOOC + SPOC 学习链路</span>
+    <span class="epic-stat">2 故事 · P0=5 / P1=5 / 空=1</span>
+    <span class="epic-owner"><b>总体负责人</b>马鸣珂</span>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U10</span>
+        <span class="story-name">MOOC 学生端全链路(选课/学习/退课/自适应) <span class="tag-new">+ Task577</span></span>
+        <span class="story-pri"><span class="pi p0">P0 × 3</span><span class="pi p1">P1 × 2</span><span class="pi empty">空 × 1</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>马鸣珂</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block p0">
+          <div class="tb-label">P0 任务(V3.0.4 必上)</div>
+          <ul>
+            <li><code>Task522</code> MOOC 接入引导式答题助手(含教师设置)</li>
+            <li><code>Task561</code> MOOC-SPOC 学习中心统一</li>
+            <li><code>Task563</code> MOOC-SPOC 自适应活动统一</li>
+          </ul>
+        </div>
+        <div class="task-block p1">
+          <div class="tb-label">P1 + 待定</div>
+          <ul>
+            <li><code>Task070</code> 个人课程管理(课程报名)<span class="pi p1" style="margin-left:6px;font-size:10px;padding:1px 5px">P1</span></li>
+            <li><code>Task537</code> MOOC 学生退课<span class="pi p1" style="margin-left:6px;font-size:10px;padding:1px 5px">P1</span></li>
+            <li><code>Task577</code> MOOC-SPOC 学生学习体验统一<span class="pi empty" style="margin-left:6px;font-size:10px;padding:1px 5px">空</span> <em style="color:var(--orange-6)">⚠ 优先级未定</em></li>
+          </ul>
+        </div>
+      </div>
+      <div class="task-migrate"><b>→ V3.0.5:</b><code>Task286</code> SPOC 自适应测验 · <code>Task538</code> MOOC 学习空间</div>
+    </div>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U11</span>
+        <span class="story-name">校级 MOOC + 共享课程包运营 </span>
+        <span class="story-pri"><span class="pi p0">P0 × 2</span><span class="pi p1">P1 × 3</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>杨晓丽<span style="margin:0 4px;color:var(--gray-5)">·</span>协同:张能</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block p0">
+          <div class="tb-label">P0 任务</div>
+          <ul>
+            <li><code>Task056</code> 校级 MOOC 真实接口接入 </li>
+            <li><code>Task565</code> SPOC 生成共享课程包资源下沉</li>
+          </ul>
+        </div>
+        <div class="task-block p1">
+          <div class="tb-label">P1 任务</div>
+          <ul>
+            <li><code>Task421</code> MOOC 分学期运行</li>
+            <li><code>Task317</code> MOOC 教学数据统计</li>
+            <li><code>Task321</code> MOOC AI 运行数据</li>
+          </ul>
+        </div>
+      </div>
+      <div class="task-migrate"><b>→ V3.0.5:</b><code>Task324</code> MOOC 课程资源展示更新 · <code>Task542</code> MOOC 作业引导式答题 · <code>Task559</code> 已发布任务功能补全 · <code>Task562</code> UGC 内容审核</div>
+    </div>
+
+    
+  </div>
+
+  
+  <div class="epic-section">
+    <span class="epic-tag">EPIC 6</span><span class="epic-title">平台底座与多端体验</span>
+    <span class="epic-stat">4 故事 · P0=6 / P1=6</span>
+    <span class="epic-owner"><b>总体负责人</b>张能</span>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U13</span>
+        <span class="story-name">多端适配(移动端 + App)</span>
+        <span class="story-pri"><span class="pi p0">P0 × 2</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>张能</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block p0">
+          <div class="tb-label">P0 任务</div>
+          <ul>
+            <li><code>Task371</code> 3.0 移动端上架</li>
+            <li><code>Task560</code> App 下载跳转 + 消息推送</li>
+          </ul>
+        </div>
+        <div class="task-block empty">无 P1 任务</div>
+      </div>
+      <div class="task-migrate"><b>→ V3.0.5:</b><code>Task072</code> 暗色模式 · <code>Task073</code> 多分辨率适配</div>
+    </div>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U14</span>
+        <span class="story-name">用户体系打通 + 个人空间增强</span>
+        <span class="story-pri"><span class="pi p0">P0 × 1</span><span class="pi p1">P1 × 3</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>张能<span style="margin:0 4px;color:var(--gray-5)">·</span>协同:马鸣珂</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block p0">
+          <div class="tb-label">P0 任务</div>
+          <ul><li><code>Task500</code> AI 创新空间用户体系打通</li></ul>
+        </div>
+        <div class="task-block p1">
+          <div class="tb-label">P1 任务</div>
+          <ul>
+            <li><code>Task069</code> 个人图谱管理</li>
+            <li><code>Task328</code> 教师空间增加待办 </li>
+            <li><code>Task401</code> 第三方登录 + 统一认证</li>
+          </ul>
+        </div>
+      </div>
+      <div class="task-migrate"><b>→ V3.0.5:</b><code>Task400</code> 个人数据看板纳入 MOOC</div>
+    </div>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U15</span>
+        <span class="story-name">平台运营配置(内置课程 + 多语言)</span>
+        <span class="story-pri"><span class="pi p0">P0 × 2</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>杨晓丽<span style="margin:0 4px;color:var(--gray-5)">·</span>协同:马鸣珂</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block p0">
+          <div class="tb-label">P0 任务</div>
+          <ul>
+            <li><code>Task189</code> 内置课程资源(含智课+SPOC)<span class="tag-changed">扩描</span></li>
+            <li><code>Task256</code> 多语种切换(扩充范围)<span class="tag-changed">扩描</span></li>
+          </ul>
+        </div>
+        <div class="task-block empty">无 P1 任务</div>
+      </div>
+      <div class="task-migrate"><b>→ V3.0.5:</b><code>Task193</code> 统一门户配置 · <code>Task295</code> 校级门户主色调</div>
+    </div>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U16</span>
+        <span class="story-name">教务管理深化(开课 + 督导 + 跨校审核)</span>
+        <span class="story-pri"><span class="pi p0">P0 × 1</span><span class="pi p1">P1 × 3</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>张能</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block p0">
+          <div class="tb-label">P0 任务</div>
+          <ul>
+            <li><code>Task253</code> SPOC/MOOC 稳定运行+压测 <span class="tag-changed">扩描</span></li>
+          </ul>
+        </div>
+        <div class="task-block p1">
+          <div class="tb-label">P1 任务</div>
+          <ul>
+            <li><code>Task483</code> 第三方督导跳转设置</li>
+            <li><code>Task496</code> 开课变更教务课程</li>
+            <li><code>Task570</code> 跨校课程审核流程</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="epic-section">
+    <span class="epic-tag">EPIC 7</span><span class="epic-title">AI 基座能力</span>
+    <span class="epic-stat">2 故事 · P0=2 · U17 暂无任务</span>
+    <span class="epic-owner"><b>总体负责人</b>徐彤彤</span>
+
+    <div class="story empty">
+      <div class="story-head">
+        <span class="story-id">U17</span>
+        <span class="story-name">AI 基座升级 <span class="pi empty">V3.0.4 占位</span></span>
+        <span class="story-pri"><span class="pi empty">无任务</span></span>
+        <span class="story-pm"><span style="color:var(--gray-5);font-style:italic">V3.0.4 暂未启动 · V3.0.5 再定责任人</span></span>
+      </div>
+      <div class="story-empty-note">
+        ⚠ 该故事原 3 个 Task <strong>全部推迟到 V3.0.5</strong>:<br>
+        <code>Task173</code> 知识库准确度 80%/90% · <code>Task515</code> 三单客户场景数据集 · <code>Task501</code> XClaw 安全合规<br>
+        <em>意味着 V3.0.4 不做基座升级,这会影响依赖它的 U02 / U05 / U07 / U04 的实际效果</em>
+      </div>
+    </div>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U18</span>
+        <span class="story-name">AI 应用层(治理 + UI 优化)</span>
+        <span class="story-pri"><span class="pi p0">P0 × 1</span><span class="pi p1">P1 × 1</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>马鸣珂<span style="margin:0 4px;color:var(--gray-5)">·</span>协同:邱月</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block p0">
+          <div class="tb-label">P0 任务</div>
+          <ul>
+            <li><code>Task521</code> AI 助学/智能体浮窗合并(UI)</li>
+          </ul>
+        </div>
+        <div class="task-block p1">
+          <div class="tb-label">P1 任务</div>
+          <ul>
+            <li><code>Task524</code> AI 应用内容举报(治理)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="task-migrate"><b>→ V3.0.5:</b><code>Task468</code> AI PPT 创作 · <code>Task557</code> FIFAgent 智能体发布 API · <code>Task107</code> AI 批改 Word/图片(将激活 U05)· <code>Task388</code> 课程任务图片文档批改</div>
+    </div>
+
+    <div class="story">
+      <div class="story-head">
+        <span class="story-id">U19</span>
+        <span class="story-name">能力训练 Skill 扩展(批判性 + 创新性)</span>
+        <span class="story-pri"><span class="pi p0">P0 × 1</span></span>
+        <span class="story-pm"><strong style="color:var(--blue-6)">第一责任人:</strong>徐彤彤</span>
+      </div>
+      <div class="task-split">
+        <div class="task-block p0">
+          <div class="tb-label">P0 任务(Task558 合并进来)</div>
+          <ul>
+            <li><code>Task551</code> 批判性思维 + 创新性思维能力训练 Skill <span class="tag-changed">合并 Task558</span></li>
+          </ul>
+        </div>
+        <div class="task-block empty">无 P1 任务</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- ============ 专题待办 ============ -->
+<section id="topic-todo" style="border-top:1px solid var(--border);padding-top:48px">
+  <div class="sec-head"><h2>专题待办</h2><span class="sec-num">TOPIC TODO</span></div>
+
+  <div class="topic-card">
+    <span class="topic-tag">📌 专题待办</span>
+    <h4>智能体可用性底座方案</h4>
+    <div>
+      <span class="topic-owner">负责人 · 段婷婷 / 徐彤彤</span>
+      <span class="topic-version">归属版本:V3.0.4 或 V3.0.5(待定)</span>
+    </div>
+    <p class="topic-desc"><b>方向:</b>XClaw / 智能体平台的可行路径设计。该专题独立于 7 大 Epic 用户故事矩阵,作为<em>产品规划层专项</em>同步推进,定位为<u>智能体可用性的底座方案</u>。</p>
+    <p class="topic-desc" style="margin-top:6px;color:var(--gray-6);font-size:12.5px">说明:此专题暂不在 V3.0.4 的 62 个 Task 内,属于面向中长期的底座设计工作。两位负责人协同输出方案后,根据深度和上线节奏,可能落地到 V3.0.4 后期或 V3.0.5。</p>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="sig">婷婷 · AI 教学产品部 · 2026.06.05</div>
+    <div style="margin-top:4px">V3 · 用户故事整合方案 · P0/P1 拆分版</div>
+  </div>
+  <div style="text-align:right">
+    <div>数据源:3.0 产品任务管理 (4).xlsx · 0605 优先级</div>
+    <div style="margin-top:4px">V2 已归档:_过程稿/V2_20260605.html</div>
+  </div>
+</footer>
+
+</body>
+</html>
