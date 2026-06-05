@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>学科大模型 · 营收结构分析 V3</title>
+<style>
+:root{--gray-0:#FFFFFF;--gray-1:#F2F5F7;--gray-3:#A9B0B8;--gray-5:#7B838C;--gray-6:#626A73;--gray-7:#4B535C;--gray-9:#272C33;--gray-10:#12151A;--blue-1:#E6F6FF;--blue-6:#0077FF;--blue-7:#005ED9;--green-1:#EBF7F1;--green-6:#23B283;--green-7:#158C68;--orange-1:#FFF4E6;--orange-6:#FC7819;--brand:#1f4378;--border:rgba(18,21,26,0.08);--border-strong:rgba(18,21,26,0.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--gray-0);color:var(--gray-10);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.65;font-size:14px}
+body{max-width:1280px;margin:0 auto;padding:0 32px 80px}
+.topbar{position:sticky;top:0;z-index:50;background:var(--gray-0);border-bottom:1px solid var(--border);padding:14px 0;margin:0 -32px;padding-left:32px;padding-right:32px;display:flex;justify-content:space-between;font-size:13px}
+.hero{padding:36px 0 26px;border-bottom:1px solid var(--border)}
+.eyebrow{font-size:12px;color:var(--blue-6);margin-bottom:12px;font-weight:500;letter-spacing:.05em}
+.eyebrow .v{display:inline-block;background:var(--blue-6);color:#fff;padding:2px 10px;font-size:11px;border-radius:4px;margin-left:8px;font-weight:600}
+h1{font-size:28px;line-height:1.3;font-weight:600;color:var(--gray-10);max-width:980px;margin-bottom:12px}
+.lead{font-size:15px;line-height:1.75;color:var(--gray-7);max-width:920px;margin-bottom:18px}
+.lead strong{color:var(--gray-10);font-weight:600}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0 0}
+.stat{padding:16px 18px;background:var(--gray-1);border-radius:8px;border-left:3px solid var(--blue-6)}
+.stat .num{font-size:28px;font-weight:600;color:var(--blue-6);line-height:1;margin-bottom:4px;font-family:Menlo,monospace}
+.stat .lbl{font-size:11.5px;color:var(--gray-6)}
+section{padding:42px 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+h2{font-size:22px;font-weight:600;color:var(--gray-10)}
+.sec-num{font-size:11px;color:var(--gray-5);font-weight:600;letter-spacing:.1em;font-family:Menlo,monospace}
+h3{font-size:16px;font-weight:600;color:var(--gray-10);margin:20px 0 12px}
+p{margin-bottom:10px;color:var(--gray-7);font-size:14px;line-height:1.75}
+strong{color:var(--gray-10);font-weight:600}
+.callout{padding:14px 18px;margin:12px 0;background:var(--gray-1);border-radius:8px;border-left:3px solid var(--gray-5);font-size:13.5px;color:var(--gray-7);line-height:1.7}
+.callout .label{font-size:11px;color:var(--gray-6);font-weight:600;margin-bottom:6px}
+.callout.info{background:var(--blue-1);border-left-color:var(--blue-6)}
+.callout.info .label{color:var(--blue-6)}
+.callout.ok{background:var(--green-1);border-left-color:var(--green-6)}
+.callout.ok .label{color:var(--green-7)}
+.callout.warn{background:var(--orange-1);border-left-color:var(--orange-6)}
+.callout.warn .label{color:var(--orange-6)}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px}
+th{background:var(--gray-1);font-weight:600;font-size:12px;color:var(--gray-9);padding:9px 11px;text-align:left;border-bottom:1px solid var(--border-strong)}
+td{padding:8px 11px;border-bottom:1px solid var(--border);color:var(--gray-7);vertical-align:top}
+td.money{text-align:right;font-weight:600;color:var(--blue-7);font-family:Menlo,monospace}
+.bar-row{margin:8px 0}
+.bar-label{font-size:13px;color:var(--gray-9);font-weight:500;margin-bottom:4px}
+.bar-bg{background:var(--gray-1);height:28px;position:relative;border-radius:4px;overflow:hidden}
+.bar-fill{height:100%}
+.bar-num{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--gray-9);font-weight:600;font-family:Menlo,monospace}
+.bar-sub{font-size:11.5px;color:var(--gray-5);margin-top:4px;padding-left:8px}
+.proj-row{margin:12px 0;display:flex;align-items:center;gap:14px}
+.proj-info{width:220px;flex-shrink:0;text-align:right}
+.proj-name{font-size:13px;font-weight:600;color:var(--gray-10);line-height:1.3}
+.proj-total{font-size:12px;color:var(--gray-6);margin-top:2px;font-family:Menlo,monospace}
+.proj-stack{flex:1;height:34px;display:flex;border-radius:4px;overflow:hidden;background:var(--gray-1)}
+.seg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:600;font-family:Menlo,monospace;line-height:1;white-space:nowrap;overflow:hidden}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0;padding:10px 14px;background:var(--gray-1);border-radius:6px;font-size:12px}
+.legend-item{display:flex;align-items:center;gap:5px;color:var(--gray-7)}
+.legend-color{width:14px;height:12px;border-radius:2px}
+.cat-tag{display:inline-block;padding:1px 7px;color:#fff;font-size:11px;border-radius:3px;font-weight:500}
+.proj-detail{margin:10px 0;background:var(--gray-1);border-radius:6px;padding:0}
+.proj-detail summary{padding:10px 14px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--gray-9)}
+.proj-detail summary::-webkit-details-marker{display:none}
+.proj-detail summary::before{content:"▸";margin-right:8px;color:var(--gray-5)}
+.proj-detail[open] summary::before{transform:rotate(90deg);display:inline-block}
+.proj-detail .proj-total-inline{font-size:12px;color:var(--gray-6);font-family:Menlo,monospace}
+.proj-detail table{margin:0;background:var(--gray-0);border-radius:0 0 6px 6px;font-size:12.5px}
+.highlight-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:16px 0}
+.hl-card{padding:18px 22px;background:var(--gray-0);border:1px solid var(--border-strong);border-radius:8px}
+.hl-card .hl-title{font-size:13px;color:var(--gray-6);margin-bottom:8px;font-weight:500}
+.hl-card .hl-num{font-size:32px;font-weight:600;color:var(--blue-6);line-height:1;font-family:Menlo,monospace;margin-bottom:6px}
+.hl-card .hl-split{display:flex;gap:14px;margin-top:10px;font-size:12.5px;color:var(--gray-7);flex-wrap:wrap}
+.hl-card .hl-split b{color:var(--gray-10);font-weight:600}
+.hl-card .ratio-bar{height:24px;background:var(--gray-1);border-radius:4px;overflow:hidden;display:flex;margin-top:8px}
+.hl-card .ratio-seg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:11.5px;font-weight:600;font-family:Menlo,monospace}
+footer{margin-top:48px;padding-top:22px;border-top:1px solid var(--border);font-size:12px;color:var(--gray-6);text-align:center}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="./index.html" style="text-decoration:none;color:#0077FF;font-weight:600">← AI 教学产品分享</a> <span style="margin-left:8px;color:#7B838C;font-weight:normal">· 学科大模型 / 营收结构分析</span>
+  <span>V3 · 婷婷 · 2026-06-05</span>
+</div>
+
+<header class="hero">
+  <div class="eyebrow">REVENUE ANALYSIS · 2026-06-05 <span class="v">V3</span></div>
+  <h1>学科大模型 · 营收结构分析 V3(8 类细分)</h1>
+  <p class="lead">基于 <strong>13 份报价单</strong>逐行精读 + 项目 PM 手工标注的"报价单(营收分类)" sheet 重新分析。8 大营收分类按战略意图排列。重点回答:<strong>"学科大模型靠什么赚钱"</strong>。</p>
+
+  <div class="stat-grid">
+    <div class="stat"><div class="num">4226</div><div class="lbl">总金额(万)</div></div>
+    <div class="stat"><div class="num">13</div><div class="lbl">项目数</div></div>
+    <div class="stat"><div class="num">325</div><div class="lbl">单项均值(万)</div></div>
+    <div class="stat"><div class="num">8</div><div class="lbl">营收类别</div></div>
+  </div>
+</header>
+
+<section>
+<h2>1 · 8 大营收分类全口径(总 4225.65 万)</h2>
+<div class="bar-row"><div class="bar-label">模型训练</div><div class="bar-bg"><div class="bar-fill" style="width:33.722622555109865%;background:#0077FF"></div><span class="bar-num">1425 万 · 33.7%</span></div></div>
+<div class="bar-row"><div class="bar-label">标品智能体</div><div class="bar-bg"><div class="bar-fill" style="width:12.731769076946742%;background:#23B283"></div><span class="bar-num">538 万 · 12.7%</span></div></div>
+<div class="bar-row"><div class="bar-label">定制智能体</div><div class="bar-bg"><div class="bar-fill" style="width:9.667151799131496%;background:#FC7819"></div><span class="bar-num">408 万 · 9.7%</span></div></div>
+<div class="bar-row"><div class="bar-label">平台/系统开发</div><div class="bar-bg"><div class="bar-fill" style="width:11.737839149006662%;background:#3658FF"></div><span class="bar-num">496 万 · 11.7%</span></div></div>
+<div class="bar-row"><div class="bar-label">数据清洗/标注</div><div class="bar-bg"><div class="bar-fill" style="width:10.826736715061589%;background:#7B838C"></div><span class="bar-num">458 万 · 10.8%</span></div></div>
+<div class="bar-row"><div class="bar-label">服务</div><div class="bar-bg"><div class="bar-fill" style="width:9.264846828298607%;background:#A9B0B8"></div><span class="bar-num">392 万 · 9.3%</span></div><div class="bar-sub">└ 部署服务 182.0 万 · 课程建设服务 98.0 万 · 对接服务 70.5 万 · 服务 40.0 万 · 培训服务 1.0 万</div></div>
+<div class="bar-row"><div class="bar-label">知识库建设服务</div><div class="bar-bg"><div class="bar-fill" style="width:8.4992841338019%;background:#1f4378"></div><span class="bar-num">359 万 · 8.5%</span></div></div>
+<div class="bar-row"><div class="bar-label">知识库工具链</div><div class="bar-bg"><div class="bar-fill" style="width:3.549749742643144%;background:#005ED9"></div><span class="bar-num">150 万 · 3.5%</span></div></div>
+
+<div class="callout info">
+<div class="label">关键发现</div>
+<p><strong>1. 模型训练独大(33.7%, 1425 万)</strong> — 真正的核心业务,头部大单都靠它。</p>
+<p><strong>2. 智能体业务标品 vs 定制 = 538 : 408 万</strong>(合计 946 万 / 22.4%)— 标品智能体占主导,定制为辅。</p>
+<p><strong>3. 知识库业务以"建设服务"为主(359 万 / 8.5%)</strong>,工具链为辅(150 万 / 3.5%)— <u>这是<strong>战略选择</strong></u>:现阶段聚焦"高质量学科知识库建设"的人工服务能力,工具链作为支撑(不主推)。</p>
+<p><strong>4. 服务大类 9.3%</strong>,内部以"部署服务 + 课程建设服务"为主(占服务大类 71%)。</p>
+<p style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)"><strong>5. 真正"卖产品"营收 = 28.0%(1184 万)</strong> — 包含<u>标品智能体(538) + 平台/系统开发(496) + 知识库工具链(150)</u>。其余 72.0% 是项目化交付。</p>
+</div>
+</section>
+
+<section>
+<h2>2 · 重点拆解 · 卖产品 vs 项目化(双轨)</h2>
+
+<div class="highlight-cards" style="margin-bottom:14px">
+  <div class="hl-card" style="border-left:4px solid #23B283">
+    <div class="hl-title">🛍️ 卖产品营收(标品矩阵)</div>
+    <div class="hl-num" style="color:#23B283">1184 万</div>
+    <div style="font-size:12px;color:var(--gray-5)">28.0% 占总营收</div>
+    <div class="hl-split">
+      <div>● <b>标品智能体 538</b></div>
+      <div>● <b>平台/系统 496</b></div>
+      <div>● <b>知识库工具链 150</b></div>
+    </div>
+    <p style="font-size:12px;color:var(--gray-6);margin-top:10px"><strong>真正可复用的产品组合</strong> — 讯飞已有的学科大模型门户/管理后台/标品智能体/知识库工具,边际成本低,毛利高。</p>
+  </div>
+
+  <div class="hl-card" style="border-left:4px solid #FC7819">
+    <div class="hl-title">🔨 项目化营收(人力定制)</div>
+    <div class="hl-num" style="color:#FC7819">3042 万</div>
+    <div style="font-size:12px;color:var(--gray-5)">72.0% 占总营收</div>
+    <div class="hl-split" style="font-size:11.5px">
+      <div>● 模型训练 1425</div>
+      <div>● 定制智能体 408</div>
+      <div>● 数据清洗 458</div>
+      <div>● 服务 392</div>
+      <div>● 知识库建设服务 359</div>
+    </div>
+    <p style="font-size:12px;color:var(--gray-6);margin-top:10px"><strong>项目级深度交付</strong> — 模型预训练/微调、学科定制智能体、数据语料清洗标注、知识库人工调优、部署/培训/集成服务等,人力堆叠出来的营收。</p>
+  </div>
+</div>
+
+<h3>智能体业务 vs 知识库业务(双轮战略)</h3>
+
+<div class="highlight-cards">
+  <div class="hl-card">
+    <div class="hl-title">🤖 智能体业务(总 946.5 万)</div>
+    <div class="hl-num">22.4%</div>
+    <div style="font-size:12px;color:var(--gray-5)">占总营收</div>
+    <div class="ratio-bar">
+      <div class="ratio-seg" style="width:56.840993132593766%;background:#23B283">538</div>
+      <div class="ratio-seg" style="width:43.159006867406234%;background:#FC7819">408</div>
+    </div>
+    <div class="hl-split">
+      <div>● <b>标品 538 万</b>(57%)</div>
+      <div>● <b>定制 408 万</b>(43%)</div>
+    </div>
+    <p style="font-size:12px;color:var(--gray-6);margin-top:10px"><strong>标品为主、定制为辅:</strong>讯飞标品智能体(教案/试题/课件/评语等通用 5 助类)占 57%,学科定制(中医药/酱酒/马列等)占 43% — <u>标品锚定教学场景,定制建立学科粘性</u>。</p>
+  </div>
+
+  <div class="hl-card">
+    <div class="hl-title">📚 知识库业务(总 509.1 万)</div>
+    <div class="hl-num">12.0%</div>
+    <div style="font-size:12px;color:var(--gray-5)">占总营收</div>
+    <div class="ratio-bar">
+      <div class="ratio-seg" style="width:70.53913385053521%;background:#1f4378">359</div>
+      <div class="ratio-seg" style="width:29.4608661494648%;background:#005ED9">150</div>
+    </div>
+    <div class="hl-split">
+      <div>● <b>建设服务 359 万</b>(71%)</div>
+      <div>● <b>工具链 150 万</b>(29%)</div>
+    </div>
+    <p style="font-size:12px;color:var(--gray-6);margin-top:10px"><strong>战略定位:</strong>现阶段以<u>知识库建设服务为主(71%)</u> — 客户最重的是"高质量学科知识库建设"的人力调优能力;工具链(29%)作为底座支撑,不主推销售。<strong>定位清晰,不是失误</strong>。</p>
+  </div>
+</div>
+
+<h3>"服务"大类的二级拆分</h3>
+<table>
+<thead><tr><th>二级服务</th><th>金额</th><th>占比(服务大类)</th><th>占比(总营收)</th></tr></thead>
+<tbody><tr><td><b>部署服务</b></td><td class="money">182.00</td><td>46.5%</td><td>4.31%</td></tr><tr><td><b>课程建设服务</b></td><td class="money">98.00</td><td>25.0%</td><td>2.32%</td></tr><tr><td><b>对接服务</b></td><td class="money">70.50</td><td>18.0%</td><td>1.67%</td></tr><tr><td><b>服务</b></td><td class="money">40.00</td><td>10.2%</td><td>0.95%</td></tr><tr><td><b>培训服务</b></td><td class="money">1.00</td><td>0.3%</td><td>0.02%</td></tr></tbody>
+</table>
+</section>
+
+<section>
+<h2>3 · 13 项目 · 营收结构堆叠对比</h2>
+<div class="legend">
+<div class="legend-item"><div class="legend-color" style="background:#0077FF"></div>模型训练</div><div class="legend-item"><div class="legend-color" style="background:#23B283"></div>标品智能体</div><div class="legend-item"><div class="legend-color" style="background:#FC7819"></div>定制智能体</div><div class="legend-item"><div class="legend-color" style="background:#3658FF"></div>平台/系统开发</div><div class="legend-item"><div class="legend-color" style="background:#7B838C"></div>数据清洗/标注</div><div class="legend-item"><div class="legend-color" style="background:#A9B0B8"></div>服务</div><div class="legend-item"><div class="legend-color" style="background:#1f4378"></div>知识库建设服务</div><div class="legend-item"><div class="legend-color" style="background:#005ED9"></div>知识库工具链</div>
+</div>
+<div class="proj-row"><div class="proj-info"><div class="proj-name">北中医报价单</div><div class="proj-total">1342.00 万</div></div><div class="proj-stack"><div class="seg" style="width:42.62295081967213%;background:#0077FF" title="模型训练 572.0万 42.6%">572</div><div class="seg" style="width:19.746646795827125%;background:#23B283" title="标品智能体 265.0万 19.7%">265</div><div class="seg" style="width:8.19672131147541%;background:#FC7819" title="定制智能体 110.0万 8.2%"></div><div class="seg" style="width:8.569299552906111%;background:#3658FF" title="平台/系统开发 115.0万 8.6%"></div><div class="seg" style="width:16.39344262295082%;background:#7B838C" title="数据清洗/标注 220.0万 16.4%">220</div><div class="seg" style="width:1.4903129657228018%;background:#A9B0B8" title="服务 20.0万 1.5%"></div><div class="seg" style="width:2.9806259314456036%;background:#1f4378" title="知识库建设服务 40.0万 3.0%"></div></div></div>
+<div class="proj-row"><div class="proj-info"><div class="proj-name">内师大报价单（模拟）</div><div class="proj-total">670.00 万</div></div><div class="proj-stack"><div class="seg" style="width:32.83582089552239%;background:#0077FF" title="模型训练 220.0万 32.8%">220</div><div class="seg" style="width:7.462686567164178%;background:#23B283" title="标品智能体 50.0万 7.5%"></div><div class="seg" style="width:7.462686567164178%;background:#FC7819" title="定制智能体 50.0万 7.5%"></div><div class="seg" style="width:14.925373134328357%;background:#3658FF" title="平台/系统开发 100.0万 14.9%">100</div><div class="seg" style="width:7.462686567164178%;background:#A9B0B8" title="服务 50.0万 7.5%"></div><div class="seg" style="width:22.388059701492537%;background:#1f4378" title="知识库建设服务 150.0万 22.4%">150</div><div class="seg" style="width:7.462686567164178%;background:#005ED9" title="知识库工具链 50.0万 7.5%"></div></div></div>
+<div class="proj-row"><div class="proj-info"><div class="proj-name">西南财经-报价单1114(最新)</div><div class="proj-total">469.00 万</div></div><div class="proj-stack"><div class="seg" style="width:54.37100213219617%;background:#0077FF" title="模型训练 255.0万 54.4%">255</div><div class="seg" style="width:6.396588486140725%;background:#23B283" title="标品智能体 30.0万 6.4%"></div><div class="seg" style="width:8.528784648187633%;background:#FC7819" title="定制智能体 40.0万 8.5%"></div><div class="seg" style="width:4.690831556503198%;background:#3658FF" title="平台/系统开发 22.0万 4.7%"></div><div class="seg" style="width:5.756929637526652%;background:#7B838C" title="数据清洗/标注 27.0万 5.8%"></div><div class="seg" style="width:14.925373134328357%;background:#A9B0B8" title="服务 70.0万 14.9%">70</div><div class="seg" style="width:5.330490405117271%;background:#1f4378" title="知识库建设服务 25.0万 5.3%"></div></div></div>
+<div class="proj-row"><div class="proj-info"><div class="proj-name">中国人民大学-一期报价单V8</div><div class="proj-total">349.50 万</div></div><div class="proj-stack"><div class="seg" style="width:14.306151645207441%;background:#0077FF" title="模型训练 50.0万 14.3%">50</div><div class="seg" style="width:10.014306151645208%;background:#23B283" title="标品智能体 35.0万 10.0%"></div><div class="seg" style="width:33.61945636623748%;background:#FC7819" title="定制智能体 117.5万 33.6%">118</div><div class="seg" style="width:36.33762517882689%;background:#7B838C" title="数据清洗/标注 127.0万 36.3%">127</div><div class="seg" style="width:5.7224606580829755%;background:#A9B0B8" title="服务 20.0万 5.7%"></div></div></div>
+<div class="proj-row"><div class="proj-info"><div class="proj-name">江南大学-食问大模型报价单V2</div><div class="proj-total">310.00 万</div></div><div class="proj-stack"><div class="seg" style="width:56.451612903225815%;background:#0077FF" title="模型训练 175.0万 56.5%">175</div><div class="seg" style="width:4.838709677419355%;background:#FC7819" title="定制智能体 15.0万 4.8%"></div><div class="seg" style="width:4.838709677419355%;background:#3658FF" title="平台/系统开发 15.0万 4.8%"></div><div class="seg" style="width:12.580645161290322%;background:#7B838C" title="数据清洗/标注 39.0万 12.6%">39</div><div class="seg" style="width:10.0%;background:#A9B0B8" title="服务 31.0万 10.0%"></div><div class="seg" style="width:11.29032258064516%;background:#1f4378" title="知识库建设服务 35.0万 11.3%"></div></div></div>
+<div class="proj-row"><div class="proj-info"><div class="proj-name">遵义师范报价单</div><div class="proj-total">260.00 万</div></div><div class="proj-stack"><div class="seg" style="width:16.153846153846153%;background:#23B283" title="标品智能体 42.0万 16.2%">42</div><div class="seg" style="width:26.923076923076923%;background:#FC7819" title="定制智能体 70.0万 26.9%">70</div><div class="seg" style="width:4.615384615384616%;background:#3658FF" title="平台/系统开发 12.0万 4.6%"></div><div class="seg" style="width:25.384615384615383%;background:#A9B0B8" title="服务 66.0万 25.4%">66</div><div class="seg" style="width:19.230769230769234%;background:#1f4378" title="知识库建设服务 50.0万 19.2%">50</div><div class="seg" style="width:7.6923076923076925%;background:#005ED9" title="知识库工具链 20.0万 7.7%"></div></div></div>
+<div class="proj-row"><div class="proj-info"><div class="proj-name">北航学科大模型项目报价单</div><div class="proj-total">178.00 万</div></div><div class="proj-stack"><div class="seg" style="width:25.280898876404496%;background:#23B283" title="标品智能体 45.0万 25.3%">45</div><div class="seg" style="width:28.08988764044944%;background:#3658FF" title="平台/系统开发 50.0万 28.1%">50</div><div class="seg" style="width:12.921348314606742%;background:#A9B0B8" title="服务 23.0万 12.9%">23</div><div class="seg" style="width:33.70786516853933%;background:#005ED9" title="知识库工具链 60.0万 33.7%">60</div></div></div>
+<div class="proj-row"><div class="proj-info"><div class="proj-name">黑龙江建筑报价单</div><div class="proj-total">148.00 万</div></div><div class="proj-stack"><div class="seg" style="width:13.513513513513514%;background:#23B283" title="标品智能体 20.0万 13.5%">20</div><div class="seg" style="width:45.94594594594595%;background:#3658FF" title="平台/系统开发 68.0万 45.9%">68</div><div class="seg" style="width:23.64864864864865%;background:#A9B0B8" title="服务 35.0万 23.6%">35</div><div class="seg" style="width:3.3783783783783785%;background:#1f4378" title="知识库建设服务 5.0万 3.4%"></div><div class="seg" style="width:13.513513513513514%;background:#005ED9" title="知识库工具链 20.0万 13.5%">20</div></div></div>
+<div class="proj-row"><div class="proj-info"><div class="proj-name">武汉大学报价单</div><div class="proj-total">118.90 万</div></div><div class="proj-stack"><div class="seg" style="width:37.84693019343987%;background:#0077FF" title="模型训练 45.0万 37.8%">45</div><div class="seg" style="width:16.82085786375105%;background:#23B283" title="标品智能体 20.0万 16.8%">20</div><div class="seg" style="width:21.026072329688812%;background:#7B838C" title="数据清洗/标注 25.0万 21.0%">25</div><div class="seg" style="width:24.306139613120266%;background:#1f4378" title="知识库建设服务 28.9万 24.3%">29</div></div></div>
+<div class="proj-row"><div class="proj-info"><div class="proj-name">武汉理工报价单</div><div class="proj-total">100.00 万</div></div><div class="proj-stack"><div class="seg" style="width:57.99999999999999%;background:#0077FF" title="模型训练 58.0万 58.0%">58</div><div class="seg" style="width:6.0%;background:#23B283" title="标品智能体 6.0万 6.0%"></div><div class="seg" style="width:6.0%;background:#FC7819" title="定制智能体 6.0万 6.0%"></div><div class="seg" style="width:19.5%;background:#7B838C" title="数据清洗/标注 19.5万 19.5%">20</div><div class="seg" style="width:5.5%;background:#A9B0B8" title="服务 5.5万 5.5%"></div><div class="seg" style="width:5.0%;background:#1f4378" title="知识库建设服务 5.0万 5.0%"></div></div></div>
+<div class="proj-row"><div class="proj-info"><div class="proj-name">地质大学一期报价单</div><div class="proj-total">99.00 万</div></div><div class="proj-stack"><div class="seg" style="width:50.505050505050505%;background:#0077FF" title="模型训练 50.0万 50.5%">50</div><div class="seg" style="width:25.252525252525253%;background:#23B283" title="标品智能体 25.0万 25.3%">25</div><div class="seg" style="width:15.151515151515152%;background:#3658FF" title="平台/系统开发 15.0万 15.2%">15</div><div class="seg" style="width:9.090909090909092%;background:#A9B0B8" title="服务 9.0万 9.1%"></div></div></div>
+<div class="proj-row"><div class="proj-info"><div class="proj-name">云南机电</div><div class="proj-total">91.00 万</div></div><div class="proj-stack"><div class="seg" style="width:92.3076923076923%;background:#3658FF" title="平台/系统开发 84.0万 92.3%">84</div><div class="seg" style="width:7.6923076923076925%;background:#A9B0B8" title="服务 7.0万 7.7%"></div></div></div>
+<div class="proj-row"><div class="proj-info"><div class="proj-name">湖北城建报价单</div><div class="proj-total">90.25 万</div></div><div class="proj-stack"><div class="seg" style="width:16.62049861495845%;background:#3658FF" title="平台/系统开发 15.0万 16.6%">15</div><div class="seg" style="width:60.94182825484764%;background:#A9B0B8" title="服务 55.0万 60.9%">55</div><div class="seg" style="width:22.437673130193904%;background:#1f4378" title="知识库建设服务 20.2万 22.4%">20</div></div></div>
+</section>
+
+<section>
+<h2>4 · 13 项目 · 营收类别明细(可展开)</h2>
+<details class="proj-detail"><summary><b>北中医报价单</b> <span class="proj-total-inline">1342.00 万 · 38 项</span></summary><table><thead><tr><th style="width:180px">类别</th><th>明细</th><th style="width:80px;text-align:right">金额(万)</th></tr></thead><tbody><tr><td><span class="cat-tag" style="background:#0077FF">模型训练</span></td><td>大模型训练 / 基于星火大模型70B进行3次预训练</td><td class="money">150.00</td></tr><tr><td></td><td>微调训练</td><td class="money">70.00</td></tr><tr><td></td><td>中药学的文献检索</td><td class="money">70.00</td></tr><tr><td></td><td>面向中药复方的大模型训练与微调 / 算力支撑，人员支撑</td><td class="money">60.00</td></tr><tr><td></td><td>科研文献研究服务以及应用开发 / 中药学的文献综述生成</td><td class="money">55.00</td></tr><tr><td></td><td>中药饮片与药材微调训练 / 保持算力，训练数量减少到400种以内，校企共同参与。</td><td class="money">50.00</td></tr><tr><td></td><td>化学分子式的识别微调训练 / 校企共同研究、科研攻关</td><td class="money">50.00</td></tr><tr><td></td><td>专业能力图谱与知识点自动挂载技术</td><td class="money">24.00</td></tr><tr><td></td><td>中药学课程知识图谱系统 / 自动图谱生成与构建</td><td class="money">23.00</td></tr><tr><td></td><td>智能体应用开发</td><td class="money">10.00</td></tr><tr><td></td><td>智能体应用开发</td><td class="money">10.00</td></tr><tr><td><span class="cat-tag" style="background:#23B283">标品智能体</span></td><td>科研文献平台开发</td><td class="money">55.00</td></tr><tr><td></td><td>应用平台 / 教学设计系统，含有中药学教学大纲生成、中药学PPT生成、中药</td><td class="money">45.00</td></tr><tr><td></td><td>知识图谱系统应用</td><td class="money">35.00</td></tr><tr><td></td><td>中药学能力图谱构建系统</td><td class="money">35.00</td></tr><tr><td></td><td>中药学知识问答智能体</td><td class="money">15.00</td></tr><tr><td></td><td>中药学知识问答 / 大语言模型微调训练：中药学知识问答任务：针对于中药学相关知识 / 保持算力，人力投入减少。</td><td class="money">10.00</td></tr><tr><td></td><td>自动出题</td><td class="money">10.00</td></tr><tr><td></td><td>AI阅读</td><td class="money">10.00</td></tr><tr><td></td><td>教案写作</td><td class="money">10.00</td></tr><tr><td></td><td>备课资源推荐</td><td class="money">10.00</td></tr><tr><td></td><td>论文思路助手</td><td class="money">10.00</td></tr><tr><td></td><td>论文推荐</td><td class="money">10.00</td></tr><tr><td></td><td>论文研读</td><td class="money">10.00</td></tr><tr><td><span class="cat-tag" style="background:#FC7819">定制智能体</span></td><td>智能体应用开发</td><td class="money">35.00</td></tr><tr><td></td><td>中药学专业术语翻译智能体</td><td class="money">30.00</td></tr><tr><td></td><td>中药学中英多语言科普智能体</td><td class="money">30.00</td></tr><tr><td></td><td>中药学大模型数据问答智能体</td><td class="money">15.00</td></tr><tr><td><span class="cat-tag" style="background:#3658FF">平台/系统开发</span></td><td>大模型门户</td><td class="money">30.00</td></tr><tr><td></td><td>就业实践系统</td><td class="money">30.00</td></tr><tr><td></td><td>心理健康系统</td><td class="money">30.00</td></tr><tr><td></td><td>“薪火中国药”运行管理后端以及系统设计</td><td class="money">25.00</td></tr><tr><td><span class="cat-tag" style="background:#7B838C">数据清洗/标注</span></td><td>数据处理服务 / 数据资源清洗、数据资源质检、数据增强扩增、语料知识抽取、模型</td><td class="money">170.00</td></tr><tr><td></td><td>中药学化学结构式图片识别及应用开发 / 化学分子式数据处理服务与数据集建设</td><td class="money">30.00</td></tr><tr><td></td><td>中药饮片与药材智能识别与应用开发 / 中药饮片与药材数据处理服务与数据集建设 / 数据集减少到400种以内</td><td class="money">20.00</td></tr><tr><td><span class="cat-tag" style="background:#A9B0B8">服务 · 服务</span></td><td>对接服务 / 统一认证集成服务</td><td class="money">10.00</td></tr><tr><td></td><td>基础数据对接</td><td class="money">10.00</td></tr><tr><td><span class="cat-tag" style="background:#1f4378">知识库建设服务</span></td><td>中药学能力图谱构建系统 / 中药学专业能力图谱构建服务</td><td class="money">40.00</td></tr></tbody></table></details>
+<details class="proj-detail"><summary><b>内师大报价单（模拟）</b> <span class="proj-total-inline">670.00 万 · 7 项</span></summary><table><thead><tr><th style="width:180px">类别</th><th>明细</th><th style="width:80px;text-align:right">金额(万)</th></tr></thead><tbody><tr><td><span class="cat-tag" style="background:#0077FF">模型训练</span></td><td></td><td class="money">220.00</td></tr><tr><td><span class="cat-tag" style="background:#23B283">标品智能体</span></td><td></td><td class="money">50.00</td></tr><tr><td><span class="cat-tag" style="background:#FC7819">定制智能体</span></td><td></td><td class="money">50.00</td></tr><tr><td><span class="cat-tag" style="background:#3658FF">平台/系统开发</span></td><td></td><td class="money">100.00</td></tr><tr><td><span class="cat-tag" style="background:#A9B0B8">服务 · 部署服务</span></td><td></td><td class="money">50.00</td></tr><tr><td><span class="cat-tag" style="background:#1f4378">知识库建设服务</span></td><td></td><td class="money">150.00</td></tr><tr><td><span class="cat-tag" style="background:#005ED9">知识库工具链</span></td><td></td><td class="money">50.00</td></tr></tbody></table></details>
+<details class="proj-detail"><summary><b>西南财经-报价单1114(最新)</b> <span class="proj-total-inline">469.00 万 · 21 项</span></summary><table><thead><tr><th style="width:180px">类别</th><th>明细</th><th style="width:80px;text-align:right">金额(万)</th></tr></thead><tbody><tr><td><span class="cat-tag" style="background:#0077FF">模型训练</span></td><td>定制训练大模型（基于星火X1 70B） / 模型继续预训练服务 / 预训练是大模型的基础构建环节，目标是让模型从海量无标注文本中</td><td class="money">150.00</td></tr><tr><td></td><td>模型微调训练服务 / 1）基于特色任务的模型训练机制：基于基座大模型，对学科相关任 / 服务</td><td class="money">105.00</td></tr><tr><td><span class="cat-tag" style="background:#23B283">标品智能体</span></td><td>核心智能体 / 助教 / AI微课生成系统</td><td class="money">15.00</td></tr><tr><td></td><td>经济学课程思政案例库 / 快速生成高质量的思政教学案例，根据教育主题自动产出富有启发性 / 软件</td><td class="money">10.00</td></tr><tr><td></td><td>助学 / 学科问答助手 / 面向高校师生提供精准的学科知识问答和多模态学习资源推荐服务，</td><td class="money">5.00</td></tr><tr><td><span class="cat-tag" style="background:#FC7819">定制智能体</span></td><td>特色智能体 / 特色智能体开发 / 金融安全稳定监管助手</td><td class="money">20.00</td></tr><tr><td></td><td>CFA考证助手 / 专为应用经济学学生及社会考证人群打造的助学工具，提供考证课程 / 软件</td><td class="money">10.00</td></tr><tr><td></td><td>考研辅导助手 / 专为考研学生打造的选校选专业工具，提供院校与专业的多维精准分 / 软件</td><td class="money">10.00</td></tr><tr><td><span class="cat-tag" style="background:#3658FF">平台/系统开发</span></td><td>学科大模型运行管理后台 / 运行数据看板 / 提供运行数据管理及数据统计看板功能，包含建设成果数据、模型用</td><td class="money">10.00</td></tr><tr><td></td><td>智能体融合打通服务 / 外部智能体平台打通服务 / 支持采用API形式调取外部智能体服务，在智能体广场上进行显示</td><td class="money">10.00</td></tr><tr><td></td><td>业务系统 / 学科大模型门户 / 门户首页定制</td><td class="money">2.00</td></tr><tr><td><span class="cat-tag" style="background:#7B838C">数据清洗/标注</span></td><td>数据资源标注 / 邀请相关学科专家进行SFT数据标注，拆分为训练集和测试集，每 / 服务</td><td class="money">10.00</td></tr><tr><td></td><td>数据资源质检 / 针对已标注的SFT数据进行人工抽检，抽检比例为20% / 服务</td><td class="money">7.00</td></tr><tr><td></td><td>模型训练 / 语料库建设服务 / 模型效果评测</td><td class="money">5.00</td></tr><tr><td></td><td>数据资源清洗 / 针对提供的SFT数据进行去重、脱敏、纠错等清洗处理，确保达到 / 服务</td><td class="money">3.00</td></tr><tr><td></td><td>数据增强扩增 / 基于已标注数据采用数据扩增技术扩增数据，同步对数据进行配比， / 服务</td><td class="money">2.00</td></tr><tr><td><span class="cat-tag" style="background:#A9B0B8">服务 · 课程建设服务</span></td><td>金课建设 / 定制金课建设 / 基于智慧课程平台，打造10门特色金课</td><td class="money">50.00</td></tr><tr><td></td><td>增值服务 / 统一认证集成服务 / 统一认证集成服务</td><td class="money">10.00</td></tr><tr><td></td><td>部署运维服务 / 混合部署 / 混合部署运维服务</td><td class="money">5.00</td></tr><tr><td></td><td>基础数据同步服务 / 基础数据同步服务 / 支持从学校统一认证系统同步组织架构、角色等账户基础数据</td><td class="money">5.00</td></tr><tr><td><span class="cat-tag" style="background:#1f4378">知识库建设服务</span></td><td>RAG服务 / RAG知识问答 / RAG知识问答</td><td class="money">25.00</td></tr></tbody></table></details>
+<details class="proj-detail"><summary><b>中国人民大学-一期报价单V8</b> <span class="proj-total-inline">349.50 万 · 10 项</span></summary><table><thead><tr><th style="width:180px">类别</th><th>明细</th><th style="width:80px;text-align:right">金额(万)</th></tr></thead><tbody><tr><td><span class="cat-tag" style="background:#0077FF">模型训练</span></td><td>模型训练服务 / 70B / 服务</td><td class="money">50.00</td></tr><tr><td><span class="cat-tag" style="background:#23B283">标品智能体</span></td><td>学科科研助手 / 学科科研助手 / 软件</td><td class="money">35.00</td></tr><tr><td><span class="cat-tag" style="background:#FC7819">定制智能体</span></td><td>学科助手定制服务 / 服务 / 根据客户需求针对性设计、开发、测试和部署具有交互界面的学科助</td><td class="money">117.50</td></tr><tr><td><span class="cat-tag" style="background:#7B838C">数据清洗/标注</span></td><td>模型接口定制服务 / 服务 / 处理70万篇文献入库，开发和封装模型接口、数据集构造</td><td class="money">105.00</td></tr><tr><td></td><td>数据处理服务 / 模型效果评测 / 服务</td><td class="money">15.00</td></tr><tr><td></td><td>数据资源质检 / 服务 / 针对已标注的SFT数据进行人工抽检，抽检比例5%</td><td class="money">7.00</td></tr><tr><td><span class="cat-tag" style="background:#A9B0B8">服务 · 部署服务</span></td><td>模型部署服务 / DS-R1-70B / 软件</td><td class="money">5.00</td></tr><tr><td></td><td>Qwen2.5-VL-7B / 软件 / 千问视觉语言模型，用于PDF格式文献信息抽取</td><td class="money">5.00</td></tr><tr><td></td><td>增值付费服务 / 统一认证集成服务 / 服务</td><td class="money">5.00</td></tr><tr><td></td><td>基础数据同步服务 / 服务 / 支持从学校统一认证系统同步组织架构、角色等账户基础数据</td><td class="money">5.00</td></tr></tbody></table></details>
+<details class="proj-detail"><summary><b>江南大学-食问大模型报价单V2</b> <span class="proj-total-inline">310.00 万 · 18 项</span></summary><table><thead><tr><th style="width:180px">类别</th><th>明细</th><th style="width:80px;text-align:right">金额(万)</th></tr></thead><tbody><tr><td><span class="cat-tag" style="background:#0077FF">模型训练</span></td><td>模型训练与评测 / 模型微调与效果测评 / 1）基于特色任务的模型训练机制：基于基座大模型，对文献分析与</td><td class="money">100.00</td></tr><tr><td></td><td>食物营养成分识别 / 支持用户输入食材，输出所包含的食材内容，并计算食物的宏量和微 / 25</td><td class="money">25.00</td></tr><tr><td></td><td>食品安全国家标准问答 / 支持用户输入国家安全标准相关的问题，大模型根据国家标准准确回 / 25</td><td class="money">25.00</td></tr><tr><td></td><td>论文关键信息抽取 / 上传论文文献，支持用户提问关键问题，大模型帮助用户从论文信息 / 25</td><td class="money">25.00</td></tr><tr><td><span class="cat-tag" style="background:#FC7819">定制智能体</span></td><td>特色应用智能体 / 特色智能体 / 食物营养成分识别</td><td class="money">5.00</td></tr><tr><td></td><td>食品安全国家标准问答 / 支持用户输入国家安全标准相关的问题，大模型根据国家标准准确回</td><td class="money">5.00</td></tr><tr><td></td><td>论文关键信息抽取 / 上传论文文献，支持用户提问关键问题，大模型帮助用户从论文信息</td><td class="money">5.00</td></tr><tr><td><span class="cat-tag" style="background:#3658FF">平台/系统开发</span></td><td>管理后台 / 智能体管理 / 提供智能体管理管理，包含智能体搜索、编辑智能体、发布智能体以</td><td class="money">13.00</td></tr><tr><td></td><td>学科大模型平台 / 学科大模型门户定制 / 学科大模型门户定制</td><td class="money">2.00</td></tr><tr><td><span class="cat-tag" style="background:#7B838C">数据清洗/标注</span></td><td>数据资源清洗 / 针对提供的预训练和SFT数据进行格式化的清洗处理，确保达到训</td><td class="money">15.00</td></tr><tr><td></td><td>语料知识抽取 / 针对DOC/DOCX/PDF等格式的教材/论文/书籍等文本资 / 15</td><td class="money">15.00</td></tr><tr><td></td><td>数据资源质检 / 针对预训练、已标注的SFT数据进行人工抽检，抽检比例15%</td><td class="money">7.00</td></tr><tr><td></td><td>数据增强扩增 / 基于已标注数据采用模型蒸馏技术扩增到20万条数据，同步对数据</td><td class="money">2.00</td></tr><tr><td><span class="cat-tag" style="background:#A9B0B8">服务 · 部署服务</span></td><td>学科大模型部署费用 / 大模型本地部署服务 / 食问大模型70B本地部署服务</td><td class="money">15.00</td></tr><tr><td></td><td>统一认证集成服务 / 支持与高校统一认证系统集成，实现用户账号单点登录，不含给予第 / 10</td><td class="money">10.00</td></tr><tr><td></td><td>基础数据同步服务 / 支持从学校统一认证系统同步组织架构、角色等账户基础数据</td><td class="money">5.00</td></tr><tr><td></td><td>产品使用培训服务 / 为保证用户能够有效地操作使用产品，面向相关部门或师生开展数据</td><td class="money">1.00</td></tr><tr><td><span class="cat-tag" style="background:#1f4378">知识库建设服务</span></td><td>RAG服务 / RAG服务 / RAG知识问答</td><td class="money">35.00</td></tr></tbody></table></details>
+<details class="proj-detail"><summary><b>遵义师范报价单</b> <span class="proj-total-inline">260.00 万 · 13 项</span></summary><table><thead><tr><th style="width:180px">类别</th><th>明细</th><th style="width:80px;text-align:right">金额(万)</th></tr></thead><tbody><tr><td><span class="cat-tag" style="background:#23B283">标品智能体</span></td><td>智慧教学智能体 / 助教 / 42</td><td class="money">42.00</td></tr><tr><td><span class="cat-tag" style="background:#FC7819">定制智能体</span></td><td>酱酒工艺视觉认知系统 / 能力训练工作台 / 45</td><td class="money">45.00</td></tr><tr><td></td><td>酱酒工艺视觉认知训练智能体 / 酱酒工艺视觉认知训练智能体 / 25</td><td class="money">25.00</td></tr><tr><td><span class="cat-tag" style="background:#3658FF">平台/系统开发</span></td><td>管理后台 / 智能体管理 / 10</td><td class="money">10.00</td></tr><tr><td></td><td>学科大模型门户定制 / 学科大模型门户定制</td><td class="money">2.00</td></tr><tr><td><span class="cat-tag" style="background:#A9B0B8">服务 · 课程建设服务</span></td><td>智慧课程建设服务 / 基础课程建设服务 / 4.8</td><td class="money">48.00</td></tr><tr><td></td><td>云端部署 / 云端部署运维服务</td><td class="money">9.00</td></tr><tr><td></td><td>安全可信体系建设 / 安全可信体系建设</td><td class="money">4.00</td></tr><tr><td></td><td>增值服务 / 统一认证集成服务</td><td class="money">3.00</td></tr><tr><td></td><td>基础数据同步服务</td><td class="money">2.00</td></tr><tr><td><span class="cat-tag" style="background:#1f4378">知识库建设服务</span></td><td>酱酒微生物数据库 / 酱酒微生物数据库对接服务 / 30</td><td class="money">30.00</td></tr><tr><td></td><td>生物学语料库建设 / 生物学语料库建设 / 20</td><td class="money">20.00</td></tr><tr><td><span class="cat-tag" style="background:#005ED9">知识库工具链</span></td><td>学科知识库平台 / 验证测试集构建 / 20</td><td class="money">20.00</td></tr></tbody></table></details>
+<details class="proj-detail"><summary><b>北航学科大模型项目报价单</b> <span class="proj-total-inline">178.00 万 · 5 项</span></summary><table><thead><tr><th style="width:180px">类别</th><th>明细</th><th style="width:80px;text-align:right">金额(万)</th></tr></thead><tbody><tr><td><span class="cat-tag" style="background:#23B283">标品智能体</span></td><td>教案生成助手 / 内容创作与编辑 / 支持自然语言或预设模板生成内容；支持附件参考或联网搜索二选一</td><td class="money">45.00</td></tr><tr><td><span class="cat-tag" style="background:#3658FF">平台/系统开发</span></td><td>学科大模型管理后台 / 智能体管理 / 支持智能体创建、编辑、发布/下架、删除及精选配置；支持超管/</td><td class="money">35.00</td></tr><tr><td></td><td>学科大模型门户 / 门户展示与入口 / 展示Logo、学科大模型名称、形象IP、招呼语、对话输入框、</td><td class="money">15.00</td></tr><tr><td><span class="cat-tag" style="background:#A9B0B8">服务 · 部署服务</span></td><td>部署方案 / 混合部署 / 大模型采用云端调用；知识库以及相关运行组件部署到本地。</td><td class="money">23.00</td></tr><tr><td><span class="cat-tag" style="background:#005ED9">知识库工具链</span></td><td>知识问答服务 / 知识库问答与可视化组件 / 支持知识库文档资源检索、排序、知识增强生成，多模态资源检索/</td><td class="money">60.00</td></tr></tbody></table></details>
+<details class="proj-detail"><summary><b>黑龙江建筑报价单</b> <span class="proj-total-inline">148.00 万 · 10 项</span></summary><table><thead><tr><th style="width:180px">类别</th><th>明细</th><th style="width:80px;text-align:right">金额(万)</th></tr></thead><tbody><tr><td><span class="cat-tag" style="background:#23B283">标品智能体</span></td><td>五助智能体 / 助教智能体 / 课件PPT生成、AI微课生成、AI写作（教案/课题报告/教学</td><td class="money">20.00</td></tr><tr><td><span class="cat-tag" style="background:#3658FF">平台/系统开发</span></td><td>智能体开发 / 智能体编排开发 / 满足高校基于个性化场景需求，零代码、低代码开发完成高校五助场</td><td class="money">30.00</td></tr><tr><td></td><td>运行管理分析平台 / 运行数据分析 / 提供运行数据管理及数据统计看板功能，包含模型用量统计、智能体</td><td class="money">20.00</td></tr><tr><td></td><td>学科问答 / 提供专业的学科知识问答服务，提供学科大模型及知识库问答。 / 软件</td><td class="money">13.00</td></tr><tr><td></td><td>学科大模型门户 / 门户首页定制 / 提供学科大模型专有门户定制，包括定制门户UI风格、背景元素、</td><td class="money">5.00</td></tr><tr><td><span class="cat-tag" style="background:#A9B0B8">服务 · 部署服务</span></td><td>云端部署 / 云端部署运维服务 / 包含业务系统、智能体应用、AI能力、模型全量云端部署及运维机</td><td class="money">20.00</td></tr><tr><td></td><td>统一认证集成服务 / 统一认证集成服务 / 支持与高校统一认证系统集成，实现用户账号单点登录，不含给予第</td><td class="money">10.00</td></tr><tr><td></td><td>基础数据同步服务 / 基础数据同步服务 / 支持从学校统一认证系统同步组织架构、角色等账户基础数据</td><td class="money">5.00</td></tr><tr><td><span class="cat-tag" style="background:#1f4378">知识库建设服务</span></td><td>验证测试集构建 / 测试集构建 / 1、需基于知识库文档内容，覆盖通用维度&amp;学科维度进行测试集构</td><td class="money">5.00</td></tr><tr><td><span class="cat-tag" style="background:#005ED9">知识库工具链</span></td><td>知识库管理 / 知识库管理 / 1.支持浏览知识库列表，支持根据知识库状态、分类进行筛选，支</td><td class="money">20.00</td></tr></tbody></table></details>
+<details class="proj-detail"><summary><b>武汉大学报价单</b> <span class="proj-total-inline">118.90 万 · 5 项</span></summary><table><thead><tr><th style="width:180px">类别</th><th>明细</th><th style="width:80px;text-align:right">金额(万)</th></tr></thead><tbody><tr><td><span class="cat-tag" style="background:#0077FF">模型训练</span></td><td>专题大模型训练服务 / 450000</td><td class="money">45.00</td></tr><tr><td><span class="cat-tag" style="background:#23B283">标品智能体</span></td><td>知识问答智能体建设服务 / 200000</td><td class="money">20.00</td></tr><tr><td><span class="cat-tag" style="background:#7B838C">数据清洗/标注</span></td><td>模型训练数据处理服务 / 250000</td><td class="money">25.00</td></tr><tr><td><span class="cat-tag" style="background:#1f4378">知识库建设服务</span></td><td>马克思主义理论学科领域 资源库建设服务 / 185000</td><td class="money">18.50</td></tr><tr><td></td><td>大模型知识库管理服务 / 104000</td><td class="money">10.40</td></tr></tbody></table></details>
+<details class="proj-detail"><summary><b>武汉理工报价单</b> <span class="proj-total-inline">100.00 万 · 9 项</span></summary><table><thead><tr><th style="width:180px">类别</th><th>明细</th><th style="width:80px;text-align:right">金额(万)</th></tr></thead><tbody><tr><td><span class="cat-tag" style="background:#0077FF">模型训练</span></td><td>学科大模型训练服务</td><td class="money">34.00</td></tr><tr><td></td><td>学科大模型推理服务</td><td class="money">24.00</td></tr><tr><td><span class="cat-tag" style="background:#23B283">标品智能体</span></td><td>材料知识问答智能体</td><td class="money">3.00</td></tr><tr><td></td><td>学科问答助手</td><td class="money">3.00</td></tr><tr><td><span class="cat-tag" style="background:#FC7819">定制智能体</span></td><td>材料性能抽取智能体</td><td class="money">3.00</td></tr><tr><td></td><td>工艺路径抽取智能体</td><td class="money">3.00</td></tr><tr><td><span class="cat-tag" style="background:#7B838C">数据清洗/标注</span></td><td>模型训练数据处理服务</td><td class="money">19.50</td></tr><tr><td><span class="cat-tag" style="background:#A9B0B8">服务 · 对接服务</span></td><td>系统集成服务</td><td class="money">5.50</td></tr><tr><td><span class="cat-tag" style="background:#1f4378">知识库建设服务</span></td><td>介电陶瓷领域数据库</td><td class="money">5.00</td></tr></tbody></table></details>
+<details class="proj-detail"><summary><b>地质大学一期报价单</b> <span class="proj-total-inline">99.00 万 · 5 项</span></summary><table><thead><tr><th style="width:180px">类别</th><th>明细</th><th style="width:80px;text-align:right">金额(万)</th></tr></thead><tbody><tr><td><span class="cat-tag" style="background:#0077FF">模型训练</span></td><td>地学知识学习智能体 / 北京科大讯飞教育科技有限公司 / 讯飞星火问道智能服务系统[简称:讯飞星火问道]V1.0</td><td class="money">25.00</td></tr><tr><td></td><td>智能问答智能体 / 北京科大讯飞教育科技有限公司 / 讯飞星火问道智能服务系统[简称:讯飞星火问道]V1.0</td><td class="money">25.00</td></tr><tr><td><span class="cat-tag" style="background:#23B283">标品智能体</span></td><td>多终端应用开发 / 北京科大讯飞教育科技有限公司 / 讯飞星火问道智能服务系统[简称:讯飞星火问道]V1.0</td><td class="money">25.00</td></tr><tr><td><span class="cat-tag" style="background:#3658FF">平台/系统开发</span></td><td>管理后台 / 北京科大讯飞教育科技有限公司 / 讯飞星火问道智能服务系统[简称:讯飞星火问道]V1.0</td><td class="money">15.00</td></tr><tr><td><span class="cat-tag" style="background:#A9B0B8">服务 · 部署服务</span></td><td>智能服务中台及集成实施服务 / 北京科大讯飞教育科技有限公司 / 讯飞星火问道智能服务系统[简称:讯飞星火问道]V1.0</td><td class="money">9.00</td></tr></tbody></table></details>
+<details class="proj-detail"><summary><b>云南机电</b> <span class="proj-total-inline">91.00 万 · 5 项</span></summary><table><thead><tr><th style="width:180px">类别</th><th>明细</th><th style="width:80px;text-align:right">金额(万)</th></tr></thead><tbody><tr><td><span class="cat-tag" style="background:#3658FF">平台/系统开发</span></td><td>软件 / 智能体应用开发平台（人工智能管服中心院校版） / 智能体管理</td><td class="money">80.00</td></tr><tr><td></td><td>软件 / 模型托管 / 模型广场</td><td class="money">2.00</td></tr><tr><td></td><td>软件 / 运营中心</td><td class="money">2.00</td></tr><tr><td><span class="cat-tag" style="background:#A9B0B8">服务 · 部署服务</span></td><td>服务 / 基础服务 / 部署安装服务</td><td class="money">5.00</td></tr><tr><td></td><td>服务 / 增值服务 / 国平台互联互通服务</td><td class="money">2.00</td></tr></tbody></table></details>
+<details class="proj-detail"><summary><b>湖北城建报价单</b> <span class="proj-total-inline">90.25 万 · 4 项</span></summary><table><thead><tr><th style="width:180px">类别</th><th>明细</th><th style="width:80px;text-align:right">金额(万)</th></tr></thead><tbody><tr><td><span class="cat-tag" style="background:#3658FF">平台/系统开发</span></td><td>管理后台(界面+数据接口)</td><td class="money">15.00</td></tr><tr><td><span class="cat-tag" style="background:#A9B0B8">服务 · 部署服务</span></td><td>云部署及运维(3年)</td><td class="money">45.00</td></tr><tr><td></td><td>统一认证及基础数据同步</td><td class="money">10.00</td></tr><tr><td><span class="cat-tag" style="background:#1f4378">知识库建设服务</span></td><td>智慧建造问答智能体(含RAG+语料+4学科智能体)</td><td class="money">20.25</td></tr></tbody></table></details>
+</section>
+
+<section>
+<h2>5 · 战略洞察 · "靠什么赚钱"</h2>
+
+<div class="callout warn">
+<div class="label">真相 1 · 模型训练 33.7% 是真核心,但非"产品"</div>
+<p>1425 万的模型训练收入,<u>大部分集中在头部 3-4 单</u>(北中医/西南财经/内师大/中国人大),这是"项目级深度定制"而不是标品产品。<strong>意味着每签一单都要重新做一次模型训练,不可批量复制</strong>。</p>
+</div>
+
+<div class="callout warn">
+<div class="label">真相 2 · 智能体业务标品 / 定制 ≈ 57:43,标品为主</div>
+<p>标品智能体 538 万(12.7%)是真正可复用的"五助类"产品(教案/试题/课件/评语/知识问答等讯飞通用资产),毛利较高;定制智能体 408 万(9.7%)是为该客户/学科专门开发。<strong>标品智能体在智能体业务中占主导(57%),定制智能体是客户粘性的"敲门砖"</strong>。</p>
+</div>
+
+<div class="callout info">
+<div class="label">真相 3 · 知识库业务"服务为主、工具链为辅" — 现阶段战略选择</div>
+<p>建设服务 359 万 vs 工具链 150 万 = 2.4:1。<u>现阶段聚焦"高质量学科知识库建设"的人工调优能力</u>,因为客户最关心的是"我的学科语料怎么变成可用知识库"。工具链作为底座支撑销售,不主推。<strong>这是 2026 阶段的战略选择,不是产品力不足</strong>。后续待标准化场景成熟,工具链占比会自然提升。</p>
+</div>
+
+<div class="callout ok">
+<div class="label">真相 4 · 真正"卖产品"营收 28.0%(标品智能体 + 平台/系统 + 知识库工具链)</div>
+<p><strong>1184 万 / 28.0%</strong> 是真正的"可复用产品"营收 — 讯飞已有的<u>标品智能体(538 万)+ 平台/系统开发(496 万,即学科大模型门户/管理后台/运行管理等)+ 知识库工具链(150 万)</u>。其余 72.0%(3042 万)是"项目化交付"(模型训练/定制智能体/数据清洗/服务/知识库建设服务)。<strong>业务本质上是"项目+产品"双轨制</strong> — 项目带产品,产品支撑项目。</p>
+</div>
+
+<h3>销售对外口径(建议)</h3>
+<table>
+<thead><tr><th>口径</th><th>承认</th><th>讲法</th></tr></thead>
+<tbody>
+<tr><td><b>"卖产品"占比</b></td><td>标品 28.0% / 项目化 72.0%</td><td>"<u>标品智能体 + 平台/系统 + 知识库工具链 = 28.0% 的标品产品矩阵</u>,锚定教学场景标准化交付"</td></tr>
+<tr><td><b>头部大单</b></td><td>北中医 1342 万一单独占 32%</td><td>"以北中医/内师大/西南财经为代表的<u>跨学科综合大单</u>是战略主线"</td></tr>
+<tr><td><b>智能体产品矩阵</b></td><td>946 万,占近 1/4 营收</td><td>"智能体业务标品(57%)为主、定制(43%)为辅,锁定 5 助类标品+学科定制双重价值"</td></tr>
+<tr><td><b>知识库定位</b></td><td>服务 71% / 工具 29%</td><td>"现阶段聚焦知识库建设服务,工具链为底座 — 待场景成熟再产品化"</td></tr>
+</tbody>
+</table>
+</section>
+
+<footer>
+作者:婷婷 · AI 教学产品部 · 2026-06-05<br>
+数据源:报价单汇总-2026-06-04 · 13 份报价单(以 PM 标注的"报价单(营收分类)" sheet 为准)<br>
+归类规则:婷婷 2026-06-05 拍板的 8 类分类体系(标品+定制智能体并排 / 知识库建设服务+工具链战略定位)
+</footer>
+
+</body></html>
