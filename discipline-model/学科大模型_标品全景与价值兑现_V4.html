@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学科大模型 · 标品全景与价值兑现</title>
+<style>
+  :root{
+    --ink:#0F172A; --gold:#C8A45C; --gold-soft:#EFE3C8; --gold-bg:#FBFAF6;
+    --blue:#1E40AF; --blue-soft:#E5EAF7; --blue-bg:#F6F8FD;
+    --green:#15803D; --green-soft:#D6EADF; --green-bg:#F0F7F2;
+    --bg:#F4F5F7; --card:#FFFFFF; --text:#1F2937; --muted:#6B7280; --line:#E5E7EB;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.7;-webkit-font-smoothing:antialiased;
+  }
+  [contenteditable]:focus{outline:2px solid var(--gold);outline-offset:2px;border-radius:3px;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 32px;}
+
+  /* 导出按钮 */
+  .export-bar{position:fixed;top:18px;right:22px;z-index:99;}
+  .export-btn{
+    background:var(--gold);color:#fff;border:none;font-family:inherit;font-size:13px;font-weight:700;
+    padding:10px 18px;border-radius:7px;cursor:pointer;box-shadow:0 6px 18px rgba(200,164,92,.4);
+  }
+  .export-btn:hover{background:#B89452;}
+
+  /* Hero */
+  .hero{background:var(--ink);color:#fff;padding:60px 0 48px;position:relative;overflow:hidden;}
+  .hero::after{content:"";position:absolute;right:-90px;top:-90px;width:360px;height:360px;
+    background:radial-gradient(circle,rgba(200,164,92,.18),transparent 70%);}
+  .hero .wrap{position:relative;z-index:1;}
+  .eyebrow{display:inline-block;font-size:13px;letter-spacing:3px;color:var(--gold);
+    border:1px solid rgba(200,164,92,.45);padding:5px 14px;border-radius:2px;margin-bottom:20px;}
+  .hero h1{font-size:36px;font-weight:800;letter-spacing:1px;margin-bottom:12px;}
+  .hero .sub{font-size:15.5px;color:#A9B4C4;max-width:720px;}
+  .hero .tip{font-size:12.5px;color:var(--gold);margin-top:14px;}
+  .hero .gold-bar{width:54px;height:4px;background:var(--gold);margin-top:18px;}
+
+  /* 核心结论 */
+  .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);
+    margin:-30px 0 0;border-radius:8px;overflow:hidden;box-shadow:0 12px 36px rgba(15,23,42,.14);}
+  .summary .cell{background:var(--card);padding:22px 18px;}
+  .summary .num{font-size:30px;font-weight:800;color:var(--ink);}
+  .summary .num .u{font-size:14px;font-weight:600;color:var(--muted);margin-left:3px;}
+  .summary .lab{font-size:12.5px;color:var(--muted);margin-top:3px;}
+  .summary .cell.accent .num{color:var(--gold);}
+
+  /* 区块 */
+  .section{padding:48px 0 6px;}
+  .sec-head{display:flex;align-items:baseline;gap:13px;margin-bottom:5px;}
+  .sec-head .tag{font-size:12px;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:3px;color:#fff;}
+  .sec-head .tag.delivered{background:var(--gold);}
+  .sec-head .tag.reused{background:var(--blue);}
+  .sec-head h2{font-size:22px;font-weight:800;color:var(--ink);}
+  .sec-desc{font-size:14px;color:var(--muted);margin-bottom:22px;}
+
+  /* 2 列网格卡片 — 沿用 V1 清晰排版 */
+  .grid{display:grid;grid-template-columns:1fr;gap:18px;}
+  .card{background:var(--card);border-radius:11px;border:1px solid var(--line);padding:24px 24px 20px;}
+  .card-badges{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:9px;}
+  .badge{font-size:11px;font-weight:700;letter-spacing:.4px;padding:5px 11px;border-radius:3px;white-space:nowrap;}
+  .badge.delivered{background:var(--gold-soft);color:#8A6A22;border:1px solid #DCC78F;}
+  .badge.reused{background:var(--blue-soft);color:var(--blue);border:1px solid #BCC9EC;}
+  .badge.base{background:var(--green-bg);color:var(--green);border:1px solid #BBD9C4;}
+  .card-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;}
+  .card-title h3{font-size:19px;font-weight:800;color:var(--ink);}
+  .count{font-size:12px;font-weight:700;color:var(--gold);background:var(--gold-bg);
+    border:1px solid var(--gold-soft);padding:3px 10px;border-radius:20px;}
+  .count.b{color:var(--blue);background:var(--blue-bg);border-color:#C9D4EE;}
+  .brief{font-size:13.5px;color:var(--text);margin-bottom:13px;min-height:44px;}
+
+  .toggle-btn{display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+    font-size:12.5px;font-weight:700;color:var(--ink);background:#F1F2F4;
+    border:1px solid var(--line);padding:8px 15px;border-radius:6px;font-family:inherit;}
+  .toggle-btn:hover{background:#E9EAEC;}
+  .toggle-btn .arrow{transition:transform .25s ease;font-size:10px;color:var(--gold);}
+  .toggle-btn.open .arrow{transform:rotate(180deg);}
+
+  .detail{max-height:0;overflow:hidden;transition:max-height .42s cubic-bezier(.4,0,.2,1);}
+  .detail.open{max-height:2600px;}
+  .detail-inner{padding:16px 0 2px;}
+  .dg{margin-bottom:13px;}
+  .dg:last-child{margin-bottom:2px;}
+  .dg-title{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:7px;
+    display:flex;align-items:center;gap:7px;}
+  .dg-title::before{content:"";width:3px;height:12px;background:var(--gold);display:inline-block;}
+  .dg-title .n{font-size:10.5px;color:var(--muted);font-weight:600;}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;}
+  .chip{font-size:12px;background:#F4F5F6;color:#374151;padding:4px 10px;border-radius:5px;border:1px solid #E8E9EC;}
+  .chip.hl{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .note{font-size:11px;color:#9AA1AC;margin-top:8px;}
+
+  .value{margin-top:14px;background:var(--gold-bg);border-left:3px solid var(--gold);
+    padding:10px 13px;border-radius:0 5px 5px 0;}
+  .value.v-blue{background:var(--blue-bg);border-left-color:var(--blue);}
+  .value .vt{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.5px;}
+  .value.v-blue .vt{color:var(--blue);}
+  .value p{font-size:12.5px;color:#4B5563;margin-top:2px;}
+  .schools{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px;}
+  .school{font-size:12px;font-weight:600;background:var(--ink);color:#fff;padding:4px 12px;border-radius:20px;}
+
+  .closing{background:var(--ink);color:#fff;margin-top:48px;padding:42px 0;}
+  .closing .wrap{display:flex;align-items:center;gap:24px;}
+  .closing .mark{font-size:42px;color:var(--gold);font-weight:800;line-height:1;}
+  .closing .ct h4{font-size:19px;font-weight:800;margin-bottom:5px;}
+  .closing .ct p{font-size:13.5px;color:#A9B4C4;}
+  footer{padding:20px 0;text-align:center;font-size:12px;color:var(--muted);}
+
+  @media(max-width:860px){
+    .summary{grid-template-columns:1fr 1fr;}
+    .grid{grid-template-columns:1fr;}
+    .hero h1{font-size:27px;}
+    .closing .wrap{flex-direction:column;text-align:center;}
+  }
+</style>
+</head>
+<body contenteditable="true" spellcheck="false">
+
+<!-- ============ 返回导航条(发布版,本地编辑器不影响) ============ -->
+<div style="position:sticky;top:0;z-index:999;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid rgba(18,21,26,.08);padding:10px 28px;font-size:13px;color:#4B535C;display:flex;align-items:center;gap:10px;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;" contenteditable="false">
+  <a href="doc-center.html" style="color:#0077FF;font-weight:600;text-decoration:none;">← 返回文档中心</a>
+  <span style="color:#A9B0B8;">/</span>
+  <span style="padding:2px 8px;background:linear-gradient(135deg,#1E3A8A,#6D28D9);color:#fff;font-size:11px;border-radius:3px;font-weight:600;">L1</span>
+  <span style="color:#272C33;font-weight:500;">学科大模型 · 标品全景与价值兑现 V4</span>
+  <span style="margin-left:auto;color:#7B838C;font-size:12px;">作者:婷婷 · 2026-05-21</span>
+</div>
+
+<div class="export-bar" contenteditable="false"><button class="export-btn" contenteditable="false" onclick="exportHTML()">⬇ 导出保存</button></div>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="eyebrow">管 理 层 汇 报</span>
+    <h1>学科大模型 · 标品全景与价值兑现</h1>
+    <p class="sub">说清楚学科大模型标品包的每一个产品——做了什么、交付到哪、研发投入最终去了哪。</p>
+    <p class="tip">✎ 本页内容可直接点击编辑;点击各产品「展开完整功能清单」查看明细;改完点右上角「导出保存」。</p>
+    <div class="gold-bar"></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="summary">
+    <div class="cell"><div class="num">6<span class="u">大产品</span></div><div class="lab">学科大模型标品包</div></div>
+    <div class="cell accent"><div class="num">4<span class="u">个</span></div><div class="lab">已大规模交付至客户</div></div>
+    <div class="cell accent"><div class="num">2<span class="u">个</span></div><div class="lab">复用升级到新版学科大模型</div></div>
+    <div class="cell"><div class="num">100<span class="u">%</span></div><div class="lab">投入转化为交付价值 / 资产</div></div>
+  </div>
+</div>
+
+<!-- 区块一 -->
+<div class="wrap">
+  <div class="section">
+    <div class="sec-head"><span class="tag delivered" contenteditable="false">已大规模交付</span><h2>研发投入 → 已转化为客户交付价值</h2></div>
+    <p class="sec-desc">以下 4 个产品已作为标品大规模交付至高校客户,研发费用已直接产生交付价值。</p>
+    <div class="grid">
+
+      <!-- 学科大模型门户 -->
+      <div class="card">
+        <div class="card-badges"><span class="badge delivered">已大规模交付</span></div>
+        <div class="card-title"><h3>学科大模型门户</h3><span class="count">3 大功能模块</span></div>
+        <p class="brief">学科大模型面向高校师生的统一入口,集门户首页定制、学科问答、智能体广场于一体,一站式访问各类 AI 教学能力。</p>
+        <button class="toggle-btn" contenteditable="false" onclick="tog(this)"><span class="t">展开完整功能清单</span> <span class="arrow">▼</span></button>
+        <div class="detail"><div class="detail-inner">
+          <div class="dg"><div class="dg-title">① 门户首页定制</div>
+            <div class="chips"><span class="chip">首页个性化定制（布局/风格模板）</span><span class="chip">LOGO·校徽·名称配置</span>
+            <span class="chip">背景图配置</span><span class="chip">配置实时生效</span><span class="chip">核心功能入口直达</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">② 学科问答 <span class="n">· 13 项能力</span></div>
+            <div class="chips"><span class="chip">个性化招呼语</span><span class="chip">文本·语音双模输入</span>
+            <span class="chip">模型问答</span><span class="chip">学科知识库检索问答</span><span class="chip">联网搜索问答</span>
+            <span class="chip">学科知识库增强问答</span><span class="chip">跨知识源问答与溯源</span><span class="chip">联网搜索可开关</span>
+            <span class="chip">附件上传对话（doc/pdf 等）</span><span class="chip">问答编辑·复制</span><span class="chip">回答重答·举报</span>
+            <span class="chip">关联问题推荐</span><span class="chip">历史记录管理</span><span class="chip">多会话隔离</span>
+            <span class="chip">智能体快捷入口</span><span class="chip">教学研智能体推荐</span><span class="chip">能力训练智能体推荐</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">③ 智能体广场</div>
+            <div class="chips"><span class="chip">本校智能体集中展示</span><span class="chip">名称模糊搜索</span>
+            <span class="chip">按助教·助学·助研筛选</span><span class="chip">一键进入智能体</span>
+            <span class="chip">精选智能体轮播展示</span><span class="chip">回到顶部</span></div>
+          </div>
+        </div></div>
+        <div class="value"><div class="vt">价值兑现</div>
+          <p>作为标品已随项目大规模交付至高校客户,是师生触达学科大模型全部能力的总入口。</p></div>
+      </div>
+
+      <!-- 管理后台 -->
+      <div class="card">
+        <div class="card-badges"><span class="badge delivered">已大规模交付</span></div>
+        <div class="card-title"><h3>运行管理分析后台</h3><span class="count">4 大功能模块</span></div>
+        <p class="brief">面向学校管理者的运行管理分析后台,提供运行数据分析、建设成果分析、智能体管理与风险管控。</p>
+        <button class="toggle-btn" contenteditable="false" onclick="tog(this)"><span class="t">展开完整功能清单</span> <span class="arrow">▼</span></button>
+        <div class="detail"><div class="detail-inner">
+          <div class="dg"><div class="dg-title">① 运行数据分析</div>
+            <div class="chips"><span class="chip">平台建设数据总览</span><span class="chip">总访问·点赞·提问数据</span>
+            <span class="chip">智能体精细化运行监控</span><span class="chip">今日核心运行指标</span>
+            <span class="chip">多维时段趋势分析</span><span class="chip">热门智能体 TOP 榜</span><span class="chip">热门问题关键词词云</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">② 建设成果分析</div>
+            <div class="chips"><span class="chip">智能体·知识库建设成果</span><span class="chip">已建数量统计</span>
+            <span class="chip">可视化图表联动</span><span class="chip">成果报告导出（Excel/PDF）</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">③ 智能体管理</div>
+            <div class="chips"><span class="chip">智能体列表检索</span><span class="chip">多维度筛选</span><span class="chip">基础信息配置</span>
+            <span class="chip">自定义图标上传</span><span class="chip">标签配置</span><span class="chip">使用人群设定</span>
+            <span class="chip">发布·取消发布·删除</span><span class="chip">标记精选</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">④ 风险管控</div>
+            <div class="chips"><span class="chip">敏感词精细化管理</span><span class="chip">敏感词批量导入</span><span class="chip">敏感词分类管理</span>
+            <span class="chip">敏感词触发统计</span><span class="chip">风险人列表管理</span>
+            <span class="chip">风险人敏感词详情</span><span class="chip">禁言·解除禁言</span></div>
+          </div>
+        </div></div>
+        <div class="value"><div class="vt">价值兑现</div>
+          <p>随门户一并交付,支撑学校侧对学科大模型的日常运营管理与成本管控。</p></div>
+      </div>
+
+      <!-- 五助智能体 -->
+      <div class="card">
+        <div class="card-badges">
+          <span class="badge delivered">已大规模交付</span>
+          <span class="badge base">⬡ 职教 · 小雅平台基座</span>
+        </div>
+        <div class="card-title"><h3>五助智能体</h3><span class="count">5 大类 · 47 个智能体</span></div>
+        <p class="brief">面向"教、学、管、研、国际交流"五大场景的助手智能体矩阵,覆盖教师、学生、管理者高频需求。</p>
+        <button class="toggle-btn" contenteditable="false" onclick="tog(this)"><span class="t">展开完整功能清单</span> <span class="arrow">▼</span></button>
+        <div class="detail"><div class="detail-inner">
+          <div class="dg"><div class="dg-title">助教智能体 <span class="n">· 8 个</span></div>
+            <div class="chips"><span class="chip">AI 写作助手</span><span class="chip">PPT 生成</span><span class="chip">备课资源检索助手</span>
+            <span class="chip">AI 出题助手</span><span class="chip">智能批改</span><span class="chip">教师 AI 孪生</span>
+            <span class="chip">AI 微课</span><span class="chip">思创案例库</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">助学智能体 <span class="n">· 15 个</span></div>
+            <div class="chips"><span class="chip">AI 阅读</span><span class="chip">AI 简历助手</span><span class="chip">启发式知识答疑</span>
+            <span class="chip">课程内容答疑</span><span class="chip">英语阅读</span><span class="chip">学习搭子</span>
+            <span class="chip">学习计划大师</span><span class="chip">考研志愿助手</span><span class="chip">大学生职业规划</span>
+            <span class="chip">大学生心理健康助手</span><span class="chip">病例报告解读助手</span><span class="chip">抑郁测试助手</span>
+            <span class="chip">面试辅导助手</span><span class="chip">形势与政策</span><span class="chip">英语口语陪练</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">助管智能体 <span class="n">· 2 个</span></div>
+            <div class="chips"><span class="chip">班导 AI 君</span><span class="chip">制度解读助手</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">助研 · 科研工作站 <span class="n">· 16 个</span></div>
+            <div class="chips"><span class="chip">科研工作站</span><span class="chip">主流学术资源库检索助手</span>
+            <span class="chip">中科院文献检索助手</span><span class="chip">论文领域追踪助手</span><span class="chip">论文阅读辅助</span>
+            <span class="chip">论文对比分析</span><span class="chip">论文学术翻译</span><span class="chip">论文英文润色</span>
+            <span class="chip">论文全文审校</span><span class="chip">论文预审</span><span class="chip">综述生成</span>
+            <span class="chip">科研图表生成工具</span><span class="chip">科研提效工具</span><span class="chip">研究方向推荐助手</span>
+            <span class="chip">知识抽取助手</span><span class="chip">论文标题生成器</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">助国际交流智能体 <span class="n">· 6 个</span></div>
+            <div class="chips"><span class="chip">国际历史学家</span><span class="chip">国际通</span><span class="chip">学校国际交流处接待人员</span>
+            <span class="chip">国际会议时间协调员</span><span class="chip">英文邮件撰写</span><span class="chip">中英互译小助手</span></div>
+          </div>
+        </div></div>
+        <div class="value"><div class="vt">价值兑现</div>
+          <p>47 个助手智能体已大规模交付至高校客户;并已接入职教平台、小雅平台,作为两大平台的智能体基座——研发投入直接转化为交付价值与平台资产。</p></div>
+      </div>
+
+      <!-- 能力训练平台 -->
+      <div class="card">
+        <div class="card-badges"><span class="badge delivered">已交付 · 持续交付底座</span></div>
+        <div class="card-title"><h3>能力训练研创平台</h3><span class="count">6 大功能模块</span></div>
+        <p class="brief">高校学生能力训练的研创平台,教师可视化创编、学生沉浸式训练,系统培养学科思维与专业能力。</p>
+        <button class="toggle-btn" contenteditable="false" onclick="tog(this)"><span class="t">展开完整功能清单</span> <span class="arrow">▼</span></button>
+        <div class="detail"><div class="detail-inner">
+          <div class="dg"><div class="dg-title">① 平台框架</div>
+            <div class="chips"><span class="chip">独立产品域名</span><span class="chip">落地页</span><span class="chip">统一登录</span><span class="chip">个人中心</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">② 通用能力训练模板库</div>
+            <div class="chips"><span class="chip">通用能力模板库</span><span class="chip">按校权限配置</span>
+            <span class="chip">批判性思维等训练模板</span><span class="chip">通用 / 学科 双模板分类</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">③ 能力训练智能体研创中心</div>
+            <div class="chips"><span class="chip">可视化创编</span><span class="chip">分步创编流程引导</span><span class="chip">内置提示词优化工具</span>
+            <span class="chip">学科知识库调用</span><span class="chip">学生视角预览调试</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">④ 能力训练智能体管理</div>
+            <div class="chips"><span class="chip">智能体列表</span><span class="chip">新建/编辑/删除/复制</span>
+            <span class="chip">搜索</span><span class="chip">训练记录</span><span class="chip">发布</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">⑤ 模拟训练中心</div>
+            <div class="chips"><span class="chip">教师发布训练任务</span><span class="chip">按教学班发布</span><span class="chip">任务发布列表</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">⑥ 学生训练工作台</div>
+            <div class="chips"><span class="chip">能力画像（雷达图/成长曲线）</span><span class="chip">我的训练</span><span class="chip">热门能力训练</span>
+            <span class="chip">沉浸式语音对话训练</span><span class="chip">训练速记</span><span class="chip">训练路径</span>
+            <span class="chip">学习资源</span><span class="chip">诊断报告</span><span class="chip">训练记录概览</span></div>
+          </div>
+        </div></div>
+        <div class="schools"><span class="school">内蒙古师范大学</span><span class="school">遵义师范学院</span><span class="school">北京邮电大学</span></div>
+        <div class="value"><div class="vt">价值兑现</div>
+          <p>已作为基础"能力训练交付平台"交付至上述三所院校;后续所有能力训练智能体的交付都将基于此平台——可持续复用的交付底座。</p></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- 区块二 -->
+<div class="wrap">
+  <div class="section">
+    <div class="sec-head"><span class="tag reused" contenteditable="false">复用升级</span><h2>研发投入 → 已转化为可复用的核心资产</h2></div>
+    <p class="sec-desc">以下 2 个产品作为成熟技术底座,复用并升级到新版学科大模型,并已接入职教、小雅平台作为基座。</p>
+    <div class="grid">
+
+      <!-- 学科大脑 -->
+      <div class="card">
+        <div class="card-badges">
+          <span class="badge reused">复用升级 → 新版学科大模型</span>
+          <span class="badge base">⬡ 职教 · 小雅平台基座</span>
+        </div>
+        <div class="card-title"><h3>学科大脑</h3><span class="count b">6 大模块 + 技术底座</span></div>
+        <p class="brief">从知识库升级为"学科认知中台",以共享知识库为根基,叠加学科化治理与对外赋能能力。</p>
+        <button class="toggle-btn" contenteditable="false" onclick="tog(this)"><span class="t">展开完整功能清单</span> <span class="arrow">▼</span></button>
+        <div class="detail"><div class="detail-inner">
+          <div class="dg"><div class="dg-title">1 · 知识接入</div>
+            <div class="chips"><span class="chip">多模态资源接入（15 种格式）</span><span class="chip">多渠道接入</span>
+            <span class="chip">多模态采集（3 种 OCR）</span><span class="chip">资源管理</span><span class="chip">批量导入</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">2 · 知识加工</div>
+            <div class="chips"><span class="chip">资源构建与向量化</span><span class="chip">文档分片（8 种模式）</span>
+            <span class="chip">切片质量自动检查</span><span class="chip">知识图谱构建</span><span class="chip">相似问题自动抽取</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">3 · 质量与治理</div>
+            <div class="chips"><span class="chip">数据自动清洗</span><span class="chip">内容一致性检测</span><span class="chip">自动生成摘要</span>
+            <span class="chip">敏感词处理</span><span class="chip">白名单管理</span><span class="chip">XSS 安全防护</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">4 · 共享共建</div>
+            <div class="chips"><span class="chip">知识库管理</span><span class="chip">成员协作</span><span class="chip">分类目录管理</span>
+            <span class="chip">标签管理</span><span class="chip">统一认证与权限</span><span class="chip">笔记系统</span>
+            <span class="chip">笔记-知识库双向联动</span><span class="chip">Coral Skill 技能开放生态</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">5 · 知识应用</div>
+            <div class="chips"><span class="chip">流式对话</span><span class="chip">多轮对话管理</span><span class="chip">对话配置中心</span>
+            <span class="chip">混合检索与重排</span><span class="chip">跨知识库对话</span>
+            <span class="chip">Web 管理端</span><span class="chip">微信小程序端</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">6 · 运营与迭代</div>
+            <div class="chips"><span class="chip">统计概览</span><span class="chip">多维度统计</span><span class="chip">使用量统计</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">L0 · 技术底座</div>
+            <div class="chips"><span class="chip hl">大模型基础信息</span><span class="chip hl">8 类模型管理</span><span class="chip hl">大模型核心能力</span>
+            <span class="chip hl">安全管理</span><span class="chip hl">架构与性能</span><span class="chip hl">云端模型服务</span></div>
+          </div>
+        </div></div>
+        <div class="value v-blue"><div class="vt">价值兑现</div>
+          <p>原知识库研发成果不闲置——作为新版学科大模型的知识库底座持续升级,并已接入职教平台、小雅平台,作为两大平台的知识库基座。</p></div>
+      </div>
+
+      <!-- 智能体开发平台 -->
+      <div class="card">
+        <div class="card-badges">
+          <span class="badge reused">复用升级 → 升级版学科大模型</span>
+          <span class="badge base">⬡ 职教 · 小雅平台基座</span>
+        </div>
+        <div class="card-title"><h3>智能体开发平台</h3><span class="count b">12 模块 · 57 项 · 22 节点引擎</span></div>
+        <p class="brief">从智能体开发平台升级为"自然语言智能体创编平台",结合 XClaw,让师生一句话生成可用的智能体。</p>
+        <button class="toggle-btn" contenteditable="false" onclick="tog(this)"><span class="t">展开完整功能清单</span> <span class="arrow">▼</span></button>
+        <div class="detail"><div class="detail-inner">
+          <div class="dg"><div class="dg-title">1 · 智能体创建与管理</div>
+            <div class="chips"><span class="chip">多方式创建智能体</span><span class="chip">AI 辅助创建</span><span class="chip">智能体模板</span>
+            <span class="chip">智能体编辑管理</span><span class="chip">列表与广场</span><span class="chip">发布与下架</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">2 · 工作流编排</div>
+            <div class="chips"><span class="chip">工作流基础操作</span><span class="chip">可视化编辑器</span><span class="chip">节点调试与构建</span>
+            <span class="chip">工作流对话测试</span><span class="chip">文件与代码处理</span><span class="chip">版本与发布管理</span>
+            <span class="chip">导入导出</span><span class="chip">工作流广场</span><span class="chip">MCP 工具集成</span><span class="chip">工作流评估</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">3 · 知识库管理　4 · 工具与插件　5 · 模型管理</div>
+            <div class="chips"><span class="chip">知识库基础操作</span><span class="chip">文件管理</span><span class="chip">内容处理</span><span class="chip">知识库检索</span>
+            <span class="chip">工具创建与编辑</span><span class="chip">工具市场</span><span class="chip">内置插件</span>
+            <span class="chip">模型接入</span><span class="chip">官方/自定义模型</span><span class="chip">模型安全</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">6 · 提示词　7 · 对话与运行调试</div>
+            <div class="chips"><span class="chip">提示词优化</span><span class="chip">提示词对比</span><span class="chip">Agent 提示词模板</span>
+            <span class="chip">聊天会话</span><span class="chip">多模态对话</span><span class="chip">聊天反馈</span><span class="chip">调试与追踪</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">8 · 发布与部署</div>
+            <div class="chips"><span class="chip">发布管理</span><span class="chip">多渠道发布（市场/API/微信/飞书/MCP）</span>
+            <span class="chip">API 发布</span><span class="chip">发布统计监控</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">9 · 多空间企业　10 · 用户与权限　11 · 资源与扩展</div>
+            <div class="chips"><span class="chip">个人空间</span><span class="chip">企业团队空间</span><span class="chip">成员管理</span>
+            <span class="chip">用户信息与权限认证</span><span class="chip">数据库管理</span>
+            <span class="chip">虚拟人与语音</span><span class="chip">图像能力</span></div>
+          </div>
+          <div class="dg"><div class="dg-title">12 · 平台底座</div>
+            <div class="chips"><span class="chip hl">22 节点工作流引擎</span><span class="chip hl">智能体执行引擎</span><span class="chip hl">多租户隔离</span>
+            <span class="chip hl">Agent 沙箱网关</span><span class="chip hl">可观测性</span><span class="chip hl">基础设施</span></div>
+          </div>
+        </div></div>
+        <div class="value v-blue"><div class="vt">价值兑现</div>
+          <p>成熟的智能体平台作为底座升级为自然语言创编平台,用于升级版学科大模型;并已接入职教平台、小雅平台,作为两大平台的智能体能力基座。</p></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="closing">
+  <div class="wrap">
+    <div class="mark" contenteditable="false">✓</div>
+    <div class="ct">
+      <h4>每一笔研发投入,都有明确归宿</h4>
+      <p>学科大模型标品包 6 大产品——4 个已大规模交付客户,2 个复用升级到新版学科大模型;其中五助智能体、学科大脑、智能体开发平台 已接入职教平台与小雅平台作为基座。没有一个产品闲置,没有一分投入沉没。</p>
+    </div>
+  </div>
+</div>
+
+<footer>学科大模型 · 标品全景与价值兑现 ｜ 婷婷 ｜ V4（单列平铺版）｜ 2026-05-21</footer>
+
+<script>
+function tog(btn){
+  btn.classList.toggle('open');
+  var d=btn.nextElementSibling;
+  d.classList.toggle('open');
+  btn.querySelector('.t').textContent = btn.classList.contains('open') ? '收起功能清单' : '展开完整功能清单';
+}
+function exportHTML(){
+  var clone=document.documentElement.cloneNode(true);
+  var html='<!DOCTYPE html>\n'+clone.outerHTML;
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='学科大模型_标品全景与价值兑现_编辑版.html';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+</script>
+
+</body>
+</html>
