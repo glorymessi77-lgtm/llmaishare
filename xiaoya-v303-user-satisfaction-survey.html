@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>小雅 3.0 · 三单验证用户满意度调研问卷 V8</title>
+<style>
+:root{
+  --gray-0:#FFFFFF;--gray-1:#F2F5F7;--gray-2:#E6EBF0;--gray-3:#A9B0B8;
+  --gray-5:#7B838C;--gray-6:#626A73;--gray-7:#4B535C;--gray-9:#272C33;--gray-10:#12151A;
+  --blue-1:#E6F6FF;--blue-2:#BAE3FF;--blue-6:#0077FF;--blue-7:#005ED9;
+  --green-1:#EBF7F1;--green-6:#23B283;--green-7:#158C68;
+  --orange-1:#FFF4E6;--orange-6:#FC7819;--orange-7:#D6590B;
+  --purple-1:#F5F0FF;--purple-6:#7C3AED;
+  --gold-1:#FFF8E6;--gold-6:#E6B422;--gold-7:#B8860B;
+  --border:rgba(18,21,26,0.08);--border-strong:rgba(18,21,26,0.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--gray-0);color:var(--gray-10);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;font-size:14px}
+body{max-width:1100px;margin:0 auto;padding:0 32px 80px}
+.topbar{position:sticky;top:0;z-index:50;background:var(--gray-0);border-bottom:1px solid var(--border);padding:14px 0;margin:0 -32px;padding-left:32px;padding-right:32px;display:flex;justify-content:space-between;font-size:13px}
+.hero{padding:42px 0 28px;border-bottom:1px solid var(--border)}
+.eyebrow{font-size:12px;color:var(--blue-6);margin-bottom:14px;font-weight:500;letter-spacing:.05em}
+.eyebrow .v{display:inline-block;background:var(--blue-6);color:#fff;padding:2px 10px;font-size:11px;border-radius:4px;margin-left:8px;font-weight:600}
+h1{font-size:28px;line-height:1.3;font-weight:600;color:var(--gray-10);max-width:900px;margin-bottom:12px}
+.lead{font-size:14.5px;line-height:1.75;color:var(--gray-7);max-width:900px;margin-bottom:18px}
+.lead strong{color:var(--gray-10);font-weight:600}
+
+.meta-bar{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;padding:12px 16px;background:var(--gray-1);border-radius:8px;font-size:12.5px;color:var(--gray-7)}
+.meta-bar b{color:var(--gray-10);margin-right:4px}
+
+section{padding:34px 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+h2{font-size:21px;font-weight:600;color:var(--gray-10)}
+.sec-num{font-size:11px;color:var(--gray-5);font-weight:600;letter-spacing:.1em;font-family:Menlo,monospace}
+h3{font-size:15px;font-weight:600;color:var(--gray-10);margin:18px 0 10px}
+p{color:var(--gray-7);font-size:14px;line-height:1.75;margin-bottom:8px}
+strong{color:var(--gray-10);font-weight:600}
+
+.callout{padding:14px 18px;margin:12px 0;background:var(--blue-1);border-left:3px solid var(--blue-6);border-radius:6px;font-size:13px;color:var(--gray-7);line-height:1.7}
+.callout.gold{background:var(--gold-1);border-left-color:var(--gold-6)}
+.callout .lbl{font-size:11px;color:var(--blue-6);font-weight:600;margin-bottom:6px}
+.callout.gold .lbl{color:var(--gold-7)}
+
+/* 维度子标题 */
+.dim-title{font-size:13.5px;font-weight:600;color:var(--gray-9);margin:18px 0 6px;padding:7px 14px;background:var(--blue-1);border-left:4px solid var(--blue-6);border-radius:0 6px 6px 0}
+.dim-title .dim-meta{float:right;font-size:11.5px;color:var(--blue-6);font-weight:500;font-family:Menlo,monospace}
+
+/* 问卷题目 */
+.question{margin:12px 0;padding:14px 18px;background:var(--gray-0);border:1px solid var(--border);border-radius:8px}
+.question .q-no{display:inline-block;font-size:11.5px;color:#fff;background:var(--blue-6);padding:2px 9px;border-radius:3px;font-weight:600;font-family:Menlo,monospace;margin-right:8px}
+.question .q-text{font-size:14px;font-weight:500;color:var(--gray-9);line-height:1.7;display:inline}
+.question .q-hint{display:block;font-size:11.5px;color:var(--gray-5);margin-top:6px;font-style:italic}
+.question.kpi{border:2px solid var(--green-6);background:linear-gradient(135deg,var(--green-1),#F0FDF6)}
+.question.kpi .q-no{background:var(--green-6)}
+
+/* 5 级量表 */
+.likert{margin-top:10px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.likert-opt{padding:10px 6px;background:var(--gray-1);border:1px solid var(--border);border-radius:6px;text-align:center;font-size:12px;color:var(--gray-7)}
+.likert-opt .lo-score{font-size:18px;font-weight:700;color:var(--gray-10);display:block;margin-bottom:2px}
+.likert-opt.l1{background:#FEF2F2;border-color:#FECACA}
+.likert-opt.l1 .lo-score{color:#DC2626}
+.likert-opt.l2{background:#FEF3E2;border-color:#FED7AA}
+.likert-opt.l2 .lo-score{color:#EA580C}
+.likert-opt.l3{background:#FEF9C3;border-color:#FDE68A}
+.likert-opt.l3 .lo-score{color:#CA8A04}
+.likert-opt.l4{background:#ECFDF5;border-color:#A7F3D0}
+.likert-opt.l4 .lo-score{color:#059669}
+.likert-opt.l5{background:#DBEAFE;border-color:#93C5FD}
+.likert-opt.l5 .lo-score{color:#2563EB}
+
+/* NPS 10 级 */
+.nps{margin-top:10px;display:grid;grid-template-columns:repeat(11,1fr);gap:4px}
+.nps-opt{padding:8px 4px;background:var(--gray-1);border:1px solid var(--border);border-radius:4px;text-align:center;font-size:13px;font-weight:600;color:var(--gray-9)}
+.nps-opt.detr{background:#FEF2F2;color:#DC2626}
+.nps-opt.pass{background:#FEF9C3;color:#CA8A04}
+.nps-opt.prom{background:#DBEAFE;color:#2563EB}
+.nps-labels{display:flex;justify-content:space-between;margin-top:4px;font-size:11px;color:var(--gray-5)}
+
+/* 单选项 */
+.single-options{margin-top:8px;display:flex;flex-wrap:wrap;gap:8px}
+.so-item{padding:6px 14px;background:var(--gray-1);border:1px solid var(--border);border-radius:20px;font-size:13px;color:var(--gray-7)}
+
+/* 文本框 */
+.text-input{display:block;width:100%;margin-top:8px;padding:10px 12px;background:var(--gray-1);border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--gray-9);min-height:24px}
+.text-area{display:block;width:100%;margin-top:8px;padding:10px 12px;background:var(--gray-1);border:1px solid var(--border);border-radius:6px;font-size:13px;color:var(--gray-9);min-height:60px;line-height:1.6}
+
+/* 部分大块 · 平台主题 */
+.platform-block{margin:18px 0;padding:24px 28px;background:linear-gradient(180deg,var(--blue-1) 0%,var(--gray-0) 4%);border:1px solid var(--border-strong);border-radius:12px;border-left:6px solid var(--blue-6)}
+.platform-block .pb-tag{display:inline-block;padding:4px 12px;background:var(--blue-6);color:#fff;font-size:11.5px;font-weight:700;border-radius:4px;letter-spacing:.05em;margin-bottom:8px}
+.platform-block .pb-title{font-size:20px;font-weight:600;color:var(--gray-10);margin-bottom:6px}
+.platform-block .pb-intro{font-size:13.5px;color:var(--gray-7);line-height:1.7;padding:10px 14px;background:var(--gray-1);border-radius:6px;margin-bottom:14px}
+.platform-block .pb-intro b{color:var(--gray-10)}
+
+/* 场景块 */
+.scene-block{margin:18px 0;padding:22px 26px;background:var(--gray-0);border:1px solid var(--border-strong);border-radius:10px;border-left:5px solid var(--gray-5)}
+.scene-block.s1{border-left-color:var(--green-6);background:linear-gradient(180deg,var(--green-1) 0%,var(--gray-0) 4%)}
+.scene-block.s2{border-left-color:var(--purple-6);background:linear-gradient(180deg,var(--purple-1) 0%,var(--gray-0) 4%)}
+.scene-block.s3{border-left-color:var(--orange-6);background:linear-gradient(180deg,var(--orange-1) 0%,var(--gray-0) 4%)}
+.scene-block .sb-head{display:flex;align-items:baseline;gap:12px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.scene-block .sb-tag{padding:3px 10px;background:var(--gray-7);color:#fff;font-size:11.5px;font-weight:600;border-radius:4px;font-family:Menlo,monospace}
+.scene-block.s1 .sb-tag{background:var(--green-6)}
+.scene-block.s2 .sb-tag{background:var(--purple-6)}
+.scene-block.s3 .sb-tag{background:var(--orange-6)}
+.scene-block .sb-title{font-size:16px;font-weight:600;color:var(--gray-10)}
+.scene-block .sb-target{margin-left:auto;font-size:11.5px;color:var(--gray-6);background:var(--gray-1);padding:3px 9px;border-radius:4px;font-family:Menlo,monospace}
+.scene-block .sb-intro{font-size:13px;color:var(--gray-7);line-height:1.7;padding:8px 12px;background:var(--gray-1);border-radius:6px;margin-bottom:12px}
+.scene-block .sb-intro b{color:var(--gray-10)}
+
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);font-size:12px;color:var(--gray-6);text-align:center;line-height:1.8}
+
+@media (max-width:980px){
+  .likert{grid-template-columns:repeat(5,1fr);gap:4px}
+  .likert-opt{padding:8px 4px;font-size:10.5px}
+  .nps{grid-template-columns:repeat(11,1fr);gap:2px}
+  .nps-opt{padding:6px 2px;font-size:11px}
+}
+
+@media print{
+  body{padding:20px;font-size:11px}
+  .topbar{display:none}
+  section{page-break-inside:avoid;padding:20px 0}
+  .platform-block,.scene-block{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span style="font-weight:600">小雅 3.0 产研结项 / 三单验证用户满意度调研</span>
+  <span>V8 · 婷婷 · 2026-06-22</span>
+</div>
+
+<header class="hero">
+  <div class="eyebrow">SURVEY · XIAOYA 3.0 PLATFORM FUSION SATISFACTION <span class="v">V8</span></div>
+  <h1>小雅 3.0 · 三单验证用户满意度调研问卷</h1>
+  <p class="lead">尊敬的老师,您好!感谢您参与<strong>小雅 3.0 智能教学平台</strong>的用户满意度调研。本问卷服务于小雅 3.0(630 版本)<strong>产研项目结项</strong>,核心评估<em>平台融合后的整体满意度</em>,辅以 3 个核心 AI 场景的支撑数据。<strong>所有信息严格保密,仅用于产品改进。</strong></p>
+
+  <div class="meta-bar">
+    <span><b>调研对象</b>三单验证学校教师</span>
+    <span><b>问卷题数</b>30 题</span>
+    <span><b>预计时长</b>约 10 分钟</span>
+    <span><b>评分方式</b>5 级李克特量表</span>
+    <span><b>结项目标</b>平台融合满意度 ≥ 85%</span>
+  </div>
+</header>
+
+<!-- ============ 一、基本信息 ============ -->
+<section>
+  <div class="sec-head"><h2>一 · 基本信息</h2><span class="sec-num">PART 1 · 4 题</span></div>
+
+  <div class="question">
+    <span class="q-no">Q1</span>
+    <span class="q-text">您所在的学校</span>
+    <input type="text" class="text-input" placeholder="请填写学校全称">
+  </div>
+
+  <div class="question">
+    <span class="q-no">Q2</span>
+    <span class="q-text">您所在的学院 / 专业 / 主讲课程</span>
+    <input type="text" class="text-input" placeholder="例如:计算机学院 / 软件工程 / 数据结构">
+  </div>
+
+  <div class="question">
+    <span class="q-no">Q3</span>
+    <span class="q-text">您的教学身份</span>
+    <div class="single-options">
+      <span class="so-item">☐ 一线任课教师</span>
+      <span class="so-item">☐ 课程负责人</span>
+      <span class="so-item">☐ 教务管理人员</span>
+      <span class="so-item">☐ 教学督导</span>
+    </div>
+  </div>
+
+  <div class="question">
+    <span class="q-no">Q4</span>
+    <span class="q-text">您在试用阶段,使用小雅平台的频繁程度如何?</span>
+    <div class="likert">
+      <div class="likert-opt l1"><span class="lo-score">1</span>极少使用</div>
+      <div class="likert-opt l2"><span class="lo-score">2</span>偶尔使用</div>
+      <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+      <div class="likert-opt l4"><span class="lo-score">4</span>较为频繁</div>
+      <div class="likert-opt l5"><span class="lo-score">5</span>非常频繁</div>
+    </div>
+    <span class="q-hint">用于分群分析 · 建议至少使用 2 周后填写</span>
+  </div>
+</section>
+
+<!-- ============ 二、评分量表说明 ============ -->
+<section>
+  <div class="sec-head"><h2>二 · 评分量表说明</h2><span class="sec-num">SCALE GUIDE</span></div>
+
+  <p>下面所有满意度题目均使用 <strong>5 级李克特量表</strong>:</p>
+
+  <div class="likert">
+    <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+    <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+    <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+    <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+    <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+  </div>
+
+  <div class="callout gold">
+    <div class="lbl">★ 评分小贴士</div>
+    <p>请基于您 <strong>真实使用体验</strong> 评分。<strong>"满意度% = 4-5 分用户占比"</strong>,即"满意"+"非常满意"用户的总数除以总有效填写人数。</p>
+  </div>
+</section>
+
+<!-- ============ 三、平台融合满意度专题(主体) ============ -->
+<section>
+  <div class="sec-head"><h2>三 · 平台融合满意度专题</h2><span class="sec-num">PART 3 · CORE KPI · 10 题</span></div>
+
+  <div class="platform-block">
+    <span class="pb-tag">★ 核心 KPI 专题</span>
+    <div class="pb-title">小雅 3.0 平台融合后整体满意度</div>
+    <div class="pb-intro">
+      <b>专题说明</b>:小雅 3.0 实现了 <b>SPOC 课程 + MOOC 课程 + 共享课程包 + AI 智能化</b> 的深度融合升级。本部分从 <b>课程统一管理 / 资源复用 / AI 智能化 / 学习体验 / 稳定性 / 综合评价</b> 6 个维度评估您的整体感受。
+    </div>
+
+    <div class="dim-title">▎ 维度 1 · 多形态课程统一管理 <span class="dim-meta">1 题</span></div>
+
+    <div class="question">
+      <span class="q-no">Q5</span>
+      <span class="q-text">您对小雅 3.0 <b>在一个平台统一管理 SPOC 课程 + MOOC 课程,且不同课程形态数据/资源互通</b>的便捷性满意度</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="dim-title">▎ 维度 2 · 共享课程包资源复用 <span class="dim-meta">2 题</span></div>
+
+    <div class="question">
+      <span class="q-no">Q6</span>
+      <span class="q-text">您对小雅 3.0 <b>将 SPOC 课程打包成共享课程包 + 跨课程/跨教师复用</b>(资源/作业/讨论沉淀可被复用)的满意度</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <span class="q-no">Q7</span>
+      <span class="q-text">您对小雅 3.0 <b>校级共享课程包运营</b>(校级 MOOC 接入 / 跨校审核流程)的满意度</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="dim-title">▎ 维度 3 · AI 智能化教学建议 <span class="dim-meta">3 题</span></div>
+
+    <div class="question">
+      <span class="q-no">Q8</span>
+      <span class="q-text">您对小雅 3.0 <b>AI 在备课环节</b>(教学设计 / 资源推荐 / 智能出题)的智能化建议满意度</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <span class="q-no">Q9</span>
+      <span class="q-text">您对小雅 3.0 <b>AI 在教学环节</b>(课堂互动 / AI 助教 / 智能批改)的智能化辅助满意度</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <span class="q-no">Q10</span>
+      <span class="q-text">您对小雅 3.0 <b>AI 在学情分析</b>(学生画像 / 教学预警 / 数据洞察)的智能化建议满意度</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="dim-title">▎ 维度 4 · 学习体验一致性(您观察的学生视角) <span class="dim-meta">1 题</span></div>
+
+    <div class="question">
+      <span class="q-no">Q11</span>
+      <span class="q-text">据您观察,<b>学生在 SPOC 与 MOOC 不同场景下学习体验的一致性</b>(学习中心 / 自适应活动 / 任务流程)的满意度</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="dim-title">▎ 维度 5 · 系统稳定性 <span class="dim-meta">1 题</span></div>
+
+    <div class="question">
+      <span class="q-no">Q12</span>
+      <span class="q-text">您对小雅 3.0 <b>系统稳定性</b>(响应速度 / 流畅度 / 异常率)的满意度</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="dim-title">▎ 维度 6 · 综合满意度(核心 KPI) <span class="dim-meta">2 题</span></div>
+
+    <div class="question kpi">
+      <span class="q-no">Q13</span>
+      <span class="q-text"><b>综合您的整体使用感受,您对小雅 3.0 平台融合升级的总体满意度</b></span>
+      <span class="q-hint">★ 核心 KPI 题:本题数据用于"平台融合满意度 ≥ 85%"结项达标判定</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <span class="q-no">Q14</span>
+      <span class="q-text">您将小雅 3.0 <b>推荐给同事使用</b>的可能性(0 = 完全不推荐,10 = 一定会推荐)</span>
+      <span class="q-hint">NPS 净推荐值:9-10 推荐者 / 7-8 中立者 / 0-6 贬损者</span>
+      <div class="nps">
+        <div class="nps-opt detr">0</div>
+        <div class="nps-opt detr">1</div>
+        <div class="nps-opt detr">2</div>
+        <div class="nps-opt detr">3</div>
+        <div class="nps-opt detr">4</div>
+        <div class="nps-opt detr">5</div>
+        <div class="nps-opt detr">6</div>
+        <div class="nps-opt pass">7</div>
+        <div class="nps-opt pass">8</div>
+        <div class="nps-opt prom">9</div>
+        <div class="nps-opt prom">10</div>
+      </div>
+      <div class="nps-labels">
+        <span>完全不推荐</span>
+        <span>一定会推荐</span>
+      </div>
+    </div>
+
+    
+  </div>
+</section>
+
+<!-- ============ 四、3 个核心场景细化(支撑数据) ============ -->
+<section>
+  <div class="sec-head"><h2>四 · 4 个核心 AI 场景细化(支撑数据)</h2><span class="sec-num">PART 4 · 12 题</span></div>
+
+  <p>本部分针对 4 个核心 AI 场景细化评价,为<strong>平台融合满意度提供支撑数据</strong>。请仅评价您实际使用过的场景。</p>
+
+  <!-- 场景 01: AI 助学 -->
+  <div class="scene-block s1">
+    <div class="sb-head">
+      <span class="sb-tag">场景 01</span>
+      <span class="sb-title">AI 助学(知识问答)</span>
+      <span class="sb-target">参考目标 ≥ 85%</span>
+    </div>
+    <div class="sb-intro">
+      <b>场景说明</b>:基于学科知识库的概念问答、辨析问答、题目问答,答案可溯源至教材页码段落。
+    </div>
+
+    <div class="question">
+      <span class="q-no">Q15</span>
+      <span class="q-text">您对 AI 助学<b>覆盖学科典型问答场景</b>(概念解释、辨析、题目讲解)的满意度</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <span class="q-no">Q16</span>
+      <span class="q-text">您对 AI 助学<b>回答准确性 + 可溯源性</b>(事实正确、专业准确,且可追溯到教材页码段落)的满意度</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="question kpi">
+      <span class="q-no">Q17</span>
+      <span class="q-text"><b>综合您的整体使用感受,您对 AI 助学的总体满意度</b></span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 场景 02: 智能教学设计 -->
+  <div class="scene-block s2">
+    <div class="sb-head">
+      <span class="sb-tag">场景 02</span>
+      <span class="sb-title">智能教学设计生成</span>
+      <span class="sb-target">参考目标 ≥ 85%</span>
+    </div>
+    <div class="sb-intro">
+      <b>场景说明</b>:基于课程主题和教学目标,自动生成完整的教学设计方案(教学目标 / 重难点 / 教学活动 / 评价方式)。
+    </div>
+
+    <div class="question">
+      <span class="q-no">Q18</span>
+      <span class="q-text">您对智能教学设计<b>覆盖学科教学设计典型场景</b>的满意度</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <span class="q-no">Q19</span>
+      <span class="q-text">您对智能教学设计<b>生成内容的完整性专业性 + 可直接采用比例</b>(教学目标/重难点/活动/评价齐全,且无需大幅修改)的满意度</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="question kpi">
+      <span class="q-no">Q20</span>
+      <span class="q-text"><b>综合您的整体使用感受,您对智能教学设计的总体满意度</b></span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 场景 03: 情感认知分类 -->
+  <div class="scene-block s3">
+    <div class="sb-head">
+      <span class="sb-tag">场景 03</span>
+      <span class="sb-title">情感认知分类智能体</span>
+      <span class="sb-target">参考目标 ≥ 85%</span>
+    </div>
+    <div class="sb-intro">
+      <b>场景说明</b>:基于<b>社区探究理论(COI)</b>对学生学习讨论内容进行情感与认知维度分类,帮助教师快速识别学生讨论中的情感倾向与认知层次。
+    </div>
+
+    <div class="question">
+      <span class="q-no">Q21</span>
+      <span class="q-text">您对情感认知分类<b>覆盖学生讨论典型场景</b>的满意度</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <span class="q-no">Q22</span>
+      <span class="q-text">您对情感认知分类<b>分类准确性 + 对教学反馈的指导价值</b>(情感/认知层次判断准确,且对教学改进有实际指导价值)的满意度</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="question kpi">
+      <span class="q-no">Q23</span>
+      <span class="q-text"><b>综合您的整体使用感受,您对情感认知分类的总体满意度</b></span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 场景 04: XClaw 智能教学闭环 -->
+  <div class="scene-block" style="border-left-color:var(--blue-6);background:linear-gradient(180deg,var(--blue-1) 0%,var(--gray-0) 4%)">
+    <div class="sb-head">
+      <span class="sb-tag" style="background:var(--blue-6)">场景 04</span>
+      <span class="sb-title">XClaw 智能教学闭环(交互式课件 + 个性化建议)</span>
+      <span class="sb-target">参考目标 ≥ 80%</span>
+    </div>
+    <div class="sb-intro">
+      <b>场景说明</b>:基于 <b>XClaw 智能枢纽</b>,结合 <b>学生学情数据 + 教师学科知识库</b>,自动生成<b>交互式学习课件</b>(用于课堂互动或学生自主学习),并根据学情数据为学生提供<b>个性化学习建议</b>,形成 <em>"学情→课件→学习→学情"</em> 的智能教学闭环。
+    </div>
+
+    <div class="question">
+      <span class="q-no">Q24</span>
+      <span class="q-text">您对 XClaw <b>覆盖您学科"交互式课堂教学 + 学生自主学习"典型场景</b>的满意度</span>
+      <span class="q-hint">即:是否覆盖您的教学场景需求</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <span class="q-no">Q25</span>
+      <span class="q-text">您对 XClaw <b>基于学生学情 + 学科知识库自动生成的交互式学习课件 + 个性化学习建议</b>(精准性 + 实用性 + 课堂互动效果)的满意度</span>
+      <span class="q-hint">即:生成的课件好不好用、个性化建议是否精准、课堂能否真正互动起来</span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+
+    <div class="question kpi">
+      <span class="q-no">Q26</span>
+      <span class="q-text"><b>综合您的整体使用感受,您对 XClaw 智能教学闭环</b>(交互式课件 + 个性化学习建议)<b>的总体满意度</b></span>
+      <div class="likert">
+        <div class="likert-opt l1"><span class="lo-score">1</span>非常不满意</div>
+        <div class="likert-opt l2"><span class="lo-score">2</span>不满意</div>
+        <div class="likert-opt l3"><span class="lo-score">3</span>一般</div>
+        <div class="likert-opt l4"><span class="lo-score">4</span>满意</div>
+        <div class="likert-opt l5"><span class="lo-score">5</span>非常满意</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 五、改进建议 ============ -->
+<section>
+  <div class="sec-head"><h2>五 · 改进建议(开放性,选填)</h2><span class="sec-num">PART 5 · 2 题</span></div>
+
+  <div class="question">
+    <span class="q-no">Q27</span>
+    <span class="q-text">您希望小雅 3.0 <b>下一步重点改进 / 新增</b>的方向是什么?</span>
+    <textarea class="text-area" placeholder="请列出 1-3 项..."></textarea>
+  </div>
+
+  <div class="question">
+    <span class="q-no">Q27</span>
+    <span class="q-text">如果同事问您"小雅 3.0 值不值得用",您会怎么回答?</span>
+    <textarea class="text-area" placeholder="可口语化描述..."></textarea>
+  </div>
+</section>
+
+<!-- ============ 七、联系方式 ============ -->
+<section>
+  <div class="sec-head"><h2>六 · 联系方式(选填)</h2><span class="sec-num">PART 6 · 2 题</span></div>
+
+  <p>如您愿意接受我们的后续<strong>1 对 1 深度访谈</strong>(约 30 分钟),请留下联系方式。信息严格保密。</p>
+
+  <div class="question">
+    <span class="q-no">Q27</span>
+    <span class="q-text">姓名 + 联系方式(微信 / 邮箱 / 电话)</span>
+    <input type="text" class="text-input" placeholder="选填">
+  </div>
+
+  <div class="question">
+    <span class="q-no">Q27</span>
+    <span class="q-text">是否愿意参与后续 1 对 1 深度访谈(约 30 分钟)?</span>
+    <div class="single-options">
+      <span class="so-item">☐ 愿意</span>
+      <span class="so-item">☐ 视情况</span>
+      <span class="so-item">☐ 不参加</span>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="lbl">✓ 问卷到此结束</div>
+    <p>感谢您的耐心填写!您的反馈将直接帮助小雅 3.0 持续改进。— AI 教学产品部</p>
+  </div>
+</section>
+
+<!-- ============ 附录:问卷设计逻辑(内部参考) ============ -->
+<section>
+  <div class="sec-head"><h2>附录 · 问卷设计逻辑(内部参考)</h2><span class="sec-num">APPENDIX</span></div>
+
+  <h3>核心 KPI(结项达标判定)</h3>
+  <div class="callout gold">
+    <div class="lbl">★ 唯一红线 KPI</div>
+    <p><strong>三单验证平台融合满意度 ≥ 85%</strong> = 项目结项达标。<br>
+    数据来源:<b>Q13 综合满意度题</b>(评分 4-5 分用户占比)。<br>
+    支撑数据:6 个维度细化 + 3 场景细化 + NPS 净推荐值 共同支撑。</p>
+  </div>
+
+  <h3>6 维度结构(平台主轴)</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin:10px 0">
+    <thead><tr style="background:var(--gray-1)"><th style="padding:9px 12px;text-align:left;border-bottom:1px solid var(--border-strong)">维度</th><th style="padding:9px 12px;text-align:left;border-bottom:1px solid var(--border-strong)">题号</th><th style="padding:9px 12px;text-align:left;border-bottom:1px solid var(--border-strong)">用户感知</th></tr></thead>
+    <tbody>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid var(--border)"><b>1 · 多形态课程统一管理</b></td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">Q5</td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">SPOC + MOOC 在一个平台管</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid var(--border)"><b>2 · 共享课程包资源复用</b></td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">Q6-Q7</td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">建好的能流转,别人建的能用</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid var(--border)"><b>3 · AI 智能化教学建议</b></td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">Q8-Q10</td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">备课 / 教学 / 学情 AI 都好用</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid var(--border)"><b>4 · 学习体验一致性</b></td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">Q11</td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">教师观察学生在不同场景体验</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid var(--border)"><b>5 · 系统稳定性</b></td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">Q12</td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">响应 / 流畅 / 异常率</td></tr>
+      <tr style="background:var(--green-1)"><td style="padding:9px 12px;border-bottom:1px solid var(--border)"><b>6 · 综合满意度</b>(KPI)</td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">Q13 + NPS Q14</td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">★ 平台融合 ≥ 85% 红线判定</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3 场景精简结构(支撑数据)</h3>
+  <p>每个场景压缩为 4 题:<b>场景适配 + 生成效果(2 题)+ 综合满意度</b>。不再测易用性(平台主轴已测),不再问推荐意愿(综合满意度已涵盖)。</p>
+
+  <h3>报告时的"金字塔"逻辑</h3>
+  <div class="callout">
+    <div class="lbl">汇报口径</div>
+    <p><b>顶层一个数字</b>:平台融合满意度 X%(对比 85% 红线)<br>
+    <b>中层 6 个维度数字</b>:课程统一 / 资源复用 / AI 智能化 / 学习一致 / 稳定性 / 综合<br>
+    <b>底层 3 个场景数字</b>:AI 助学 / 教学设计 / 情感认知<br>
+    <b>侧翼 NPS 净推荐值</b>:作为口碑指标补充</p>
+  </div>
+
+  <h3>专业补充建议落地说明</h3>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;margin:10px 0">
+    <thead><tr style="background:var(--gray-1)"><th style="padding:9px 12px;text-align:left;border-bottom:1px solid var(--border-strong)">建议</th><th style="padding:9px 12px;text-align:left;border-bottom:1px solid var(--border-strong)">落地位置</th></tr></thead>
+    <tbody>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid var(--border)"><b>NPS 净推荐值</b></td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">Q14(平台综合满意度旁,作为口碑指标)</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid var(--border)"><b>使用频率分群分析</b></td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">Q4 收集,报告环节按频率分群</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid var(--border)"><b>学校分组对比</b></td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">Q1 收集,报告按 3 所学校分组</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid var(--border)"><b>调研时机控制</b></td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">2-4 周窗口,跟婉君对齐</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid var(--border)"><b>客观行为数据双轨</b></td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">从运管后台拉数据对照(张能配合)</td></tr>
+      <tr><td style="padding:9px 12px;border-bottom:1px solid var(--border)"><b>问卷长度控制</b></td><td style="padding:9px 12px;border-bottom:1px solid var(--border)">30 题 · 约 10 分钟 · 核心 KPI 题(Q13)位于第三部分中段,用户精力饱满时填</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  作者:婷婷 · AI 教学产品部 · 2026-06-22 · V8<br>
+  小雅 3.0 三单验证 · 用户满意度调研问卷 · 教师视角<br>
+  核心 KPI:三单验证平台融合满意度 ≥ 85% · 30 题 · 约 10 分钟<br>
+  归档路径:<code style="font-family:Menlo,monospace">~/Desktop/ClaudeCode/小雅平台知识库/产研结项/</code>
+</footer>
+
+</body>
+</html>
