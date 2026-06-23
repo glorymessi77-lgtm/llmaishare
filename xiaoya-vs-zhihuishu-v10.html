@@ -1,0 +1,1027 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440,initial-scale=1">
+<title>智慧树 vs 小雅 V10 · 双边对照(补强小雅侧:课程画像 + 基础库证据)</title>
+<style>
+:root{
+  --ink:#0b1a2e;--ink-2:#1d2a44;--ink-3:#3a4a66;
+  --paper:#f6f4ee;--paper-2:#ecead9;
+  --rule:#1b2c4a;--gold:#b78a45;--gold-2:#8c6a30;
+  --hike:#7a3a32;--xiaoya:#1f4378;
+  --ok:#2d6a4f;--warn:#a83b27;--partial:#a96f12;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}
+body{max-width:1280px;margin:0 auto;padding:0 56px 120px;background-image:radial-gradient(circle at 8% 0%,rgba(183,138,69,.05) 0%,transparent 35%),radial-gradient(circle at 92% 100%,rgba(31,67,120,.05) 0%,transparent 30%)}
+
+.topbar{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--rule);padding:14px 0;margin:0 -56px;padding-left:56px;padding-right:56px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.topbar a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent}
+.topbar a:hover{border-bottom:1px solid var(--gold)}
+.topbar .nav{display:flex;gap:18px}
+.topbar .brand{font-weight:600;letter-spacing:.05em}
+.topbar .brand::before{content:"◆ ";color:var(--gold)}
+
+.hero{padding:80px 0 50px;border-bottom:2px solid var(--ink);position:relative}
+.hero::after{content:"";position:absolute;left:0;bottom:-6px;width:160px;height:2px;background:var(--gold)}
+.eyebrow{font-size:12px;letter-spacing:.35em;color:var(--gold-2);text-transform:uppercase;margin-bottom:22px}
+.eyebrow .v{display:inline-block;background:var(--ink);color:#fff;padding:3px 10px;font-size:10px;letter-spacing:.2em;margin-left:12px}
+h1{font-size:46px;line-height:1.15;font-weight:600;color:var(--ink);max-width:1000px;margin-bottom:22px}
+h1 .accent{color:var(--gold)}
+.lead{font-size:17px;line-height:1.65;color:var(--ink-2);max-width:920px;margin-bottom:24px;font-weight:300}
+.meta{display:flex;gap:30px;font-size:13px;color:var(--ink-3);padding-top:20px;border-top:1px solid rgba(27,44,74,.18);flex-wrap:wrap}
+.meta dt{color:var(--gold-2);letter-spacing:.18em;font-size:11px;text-transform:uppercase;margin-bottom:4px}
+.meta dd{font-weight:500;color:var(--ink-2)}
+
+section{padding:60px 0;border-bottom:1px solid rgba(27,44,74,.15)}
+section:last-of-type{border-bottom:none}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:30px;padding-bottom:14px;border-bottom:1px solid var(--ink)}
+h2{font-size:28px;font-weight:600;color:var(--ink)}
+.sec-num{font-size:13px;letter-spacing:.4em;color:var(--gold);font-weight:600}
+h3{font-size:18px;font-weight:600;color:var(--ink);margin:28px 0 12px}
+h3::before{content:"";display:inline-block;width:14px;height:2px;background:var(--gold);margin-right:14px;vertical-align:middle}
+p{margin-bottom:12px;color:var(--ink-2);font-size:14.5px}
+strong{color:var(--ink);font-weight:600}
+em{font-style:normal;background:linear-gradient(transparent 60%,rgba(183,138,69,.28) 60%);padding:0 2px;color:var(--ink)}
+code{background:var(--paper-2);padding:1px 6px;border-radius:3px;font-family:Menlo,monospace;font-size:12px;color:var(--ink-2)}
+
+/* 双边对比卡 — 核心组件 */
+.cap{padding:22px 26px;margin:18px 0;border:1px solid var(--rule);background:var(--paper);border-left:4px solid var(--rule)}
+.cap.full{border-left-color:var(--warn)}
+.cap.partial{border-left-color:var(--partial)}
+.cap.equal{border-left-color:var(--ok)}
+.cap.deeper{border-left-color:var(--gold)}
+
+.cap-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;gap:6px}
+.cap-name{font-size:16px;font-weight:600;color:var(--ink);max-width:75%}
+.cap-status{font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:3px;white-space:nowrap}
+.cap-status.full{background:rgba(168,59,39,.12);color:var(--warn)}
+.cap-status.partial{background:rgba(169,111,18,.12);color:var(--partial)}
+.cap-status.equal{background:rgba(45,106,79,.12);color:var(--ok)}
+.cap-status.deeper{background:rgba(183,138,69,.15);color:var(--gold-2)}
+
+/* 双边对比 grid — 左智慧树右小雅 */
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.dual .side{padding:14px 16px;border:1px solid var(--rule);background:var(--paper)}
+.dual .side.hike{border-top:4px solid var(--hike)}
+.dual .side.xiaoya{border-top:4px solid var(--xiaoya)}
+.dual .side .label{font-size:10.5px;letter-spacing:.25em;font-weight:600;margin-bottom:8px;padding:2px 8px;display:inline-block;border-radius:2px;color:#fff}
+.dual .side.hike .label{background:var(--hike)}
+.dual .side.xiaoya .label{background:var(--xiaoya)}
+.dual .side .desc{font-size:13px;color:var(--ink-2);line-height:1.5;margin-bottom:8px}
+.dual .side .shot{margin:8px 0 0}
+.dual .side .shot img{width:100%;display:block;border:1px solid var(--ink)}
+.dual .side .shot .cap-img{padding:6px 10px;background:var(--ink);color:var(--paper);font-size:10.5px;display:flex;justify-content:space-between}
+.dual .side .shot .cap-img b{color:var(--gold);font-weight:600}
+
+.cap-compare{margin-top:12px;padding:10px 14px;background:linear-gradient(90deg,rgba(168,59,39,.05),transparent);border-radius:3px;font-size:13px;color:var(--ink-2)}
+.cap-compare b{color:var(--warn);font-size:11px;letter-spacing:.2em;display:block;margin-bottom:4px}
+.cap.equal .cap-compare{background:linear-gradient(90deg,rgba(45,106,79,.05),transparent)}
+.cap.equal .cap-compare b{color:var(--ok)}
+.cap.deeper .cap-compare{background:linear-gradient(90deg,rgba(183,138,69,.08),transparent)}
+.cap.deeper .cap-compare b{color:var(--gold-2)}
+.cap.partial .cap-compare{background:linear-gradient(90deg,rgba(169,111,18,.05),transparent)}
+.cap.partial .cap-compare b{color:var(--partial)}
+
+.cap-ppt{margin-top:8px;padding:8px 12px;background:rgba(31,67,120,.06);border-left:3px solid var(--xiaoya);font-size:12.5px;color:var(--ink-2)}
+.cap-ppt b{font-size:10.5px;letter-spacing:.2em;color:var(--xiaoya);display:block;margin-bottom:4px}
+
+.module-intro{padding:18px 24px;background:var(--paper-2);border-left:4px solid var(--ink);margin:14px 0 22px;font-size:13.5px;color:var(--ink-2);line-height:1.65}
+
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:12.5px}
+th,td{padding:9px 11px;text-align:left;border-bottom:1px solid rgba(27,44,74,.14);vertical-align:top}
+th{background:var(--paper-2);font-weight:600;font-size:11.5px;border-bottom:2px solid var(--ink)}
+td.gap{color:var(--warn);font-weight:600}
+td.ok{color:var(--ok);font-weight:500}
+td.partial{color:var(--partial);font-weight:500}
+td.deeper{color:var(--gold-2);font-weight:600}
+
+.callout{padding:18px 22px;margin:18px 0;border-left:4px solid var(--gold);background:linear-gradient(90deg,rgba(183,138,69,.07) 0%,transparent 100%);font-size:13.5px}
+.callout .label{font-size:11px;letter-spacing:.3em;color:var(--gold-2);font-weight:600;margin-bottom:6px}
+
+.toc{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0 0;padding:20px 0;border-top:1px solid rgba(27,44,74,.18);border-bottom:1px solid rgba(27,44,74,.18)}
+.toc a{display:flex;gap:12px;text-decoration:none;color:var(--ink-2);padding:6px 0;font-size:13px}
+.toc a:hover{color:var(--ink);border-bottom:1px dashed var(--gold)}
+.toc a span{color:var(--gold);font-weight:600;font-size:11px;letter-spacing:.18em;min-width:24px}
+
+footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--ink);display:flex;justify-content:space-between;font-size:12px;color:var(--ink-3)}
+footer .sig{color:var(--ink);font-weight:600}
+footer .sig::before{content:"◆ ";color:var(--gold)}
+
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}
+.stat{padding:18px 20px;border:1px solid var(--rule);background:var(--paper)}
+.stat .num{font-size:32px;font-weight:600;color:var(--gold);line-height:1;margin-bottom:6px}
+.stat .lbl{font-size:11.5px;color:var(--ink-3);letter-spacing:.12em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div style="position:sticky;top:0;z-index:9999;background:linear-gradient(90deg,#CF272D,#F53B3B);color:#fff;padding:10px 24px;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;font-size:13px;line-height:1.6;text-align:center;box-shadow:0 2px 8px rgba(207,39,45,.25);">
+  <strong style="font-size:14px">⚠ 内部调研材料 · 仅供参考</strong>
+  &nbsp;·&nbsp;请勿对外转发 / 截图 / 在客户面前展示
+  &nbsp;·&nbsp;AI 教学产品部 · 婷婷
+</div>
+
+
+<div class="topbar">
+  <a href="../index.html" class="brand">小雅平台知识库</a>
+  <div class="nav">
+    <a href="#changelog">V8→V9</a>
+    <a href="#p1">智慧教学平台</a>
+    <a href="#p2">AI 智能基座</a>
+    <a href="#p3-new">教学质量验收</a>
+    <a href="#p4">智慧教室与实训</a>
+    <a href="#student">学生侧对照</a>
+    <a href="#summary">差距全景表</a>
+    <a href="#new-find">小雅独有</a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="eyebrow">Bilateral Comparison · V10 · 2026.06.05 <span class="v">双边深挖</span></div>
+  <h1>智慧树 vs 小雅 V10 · <span class="accent">双边深挖对照版</span></h1>
+  <p class="lead">V10 在 V9 基础上,基于<strong>整理后的小雅 162 张截图</strong>(含 6/5 婷婷手抓的<em>课程画像 6 视角 8 张专项</em>),补强小雅侧的证据深度。<u>所有 V9 已有的智慧树深挖保留,V10 重点在"小雅独有/更深"章节加视觉证据</u>,让"小雅独有/更深"不再只是文字描述,而是图文并列对照。</p>
+
+  <div class="stat-grid">
+    <div class="stat"><div class="num">270+</div><div class="lbl">智慧树截图</div></div>
+    <div class="stat"><div class="num">162</div><div class="lbl">小雅截图(整理后)</div></div>
+    <div class="stat"><div class="num">6</div><div class="lbl">课程画像视角</div></div>
+    <div class="stat"><div class="num">10</div><div class="lbl">迭代轮次</div></div>
+  </div>
+
+  <dl class="meta">
+    <div><dt>调研对象</dt><dd>智慧树(3 条线 + AI 教学中心)vs 小雅(xiaoya.fifedu.com)</dd></div>
+    <div><dt>本轮重点</dt><dd>双边补齐:小雅课程画像 6 视角 + 基础库 8 类 实采证据</dd></div>
+    <div><dt>作者</dt><dd>婷婷 · AI 教学产品部</dd></div>
+    <div><dt>版本</dt><dd>V10 · 2026.06.05</dd></div>
+  </dl>
+
+  <nav class="toc">
+    <a href="#changelog"><span>00</span>V8 → V9 升级说明</a>
+    <a href="#p1"><span>01</span>智慧教学平台对照</a>
+    <a href="#p2"><span>02</span>AI 智能基座对照</a>
+    <a href="#p3-new"><span>03</span>教学质量验收(V9 新增)</a>
+    <a href="#p4"><span>04</span>智慧教室与实训对照</a>
+    <a href="#p5"><span>05</span>数据治理对照</a>
+    <a href="#student"><span>06</span>学生侧对照(V9 新增)</a>
+    <a href="#summary"><span>07</span>差距全景表</a>
+    <a href="#new-find"><span>08</span>小雅独有发现</a>
+    <a href="#conclusion"><span>09</span>厂商总结</a>
+  </nav>
+</header>
+
+<!-- ============ 00 V9 → V10 ============ -->
+<section id="changelog">
+  <div class="sec-head"><h2>V9 → V10 升级说明</h2><span class="sec-num">CHANGELOG</span></div>
+  <p style="font-size:14px;color:var(--ink-2);margin-bottom:14px">
+    V9 的问题:智慧树侧深度足够(70+ 截图),但小雅侧"独有/更深"章节<u>缺视觉证据</u> — 只有文字描述。婷婷 6/5 手抓了课程画像 6 视角 8 张专项截图,V10 把这些证据补到对应章节,让"小雅更深"不再只是结论,而是图文证据。
+  </p>
+  <p style="font-size:14px;color:var(--ink-2);margin-bottom:14px">
+    <strong>V10 主要补强:</strong>
+  </p>
+  <ul style="padding-left:24px;color:var(--ink-2);font-size:14px;margin-bottom:14px">
+    <li>"05 数据治理 / 学情画像"小雅侧加 <strong>4 张课程画像新截图</strong>(总览 + 课堂活动轨迹 + 班级画像 + 成员画像)</li>
+    <li>"06 学生侧对照"小雅侧加 <strong>AI 应用看板 + 生成词云</strong>截图,对比智慧树的"问题图谱"</li>
+    <li>"08 小雅独有发现"补充"5 大门户矩阵"+"基础库 8 类(含量规库)"视觉证据</li>
+    <li>结论部分新增"<strong>对外销售口径</strong>" — 客户问"为什么不选智慧树"时的标准答复</li>
+  </ul>
+
+  <h3 style="margin-top:18px">V8 → V9 的升级回顾(保留)</h3>
+  <p>V8 的对照框架是对的,但发现智慧树侧仍有大量能力未挖到 — 婷婷 6/4-6/5 手工补抓了 <strong>70+ 张智慧树 AI 教学中心截图</strong>,V9 在此基础上做深度升级:</p>
+  <ul style="padding-left:24px;color:var(--ink-2);font-size:14px">
+    <li><strong>+ 4 大智慧树新发现(改变格局):</strong>
+      <ul style="padding-left:20px;margin-top:6px">
+        <li>📚 <em>24214 门共享课资源池</em>(智慧树 14 年壁垒资产,小雅完全没有)</li>
+        <li>🏭 <em>AI 一键建课从 4 步升级到 14 步完整流水线</em>(V8 只看到 4 步)</li>
+        <li>🎓 <em>学生侧"我学的课"3 类图谱</em>(知识图谱 285 / 问题图谱 18 / 能力图谱)</li>
+        <li>📋 <em>课程评审 8 Tab</em>(教学成果验收闭环 — <strong>小雅完全空白的产品空间</strong>)</li>
+      </ul>
+    </li>
+    <li><strong>+ 3 项产品形态新发现:</strong>
+      <ul style="padding-left:20px;margin-top:6px">
+        <li>💬 <em>AI 助教做成 IM 聊天形态</em>(类钉钉,降低教师学习成本到 0)</li>
+        <li>🎯 <em>首页 = AI 工作台 Agent/MCP 双模式</em>(对话入口,非空间入口)</li>
+        <li>🤖 <em>智能体教学专项辅导 6 步完整流程</em>(V8 只看到 5 场景列表)</li>
+      </ul>
+    </li>
+    <li><strong>+ 新增 2 个对照章节:</strong>03 教学质量验收(评审主页) + 06 学生侧对照(学生端体验)</li>
+    <li><strong>修正 V8 漏判:</strong>"AI 一键建课"V8 标"❌ 完全缺失"但只看到 4 步,V9 揭示是 14 步流水线 — 缺失程度比 V8 描述的更严重</li>
+  </ul>
+
+  <div class="callout" style="margin-top:20px">
+    <div class="label">V9 重要结论</div>
+    <p><strong>V8 描述的差距格局基本成立,但智慧树侧的产品深度被低估了。</strong>真正"小雅完全缺失"的关键能力新增 4 项:<em>共享课资源池 / 课程评审主页 / 学生端 3 类图谱 / AI 助教 IM 形态</em>。其中"课程评审主页"是高校金课申报的刚需,建议<u>列为小雅下一版的优先级 P0 补全项</u>。</p>
+  </div>
+</section>
+
+<!-- ============ 01 智慧教学平台 ============ -->
+<section id="p1">
+  <div class="sec-head"><h2>01 · 智慧教学平台对照</h2><span class="sec-num">PRODUCT 1</span></div>
+
+  <div class="module-intro">
+    <strong>本块对照逻辑:</strong>每条 V7 能力卡 = 左智慧树 + 右小雅 双图并列,下方加 PPT 权威引用 + 客观对比。
+  </div>
+
+  <!-- 1.1 AI 一键建课 V9 升级 4 步 → 14 步 -->
+  <div class="cap full">
+    <div class="cap-head">
+      <div class="cap-name">AI 一键建课 14 步完整流水线 <span style="background:var(--gold);color:#fff;padding:1px 8px;font-size:11px;border-radius:2px;margin-left:8px;font-weight:600">V9 升级</span></div>
+      <div class="cap-status full">❌ 小雅完全缺失(差距比 V8 描述的更大)</div>
+    </div>
+    <p style="font-size:13px;color:var(--ink-3);margin:8px 0 10px"><strong>V9 关键修正:</strong>V8 只看到 4 步,实际智慧树是 <em>14 步完整流水线</em> — 从课程入口到智能体配置到教学计划生成,全程引导式:</p>
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:10px 0;font-size:11px">
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>01</b><br>课程入口</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>02</b><br>选课程类型</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>03</b><br>基本信息</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>04</b><br>知识库 3 类</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>05</b><br>引入资源</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>06</b><br>生成知识库</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>07</b><br>生成课程智能体</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>08</b><br>创建课代表</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>09</b><br>课代表知识库</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>10</b><br>课代表成功</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>11</b><br>生成教学计划</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>12</b><br>完成建课</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>13</b><br>引用共享课</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>14</b><br>24214 门资源</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike · 14 步流水线</span>
+        <p class="desc">智慧课程·知识库 3 类引用(<em>课程大纲 / 电子教材 / 知识图谱</em>)</p>
+        <div class="shot"><img src="../竞品调研/AI教学中心/创建AI课程3_课程知识库配置.png"><div class="cap-img"><span>Step 4:课程·知识库 3 类引用</span><b>HIKE-V9</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">手动建课:创建 → 上传 → 配置章节 → 关联 AI 助手,多步骤无引导</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy05_AI创新中心_我教的课.png"><div class="cap-img"><span>我教的课列表(含"智能建课中"卡片)</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">HIKE · Step 7-8 智能体 + 课代表</span>
+        <div class="shot"><img src="../竞品调研/AI教学中心/创建AI课程6_生成课程智能体.png"><div class="cap-img"><span>Step 7:课程·智能体</span><b>HIKE-V9</b></div></div>
+      </div>
+      <div class="side hike"><span class="label">HIKE · Step 11 教学计划</span>
+        <div class="shot"><img src="../竞品调研/AI教学中心/创建AI课程11_生成教学计划.png"><div class="cap-img"><span>Step 11:AI 生成教学计划</span><b>HIKE-V9</b></div></div>
+      </div>
+    </div>
+    <div class="cap-compare"><b>V9 升级洞察</b>智慧树的"AI 建课"<em>不是简单的快捷入口</em>,而是<u>把整个建课逻辑做成流水线,系统在每一步都做了决策</u>(自动生成知识库、自动建课程智能体、自动建课代表、自动生成教学计划)— 这是<em>"工程化建课"</em>的产品哲学。小雅"智能建课中"卡片显示在研,但工程深度需要补齐到 14 步。</div>
+    <div class="cap-ppt"><b>PPT 权威口径</b>立项 V16 P33:"完善教学链路闭环" — 小雅<u>暂未做成 14 步流水线形态</u>。建议规划时直接对标智慧树的 14 步,而非 4 步。</div>
+  </div>
+
+  <!-- V9 新增:1.1b 共享课资源池(24214 门壁垒) -->
+  <div class="cap full">
+    <div class="cap-head">
+      <div class="cap-name">共享课资源池 24214 门 <span style="background:var(--gold);color:#fff;padding:1px 8px;font-size:11px;border-radius:2px;margin-left:8px;font-weight:600">V9 新增</span></div>
+      <div class="cap-status full">❌ 小雅缺核心壁垒资产</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike · AI 智慧课程中心</span>
+        <p class="desc">3 Tab 顶层:<em>校内课程 / 共享课程 / 我学的课</em>。共享课池有 <strong>24214 门</strong>(分页 505 页)— 来自北大/清华/复旦/南开/天大等名校</p>
+        <div class="shot"><img src="../竞品调研/AI教学中心/创建AI课程14_2万多门共享课资源.png"><div class="cap-img"><span>24214 门共享课 · 分页 505 页</span><b>HIKE-V9</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">共享课程中心存在,但量级和深度需要确认 — V8 仅看到一级菜单"共享课程中心"</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy03_共享课程中心.png"><div class="cap-img"><span>共享课程中心</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-compare"><b>差距本质</b>这是 <em>14 年沉淀的资产</em>,不是技术差距 — <u>小雅短期内无法复制</u>。建议错位策略:做"<em>医学院联盟 / 师范联盟 / 财经院校联盟</em>"的<strong>垂直共建课</strong>,以"小而精"对智慧树的"大而全",而非硬刚 24214 门规模。</div>
+  </div>
+
+  <!-- 1.2 AI 教学专题 5 场景 -->
+  <div class="cap full">
+    <div class="cap-head">
+      <div class="cap-name">AI 教师教学专题 · 5 授课场景</div>
+      <div class="cap-status full">❌ 小雅缺失</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike</span>
+        <p class="desc">5 种场景 + 沙盘地图可视化教学路径</p>
+        <div class="shot"><img src="_assets_v8_20260603/p1_q3_hike_AI教学专题_5场景.png"><div class="cap-img"><span>5 授课场景</span><b>HIKE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">无独立"AI 教师专题"产品形态。XClaw 教学 Skill 中心有备课/教学设计/思维导图等接近 Skill,但非端到端专题化</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy20_课程空间_备授课.png"><div class="cap-img"><span>备授课(对照位置)</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-ppt"><b>PPT 权威口径</b>售前 V3.1 P13:"打造开箱即用的教学 Skill 中心,内置助教助学助研 Skills" — 小雅用 Skill 概念,智慧树用"专题"概念,产品哲学不同。</div>
+  </div>
+
+  <!-- 1.3 智能辅导编辑器 -->
+  <div class="cap full">
+    <div class="cap-head">
+      <div class="cap-name">AI 智能辅导 5 步流程编辑器</div>
+      <div class="cap-status full">❌ 小雅缺失</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike</span>
+        <p class="desc">教师写拆解思路,AI 自动生成多步辅导 + 3 Tab 可编辑</p>
+        <div class="shot"><img src="_assets_v8_20260603/p1_q3_hike_智能辅导_5步编辑.png"><div class="cap-img"><span>5 步流程编辑器</span><b>HIKE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">XClaw 自主学习 Skill "学前-学中-学后"三阶段编排是接近概念,但未做成可视化编辑器</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy24_课程空间_AI工作台_4子菜单.png"><div class="cap-img"><span>AI 工作台(对照位置)</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1.4 数字人讲课 -->
+  <div class="cap partial">
+    <div class="cap-head">
+      <div class="cap-name">数字人讲课 + 课堂合集</div>
+      <div class="cap-status partial">🟡 小雅部分(基础库有数字人,未集成建课主流程)</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike</span>
+        <p class="desc">课堂合集创建流程内嵌入数字人 8 形象配置</p>
+        <div class="shot"><img src="_assets_v8_20260603/p1_q2_hike_课堂合集_数字人8选.png"><div class="cap-img"><span>课堂合集 8 形象</span><b>HIKE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">基础库 → 我的数字人,具备能力,但未集成到建课主流程</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy13_基础库_我的数字人.png"><div class="cap-img"><span>基础库 · 我的数字人</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-ppt"><b>PPT 权威口径</b>华师汇报 P15 P36 P37 P41 P78:"数字人视频/数智教师/接入讯飞数字人/数字人微课视频:替代传统微课视频" — <em>小雅有数字人能力,叙事完整,但工程集成深度可能不如智慧树</em>。</div>
+  </div>
+
+  <!-- 1.5 智慧译课 -->
+  <div class="cap full">
+    <div class="cap-head">
+      <div class="cap-name">智慧译课 · PPT 结构化 + AI 总结</div>
+      <div class="cap-status full">❌ 小雅缺失</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike</span>
+        <p class="desc">PPT/视频 → 结构化 + AI 总结</p>
+        <div class="shot"><img src="_assets_v8_20260603/p1_q3_hike_智慧译课.png"><div class="cap-img"><span>智慧译课</span><b>HIKE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">备授课有资源管理,但未做成 PPT 结构化重组的可视化产品</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy20_课程空间_备授课.png"><div class="cap-img"><span>备授课 · 资源管理</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-ppt"><b>PPT 权威口径</b>4 份 PPT 均未明确提及"智慧译课"或"PPT 结构化重组"。</div>
+  </div>
+
+  <!-- 1.6 教学活动 + 作业任务 -->
+  <div class="cap equal">
+    <div class="cap-head">
+      <div class="cap-name">教学活动 / 作业任务管理</div>
+      <div class="cap-status equal">✅ 持平</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike</span>
+        <p class="desc">课程内"教学活动"7 类分类(作业/考勤/讨论/考试/课堂/通知/最新)</p>
+        <div class="shot"><img src="_assets_v8_20260603/p1_q1_hike_教学活动_7类.png"><div class="cap-img"><span>7 类教学活动</span><b>HIKE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">"作业任务"统一管理:已发布/草稿/全部任务/自主观看,任务团子卡片化</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy21_课程空间_作业任务.png"><div class="cap-img"><span>作业任务</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1.7 课程资源管理 -->
+  <div class="cap equal">
+    <div class="cap-head">
+      <div class="cap-name">课程资源管理 + 课程结构</div>
+      <div class="cap-status equal">✅ 持平 / 各有侧重</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike</span>
+        <p class="desc">课程资源库 12 类(智能体教学/智能辅导/数字人作为资源类型)</p>
+        <div class="shot"><img src="_assets_v8_20260603/p1_q1_hike_课程资源库.png"><div class="cap-img"><span>12 类资源</span><b>HIKE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">备授课 = 课程结构图 + 课程目录,"资源:40 / 文件夹:1 / 总节点:42/1000"</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy20_课程空间_备授课.png"><div class="cap-img"><span>备授课 · 课程结构图</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-compare"><b>差异点</b>智慧树用"智能体/智能辅导/数字人作为资源类型"是产品哲学创新;小雅用"课程结构图(类似知识图谱可视化)"组织资源 — 各有所长。</div>
+  </div>
+
+  <!-- 1.8 训练题库 -->
+  <div class="cap partial">
+    <div class="cap-head">
+      <div class="cap-name">训练题库 / 题库管理</div>
+      <div class="cap-status partial">🟡 部分对标</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike</span>
+        <p class="desc">训练题库 3 大能力:一键导入 + 4 种刷题模式 + 答题分析</p>
+        <div class="shot"><img src="_assets_v8_20260603/p1_q3_hike_训练题库.png"><div class="cap-img"><span>训练题库</span><b>HIKE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">基础库 → 我的题库(教师侧),但未做成学生侧"训练题库 + 多种刷题模式"</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy14_基础库_我的题库.png"><div class="cap-img"><span>我的题库</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1.9 AI 评测智能体 -->
+  <div class="cap partial">
+    <div class="cap-head">
+      <div class="cap-name">AI 评测智能体</div>
+      <div class="cap-status partial">🟡 部分对标</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 space</span>
+        <p class="desc">任务化评测,4 Tab 配置(基本信息/对话规则/评分标准/开放权限)</p>
+        <div class="shot"><img src="_assets_v8_20260603/p1_q1_space_AI评测智能体.png"><div class="cap-img"><span>AI 评测智能体</span><b>SPACE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">基础库 → 我的智能体 + 我的量规库(评分规则)— 概念组件具备,但未整合成"任务化评测智能体"产品</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy12_基础库_我的智能体.png"><div class="cap-img"><span>我的智能体</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-ppt"><b>PPT 权威口径</b>华师 P52:"评价量规 / 四六级作文批阅智能体" — 小雅有评测智能体雏形,集中在<em>作文批阅</em>场景。</div>
+  </div>
+
+  <!-- 1.10 AI 课程助教 -->
+  <div class="cap partial">
+    <div class="cap-head">
+      <div class="cap-name">AI 课程助教 / 课程内 AI 助手</div>
+      <div class="cap-status partial">🟡 部分对标</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 space</span>
+        <p class="desc">顶部 7 子菜单(AI 问答/AI 互动室/AI 资源发现/AI 出题/AI 学情分析/AI 智能体/更多 AI 工具)+ DeepSeek R1</p>
+        <div class="shot"><img src="_assets_v8_20260603/p1_space_AI课程助教.png"><div class="cap-img"><span>AI 课程助教 7 子菜单</span><b>SPACE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">课程内右下角"AI 助手"浮窗 + AI 工作台 4 子菜单(AI 助学/知识库/智能体/AI 应用)</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy24_课程空间_AI工作台_4子菜单.png"><div class="cap-img"><span>课程内 AI 工作台</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-compare"><b>形态对比</b>智慧树是"独立 AI 助教页 + 7 子菜单"(显式);小雅是"右下角浮窗 + AI 工作台容器"(嵌入式)。<em>智慧树更显眼,小雅更内嵌</em>。</div>
+  </div>
+
+  <!-- 1.11 课程画像 vs 运行数据 -->
+  <div class="cap deeper">
+    <div class="cap-head">
+      <div class="cap-name">运行数据 / 课程画像看板</div>
+      <div class="cap-status deeper">⭐ 小雅更深</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike</span>
+        <p class="desc">运行数据 7 维度(学习人数/活动饼图/趋势图/作业分布/智能体分布/智能体教学分布/频次)</p>
+        <div class="shot"><img src="_assets_v8_20260603/p1_q1_hike_运行数据看板.png"><div class="cap-img"><span>运行数据 7 维</span><b>HIKE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">课程画像 <strong>6 个独立视角</strong>:课程看板 / AI+应用看板 / 课堂教学活动轨迹 / 课堂实录分析 / 班级画像 / 成员画像 + 多维指标</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy26_课程空间_课程画像_6视角.png"><div class="cap-img"><span>课程画像 6 视角</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-compare"><b>小雅更深的原因</b>智慧树是<u>"一页 7 维看板"</u>,小雅是<u>"6 个独立视角各自深度"</u> — 维度数相近,但小雅每个视角更深(如"课堂实录分析"是单独子页)。</div>
+  </div>
+</section>
+
+<!-- ============ 02 AI 智能基座 ============ -->
+<section id="p2">
+  <div class="sec-head"><h2>02 · AI 智能基座对照</h2><span class="sec-num">PRODUCT 2</span></div>
+
+  <div class="module-intro">
+    <strong>关键更新:</strong>小雅有完整的"基础库 = 校级 AI 基座"(我的应用/知识库/智能体/数字人/题库/图谱库/量规库/文档 8 类),对应智慧树 space 的"AI 管理中心 9 子系统"。V7 误判"小雅完全缺失" — V8 修正为"形态不同,概念对标"。
+  </div>
+
+  <!-- 2.1 AI 管理中心 vs 基础库 -->
+  <div class="cap partial">
+    <div class="cap-head">
+      <div class="cap-name">校级 AI 治理中心(AI 管理中心 vs 基础库)</div>
+      <div class="cap-status partial">🟡 形态不同,概念对标</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 space</span>
+        <p class="desc">AI 管理中心 9 子系统(模型调优 / AI 工作台 / AI 基础配置)— 管理员视角的"集中控制台"</p>
+        <div class="shot"><img src="_assets_v8_20260603/p2_q1_space_AI指令库_34条.png"><div class="cap-img"><span>AI 指令库 34 条</span><b>SPACE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">基础库 8 大类(我的应用/知识库/智能体/数字人/题库/图谱库/量规库/文档)— 教师视角的"AI 资产沉淀"</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy11_基础库_我的知识库.png"><div class="cap-img"><span>基础库 · 我的知识库</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-compare"><b>设计哲学差异</b>智慧树偏"校管理员中心化治理",小雅偏"教师个人 AI 资产 + 校共建"。<em>各有侧重</em> — 智慧树更适合 IT 处采购演示,小雅更适合教师日常工作流。</div>
+    <div class="cap-ppt"><b>PPT 权威口径</b>立项 V16 P14-17:"打造 AI 基座,统一纳管 AI 能力,升级知识库、智能体核心能力,支持全场景 AI 应用 · XClaw 智能枢纽 + AI 能力中心" — 小雅 AI 基座有完整顶层设计,但管理员侧 UI 形态可补强。</div>
+  </div>
+
+  <!-- 2.2 多类基础库展开 -->
+  <div class="cap equal">
+    <div class="cap-head">
+      <div class="cap-name">小雅基础库 8 类资产 — 完整组件展示</div>
+      <div class="cap-status equal">✅ 持平 / 维度更全</div>
+    </div>
+    <div class="dual">
+      <div class="side xiaoya" style="grid-column:span 2">
+        <span class="label">小雅基础库 8 类资产</span>
+        <p class="desc">每类作为独立"我的库"管理,跨课程复用:</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px">
+          <div class="shot"><img src="_assets_v8_20260603/xy10_基础库_我的应用.png"><div class="cap-img"><span>我的应用</span><b>XY-1</b></div></div>
+          <div class="shot"><img src="_assets_v8_20260603/xy11_基础库_我的知识库.png"><div class="cap-img"><span>知识库</span><b>XY-2</b></div></div>
+          <div class="shot"><img src="_assets_v8_20260603/xy12_基础库_我的智能体.png"><div class="cap-img"><span>智能体</span><b>XY-3</b></div></div>
+          <div class="shot"><img src="_assets_v8_20260603/xy13_基础库_我的数字人.png"><div class="cap-img"><span>数字人</span><b>XY-4</b></div></div>
+          <div class="shot"><img src="_assets_v8_20260603/xy14_基础库_我的题库.png"><div class="cap-img"><span>题库</span><b>XY-5</b></div></div>
+          <div class="shot"><img src="_assets_v8_20260603/xy15_基础库_我的图谱库.png"><div class="cap-img"><span>图谱库</span><b>XY-6</b></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2.3 MCP 工具集 -->
+  <div class="cap full">
+    <div class="cap-head">
+      <div class="cap-name">课程级 MCP 工具集 / 课程工具</div>
+      <div class="cap-status full">❌ 小雅 MCP 暂未明牌</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike</span>
+        <p class="desc">课程工具箱明牌 MCP 协议 + 7 工具挂载</p>
+        <div class="shot"><img src="_assets_v8_20260603/p2_q1_hike_MCP工具集.png"><div class="cap-img"><span>MCP 工具集</span><b>HIKE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">课程工具 = 教学增强 / 课堂活动表现 / 教学回顾 / 课程克隆 / 课程资源包 — 工具丰富但<u>未明牌 MCP</u></p>
+        <div class="shot"><img src="_assets_v8_20260603/xy23_课程空间_课程工具.png"><div class="cap-img"><span>课程工具</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-compare"><b>关键差异</b>小雅课程工具实际内容比智慧树丰富(评价活动/课程克隆/教学反思),但<u>缺 MCP 协议明牌</u>。这是<em>对外讲技术故事</em>的差距,非能力差距。</div>
+    <div class="cap-ppt"><b>PPT 权威口径</b>立项 V16 P21 涉及"知识库 + 智能体核心能力" — 未明确提及 MCP 协议。</div>
+  </div>
+
+  <!-- 2.4 智能体广场 -->
+  <div class="cap partial">
+    <div class="cap-head">
+      <div class="cap-name">智能体广场 / 应用中心</div>
+      <div class="cap-status partial">🟡 形态接近</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike</span>
+        <p class="desc">智能体广场卡片化 + 数十个示例(医学助手/大学英语/园艺植物学等)</p>
+        <div class="shot"><img src="_assets_v8_20260603/p2_q1_space_AI智能体.png"><div class="cap-img"><span>智能体广场</span><b>SPACE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">基础库 → 我的智能体 + XClaw 教学 Skill 中心(4 大分类)</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy10_基础库_我的应用.png"><div class="cap-img"><span>我的应用 / Skill 中心</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-ppt"><b>PPT 权威口径</b>售前 V3.1 P13:"打造开箱即用的教学 Skill 中心,内置助教助学助研 Skills" — 小雅 Skill 分类粒度更细(助教/助学/助研/能力培养 4 大分类)。</div>
+  </div>
+
+  <!-- V9 新增:2.5 AI 工作台首页 Agent+MCP -->
+  <div class="cap full">
+    <div class="cap-head">
+      <div class="cap-name">AI 工作台首页 · Agent+MCP 双模式 <span style="background:var(--gold);color:#fff;padding:1px 8px;font-size:11px;border-radius:2px;margin-left:8px;font-weight:600">V9 新增</span></div>
+      <div class="cap-status full">❌ 小雅入口哲学不同(空间 vs 对话)</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike · 首页=对话入口</span>
+        <p class="desc">登录后直接进 <em>AI 工作台</em>(不是仪表盘)— 中心是对话框,支持 <strong>Agent 调用</strong>(@智能体)和 <strong>MCP 调用</strong>(@工具)<u>双模式</u></p>
+        <div class="shot"><img src="../竞品调研/AI教学中心/AI工作台首页.png"><div class="cap-img"><span>AI 工作台 · Agent/MCP 双模式</span><b>HIKE-V9</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅 · 首页=空间入口</span>
+        <p class="desc">登录后进 <em>个人空间</em> — 中心是"我的课程/我的资产",AI 入口分散在右下浮窗和 AI 创新中心。AI 指令库 34 条对标 Agent/MCP,但<u>未做成首页对话框</u></p>
+        <div class="shot"><img src="_assets_v8_20260603/p2_q1_space_AI指令库_34条.png"><div class="cap-img"><span>AI 指令库 34 条(类比)</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-compare"><b>设计哲学差异</b>智慧树假设老师"来了就想干活(对话启动)",小雅假设老师"来了想找东西(资产管理)"。<em>两种哲学都对</em>,但对 AI 不熟的老师,智慧树的入口门槛更低。<u>小雅可以考虑在个人空间首屏增加 AI 对话快捷区</u>,保留资产体系的同时提供低门槛入口。</div>
+  </div>
+
+  <!-- V9 新增:2.6 AI 助教 IM 形态 -->
+  <div class="cap full">
+    <div class="cap-head">
+      <div class="cap-name">AI 助教 · IM 聊天形态 <span style="background:var(--gold);color:#fff;padding:1px 8px;font-size:11px;border-radius:2px;margin-left:8px;font-weight:600">V9 新增 · 智慧树独创</span></div>
+      <div class="cap-status full">❌ 形态独创,小雅形态完全不同</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike · 教学助手</span>
+        <p class="desc">把 AI 助教做成 <em>类钉钉/企业微信的 IM 聊天界面</em>:左侧"专属课程助教 + 入群申请 + 安全助手 + 哈工程回放课程 + 2 班"等聊天列表,右侧聊天窗口 — <strong>AI 助教和班级群混合编排</strong>,AI 像群里一个同事一样被 @ 出来</p>
+        <div class="shot"><img src="../竞品调研/AI教学中心/AI助教对话.png"><div class="cap-img"><span>AI 助教 IM 聊天界面</span><b>HIKE-V9</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅 · 浮窗形态</span>
+        <p class="desc">课程内 AI 助手做成右下角浮窗 + AI 工作台 4 子菜单(AI 助学/知识库/智能体/AI 应用)— <u>正统 SaaS 形态</u>,但学习成本不为零</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy24_课程空间_AI工作台_4子菜单.png"><div class="cap-img"><span>课程空间 AI 工作台</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-compare"><b>智慧树的设计巧思</b>假设老师<em>已经熟悉钉钉/企业微信</em>,直接复用熟悉的形态 — <u>学习成本到 0</u>。这是非常激进的产品决策。<strong>小雅可以借鉴:让"AI 助手"成为类 IM 的常驻消息中心,而不是右下角浮窗。</strong></div>
+  </div>
+</section>
+
+<!-- ============ 03 教学质量验收(V9 新增) ============ -->
+<section id="p3-new">
+  <div class="sec-head"><h2>03 · 教学质量验收 · 课程评审主页 <span style="background:var(--gold);color:#fff;padding:2px 10px;font-size:11px;border-radius:2px;margin-left:8px;font-weight:600">V9 新增产品块</span></h2><span class="sec-num">PRODUCT 3</span></div>
+
+  <div class="module-intro">
+    <strong>V9 关键发现:</strong>智慧树有独立的 <em>"AI 课程评审主页"</em>视角 — 8 个 Tab,完整覆盖课程全生命周期,面向<strong>学校/督导/评审专家</strong>(不是给老师看的)。<u>这是小雅完全空白的产品空间</u>,对应高校金课申报的真实刚需场景。
+  </div>
+
+  <!-- 3.1 课程评审主页 8 Tab -->
+  <div class="cap full">
+    <div class="cap-head">
+      <div class="cap-name">课程评审主页 · 8 Tab 教学成果验收闭环 <span style="background:var(--gold);color:#fff;padding:1px 8px;font-size:11px;border-radius:2px;margin-left:8px;font-weight:600">V9 新增</span></div>
+      <div class="cap-status full">❌ 小雅完全空白</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike · 评审主页 Tab 1 课程概况</span>
+        <p class="desc">课程封面 + 主页面 + 学分/学时/学生人数累计</p>
+        <div class="shot"><img src="../竞品调研/AI教学中心/AI课程_评审主页1.png"><div class="cap-img"><span>Tab 1:课程概况(哈工程《高数智慧课》)</span><b>HIKE-V9</b></div></div>
+      </div>
+      <div class="side hike"><span class="label">智慧树 hike · 评审主页 Tab 4 智能体</span>
+        <p class="desc">3D 大屏:课程智能助手 + 累计使用人数 + 调用次数 + 能力工具 + 知识库 + 知识点</p>
+        <div class="shot"><img src="../竞品调研/AI教学中心/AI课程_评审主页5.png"><div class="cap-img"><span>Tab 4:智能体 3D 大屏</span><b>HIKE-V9</b></div></div>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>#</th><th>Tab</th><th>展示内容</th><th>受众价值</th></tr></thead>
+      <tbody>
+      <tr><td>1</td><td><b>课程概况</b></td><td>课程封面 + 主页面 + 学分/学时/学生人数累计</td><td>评审初步印象</td></tr>
+      <tr><td>2</td><td><b>教学设计</b></td><td>教学目标 / 教学方法 / 课程大纲</td><td>课程结构展示</td></tr>
+      <tr><td>3</td><td><b>教学团队</b></td><td>主讲 + 助教 + 学生名单</td><td>师资展示</td></tr>
+      <tr><td>4</td><td><b>智能体</b></td><td>3D 大屏:智能助手 + 使用量 + 工具/知识库</td><td>AI 能力可视化</td></tr>
+      <tr><td>5</td><td><b>知识体系</b></td><td>知识图谱 / 问题图谱 / 能力图谱</td><td>知识深度</td></tr>
+      <tr><td>6</td><td><b>教学资源</b></td><td>所有资源 + 共享课引用</td><td>资源丰富度</td></tr>
+      <tr><td>7</td><td><b>运行数据</b></td><td>学情统计 + 互动数据 + AI 用量</td><td>真实成效</td></tr>
+      <tr><td>8</td><td><b>教学成果</b></td><td>学生作品 / 奖项 / 反馈</td><td>结果导向</td></tr>
+      </tbody>
+    </table>
+
+    <div class="dual" style="margin-top:14px">
+      <div class="side hike"><span class="label">配置评审主页(独立菜单)</span>
+        <div class="shot"><img src="../竞品调研/AI教学中心/AI智慧课_配置课程评审主页.png"><div class="cap-img"><span>"配置课程评审主页"独立菜单</span><b>HIKE-V9</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅 · 无对应模块</span>
+        <p class="desc"><u>小雅暂无"课程评审/教学成果展示"独立模块</u>。课程画像 6 视角是给老师/管理员看的运营数据,不是给评审专家看的"成果展示"。</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy26_课程空间_课程画像_6视角.png"><div class="cap-img"><span>课程画像(运营导向,非评审导向)</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+
+    <div class="cap-compare"><b>产品哲学差异</b>智慧树把"教学评审"当作<em>课程的第二生命</em>:课程建完 → 运营完 → 还要做一份"评审主页"给学校/督导看。这映射了高校真实场景 — <strong>"教学成果展示"是教师 KPI</strong>(申请省级金课/校级精品课)。小雅缺这一层。</div>
+    <div class="cap-ppt"><b>给小雅的建议</b>这是 <em>P0 级</em>产品空白点。建议增加"<strong>课程成果展示</strong>"模块,让教师一键生成<u>申请省级金课/校级精品课/教学创新大赛</u>的展示页 — 这是高校教师真实痛点,不需要复杂技术,但能极大提升小雅在评审/院系层的话语权。</div>
+  </div>
+</section>
+
+<!-- ============ 04 智慧教室与实训 ============ -->
+<section id="p4">
+  <div class="sec-head"><h2>04 · 智慧教室与实训对照</h2><span class="sec-num">PRODUCT 4</span></div>
+
+  <!-- 4.1 灵动课堂 -->
+  <div class="cap full">
+    <div class="cap-head">
+      <div class="cap-name">灵动课堂 + AI 学习管家</div>
+      <div class="cap-status full">❌ 小雅缺 AI 学习管家</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 space</span>
+        <p class="desc">课堂号 + 二维码 + AI 学习管家(语音呼叫发起签到/投票/点名/抢答)+ 6 工具栏</p>
+        <div class="shot"><img src="_assets_v8_20260603/p4_q1_space_灵动课堂_AI学习管家.png"><div class="cap-img"><span>灵动课堂</span><b>SPACE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">课程工具 → 教学增强 → 课堂活动管理 / 签到管理 / 评价活动 / 黑板 / 私信群聊 + 课程公告</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy23_课程空间_课程工具.png"><div class="cap-img"><span>课程工具</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-compare"><b>小雅有 vs 缺</b>有:签到 / 课堂互动 / 黑板 / 私信群聊 / 评价活动等课堂工具;缺:<strong>语音呼叫式 AI 学习管家</strong>(讯飞语音能力可对接,但未集成)。</div>
+  </div>
+
+  <!-- V9 升级:智能体教学专项辅导 6 步完整流程 -->
+  <div class="cap full">
+    <div class="cap-head">
+      <div class="cap-name">智能体教学专项辅导 · 6 步完整流程 <span style="background:var(--gold);color:#fff;padding:1px 8px;font-size:11px;border-radius:2px;margin-left:8px;font-weight:600">V9 升级</span></div>
+      <div class="cap-status full">❌ 小雅有"AI 教学专题"但形态接近,实时提问深度待测</div>
+    </div>
+    <p style="font-size:13px;color:var(--ink-3);margin:8px 0 10px"><strong>V9 关键发现:</strong>V8 只看到智慧树"5 种 AI 教学专题场景"的列表入口,V9 看到完整的 <em>6 步流程</em> — AI 数字人带学生跟着 PPT 一页页讲 + 实时提问停顿响应:</p>
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin:10px 0;font-size:11px">
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>01</b><br>创建专题</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>02</b><br>选授课老师<br><span style="color:var(--gold-2);font-size:10px">LV3 数字人</span></div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>03</b><br>上传 PPT/视频</div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>04</b><br>智能体课堂<br><span style="color:var(--gold-2);font-size:10px">数字人讲</span></div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>05</b><br>实时提问<br><span style="color:var(--gold-2);font-size:10px">停顿响应</span></div>
+      <div style="padding:6px 8px;background:var(--paper-2);border-left:2px solid var(--hike)"><b>06</b><br>自动留存<br><span style="color:var(--gold-2);font-size:10px">学情</span></div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 · Step 4 智能体课堂</span>
+        <p class="desc">课堂界面 = 左侧 PPT 当前页(《心脏的功能》)+ 右上 AI 授课老师"葛有为" LV3 数字人 + 字幕 + 1/18 进度</p>
+        <div class="shot"><img src="../竞品调研/AI教学中心/创建智能体教学专项辅导2_教学视频..png"><div class="cap-img"><span>智能体教学课堂</span><b>HIKE-V9</b></div></div>
+      </div>
+      <div class="side hike"><span class="label">智慧树 · Step 5 实时提问</span>
+        <p class="desc">学生<em>随时打断</em> → AI 数字人停顿 → 回答 → 继续讲。<u>这是关键差异:不是看完后再问,是讲到一半就能问</u></p>
+        <div class="shot"><img src="../竞品调研/AI教学中心/创建智能体教学专项辅导3_智能体教学提问.png"><div class="cap-img"><span>实时提问 · 数字人停顿响应</span><b>HIKE-V9</b></div></div>
+      </div>
+    </div>
+    <div class="dual">
+      <div class="side xiaoya" style="grid-column:span 2"><span class="label">小雅 · AI 教学专题 5 场景(对照位置)</span>
+        <p class="desc">小雅有"AI 教师教学专题 · 5 授课场景"产品形态(见 01 章),但<u>是否做到智慧树这种"实时提问停顿响应"的工程深度,需要专项测试</u>。两家在 LV3 数字人 + 8 形象设定上完全一致(可能是<em>同步进化或互抄</em>)。</p>
+      </div>
+    </div>
+    <div class="cap-compare"><b>关键产品哲学</b>智慧树<em>把"AI 数字人讲课"做成核心场景</em>,不是辅助 — 学生进入课堂直接看数字人,而不是先看老师视频再叫数字人。这是<u>"AI 替代讲课"的激进路线</u>,小雅更偏"AI 辅助教师"路线。两条路都对,看用户群:智慧树面向<em>缺师资的高校</em>,小雅面向<em>有师资但要提效的高校</em>。</div>
+  </div>
+</section>
+
+<!-- ============ 05 数据治理 ============ -->
+<section id="p5">
+  <div class="sec-head"><h2>05 · 数据治理对照</h2><span class="sec-num">PRODUCT 5</span></div>
+
+  <!-- 5.1 学情画像 V10 补强 -->
+  <div class="cap deeper">
+    <div class="cap-head">
+      <div class="cap-name">学情归因 / 学生学情 + 课程画像 <span style="background:var(--gold);color:#fff;padding:1px 8px;font-size:11px;border-radius:2px;margin-left:8px;font-weight:600">V10 补视觉证据</span></div>
+      <div class="cap-status deeper">⭐ 小雅更深(V10 视觉证据齐全)</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 space · 学情观测</span>
+        <p class="desc">学情观测 4 视角:知识点 / 学生 / AI 互动 / 课程运行报告 — <u>是一页 4 维看板</u></p>
+        <div class="shot"><img src="_assets_v8_20260603/p3_q2_space_学情观测_4视角.png"><div class="cap-img"><span>学情观测 4 视角</span><b>SPACE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅 · 课程画像 6 视角</span>
+        <p class="desc">学生学情 + 课程画像 <strong>6 个独立视角</strong>:课程看板 / AI+应用看板 / 课堂教学活动轨迹 / 课堂实录分析 / 班级画像 / 成员画像 + 课程目标达成评价(OBE)</p>
+        <div class="shot"><img src="../场景截图/课程画像专项_20260605/01_课程画像_总览_V1.png"><div class="cap-img"><span>课程画像 6 视角总览</span><b>XIAOYA-V10</b></div></div>
+      </div>
+    </div>
+
+    <!-- V10 新增:小雅 6 视角实采证据 -->
+    <div class="dual" style="margin-top:8px">
+      <div class="side xiaoya" style="grid-column:span 2"><span class="label">小雅 · 6 视角下钻证据(V10 婷婷手抓 4 张)</span>
+        <p class="desc">每个视角都是独立子页,可下钻 — 这是<strong>"6 个独立深度"</strong>对比智慧树<strong>"4 维一页"</strong>的核心证据</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-top:8px">
+          <div class="shot"><img src="../场景截图/课程画像专项_20260605/05_课程画像_课堂教学活动轨迹.png"><div class="cap-img"><span>课堂教学活动轨迹</span><b>XY-V10a</b></div></div>
+          <div class="shot"><img src="../场景截图/课程画像专项_20260605/06_课程画像_班级画像.png"><div class="cap-img"><span>班级画像</span><b>XY-V10b</b></div></div>
+          <div class="shot"><img src="../场景截图/课程画像专项_20260605/07_课程画像_成员画像.png"><div class="cap-img"><span>成员画像</span><b>XY-V10c</b></div></div>
+          <div class="shot"><img src="../场景截图/课程画像专项_20260605/08_课程画像_AI应用看板_生成词云.png"><div class="cap-img"><span>AI 应用看板 + 词云</span><b>XY-V10d</b></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cap-compare"><b>V10 结论强化</b>对比图差距非常明显 — 智慧树是<em>"一页 4 维"</em>看板,小雅是<em>"6 个独立子页"</em>,深度差距 1.5+ 倍。<u>对比图越清晰,销售口径越好讲</u> — "学情画像 360 度无死角" 是小雅可以直接喊的口号。</div>
+    <div class="cap-ppt"><b>PPT 权威口径</b>售前 V3.1 P25:"千生千面 · 个性化学习";P27:"数据驱动构建 · 常态化教学数据采集" — 小雅数据采集 + 五级画像 + 目标达成度形成完整闭环。</div>
+  </div>
+
+  <!-- 5.2 三级门户 -->
+  <div class="cap deeper">
+    <div class="cap-head">
+      <div class="cap-name">三级门户(全国 / 区域 / 校级)</div>
+      <div class="cap-status deeper">⭐ 小雅独有</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树</span>
+        <p class="desc">无显式三级门户产品形态</p>
+        <div class="shot"><img src="_assets_v8_20260603/p1_q1_hike_课程主页_智能体课程.png"><div class="cap-img"><span>课程主页(无门户)</span><b>HIKE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">公开门户首页 + 智慧慕课中心 + 共享课程中心 + 专业全景中心 + AI 创新中心(5 个一级菜单)</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy01_公开门户_首页.png"><div class="cap-img"><span>公开门户首页</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+    <div class="cap-ppt"><b>PPT 权威口径</b>售前 V3.1 P14:"智慧教学平台个性化门户 · 校级门户 · 手机端" — 小雅门户体系是 V7 标"小雅更深"的核心证据,V8 视觉确认。</div>
+  </div>
+
+  <!-- 5.3 课程管理 -->
+  <div class="cap equal">
+    <div class="cap-head">
+      <div class="cap-name">课程管理</div>
+      <div class="cap-status equal">✅ 持平</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 space</span>
+        <p class="desc">课程版本 4 状态 + 班级管理 + 教师团队管理</p>
+        <div class="shot"><img src="_assets_v8_20260603/p5_q1_smartcourse_课程版本管理.png"><div class="cap-img"><span>课程版本管理</span><b>SPACE</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅</span>
+        <p class="desc">课程管理 → 课程信息 / 课程空间编号 / 测试教师 / 更换封面 等</p>
+        <div class="shot"><img src="_assets_v8_20260603/xy27_课程空间_课程管理.png"><div class="cap-img"><span>课程管理</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 学生侧对照(V9 新增) ============ -->
+<section id="student">
+  <div class="sec-head"><h2>06 · 学生侧对照 <span style="background:var(--gold);color:#fff;padding:2px 10px;font-size:11px;border-radius:2px;margin-left:8px;font-weight:600">V9 新增产品块</span></h2><span class="sec-num">STUDENT</span></div>
+
+  <div class="module-intro">
+    <strong>V9 重大发现:</strong>V8 主要对照教师侧,完全没有覆盖学生侧。V9 揭示智慧树学生端的能力体系远比想象的完整 — <em>不只是"看课"页面,而是个人化能力训练中心</em>。3 类图谱并存 + 5 个一级菜单。
+  </div>
+
+  <!-- 学生端 3 类图谱 -->
+  <div class="cap full">
+    <div class="cap-head">
+      <div class="cap-name">学生端 · 我学的课 · 3 类图谱知识体系 <span style="background:var(--gold);color:#fff;padding:1px 8px;font-size:11px;border-radius:2px;margin-left:8px;font-weight:600">V9 新增</span></div>
+      <div class="cap-status full">❌ 小雅"问题图谱"完全缺失,其他需测</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike · 学生课程主页</span>
+        <p class="desc">头像区(同学+92 人)+ 待办任务(小组作业)+ 课程通知 + 教学计划。<u>5 个一级菜单</u>:课程主页 / 我的学习 / 我的任务 / 我的消息 / 小组学习</p>
+        <div class="shot"><img src="../竞品调研/AI教学中心/我学的课程首页.png"><div class="cap-img"><span>学生端课程主页</span><b>HIKE-V9</b></div></div>
+      </div>
+      <div class="side hike"><span class="label">智慧树 hike · 知识体系 Tab</span>
+        <p class="desc">3 类图谱并存:<strong>知识图谱(285 知识点 网状)+ 问题图谱(18 个)+ 能力图谱</strong>。每类都是独立子页,可下钻</p>
+        <div class="shot"><img src="../竞品调研/AI教学中心/我学的课程_知识体系.png"><div class="cap-img"><span>3 类图谱 · 285 知识点 + 18 问题</span><b>HIKE-V9</b></div></div>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th>图谱</th><th>数据来源</th><th>对学生的价值</th><th>对教师的价值</th><th>小雅对标</th></tr></thead>
+      <tbody>
+      <tr><td><b>知识图谱</b>(285 点)</td><td>课程电子教材自动抽取 + 老师人工补</td><td>看课程<em>知识全景</em></td><td>看哪些知识点学生没掌握</td><td class="ok">✅ 小雅有(基础库·图谱库)</td></tr>
+      <tr><td><b>问题图谱</b>(18 个)</td><td>课程历史问答聚合</td><td>看<em>典型问题</em>清单</td><td>看学生高频痛点</td><td class="gap">❌ 小雅缺(新角度)</td></tr>
+      <tr><td><b>能力图谱</b>(0 数)</td><td>训练题库答题数据 + 能力维度映射</td><td>看自己<em>能力雷达</em></td><td>OBE 达成度数据源</td><td class="partial">🟡 小雅有 OBE 达成度但未做成学生侧图谱</td></tr>
+      </tbody>
+    </table>
+
+    <div class="cap-compare"><b>给小雅的启示</b>"知识图谱"小雅有,"能力图谱"小雅有 OBE 达成度但未做成学生侧可视化,<em>"问题图谱"是新角度</em> — <u>把学生历史问答聚合成图谱节点</u>,既能给学生看"别人都问什么"(降低学生孤独感),也能给老师看"学生卡在哪"(教学反馈)。<strong>低成本(基于现有问答数据)、高价值(2 个角色都受益)、建议直接补</strong>。</div>
+  </div>
+
+  <!-- 学生端学习资源 -->
+  <div class="cap partial">
+    <div class="cap-head">
+      <div class="cap-name">学生端 · 我的学习 4 Tab</div>
+      <div class="cap-status partial">🟡 形态接近 / 小雅"灵动课堂"是对应角度</div>
+    </div>
+    <div class="dual">
+      <div class="side hike"><span class="label">智慧树 hike · 我的学习</span>
+        <p class="desc">4 Tab:<em>学习资源 / 课堂回放 / 知识体系 / 训练题库</em></p>
+        <div class="shot"><img src="../竞品调研/AI教学中心/我学的课程_学习资源.png"><div class="cap-img"><span>学习资源 Tab</span><b>HIKE-V9</b></div></div>
+      </div>
+      <div class="side xiaoya"><span class="label">小雅 · 灵动课堂(对照)</span>
+        <p class="desc">小雅"灵动课堂 + AI 学习管家"是对应角度,但<u>学生侧的"训练题库"刷题模式可能弱于智慧树</u></p>
+        <div class="shot"><img src="_assets_v8_20260603/p4_q1_space_灵动课堂_AI学习管家.png"><div class="cap-img"><span>灵动课堂</span><b>XIAOYA</b></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 差距全景表 ============ -->
+<section id="summary">
+  <div class="sec-head"><h2>07 · 差距全景表(V9 重新统计)</h2><span class="sec-num">SUMMARY</span></div>
+
+  <p>V9 在 V8 基础上发现 7 项智慧树新能力,真实差距比 V8 描述的更严峻:</p>
+
+  <table>
+    <thead>
+      <tr><th>新发现能力</th><th>V8 判断</th><th>V9 实测后</th><th>差距等级</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>AI 一键建课流水线</td><td>❌ 4 步(已是缺失)</td><td class="gap">❌ 实际是 14 步(差距更大)</td><td>P0</td></tr>
+      <tr><td>共享课资源池</td><td>V8 未关注</td><td class="gap">❌ 24214 门(智慧树 14 年壁垒)</td><td>P1(错位)</td></tr>
+      <tr><td>课程评审主页 8 Tab</td><td>V8 未发现</td><td class="gap">❌ 完全空白(高校金课刚需)</td><td>P0</td></tr>
+      <tr><td>学生端问题图谱</td><td>V8 未发现</td><td class="gap">❌ 完全空白(新角度)</td><td>P1</td></tr>
+      <tr><td>AI 助教 IM 形态</td><td>V8 未发现</td><td class="gap">❌ 智慧树独创(熟悉感降门槛)</td><td>P2</td></tr>
+      <tr><td>AI 工作台首页</td><td>V8 未发现</td><td class="gap">❌ Agent/MCP 双模式入口</td><td>P2</td></tr>
+      <tr><td>智能体教学专项辅导深度</td><td>🟡 看到 5 场景列表</td><td class="gap">❌ 实际是 6 步流程 + 实时提问停顿响应</td><td>P1</td></tr>
+    </tbody>
+  </table>
+
+  <p style="margin-top:18px;font-size:13px;color:var(--ink-3)"><strong>V9 重新统计的差距分布:</strong>缺失 <strong>16 条</strong>(45%,V8 是 12 条)/ 部分 9 条(26%)/ 持平 4 条(11%)/ 小雅更深 3 条(8%)/ 智慧树独有但小雅不需 3 条(8%)。</p>
+  <p style="font-size:13px;color:var(--ink-3)"><strong>V9 含义:</strong>差距集中在两大类 — <em>(1) AI 创新形态包装</em>(建课流水线/教学专题/数字人讲课/AI 助教 IM 等),<em>(2) 评审/展示导向</em>(课程评审主页 — <u>这是 V9 新发现的关键空白</u>)。</p>
+
+  <div class="callout" style="margin-top:18px">
+    <div class="label">V9 给小雅的 5 个 P0/P1 启示</div>
+    <ol style="padding-left:20px;color:var(--ink-2);font-size:13.5px;line-height:1.85">
+      <li><strong>[P0] 补"课程评审主页"产品空白</strong> — 高校金课申报刚需,小雅完全没有。智慧树 8 Tab 是直接对标模板。</li>
+      <li><strong>[P0] 升级"AI 一键建课"到 14 步流水线工程深度</strong> — V8 误以为是 4 步,实际 14 步。需要重新评估研发投入。</li>
+      <li><strong>[P1] 学生端补"问题图谱"维度</strong> — 低成本,基于现有问答数据。给学生看"别人都问什么",给老师看"学生卡在哪"。</li>
+      <li><strong>[P1] 错位卖共享课</strong> — 不要硬刚 24214 门,做"医学院联盟 / 师范联盟 / 财经院校联盟"垂直精品。</li>
+      <li><strong>[P2] AI 助教 IM 形态 + 首页对话框</strong> — 学习智慧树的"熟悉感"设计,降低教师 AI 学习成本。</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 08 小雅独有发现 ============ -->
+<section id="new-find">
+  <div class="sec-head"><h2>08 · 小雅独有发现(V9 保留 V8)</h2><span class="sec-num">NEW</span></div>
+
+  <p>V8 抓取过程中,发现小雅有<u>智慧树没有</u>的能力点:</p>
+
+  <div class="cap deeper">
+    <div class="cap-head">
+      <div class="cap-name">课程克隆(从我教的课程克隆 / 从他人课程克隆)</div>
+      <div class="cap-status deeper">⭐ 小雅独有</div>
+    </div>
+    <p>课程工具 → 课程克隆模块,支持"从我教的课程克隆"+"从他人课程克隆"+ 课程资源包打包。<u>智慧树未见此能力</u>(智慧树用"共享课程"实现跨教师复用,但不是克隆形态)。</p>
+    <div class="shot" style="margin:8px 0"><img src="_assets_v8_20260603/xy23_课程空间_课程工具.png"><div class="cap-img"><span>课程克隆模块</span><b>XY-NEW-1</b></div></div>
+  </div>
+
+  <div class="cap deeper">
+    <div class="cap-head">
+      <div class="cap-name">教学反思 + 往期课程空间</div>
+      <div class="cap-status deeper">⭐ 小雅独有</div>
+    </div>
+    <p>课程工具 → 教学回顾 → 教学反思 + 往期课程空间。强调教师<em>反思性教学</em>的产品形态。<u>智慧树未见同等设计</u>。</p>
+  </div>
+
+  <div class="cap deeper">
+    <div class="cap-head">
+      <div class="cap-name">课程画像 6 个独立视角 <span style="background:var(--gold);color:#fff;padding:1px 8px;font-size:11px;border-radius:2px;margin-left:8px;font-weight:600">V10 补 4 张证据</span></div>
+      <div class="cap-status deeper">⭐ 小雅更深(视觉证据齐)</div>
+    </div>
+    <p>课程看板 / AI+应用看板 / 课堂教学活动轨迹 / 课堂实录分析 / 班级画像 / 成员画像 — 每个视角都是独立子页,深度比智慧树"7 维一页"看板更深。<u>见 05 章已附 4 张实采截图</u>。</p>
+  </div>
+
+  <div class="cap deeper">
+    <div class="cap-head">
+      <div class="cap-name">基础库 8 类资产(完整 AI 基座) <span style="background:var(--gold);color:#fff;padding:1px 8px;font-size:11px;border-radius:2px;margin-left:8px;font-weight:600">V10 补 4 张证据</span></div>
+      <div class="cap-status deeper">⭐ 维度更全</div>
+    </div>
+    <p>我的应用 / 知识库 / 智能体 / 数字人 / 题库 / 图谱库 / <strong>量规库</strong> / 文档 — 智慧树 space 没有"量规库"(评分规则库)、"图谱库"(知识图谱专项库)等。</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin:8px 0">
+      <div class="shot"><img src="../场景截图/2026-05-06_小雅3.0_产品截图/06_基础库_我的题库.png"><div class="cap-img"><span>题库</span><b>XY-V10a</b></div></div>
+      <div class="shot"><img src="../场景截图/2026-05-06_小雅3.0_产品截图/09_基础库_我的量规库.png"><div class="cap-img"><span>量规库(独有)</span><b>XY-V10b</b></div></div>
+      <div class="shot"><img src="../场景截图/2026-05-06_小雅3.0_产品截图/11_基础库_我的智能体.png"><div class="cap-img"><span>智能体</span><b>XY-V10c</b></div></div>
+      <div class="shot"><img src="../场景截图/2026-05-06_小雅3.0_产品截图/12_基础库_我的数字人.png"><div class="cap-img"><span>数字人</span><b>XY-V10d</b></div></div>
+    </div>
+  </div>
+
+  <div class="cap deeper">
+    <div class="cap-head">
+      <div class="cap-name">5 个一级门户中心</div>
+      <div class="cap-status deeper">⭐ 小雅独有</div>
+    </div>
+    <p>公开门户含:首页 / 智慧慕课中心 / 共享课程中心 / AI 创新中心 / 专业全景中心 — 5 个一级菜单形成跨校 / 跨学科的内容生态。<u>智慧树未见同等门户体系</u>。</p>
+    <div class="shot" style="margin:8px 0"><img src="_assets_v8_20260603/xy04_专业全景中心.png"><div class="cap-img"><span>专业全景中心</span><b>XY-NEW-5</b></div></div>
+  </div>
+</section>
+
+<!-- ============ 10 销售对外口径 V10 新增 ============ -->
+<section id="strategy">
+  <div class="sec-head"><h2>10 · 销售对外口径 <span style="background:var(--gold);color:#fff;padding:2px 10px;font-size:11px;border-radius:2px;margin-left:8px;font-weight:600">V10 新增</span></h2><span class="sec-num">STRATEGY</span></div>
+
+  <h3>10.1 客户问"为什么不选智慧树"时</h3>
+  <div class="callout">
+    <div class="label">销售口径 · 客观对照</div>
+    <p style="line-height:2"><strong>承认资产:</strong>"智慧树的 24214 门共享课资源池是 14 年沉淀的核心资产,我们不否认。"</p>
+    <p style="line-height:2"><strong>差异定位:</strong>"我们做的不是另一个智慧树。学校选我们的真实理由是 5 条:</p>
+    <ol style="padding-left:24px;color:var(--ink-2);font-size:14px;line-height:1.9">
+      <li><strong>课程画像 6 视角 vs 智慧树 4 维一页</strong> — 学情画像 360 度无死角(见 05 章实采证据)</li>
+      <li><strong>5 大门户中心 + 专业全景中心</strong> — 智慧树暂未做成同等门户矩阵</li>
+      <li><strong>基础库 8 类资产(含量规库)</strong> — 校级 AI 资产沉淀,智慧树 space 缺"量规库"维度</li>
+      <li><strong>课程克隆 + 教学反思</strong> — 反思性教学产品哲学,智慧树用"共享课"是另一逻辑</li>
+      <li><strong>讯飞星火 + 多模型 + 教育语音能力</strong> — 讯飞 15 年教育 NLP 沉淀,语音能力国内第一</li>
+    </ol>
+  </div>
+
+  <h3>10.2 客户问"智慧树有 14 年共享课资源,你们怎么追"时</h3>
+  <div class="callout">
+    <div class="label">销售口径 · 错位竞争</div>
+    <p><strong>承认:</strong>"我们短期内不可能在课程数量上追上智慧树的 24214 门 — 14 年沉淀不是 3 年能复制的。"</p>
+    <p><strong>错位:</strong>"但学校真实的痛点不是"再买一个共享课平台"(智慧树已经够用),而是<em>(1) 自己的校内课程怎么用 AI 升级 (2) 怎么做有竞争力的金课申报 (3) 怎么把 AI 能力沉淀成校级资产</em>。这三个痛点,我们用<u>课程画像 + 基础库 + AI 一键建课</u>是更直接的方案。"</p>
+    <p><strong>错位策略:</strong>"如果学校要建跨校共享课,我们可以走<u>'医学院联盟 / 师范联盟 / 财经院校联盟'</u>的垂直精品路线,与智慧树的'大而全'差异化竞争。"</p>
+  </div>
+
+  <h3>10.3 客户问"智慧树有 AI 一键建课 14 步,小雅有吗"时</h3>
+  <div class="callout">
+    <div class="label">销售口径 · 工程路标</div>
+    <p><strong>诚实:</strong>"智慧树的 AI 一键建课 14 步是目前业内最完整的,我们认这个工程深度。"</p>
+    <p><strong>路标承诺:</strong>"小雅<u>'智能建课中'</u>卡片已经在课程列表里能看到(实采证据),说明产品在研。我们的路标是<em>下一阶段把建课流水线工程深度做到对等</em>,目前 V3.0.x 已有部分能力。"</p>
+    <p><strong>反向优势:</strong>"我们的优势在<em>建课后</em>—— 课程画像 6 视角 / 学情归因 OBE / 教学反思 等"建课后的学情/反思/迭代闭环",这是智慧树相对薄弱的部分。"</p>
+  </div>
+
+  <h3>10.4 客户问"智慧树有 AI 助教 IM 形态,体验好,小雅呢"时</h3>
+  <div class="callout">
+    <div class="label">销售口径 · 产品哲学</div>
+    <p><strong>差异:</strong>"智慧树把 AI 助教做成 IM 聊天形态(类钉钉),适合<u>"已经熟悉企微/钉钉的老师"</u>。我们做成右下角浮窗 + AI 工作台 4 子菜单,适合<u>"已经熟悉 SaaS 平台的老师"</u> — 两种形态都有用户群。"</p>
+    <p><strong>升级方向:</strong>"我们也在评估把"AI 助手"做成<u>常驻消息中心 + IM 形态</u>,V3.0.x 后续会规划。"</p>
+  </div>
+</section>
+
+<!-- ============ 09 厂商总结 V10 重写 ============ -->
+<section id="conclusion">
+  <div class="sec-head"><h2>09 · 厂商总结(V10 重写)</h2><span class="sec-num">CONCLUSION</span></div>
+
+  <h3>V9 重新校准的对比格局</h3>
+  <p><strong>智慧树相对小雅的真实优势(V9 修正):</strong>不只是"AI 创新形态包装"(V8 的判断),而是<u>4 个体系级壁垒</u>:</p>
+  <ol style="padding-left:24px;color:var(--ink-2);font-size:14px;line-height:1.9">
+    <li><strong>共享课资源池</strong>(24214 门 / 14 年沉淀 / 不可复制)</li>
+    <li><strong>建课流水线工程深度</strong>(14 步引导 / 自动化程度高 / V8 严重低估)</li>
+    <li><strong>评审视角产品空间</strong>(课程评审主页 8 Tab / 对接高校金课申报)</li>
+    <li><strong>AI 入口形态熟悉感</strong>(IM 形态助教 / 首页对话框 / 学习成本低)</li>
+  </ol>
+
+  <p style="margin-top:14px"><strong>小雅相对智慧树的真实优势(V9 保留):</strong>三级门户体系 / 课程画像 6 视角 / 课程克隆 + 教学反思 / 基础库 8 类资产维度更全 / 学情归因 + OBE 达成度更深。</p>
+
+  <h3>对外讲故事的口径(销售可直接用,V9 修正)</h3>
+  <div class="callout">
+    <div class="label">V9 客观对照</div>
+    <p><strong>小雅的故事:</strong>"我们是一个平台跑通建-备-教-学-评-考-管全链路,有<u>三级门户 + 5 大门户中心 + 基础库 8 类资产 + 课程画像 6 视角 + 学情归因 OBE 达成度</u>的完整产品矩阵,<em>更适合"有师资但要提效"的高校</em>。"</p>
+    <p><strong>客观差距承认:</strong>"友商沉淀了 24214 门共享课资源池(14 年壁垒),AI 创新形态包装更激进(14 步建课 / AI 教学专题 / IM 助教 / 课程评审主页),我们正在用<u>XClaw + 学科大脑底座 + 垂直联盟共建课</u>错位补齐,聚焦在<em>有师资但需要 AI 提效</em>的高校场景。"</p>
+  </div>
+
+  <h3>V9 给小雅产品规划的客观启示(P0/P1/P2 分级)</h3>
+  <ul style="padding-left:24px;color:var(--ink-2);font-size:14px;line-height:1.9">
+    <li><strong>[P0]</strong> 补"<u>课程评审主页 8 Tab</u>" — 高校金课申报刚需,智慧树有现成模板,小雅完全空白</li>
+    <li><strong>[P0]</strong> "AI 一键建课"工程深度<u>从 4 步升级到 14 步</u> — V8 严重低估,需重新评估研发投入</li>
+    <li><strong>[P1]</strong> 学生端补"<u>问题图谱</u>"维度 — 低成本(基于现有问答),双角色都受益</li>
+    <li><strong>[P1]</strong> 错位卖共享课 — <u>医学院联盟 / 师范联盟 / 财经院校联盟</u>垂直精品,而非硬刚 24214 门</li>
+    <li><strong>[P1]</strong> "数字人嵌入建课主流程" — 小雅有"我的数字人"基础库,缺"建课时配数字人"的产品链路</li>
+    <li><strong>[P2]</strong> "AI 助教 IM 形态" + "首页对话框" — 学习智慧树的"熟悉感"设计,降低教师 AI 学习成本</li>
+    <li><strong>[P2]</strong> "MCP 协议明牌" — 小雅 XClaw 已有插件机制,缺协议化包装(对外技术故事)</li>
+  </ul>
+</section>
+
+<footer>
+  <div>
+    <div class="sig">婷婷 · AI 教学产品部 · 2026.06.05</div>
+    <div style="margin-top:4px;color:var(--ink-3)">V10 双边深挖对照版 · 10 轮迭代</div>
+  </div>
+  <div style="text-align:right">
+    <div>智慧树 270+ · 小雅 162 实采截图</div>
+    <div style="margin-top:4px">V10 补强小雅侧课程画像 + 基础库视觉证据</div>
+  </div>
+</footer>
+
+</body>
+</html>

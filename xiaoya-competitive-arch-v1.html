@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440,initial-scale=1">
+<title>智慧树 / 超星 / 小雅 · 三家产品架构对比 + 小雅竞争优势思考 V1</title>
+<style>
+:root{
+  --ink:#0b1a2e;--ink-2:#1d2a44;--ink-3:#3a4a66;
+  --paper:#f6f4ee;--paper-2:#ecead9;
+  --rule:#1b2c4a;--gold:#b78a45;--gold-2:#8c6a30;
+  --hike:#7a3a32;--cx:#1e3a8a;--xy:#2d6a4f;
+  --ok:#2d6a4f;--warn:#a83b27;--partial:#a96f12;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}
+body{max-width:1280px;margin:0 auto;padding:0 56px 120px;background-image:radial-gradient(circle at 8% 0%,rgba(183,138,69,.05) 0%,transparent 35%),radial-gradient(circle at 92% 100%,rgba(45,106,79,.05) 0%,transparent 30%)}
+
+.topbar{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--rule);padding:14px 0;margin:0 -56px;padding-left:56px;padding-right:56px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.topbar a{color:var(--ink);text-decoration:none;border-bottom:1px solid transparent}
+.topbar a:hover{border-bottom:1px solid var(--gold)}
+.topbar .nav{display:flex;gap:18px}
+.topbar .brand{font-weight:600;letter-spacing:.05em}
+.topbar .brand::before{content:"◆ ";color:var(--gold)}
+
+.hero{padding:80px 0 50px;border-bottom:2px solid var(--ink);position:relative}
+.hero::after{content:"";position:absolute;left:0;bottom:-6px;width:160px;height:2px;background:var(--gold)}
+.eyebrow{font-size:12px;letter-spacing:.35em;color:var(--gold-2);text-transform:uppercase;margin-bottom:22px}
+.eyebrow .v{display:inline-block;background:var(--ink);color:#fff;padding:3px 10px;font-size:10px;letter-spacing:.2em;margin-left:12px}
+h1{font-size:42px;line-height:1.15;font-weight:600;color:var(--ink);max-width:1000px;margin-bottom:22px}
+h1 .accent{color:var(--gold)}
+.lead{font-size:17px;line-height:1.65;color:var(--ink-2);max-width:920px;margin-bottom:24px;font-weight:300}
+.meta{display:flex;gap:30px;font-size:13px;color:var(--ink-3);padding-top:20px;border-top:1px solid rgba(27,44,74,.18);flex-wrap:wrap}
+.meta dt{color:var(--gold-2);letter-spacing:.18em;font-size:11px;text-transform:uppercase;margin-bottom:4px}
+.meta dd{font-weight:500;color:var(--ink-2)}
+
+section{padding:60px 0;border-bottom:1px solid rgba(27,44,74,.15)}
+section:last-of-type{border-bottom:none}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:30px;padding-bottom:14px;border-bottom:1px solid var(--ink)}
+h2{font-size:26px;font-weight:600;color:var(--ink)}
+.sec-num{font-size:13px;letter-spacing:.4em;color:var(--gold);font-weight:600}
+h3{font-size:18px;font-weight:600;color:var(--ink);margin:24px 0 12px}
+h3::before{content:"";display:inline-block;width:14px;height:2px;background:var(--gold);margin-right:14px;vertical-align:middle}
+h4{font-size:14.5px;font-weight:600;color:var(--ink-2);margin:14px 0 6px}
+p{margin-bottom:12px;color:var(--ink-2);font-size:14.5px}
+strong{color:var(--ink);font-weight:600}
+em{font-style:normal;background:linear-gradient(transparent 60%,rgba(183,138,69,.28) 60%);padding:0 2px;color:var(--ink)}
+u{text-decoration:none;border-bottom:1.5px solid var(--gold);padding:0 1px}
+
+.tripartite{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:18px 0}
+.tripartite .col{padding:18px 20px;border:1px solid var(--rule);background:var(--paper)}
+.tripartite .col.hike{border-top:4px solid var(--hike)}
+.tripartite .col.cx{border-top:4px solid var(--cx)}
+.tripartite .col.xy{border-top:4px solid var(--xy)}
+.tripartite .col .label{font-size:10.5px;letter-spacing:.25em;font-weight:600;margin-bottom:10px;padding:2px 8px;display:inline-block;border-radius:2px;color:#fff}
+.tripartite .col.hike .label{background:var(--hike)}
+.tripartite .col.cx .label{background:var(--cx)}
+.tripartite .col.xy .label{background:var(--xy)}
+.tripartite .col .name{font-size:15px;font-weight:600;margin-bottom:8px;color:var(--ink)}
+.tripartite .col .desc{font-size:13px;color:var(--ink-2);line-height:1.6}
+.tripartite .col .desc b{color:var(--ink)}
+.tripartite .col .stat{margin-top:10px;padding-top:10px;border-top:1px solid rgba(27,44,74,.12);font-size:12px}
+
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:12.5px}
+th,td{padding:9px 11px;text-align:left;border-bottom:1px solid rgba(27,44,74,.14);vertical-align:top}
+th{background:var(--paper-2);font-weight:600;font-size:11.5px;border-bottom:2px solid var(--ink)}
+.cmp-table th.hike-h{color:var(--hike)}
+.cmp-table th.cx-h{color:var(--cx)}
+.cmp-table th.xy-h{color:var(--xy)}
+.cmp-table td.hike{color:var(--hike);font-weight:500}
+.cmp-table td.cx{color:var(--cx);font-weight:500}
+.cmp-table td.xy{color:var(--xy);font-weight:500}
+td.gap{color:var(--warn);font-weight:600}
+td.ok{color:var(--ok);font-weight:500}
+td.partial{color:var(--partial);font-weight:500}
+td.deeper{color:var(--gold-2);font-weight:600}
+
+.callout{padding:18px 22px;margin:18px 0;border-left:4px solid var(--gold);background:linear-gradient(90deg,rgba(183,138,69,.07) 0%,transparent 100%);font-size:13.5px;color:var(--ink-2);line-height:1.75}
+.callout .label{font-size:11px;letter-spacing:.3em;color:var(--gold-2);font-weight:600;margin-bottom:8px}
+.callout.warn{border-left-color:var(--warn);background:linear-gradient(90deg,rgba(168,59,39,.07) 0%,transparent 100%)}
+.callout.warn .label{color:var(--warn)}
+.callout.ok{border-left-color:var(--ok);background:linear-gradient(90deg,rgba(45,106,79,.07) 0%,transparent 100%)}
+.callout.ok .label{color:var(--ok)}
+.callout.deep{border-left-color:var(--ink);background:linear-gradient(90deg,rgba(11,26,46,.06) 0%,transparent 100%)}
+.callout.deep .label{color:var(--ink)}
+
+.matrix{display:grid;grid-template-columns:120px 1fr 1fr 1fr;gap:0;margin:18px 0;border:1px solid var(--rule)}
+.matrix > div{padding:10px 12px;border-bottom:1px solid rgba(27,44,74,.12);font-size:13px}
+.matrix .h{background:var(--paper-2);font-weight:600;font-size:11.5px;color:var(--ink);border-bottom:2px solid var(--ink)}
+.matrix .h.hike-h{color:var(--hike)}
+.matrix .h.cx-h{color:var(--cx)}
+.matrix .h.xy-h{color:var(--xy)}
+.matrix .dim{font-weight:600;color:var(--ink);font-size:13px;background:rgba(11,26,46,.04)}
+.matrix .score{font-family:Menlo,monospace;font-weight:600}
+.matrix .s5{color:#1a5d3a}
+.matrix .s4{color:#2d6a4f}
+.matrix .s3{color:#a96f12}
+.matrix .s2{color:#a83b27}
+.matrix .s1{color:#7a1f1f}
+.matrix .note{font-size:11.5px;color:var(--ink-3);margin-top:2px;font-weight:normal;font-family:inherit}
+
+.toc{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0 0;padding:20px 0;border-top:1px solid rgba(27,44,74,.18);border-bottom:1px solid rgba(27,44,74,.18)}
+.toc a{display:flex;gap:12px;text-decoration:none;color:var(--ink-2);padding:6px 0;font-size:13px}
+.toc a:hover{color:var(--ink);border-bottom:1px dashed var(--gold)}
+.toc a span{color:var(--gold);font-weight:600;font-size:11px;letter-spacing:.18em;min-width:24px}
+
+footer{margin-top:60px;padding-top:24px;border-top:1px solid var(--ink);display:flex;justify-content:space-between;font-size:12px;color:var(--ink-3)}
+footer .sig{color:var(--ink);font-weight:600}
+footer .sig::before{content:"◆ ";color:var(--gold)}
+
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:20px 0}
+.stat{padding:18px 20px;border:1px solid var(--rule);background:var(--paper)}
+.stat .num{font-size:30px;font-weight:600;color:var(--gold);line-height:1;margin-bottom:6px}
+.stat .lbl{font-size:11px;color:var(--ink-3);letter-spacing:.1em;text-transform:uppercase}
+
+.dna-card{padding:22px 26px;margin:14px 0;border:1px solid var(--rule);background:var(--paper);border-left:6px solid}
+.dna-card.hike{border-left-color:var(--hike)}
+.dna-card.cx{border-left-color:var(--cx)}
+.dna-card.xy{border-left-color:var(--xy)}
+.dna-card h4{font-size:16px;margin:0 0 10px;color:var(--ink)}
+.dna-card .dna-trace{font-size:13px;color:var(--ink-2);line-height:1.7;margin-bottom:10px}
+.dna-card .dna-trace b{color:var(--ink)}
+
+ol li, ul li{margin:6px 0;font-size:14px;color:var(--ink-2);line-height:1.75}
+ol li strong, ul li strong{color:var(--ink)}
+
+.strategy-box{padding:20px 24px;margin:14px 0;border:1px solid var(--rule);background:var(--paper)}
+.strategy-box.must-do{border-left:5px solid var(--ok);background:linear-gradient(90deg,rgba(45,106,79,.05) 0%,transparent 100%)}
+.strategy-box.must-not{border-left:5px solid var(--warn);background:linear-gradient(90deg,rgba(168,59,39,.05) 0%,transparent 100%)}
+.strategy-box.consider{border-left:5px solid var(--gold);background:linear-gradient(90deg,rgba(183,138,69,.05) 0%,transparent 100%)}
+.strategy-box h4{margin-top:0;font-size:15px}
+.strategy-box .tag{display:inline-block;padding:2px 10px;font-size:11px;font-weight:600;letter-spacing:.1em;border-radius:2px;margin-right:8px;color:#fff;text-transform:uppercase}
+.strategy-box.must-do .tag{background:var(--ok)}
+.strategy-box.must-not .tag{background:var(--warn)}
+.strategy-box.consider .tag{background:var(--gold)}
+</style>
+</head>
+<body>
+<div style="position:sticky;top:0;z-index:9999;background:linear-gradient(90deg,#CF272D,#F53B3B);color:#fff;padding:10px 24px;font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;font-size:13px;line-height:1.6;text-align:center;box-shadow:0 2px 8px rgba(207,39,45,.25);">
+  <strong style="font-size:14px">⚠ 内部调研材料 · 仅供参考</strong>
+  &nbsp;·&nbsp;请勿对外转发 / 截图 / 在客户面前展示
+  &nbsp;·&nbsp;AI 教学产品部 · 婷婷
+</div>
+
+
+<div class="topbar">
+  <a href="../index.html" class="brand">小雅平台知识库</a>
+  <div class="nav">
+    <a href="#summary">00 一句话总结</a>
+    <a href="#dna">01 产品 DNA</a>
+    <a href="#arch">02 架构哲学</a>
+    <a href="#biz">03 商业模式</a>
+    <a href="#moat">04 护城河</a>
+    <a href="#matrix">05 能力矩阵</a>
+    <a href="#xy-advantage">06 小雅优势</a>
+    <a href="#strategy">07 战略建议</a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="eyebrow">Strategic Comparison · V1 · 2026.06.05 <span class="v">三家架构对比</span></div>
+  <h1>智慧树 / 超星 / 小雅 · <span class="accent">三家产品架构对比 + 小雅竞争优势思考</span></h1>
+  <p class="lead">这份文档<u>不再列功能清单</u>(功能对照见 V10 智慧树 / V2 超星 双边报告)。聚焦战略层 7 个维度:<em>产品 DNA / 架构哲学 / 商业模式 / 护城河 / 能力矩阵 / 小雅真实优势 / 战略建议</em>。<strong>目标读者:孙总 + 销售总监 + 产品规划层</strong>。</p>
+
+  <div class="stat-grid">
+    <div class="stat"><div class="num">7</div><div class="lbl">战略维度</div></div>
+    <div class="stat"><div class="num">3</div><div class="lbl">短中长期</div></div>
+    <div class="stat"><div class="num">5</div><div class="lbl">小雅核心优势</div></div>
+    <div class="stat"><div class="num">3</div><div class="lbl">错位突围方向</div></div>
+  </div>
+
+  <dl class="meta">
+    <div><dt>核心问题</dt><dd>小雅在智慧树/超星双压制下,真实差异化优势是什么?</dd></div>
+    <div><dt>不回答的问题</dt><dd>具体功能怎么做(见 V10/V2 双边报告)</dd></div>
+    <div><dt>作者</dt><dd>婷婷 · AI 教学产品部</dd></div>
+    <div><dt>版本</dt><dd>V1 · 2026.06.05</dd></div>
+  </dl>
+
+  <nav class="toc">
+    <a href="#summary"><span>00</span>一句话战略总结</a>
+    <a href="#dna"><span>01</span>产品 DNA 解剖</a>
+    <a href="#arch"><span>02</span>架构哲学对比</a>
+    <a href="#biz"><span>03</span>商业模式拆解</a>
+    <a href="#moat"><span>04</span>护城河分析</a>
+    <a href="#matrix"><span>05</span>能力矩阵评分</a>
+    <a href="#xy-advantage"><span>06</span>小雅真实竞争优势</a>
+    <a href="#strategy"><span>07</span>战略建议</a>
+  </nav>
+</header>
+
+<!-- ============ 00 一句话总结 ============ -->
+<section id="summary">
+  <div class="sec-head"><h2>00 · 一句话战略总结</h2><span class="sec-num">SUMMARY</span></div>
+
+  <div class="tripartite">
+    <div class="col hike">
+      <span class="label">智慧树 HIKE</span>
+      <div class="name">资源驱动 · 14 年共享课沉淀</div>
+      <div class="desc"><b>"我有 24214 门共享课,你用我的资源教你的学生"</b><br><br>DNA = MOOC 平台 / 内容供给者 · 把共享课作为核心入口,AI 是建课流水线工具</div>
+      <div class="stat"><b>24214</b> 门共享课 · <b>14</b> 年沉淀 · <b>14 步</b> AI 建课</div>
+    </div>
+    <div class="col cx">
+      <span class="label">超星 CHAOXING</span>
+      <div class="name">LMS 驱动 · 教育系统深度绑定</div>
+      <div class="desc"><b>"我深耕高校 LMS 14 年,有 2700 所合作高校,AI 接管你的教学入口"</b><br><br>DNA = 图书数字化 → 教学平台 · LMS 沉淀 + 省级评审霸主 + 内容制作市占第一</div>
+      <div class="stat"><b>2700</b> 高校 · <b>13800</b> 课程 · <b>港股 02687</b></div>
+    </div>
+    <div class="col xy">
+      <span class="label">小雅 XIAOYA</span>
+      <div class="name">AI 驱动 · 讯飞能力重塑教学</div>
+      <div class="desc"><b>"我用讯飞 15 年教育 AI + 数字基座,重塑教学过程"</b><br><br>DNA = 教育语音 NLP → 学科大脑 → 教学平台 · AI 是产品本体而非工具</div>
+      <div class="stat"><b>讯飞星火</b> + <b>5 大门户</b> + <b>6 视角画像</b></div>
+    </div>
+  </div>
+
+  <div class="callout deep">
+    <div class="label">核心战略判断</div>
+    <p style="line-height:2"><strong>这三家做的不是同一个产品,而是同一个赛道的不同打法。</strong></p>
+    <ul style="padding-left:20px;color:var(--ink-2);font-size:14px">
+      <li>智慧树是"<em>资源/内容公司做平台</em>"</li>
+      <li>超星是"<em>工具/LMS 公司做生态</em>"</li>
+      <li>小雅是"<em>AI/技术公司做教学</em>"</li>
+    </ul>
+    <p>小雅的优势不在"做一个更好的 LMS"或"做一个更多内容的资源池",而在"<u>用 AI 的方式重新定义教学过程</u>"。这是身份和定位问题,不是功能问题。</p>
+  </div>
+</section>
+
+<!-- ============ 01 产品 DNA ============ -->
+<section id="dna">
+  <div class="sec-head"><h2>01 · 产品 DNA 解剖</h2><span class="sec-num">DNA</span></div>
+
+  <p style="font-size:14.5px;margin-bottom:18px">产品 DNA = 公司"从哪里来" — 决定产品的<u>底层视角</u>和<u>架构倾向</u>。</p>
+
+  <div class="dna-card hike">
+    <h4>智慧树 · DNA = 内容/资源 [MOOC 起家]</h4>
+    <div class="dna-trace">
+      <b>起源:</b>2013 年由上海卓越睿新推出"智慧树"。最初定位 <em>跨校共享课平台</em>(类似 Coursera 中国版),核心商业模式是<u>"把名校课程开放给二三本院校学生选修"</u>。<br><br>
+      <b>演进:</b>共享课 → 智慧课程 → AI 智慧课程中心(2026)。每一步都<em>沿着"资源/内容"主线展开</em>。<br><br>
+      <b>DNA 体现:</b>
+      <ul style="padding-left:20px">
+        <li>课程中心 3 Tab = <strong>校内 / 共享 / 我学的课</strong> — 共享课作为顶级 Tab</li>
+        <li>14 步 AI 建课中 Step 13-14 是<strong>"引用共享课资源"</strong> — 资源是建课终点</li>
+        <li>知识发现菜单 = <strong>"教法创新"</strong>(行业内容分享)</li>
+        <li>课程评审 8 Tab = <strong>"教学成果展示"</strong>(把课程做成可展示资源)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="dna-card cx">
+    <h4>超星 · DNA = 工具+内容 [图书馆起家]</h4>
+    <div class="dna-trace">
+      <b>起源:</b>1993 年超星集团起家于<em>图书数字化</em>(超星图书馆,中国最早的电子图书提供商之一)。2008 年成立卓越睿新数码科技,转型<em>高校学习平台</em>。<br><br>
+      <b>演进:</b>图书数字化 → 慕课/学银在线 → 泛雅 LMS → 汇雅大模型(2024.11 备案)→ 港股上市(2025-12-08)。<u>沿着"内容数字化 + 教学工具化"双线</u>。<br><br>
+      <b>DNA 体现:</b>
+      <ul style="padding-left:20px">
+        <li>课程内 <strong>18 个独立菜单</strong> — 把传统 LMS 拆得最细(课件 / 教案 / 章节 / 资料 / 通知 / 讨论 / 作业 / 考试 / 题库 等都是独立菜单)</li>
+        <li><strong>云盘 + 笔记</strong>独立菜单 — 反映"图书馆"基因(用户存内容/记笔记是核心)</li>
+        <li>市场地位 = <strong>内容制作市占第一(7.3%)</strong>+ 高教数字化第二 — 资源+工具双向</li>
+        <li>省级评审霸主 = <strong>教育系统资源关系</strong>(山东 58% / 重庆 51%)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="dna-card xy">
+    <h4>小雅 · DNA = AI/技术 [教育 NLP 起家]</h4>
+    <div class="dna-trace">
+      <b>起源:</b>讯飞 1999 年成立,核心是<em>语音 AI</em>。2010 年起<u>教育事业部</u>聚焦教育 NLP 场景(智学网批改 / 学习机 / 智慧课堂等)。小雅平台是讯飞高教在<em>"教学过程 AI 化"</em>方向的产品形态(2024-2025 重点投入)。<br><br>
+      <b>演进:</b>语音/教育 NLP → 学科大模型 → 学科大脑 → XClaw 智能枢纽 → 小雅平台。<u>每一步都沿着"AI 能力"主线展开</u>。<br><br>
+      <b>DNA 体现:</b>
+      <ul style="padding-left:20px">
+        <li>课程画像 <strong>6 个独立视角</strong>(含 AI+应用看板 / 课堂实录分析)— 数据 + AI 双驱动</li>
+        <li>基础库 <strong>8 类资产</strong>(含智能体 / 数字人 / 量规库)— AI 资产沉淀</li>
+        <li><strong>灵动课堂 + AI 学习管家</strong> — 讯飞语音独有能力</li>
+        <li>学科大脑 + XClaw + 教育垂类大模型 — <strong>AI 底座生态</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="label">DNA 决定产品形态</div>
+    <p>智慧树看到"老师要建课" → 给资源;<br>
+    超星看到"老师要建课" → 给完整 LMS 工具;<br>
+    小雅看到"老师要建课" → 给 AI + 数据 + 资产沉淀。<br><br>
+    <strong>三家在"老师要建课"这个同样需求上,从根本上给出不同的答案。</strong></p>
+  </div>
+</section>
+
+<!-- ============ 02 架构哲学 ============ -->
+<section id="arch">
+  <div class="sec-head"><h2>02 · 架构哲学对比</h2><span class="sec-num">ARCHITECTURE</span></div>
+
+  <p style="font-size:14.5px;margin-bottom:18px">架构哲学 = 产品"怎么组织模块"。三家的一级菜单结构暴露了完全不同的设计思路。</p>
+
+  <table class="cmp-table">
+    <thead>
+      <tr><th>架构维度</th><th class="hike-h">智慧树</th><th class="cx-h">超星</th><th class="xy-h">小雅</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>顶层入口</b></td>
+        <td class="hike">AI 工作台首页(Agent/MCP 对话)</td>
+        <td class="cx">课程后台门户(我授课的课列表)</td>
+        <td class="xy">个人空间(我的课程 + 基础库)</td>
+      </tr>
+      <tr>
+        <td><b>课程默认页</b></td>
+        <td class="hike">课程主页(AI 智能体卡片)</td>
+        <td class="cx"><b>AI 助教工作台(顶部 4 Tab)</b></td>
+        <td class="xy">备授课(课程结构图)</td>
+      </tr>
+      <tr>
+        <td><b>课程内一级菜单数</b></td>
+        <td class="hike">10 个 Tab(主页/活动/资源库/对话/数据)</td>
+        <td class="cx"><b>18 个独立菜单</b>(粒度最细)</td>
+        <td class="xy">12 个模块(备授课/作业/工具/画像/学情)</td>
+      </tr>
+      <tr>
+        <td><b>资源组织</b></td>
+        <td class="hike">课程资源库(12 类作为资源)</td>
+        <td class="cx">课件 + 教案 + 章节 + 资料(4 独立菜单)</td>
+        <td class="xy">备授课统一容器 + 基础库 8 类资产</td>
+      </tr>
+      <tr>
+        <td><b>AI 能力组织</b></td>
+        <td class="hike">AI 工作台首页 + 课程内嵌</td>
+        <td class="cx">课程内 AI 助教 4 Tab + AI 工作台菜单</td>
+        <td class="xy">右下角浮窗 + 基础库 + 课程 AI 工作台 4 子菜单</td>
+      </tr>
+      <tr>
+        <td><b>学情数据组织</b></td>
+        <td class="hike">学情观测 4 视角 + 运行数据 7 维</td>
+        <td class="cx">统计菜单(单一看板)+ 后台课程关键数据</td>
+        <td class="xy"><b>课程画像 6 视角(各自独立子页)</b></td>
+      </tr>
+      <tr>
+        <td><b>跨课程复用</b></td>
+        <td class="hike">共享课资源池(24214 门)</td>
+        <td class="cx">任务引擎跨课导入</td>
+        <td class="xy">课程克隆 + 基础库跨课资产</td>
+      </tr>
+      <tr>
+        <td><b>教学评审</b></td>
+        <td class="hike"><b>课程评审主页 8 Tab(独立产品块)</b></td>
+        <td class="cx">课程达成度报告(校级独立菜单)</td>
+        <td class="xy">学生学情 → 课程目标达成评价(嵌入)</td>
+      </tr>
+      <tr>
+        <td><b>学生侧</b></td>
+        <td class="hike"><b>"我学的课" 3 类图谱</b>(知识/问题/能力)</td>
+        <td class="cx">课程内学生视图(看课为主)</td>
+        <td class="xy">灵动课堂 + AI 学习管家</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>三种架构哲学的本质差异</h3>
+
+  <div class="tripartite">
+    <div class="col hike">
+      <span class="label">智慧树</span>
+      <div class="name">流水线哲学</div>
+      <div class="desc">"我帮你建课,你只管教"<br><br><b>14 步引导建课</b>→ 自动生成知识库 → 自动建智能体 → 自动建课代表 → 自动生成教学计划<br><br><em>用户角色:被引导</em></div>
+    </div>
+    <div class="col cx">
+      <span class="label">超星</span>
+      <div class="name">工具箱哲学</div>
+      <div class="desc">"我给你最全的工具,你自己组合"<br><br><b>18 个独立菜单</b>+ AI 助教接管入口 → 教师自行调用各模块<br><br><em>用户角色:自主装配</em></div>
+    </div>
+    <div class="col xy">
+      <span class="label">小雅</span>
+      <div class="name">资产+空间哲学</div>
+      <div class="desc">"你的 AI 资产跨课程沉淀,空间是你的工作流"<br><br><b>基础库 8 类资产</b> + <b>课程空间 12 模块</b> + <b>5 大门户矩阵</b><br><br><em>用户角色:资产沉淀者</em></div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="label">架构哲学的优劣</div>
+    <p><strong>智慧树流水线:</strong>对 AI 不熟的老师友好(降门槛),但对资深教师"过度引导"造成不灵活</p>
+    <p><strong>超星工具箱:</strong>对资深教师友好(给最多工具),但对 AI 新手"工具碎片化"</p>
+    <p><strong>小雅资产+空间:</strong>对长期使用友好(资产沉淀复用),但对初次接触"概念门槛高"(空间体系需要理解)</p>
+    <p style="margin-top:10px"><strong>用户选择哪个,本质看老师的产品偏好和 AI 素养。</strong>三家可以共存,因为面向的<em>用户细分不同</em>。</p>
+  </div>
+</section>
+
+<!-- ============ 03 商业模式 ============ -->
+<section id="biz">
+  <div class="sec-head"><h2>03 · 商业模式拆解</h2><span class="sec-num">BUSINESS MODEL</span></div>
+
+  <table class="cmp-table">
+    <thead>
+      <tr><th>商业维度</th><th class="hike-h">智慧树</th><th class="cx-h">超星</th><th class="xy-h">小雅</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>核心收入</b></td>
+        <td class="hike">共享课订阅(校级)+ AI 智慧课程模块</td>
+        <td class="cx">校级 LMS 软件采购 + 内容采购 + 评审服务</td>
+        <td class="xy">讯飞集成销售(数字基座一部分)+ 高校样板间</td>
+      </tr>
+      <tr>
+        <td><b>定价模式</b></td>
+        <td class="hike">分层(基础共享课 + AI 增值)</td>
+        <td class="cx">软件许可 + 服务包(广州 200 人本地化)</td>
+        <td class="xy">学科大模型 60-1342 万项目级 + 平台标品</td>
+      </tr>
+      <tr>
+        <td><b>客单价</b></td>
+        <td class="hike">校级 5-50 万/年</td>
+        <td class="cx">校级 10-100 万/年</td>
+        <td class="xy">学科大模型 60-1342 万 / 小雅平台未单卖</td>
+      </tr>
+      <tr>
+        <td><b>客户规模</b></td>
+        <td class="hike">高校全国(共享课覆盖广)</td>
+        <td class="cx"><b>2700 深度合作高校</b></td>
+        <td class="xy">数十所(以华师 / 同济 / 广大等样板间为主)</td>
+      </tr>
+      <tr>
+        <td><b>市场地位</b></td>
+        <td class="hike">共享课老品牌 · 客户认知强</td>
+        <td class="cx"><b>港股 02687</b> · 内容制作市占第一</td>
+        <td class="xy">讯飞集团旗下 · 上市公司 · 教育板块</td>
+      </tr>
+      <tr>
+        <td><b>渠道</b></td>
+        <td class="hike">直销 + 区域代理</td>
+        <td class="cx"><b>本地化 1V1(广州 200 人团队)</b></td>
+        <td class="xy">讯飞各省区域服务体系</td>
+      </tr>
+      <tr>
+        <td><b>政策对接</b></td>
+        <td class="hike">"AI+ 重点课"等省级评审认定</td>
+        <td class="cx"><b>山东 58% / 重庆 51% 省级评审</b></td>
+        <td class="xy">国家智慧教育平台 / 教育部产学合作潜力</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>三家收入结构推测</h3>
+
+  <div class="tripartite">
+    <div class="col hike">
+      <span class="label">智慧树 收入猜想</span>
+      <div class="desc">
+        <b>共享课订阅 ~50%</b>:学校付费用大课<br>
+        <b>智慧课程平台 ~30%</b>:校级 LMS<br>
+        <b>AI 创新模块 ~15%</b>:AI 一键建课等新功能<br>
+        <b>培训/服务 ~5%</b>:教师培训
+      </div>
+    </div>
+    <div class="col cx">
+      <span class="label">超星 收入(2024 年报)</span>
+      <div class="desc">
+        <b>2024 营收 8.48 亿 ↑ 29.9%</b><br><br>
+        软件许可(LMS)+ 内容采购(电子图书 / 学银在线)+ 本地化服务(广州 200 人)+ 自研模型(汇雅大模型 2024.11 备案)<br><br>
+        市场: <b>高教数字化第二(4.0%)</b><br>
+        <b>内容制作第一(7.3%)</b>
+      </div>
+    </div>
+    <div class="col xy">
+      <span class="label">小雅 收入(推测)</span>
+      <div class="desc">
+        <b>学科大模型项目 70%+</b>:60-1342 万项目级(详见报价单分析)<br>
+        <b>小雅平台标品 10-20%</b>:暂未单独定价<br>
+        <b>讯飞集成 10-20%</b>:作为数字基座一部分<br><br>
+        <em>注:小雅平台尚未做成"独立标品",主要靠学科大模型项目带销售</em>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div class="label">关键商业风险</div>
+    <p><strong>小雅当前的商业问题:</strong></p>
+    <ol style="padding-left:20px">
+      <li><b>客户规模严重落后</b>:超星 2700 所 / 智慧树全国共享课覆盖 / 小雅数十所 — 短期不可追</li>
+      <li><b>定价模式不清晰</b>:小雅平台未单独定价,捆绑学科大模型项目卖 — 客户难以单买</li>
+      <li><b>渠道弱</b>:讯飞各省团队卖的是数字基座综合方案,小雅平台的独立销售/培训/支持体系不成型</li>
+      <li><b>没参加省级评审标杆</b>:山东 / 重庆 / 河南都是超星霸主 — 小雅在政策层缺位</li>
+    </ol>
+    <p style="margin-top:10px"><strong>这些问题不解决,即使产品力领先,也卖不动。</strong>战略建议章节会重点回应。</p>
+  </div>
+</section>
+
+<!-- ============ 04 护城河 ============ -->
+<section id="moat">
+  <div class="sec-head"><h2>04 · 护城河分析</h2><span class="sec-num">MOAT</span></div>
+
+  <table class="cmp-table">
+    <thead>
+      <tr><th>护城河维度</th><th class="hike-h">智慧树</th><th class="cx-h">超星</th><th class="xy-h">小雅</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>内容资产</b></td>
+        <td class="hike"><b>★★★★★</b><br>24214 门共享课(14 年沉淀,不可复制)</td>
+        <td class="cx"><b>★★★★</b><br>内容制作市占第一 + 学银在线 5000+ 国家级课</td>
+        <td class="xy"><b>★</b><br>样板课程数十门</td>
+      </tr>
+      <tr>
+        <td><b>客户基础</b></td>
+        <td class="hike"><b>★★★★</b><br>共享课覆盖全国(浅但广)</td>
+        <td class="cx"><b>★★★★★</b><br>2700 深度合作高校</td>
+        <td class="xy"><b>★★</b><br>讯飞集团客户 + 教育部资源</td>
+      </tr>
+      <tr>
+        <td><b>政策/评审地位</b></td>
+        <td class="hike"><b>★★★</b><br>"AI+ 重点课"省级认定支持</td>
+        <td class="cx"><b>★★★★★</b><br>山东 58% / 重庆 51% 评审霸主</td>
+        <td class="xy"><b>★★</b><br>未深度参与省级评审</td>
+      </tr>
+      <tr>
+        <td><b>AI 技术能力</b></td>
+        <td class="hike"><b>★★★</b><br>14 步建课流水线 + AI 助教 IM 形态</td>
+        <td class="cx"><b>★★★</b><br>汇雅大模型(2024.11 备案)</td>
+        <td class="xy"><b>★★★★★</b><br>讯飞星火 + 语音 + 多模型 + 学科大脑生态</td>
+      </tr>
+      <tr>
+        <td><b>本地化服务</b></td>
+        <td class="hike"><b>★★★</b><br>区域代理网络</td>
+        <td class="cx"><b>★★★★★</b><br>广州 200 人本地化团队 + 1V1 全时段</td>
+        <td class="xy"><b>★★★★</b><br>讯飞各省区域分公司</td>
+      </tr>
+      <tr>
+        <td><b>资金/资本</b></td>
+        <td class="hike"><b>★★★</b><br>(智慧树未独立上市)</td>
+        <td class="cx"><b>★★★★★</b><br>港股 02687(2025-12 IPO)</td>
+        <td class="xy"><b>★★★★★</b><br>讯飞 A 股 002230 母公司</td>
+      </tr>
+      <tr>
+        <td><b>品牌认知</b></td>
+        <td class="hike"><b>★★★★</b><br>共享课老品牌 + AI 创新形象</td>
+        <td class="cx"><b>★★★★★</b><br>高校"采购首选"心智</td>
+        <td class="xy"><b>★★★</b><br>讯飞品牌强 + 小雅平台认知正建立</td>
+      </tr>
+      <tr>
+        <td><b>产品哲学差异化</b></td>
+        <td class="hike"><b>★★★</b><br>流水线建课 + 共享课资源</td>
+        <td class="cx"><b>★★</b><br>传统 LMS + AI 接管入口</td>
+        <td class="xy"><b>★★★★</b><br>资产+空间 + 课程画像 6 视角 + 5 大门户</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <div class="label">三家护城河本质</div>
+    <p style="line-height:1.9">
+      <strong>智慧树护城河 =</strong> <em>内容资产 + 共享课认知</em>(14 年沉淀,短期不可追)<br>
+      <strong>超星护城河 =</strong> <em>客户深度绑定 + 省级评审 + 本地化服务</em>(2700 高校 + 200 人团队)<br>
+      <strong>小雅护城河 =</strong> <em>AI 技术 + 讯飞资金 + 产品哲学差异化</em>(技术 + 资本 + 产品创新)
+    </p>
+    <p style="margin-top:10px"><strong>关键观察:小雅的护城河是"前置"的(技术 + 资本 + 产品),不是"沉淀"的(内容 / 客户 / 评审)。</strong>这意味着小雅的优势在<em>未来 3-5 年</em>,而非现在。</p>
+  </div>
+</section>
+
+<!-- ============ 05 能力矩阵评分 ============ -->
+<section id="matrix">
+  <div class="sec-head"><h2>05 · 能力矩阵评分(1-5 分)</h2><span class="sec-num">MATRIX</span></div>
+
+  <p style="font-size:14.5px;margin-bottom:18px">根据 V10 / V2 / 单平台 报告的实采证据,对三家在 12 个能力维度上打分(1=弱 / 5=强)。</p>
+
+  <div class="matrix">
+    <div class="h">能力维度</div>
+    <div class="h hike-h">智慧树</div>
+    <div class="h cx-h">超星</div>
+    <div class="h xy-h">小雅</div>
+
+    <div class="dim">课程内容资源</div>
+    <div class="score s5">5 / 5<div class="note">24214 门共享课</div></div>
+    <div class="score s5">5 / 5<div class="note">内容制作市占第一</div></div>
+    <div class="score s2">2 / 5<div class="note">样板课程为主</div></div>
+
+    <div class="dim">AI 建课工程深度</div>
+    <div class="score s5">5 / 5<div class="note">14 步流水线最深</div></div>
+    <div class="score s3">3 / 5<div class="note">AI 接管入口但建课少</div></div>
+    <div class="score s2">2 / 5<div class="note">智能建课中 · 在研</div></div>
+
+    <div class="dim">课程内 LMS 工具</div>
+    <div class="score s4">4 / 5<div class="note">10 Tab 完整</div></div>
+    <div class="score s5">5 / 5<div class="note">18 独立菜单粒度最细</div></div>
+    <div class="score s4">4 / 5<div class="note">12 模块统一容器</div></div>
+
+    <div class="dim">学情画像深度</div>
+    <div class="score s3">3 / 5<div class="note">观测 4 视角一页</div></div>
+    <div class="score s2">2 / 5<div class="note">统计单一看板</div></div>
+    <div class="score s5">5 / 5<div class="note">课程画像 6 视角独立</div></div>
+
+    <div class="dim">AI 助教形态</div>
+    <div class="score s5">5 / 5<div class="note">IM 聊天形态独创</div></div>
+    <div class="score s4">4 / 5<div class="note">课程入口 4 Tab 接管</div></div>
+    <div class="score s3">3 / 5<div class="note">浮窗 + AI 工作台 4 子菜单</div></div>
+
+    <div class="dim">AI 资产沉淀</div>
+    <div class="score s2">2 / 5<div class="note">课程内沉淀</div></div>
+    <div class="score s2">2 / 5<div class="note">课程级私有</div></div>
+    <div class="score s5">5 / 5<div class="note">基础库 8 类校级跨课</div></div>
+
+    <div class="dim">教学评审视角</div>
+    <div class="score s5">5 / 5<div class="note">课程评审主页 8 Tab</div></div>
+    <div class="score s4">4 / 5<div class="note">课程达成度报告</div></div>
+    <div class="score s2">2 / 5<div class="note">仅嵌入学生学情</div></div>
+
+    <div class="dim">门户矩阵</div>
+    <div class="score s2">2 / 5<div class="note">无明显门户矩阵</div></div>
+    <div class="score s2">2 / 5<div class="note">校级门户为主</div></div>
+    <div class="score s5">5 / 5<div class="note">5 大门户中心</div></div>
+
+    <div class="dim">智慧教室/灵动课堂</div>
+    <div class="score s3">3 / 5<div class="note">课堂工具</div></div>
+    <div class="score s3">3 / 5<div class="note">班级活动</div></div>
+    <div class="score s5">5 / 5<div class="note">语音呼叫式学习管家</div></div>
+
+    <div class="dim">数据治理/三级门户</div>
+    <div class="score s3">3 / 5<div class="note">校级运营数据</div></div>
+    <div class="score s4">4 / 5<div class="note">校级关键数据</div></div>
+    <div class="score s5">5 / 5<div class="note">三级门户 + 5 中心</div></div>
+
+    <div class="dim">客户规模</div>
+    <div class="score s4">4 / 5<div class="note">共享课覆盖全国</div></div>
+    <div class="score s5">5 / 5<div class="note">2700 深度合作</div></div>
+    <div class="score s2">2 / 5<div class="note">数十所样板</div></div>
+
+    <div class="dim">省级评审地位</div>
+    <div class="score s3">3 / 5<div class="note">"AI+ 重点课"支持</div></div>
+    <div class="score s5">5 / 5<div class="note">山东58% 重庆51% 霸主</div></div>
+    <div class="score s2">2 / 5<div class="note">未深度参与</div></div>
+  </div>
+
+  <h3>能力维度总分(满分 60)</h3>
+  <table>
+    <thead><tr><th>厂商</th><th>总分</th><th>满分类目</th><th>低分类目</th></tr></thead>
+    <tbody>
+      <tr><td class="hike"><b>智慧树</b></td><td><b>44 / 60</b></td><td>内容资源 5 / AI 建课 5 / AI 助教形态 5 / 教学评审 5</td><td>门户矩阵 2 / AI 资产沉淀 2</td></tr>
+      <tr><td class="cx"><b>超星</b></td><td><b>44 / 60</b></td><td>内容资源 5 / LMS 工具 5 / 客户规模 5 / 省级评审 5</td><td>学情画像 2 / AI 资产沉淀 2 / 门户矩阵 2</td></tr>
+      <tr><td class="xy"><b>小雅</b></td><td><b>42 / 60</b></td><td>学情画像 5 / AI 资产沉淀 5 / 门户矩阵 5 / 智慧教室 5 / 数据治理 5</td><td>客户规模 2 / 教学评审 2 / 省级评审 2 / 课程内容资源 2 / AI 建课工程 2</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout deep">
+    <div class="label">能力总分接近,但分布完全不同</div>
+    <p style="line-height:1.9">三家总分接近(44/44/42),但<u>强项和弱项分布完全不同</u>:</p>
+    <ul style="padding-left:20px">
+      <li><strong>智慧树:</strong>内容 + AI 建课 + 教学评审是强项,门户/资产沉淀是弱项</li>
+      <li><strong>超星:</strong>内容 + LMS 工具 + 客户/政策是强项,学情/资产沉淀/门户是弱项</li>
+      <li><strong>小雅:</strong>学情画像 + 资产沉淀 + 门户矩阵 + 智慧教室 + 数据治理 是强项,客户规模/评审/内容资源是弱项</li>
+    </ul>
+    <p style="margin-top:10px"><strong>这意味着小雅可以选择"差异化打法",而非"全面对标"。</strong>在自己强项(5 个 5 分)上把声量做足,在弱项(客户规模 / 评审 / 内容资源)上承认并错位。</p>
+  </div>
+</section>
+
+<!-- ============ 06 小雅真实竞争优势 ============ -->
+<section id="xy-advantage">
+  <div class="sec-head"><h2>06 · 小雅真实竞争优势</h2><span class="sec-num">ADVANTAGE</span></div>
+
+  <h3>6.1 短期(1 年内)5 大差异化优势</h3>
+
+  <div class="strategy-box must-do">
+    <h4><span class="tag">优势 1</span>课程画像 6 视角(学情画像 360 度无死角)</h4>
+    <p>小雅是三家中<u>唯一做到"6 个独立视角各自深度"</u>的:课程看板 / AI+应用看板 / 课堂教学活动轨迹 / 课堂实录分析 / 班级画像 / 成员画像。智慧树是 4 维一页,超星是单一统计看板。<strong>视觉碾压,销售容易讲故事</strong>。</p>
+    <p style="font-size:13px;color:var(--ink-3);margin-top:6px"><b>对外口号:</b>"学情画像 360 度无死角,从课程到班级到学生个体,每个维度独立深度"</p>
+  </div>
+
+  <div class="strategy-box must-do">
+    <h4><span class="tag">优势 2</span>基础库 8 类资产(校级 AI 沉淀)</h4>
+    <p>智慧树和超星的 AI 知识库 / 智能体都是<u>课程级私有</u>(每门课分别建,跨课不复用)。小雅的<strong>基础库 8 类(应用 / 知识库 / 智能体 / 数字人 / 题库 / 图谱库 / 量规库 / 文档)</strong>是<em>校级跨课程沉淀</em>。<u>"量规库"(评分规则化)是小雅独有</u>。</p>
+    <p style="font-size:13px;color:var(--ink-3);margin-top:6px"><b>对外口号:</b>"AI 资产跨课程沉淀,建一次用十年。其他平台是建一次用一次"</p>
+  </div>
+
+  <div class="strategy-box must-do">
+    <h4><span class="tag">优势 3</span>5 大门户中心(高校 AI 教学生态)</h4>
+    <p>首页 + 智慧慕课中心 + 共享课程中心 + AI 创新中心 + <strong>专业全景中心</strong> — 5 个一级门户,跨校 / 跨学科。<u>智慧树没做成门户矩阵,超星只有校级门户</u>。"专业全景中心"是高校建专业刚需,小雅独有。</p>
+    <p style="font-size:13px;color:var(--ink-3);margin-top:6px"><b>对外口号:</b>"不只是课程平台,是高校 AI 教学完整生态"</p>
+  </div>
+
+  <div class="strategy-box must-do">
+    <h4><span class="tag">优势 4</span>灵动课堂 + AI 学习管家(讯飞语音独有)</h4>
+    <p>课堂号 + 二维码 + <strong>语音呼叫式 AI 学习管家</strong>(签到 / 投票 / 点名 / 抢答)+ 6 工具栏。<u>智慧树和超星都没有语音呼叫式 AI</u> — 这是讯飞语音能力 14 年沉淀的天然集成,<em>对方无法快速复制</em>。</p>
+    <p style="font-size:13px;color:var(--ink-3);margin-top:6px"><b>对外口号:</b>"叫一声老师,AI 自动帮你管理整个课堂"</p>
+  </div>
+
+  <div class="strategy-box must-do">
+    <h4><span class="tag">优势 5</span>反思性教学(课程克隆 + 教学反思 + 量规库)</h4>
+    <p>课程工具内置 <strong>课程克隆</strong>(从我教的课 / 从他人课克隆)+ <strong>教学反思</strong>(往期课程空间)+ <strong>量规库</strong>(评分规则)。三个组合形成"反思性教学"产品哲学。<u>智慧树用"共享课"是另一逻辑,超星无同等设计</u>。</p>
+    <p style="font-size:13px;color:var(--ink-3);margin-top:6px"><b>对外口号:</b>"教师不只是上课,还要反思迭代。小雅给你完整的反思工具"</p>
+  </div>
+
+  <h3>6.2 中期(3 年)生态优势</h3>
+
+  <div class="strategy-box consider">
+    <h4><span class="tag">中期 1</span>讯飞星火 + 学科大模型 + XClaw 智能枢纽</h4>
+    <p><strong>讯飞星火</strong>是国内一线大模型(15 年教育 NLP 积累)+ <strong>学科大模型</strong>(60-1342 万项目级订单)+ <strong>XClaw 智能枢纽</strong>(MCP/Skill 工具体系)。三层组合形成<em>"教育 AI 全栈能力"</em>,3 年内做成行业标杆有可能。</p>
+  </div>
+
+  <div class="strategy-box consider">
+    <h4><span class="tag">中期 2</span>讯飞数字基座生态(高校全场景集成)</h4>
+    <p>讯飞数字基座 = 智慧教学(小雅)+ 智能教务 + 智慧科研 + 智慧管理 + 数据中台。<u>三家中只有小雅是"完整数字基座"的一部分</u>,智慧树和超星都是单一平台。<em>对高校 CIO 来说,集成方案更有吸引力</em>。</p>
+  </div>
+
+  <div class="strategy-box consider">
+    <h4><span class="tag">中期 3</span>样板高校沉淀(华师 / 同济 / 广大等)</h4>
+    <p>华师 PPT 80 页 + 同济同济大学 + 广州大学等真实场景沉淀。这些样板的<u>"AI 应用最佳实践"</u>是可以做成<strong>"小雅高校案例集"</strong>对外讲故事的资产。</p>
+  </div>
+
+  <h3>6.3 长期(5 年)平台级优势</h3>
+
+  <div class="strategy-box consider">
+    <h4><span class="tag">长期 1</span>讯飞集团 AI 全栈(语音 / 视觉 / NLP)</h4>
+    <p>讯飞集团是国内 AI 全栈能力最完整的之一:<u>语音(国内第一)+ 视觉(后发)+ NLP(教育垂直最强)+ 多模态(快速跟进)</u>。小雅作为讯飞教育板块的旗舰产品,长期可以集成全部 AI 能力,这是超星 1500 人研发短期内追不上的。</p>
+  </div>
+
+  <div class="strategy-box consider">
+    <h4><span class="tag">长期 2</span>国家智慧教育平台合作潜力</h4>
+    <p>讯飞作为央企合作伙伴,与教育部"国家智慧教育平台"有天然对接路径。如果<u>小雅能成为国家智慧教育平台的高校段标准方案之一</u>,这是 14 年也建立不了的政策护城河。</p>
+  </div>
+
+  <h3>6.4 诚实承认的不可比劣势</h3>
+
+  <div class="strategy-box must-not">
+    <h4><span class="tag">不可比 1</span>体量(2700 vs 数十)</h4>
+    <p>超星 2700 深度合作高校 / 智慧树覆盖全国共享课。小雅 3-5 年内不可能追上这个体量。<u>不要在销售时假装"我们也有 N 千所"</u> — 客户能查到,反而失信。</p>
+  </div>
+
+  <div class="strategy-box must-not">
+    <h4><span class="tag">不可比 2</span>共享课内容(24214 门 vs 几十门)</h4>
+    <p>智慧树 14 年共享课沉淀不可复制。小雅短期内做不到这个规模。<u>不要试图直接对标</u>,走错位路线(垂直联盟 / 校内共建)。</p>
+  </div>
+
+  <div class="strategy-box must-not">
+    <h4><span class="tag">不可比 3</span>省级评审霸主(山东 58% / 重庆 51%)</h4>
+    <p>超星深耕教育系统多年。小雅未深度参与省级评审。<u>不要在销售时谈"省级金课"</u>,避开锋芒。</p>
+  </div>
+</section>
+
+<!-- ============ 07 战略建议 ============ -->
+<section id="strategy">
+  <div class="sec-head"><h2>07 · 战略建议(给孙总看)</h2><span class="sec-num">STRATEGY</span></div>
+
+  <h3>7.1 不要做的(避免陷阱)</h3>
+
+  <div class="strategy-box must-not">
+    <h4><span class="tag">陷阱 1</span>不要复制智慧树的"AI 一键建课 14 步"工程深度</h4>
+    <p>智慧树 14 步流水线是"用户被引导"的产品哲学。小雅是"用户资产沉淀"哲学,两者不必硬碰。<u>把建课工程深度做到 6-8 步(基础版)即可</u>,把更多精力放在"建课后的学情/反思/迭代"。</p>
+  </div>
+
+  <div class="strategy-box must-not">
+    <h4><span class="tag">陷阱 2</span>不要直接对标超星 2700 高校规模</h4>
+    <p>这是 14 年沉淀的资产,3-5 年内不可能追上。<u>聚焦在"垂直精品高校"</u>(医学院联盟 / 师范联盟 / 财经院校联盟 / 985 头部),做"小而精"。</p>
+  </div>
+
+  <div class="strategy-box must-not">
+    <h4><span class="tag">陷阱 3</span>不要在产品上"既要又要"</h4>
+    <p>小雅短板是"客户规模 / 评审 / 内容资源 / AI 建课工程",这些<u>不要全补</u>。只补对销售关键的 1-2 项(如评审主页),其他承认劣势,错位竞争。</p>
+  </div>
+
+  <h3>7.2 必须做的(差异化突围)</h3>
+
+  <div class="strategy-box must-do">
+    <h4><span class="tag">突围 1</span>把"课程画像 6 视角"做成对外讲故事的核心锚点</h4>
+    <p>这是<u>视觉证据最完整、对方完全没有</u>的差异化点。<strong>所有销售物料、PPT、Demo 都从课程画像开始讲</strong>。一个核心锚点反复打,比 10 个零散功能更有效。</p>
+    <p style="font-size:13px;color:var(--ink-3);margin-top:6px"><b>口号建议:</b>"360 度学情画像,从课程到班级到学生个体,只有小雅做到了"</p>
+  </div>
+
+  <div class="strategy-box must-do">
+    <h4><span class="tag">突围 2</span>把"基础库 8 类(含量规库)"做成 AI 资产沉淀旗帜</h4>
+    <p><u>对标客户最关心的是"投入 AI 后能不能持续累积资产"</u>。基础库是这个故事的最好答案。"<strong>建一次,用十年,跨课程复用</strong>"是核心 messaging。</p>
+  </div>
+
+  <div class="strategy-box must-do">
+    <h4><span class="tag">突围 3</span>把"5 大门户中心"扩展为"高校 AI 教学完整生态"</h4>
+    <p>不只是课程平台,而是"完整生态"。包含:<u>智慧慕课 + 共享课程 + 专业全景 + AI 创新 + 首页</u>。<strong>把"专业全景中心"做成专业建设拳头产品</strong>(对接教务处的专业建设刚需)。</p>
+  </div>
+
+  <div class="strategy-box must-do">
+    <h4><span class="tag">突围 4</span>把"灵动课堂 + AI 学习管家"做成讯飞语音独家</h4>
+    <p>语音呼叫式 AI 是讯飞 14 年语音能力的天然集成,<u>对方不可快速复制</u>。在销售 Demo 中,让客户<strong>实际"喊一声"看效果</strong>,视觉冲击远大于功能列表。</p>
+  </div>
+
+  <div class="strategy-box must-do">
+    <h4><span class="tag">突围 5</span>补"课程评审主页"对接高校金课申报</h4>
+    <p><u>这是 P0 级补齐</u>。智慧树有 8 Tab 评审主页,超星有校级达成度报告,小雅完全空白。<strong>对接高校金课/精品课/教学奖申报刚需</strong>。建议下一版直接对标智慧树 8 Tab 模板。</p>
+  </div>
+
+  <h3>7.3 错位突围 3 个方向</h3>
+
+  <div class="strategy-box consider">
+    <h4><span class="tag">错位 1</span>垂直联盟共建课(医学院 / 师范 / 财经)</h4>
+    <p>不挑战智慧树的"大而全"(24214 门),做<u>"小而精"垂直联盟</u>:<br>
+    <strong>医学院联盟:</strong>北中医 / 南医大 / 中医药等 50 所(已有学科大模型项目基础)<br>
+    <strong>师范联盟:</strong>华师 / 北师大 / 南师大等(已有华师样板)<br>
+    <strong>财经院校联盟:</strong>西南财经 / 中央财经等(已有西南财经学科大模型项目)<br>
+    每个联盟做<u>"高质量共建课 + AI 智能体定制"</u>,客单价比智慧树高,差异化清晰</p>
+  </div>
+
+  <div class="strategy-box consider">
+    <h4><span class="tag">错位 2</span>讯飞星火 · 教育垂类版 品牌包装</h4>
+    <p>超星 2024.11 备案"汇雅大模型"主打教育垂类。讯飞星火本身是国内一线,但<u>未单独打"教育垂类"品牌</u>。建议:<br>
+    <strong>基于讯飞星火做教育语料微调</strong>(技术上已有基础)→ <strong>独立打"讯飞星火 · 教育垂类版"品牌</strong> → 对学校采购方有说服力<br>
+    <em>低成本(品牌化,不增技术)+ 高回报(对位超星汇雅)</em></p>
+  </div>
+
+  <div class="strategy-box consider">
+    <h4><span class="tag">错位 3</span>"AI 升级层" + 已有 LMS 共存策略</h4>
+    <p>不强求学校"二选一"。允许小雅与现有超星/智慧树共存,<u>把小雅定位为"已有 LMS 的 AI 升级层"</u>:<br>
+    <strong>承接客户:</strong>学校已用超星 LMS → 加小雅做 AI 重塑(课程画像 6 视角 + 基础库 + AI 学习管家)<br>
+    <strong>技术对接:</strong>用 API / 数据同步,不破坏现有 LMS 投资<br>
+    <strong>价格策略:</strong>不卖整套(避免和超星 LMS 正面冲突),只卖 AI 升级层<br>
+    <em>客户接受度高,因为不需要替换现有系统</em></p>
+  </div>
+
+  <h3>7.4 销售对外的 3 句话定调</h3>
+
+  <div class="callout deep">
+    <div class="label">对外口径 · 三句话总结</div>
+    <p style="font-size:15px;line-height:2;margin-bottom:10px"><strong>1. 我们做的不是另一个 LMS</strong></p>
+    <p style="margin-left:24px">"超星和智慧树是 LMS 加 AI;小雅是 AI 重塑教学。学校不需要再买一个 LMS,需要的是 AI 升级层。"</p>
+
+    <p style="font-size:15px;line-height:2;margin-top:14px;margin-bottom:10px"><strong>2. 我们做的不是更大的内容池</strong></p>
+    <p style="margin-left:24px">"智慧树有 24214 门共享课,这是 14 年沉淀。我们走垂直联盟路线 — 医学院 / 师范 / 财经的"高质量共建课 + AI 定制",小而精。"</p>
+
+    <p style="font-size:15px;line-height:2;margin-top:14px;margin-bottom:10px"><strong>3. 我们做的是 AI 资产 + 学情画像 + 5 大门户生态</strong></p>
+    <p style="margin-left:24px">"360 度学情画像 / 基础库 8 类 AI 资产 / 5 大门户中心 / 灵动课堂语音 — 这是小雅的差异化 4 个锚点。对方都没有。"</p>
+  </div>
+
+  <h3>7.5 一年路标(下一步必须做)</h3>
+
+  <table>
+    <thead><tr><th>季度</th><th>必做事项</th><th>对应优势</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>Q3 · 7-9 月</b></td>
+        <td>① 补"课程评审主页 8 Tab"(P0)<br>② "课程画像 6 视角"做完整 Demo 视频<br>③ "讯飞星火 · 教育垂类版"品牌包装</td>
+        <td>评审优势 / 学情画像优势 / AI 品牌</td>
+      </tr>
+      <tr>
+        <td><b>Q4 · 10-12 月</b></td>
+        <td>① "AI 一键建课"工程深度升到 6-8 步基础版<br>② 学生侧补"问题图谱"<br>③ "AI 助手"做成常驻消息中心形态</td>
+        <td>建课优势 / 学生侧深度 / 助手形态</td>
+      </tr>
+      <tr>
+        <td><b>Q1 · 1-3 月</b></td>
+        <td>① 医学院/师范/财经垂直联盟产品方案<br>② 高校样板案例集(华师/同济/广大)<br>② 销售工具包升级</td>
+        <td>错位竞争 / 样板沉淀 / 销售赋能</td>
+      </tr>
+      <tr>
+        <td><b>Q2 · 4-6 月</b></td>
+        <td>① 省级评审参与(广东 / 上海)<br>② "AI 升级层"对接方案(API 标准化)<br>③ 客户数突破 100+</td>
+        <td>政策破冰 / 共存策略 / 规模追赶</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <div>
+    <div class="sig">婷婷 · AI 教学产品部 · 2026.06.05</div>
+    <div style="margin-top:4px;color:var(--ink-3)">V1 三家架构对比 + 小雅竞争优势思考(战略层)</div>
+  </div>
+  <div style="text-align:right">
+    <div>配套:V10 智慧树对照 / V2 超星对照</div>
+    <div style="margin-top:4px">目标读者:孙总 + 销售总监 + 产品规划</div>
+  </div>
+</footer>
+
+</body>
+</html>
