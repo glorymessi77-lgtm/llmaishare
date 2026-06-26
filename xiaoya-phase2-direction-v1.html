@@ -1,0 +1,1400 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>小雅二期立项汇报 V7 · 讯飞数学批改 + 清华合作</title>
+<style>
+:root{
+  --gray-0:#FFFFFF;--gray-1:#F2F5F7;--gray-2:#E6EBF0;
+  --gray-5:#7B838C;--gray-6:#626A73;--gray-7:#4B535C;--gray-9:#272C33;--gray-10:#12151A;
+  --blue-1:#E6F6FF;--blue-2:#BAE3FF;--blue-6:#0077FF;--blue-7:#005ED9;--blue-9:#003A8C;
+  --green-1:#EBF7F1;--green-6:#23B283;--green-7:#158C68;
+  --orange-1:#FFF4E6;--orange-6:#FC7819;--orange-7:#D6590B;
+  --purple-1:#F5F0FF;--purple-6:#7C3AED;--purple-7:#5B21B6;
+  --gold-1:#FFF8E6;--gold-6:#E6B422;--gold-7:#B8860B;
+  --red-1:#FFF2F0;--red-6:#F53B3B;--red-7:#CF272D;
+  --indigo-1:#EEF2FF;--indigo-6:#4F46E5;--indigo-7:#3730A3;
+  --border:rgba(18,21,26,0.08);--border-strong:rgba(18,21,26,0.12);
+  --shadow:0 1px 3px rgba(0,0,0,0.04),0 4px 16px rgba(0,0,0,0.04);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--gray-0);color:var(--gray-10);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75;font-size:14.5px}
+body{max-width:1200px;margin:0 auto;padding:0 40px 100px}
+
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:14px 0;margin:0 -40px 0;padding-left:40px;padding-right:40px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.topbar .left{font-weight:600;font-size:14px;color:var(--gray-10)}
+.topbar .right{color:var(--gray-6)}
+.topbar .right span{display:inline-block;background:var(--blue-6);color:#fff;padding:2px 9px;border-radius:3px;margin-left:8px;font-weight:600;font-size:11.5px}
+
+/* Hero */
+.hero{padding:56px 0 36px;text-align:center;border-bottom:1px solid var(--border)}
+.eyebrow{font-size:11.5px;color:var(--blue-6);margin-bottom:18px;font-weight:600;letter-spacing:.15em;text-transform:uppercase}
+h1{font-size:34px;line-height:1.3;font-weight:700;color:var(--gray-10);max-width:980px;margin:0 auto 14px;letter-spacing:-0.01em}
+.subtitle{font-size:15.5px;line-height:1.75;color:var(--gray-7);max-width:920px;margin:0 auto;font-weight:400}
+.subtitle strong{color:var(--gray-10);font-weight:600}
+.hero-meta{display:flex;gap:18px;margin-top:22px;justify-content:center;font-size:12px;color:var(--gray-6);flex-wrap:wrap}
+.hero-meta span{padding:4px 14px;background:var(--gray-1);border-radius:14px}
+
+.ideal-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:32px 0 0}
+.ideal-card{padding:22px 24px;background:var(--gray-0);border:1px solid var(--border-strong);border-radius:12px;text-align:left;box-shadow:var(--shadow)}
+.ideal-card .ideal-name{font-size:22px;font-weight:700;color:var(--blue-7);margin-bottom:8px;letter-spacing:-0.005em}
+.ideal-card .ideal-desc{font-size:13.5px;line-height:1.7;color:var(--gray-7)}
+.ideal-card .ideal-desc b{color:var(--gray-10)}
+
+section{padding:56px 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-head{margin-bottom:30px}
+.sec-head .num{display:inline-block;color:var(--blue-6);font-family:Menlo,monospace;font-size:13px;font-weight:700;letter-spacing:.2em;margin-bottom:8px}
+h2{font-size:26px;font-weight:700;color:var(--gray-10);letter-spacing:-0.01em;line-height:1.3}
+.sec-head .sub{font-size:14px;color:var(--gray-6);margin-top:6px;font-weight:400}
+h3{font-size:17px;font-weight:600;color:var(--gray-10);margin:26px 0 12px}
+p{color:var(--gray-7);font-size:14.5px;line-height:1.85;margin-bottom:10px}
+strong{color:var(--gray-10);font-weight:600}
+
+/* 方向卡片 */
+.direction-card{margin:28px 0;padding:0;background:var(--gray-0);border:1px solid var(--border-strong);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.dc-header{padding:24px 30px 18px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#FAFCFF,#fff)}
+.dc-header .dc-id{display:inline-flex;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.dc-header .dc-no{font-size:14px;font-weight:700;color:var(--gray-10);font-family:Menlo,monospace}
+.dc-header .dc-tag{font-size:11px;padding:3px 10px;color:#fff;border-radius:3px;font-weight:600;letter-spacing:.05em;font-family:Menlo,monospace}
+.dc-tag.live{background:var(--red-6)}
+.dc-tag.hard{background:var(--orange-6)}
+.dc-tag.standard{background:var(--purple-6)}
+.dc-tag.most{background:var(--blue-6)}
+.dc-tag.ground{background:var(--green-6)}
+.dc-tag.last{background:var(--gray-5)}
+.dc-header .dc-name{font-size:23px;font-weight:700;color:var(--gray-10);letter-spacing:-0.005em;line-height:1.3;margin-bottom:4px}
+.dc-header .dc-owner{font-size:12.5px;color:var(--gray-6);margin-top:6px}
+.dc-header .dc-owner b{color:var(--gray-10);background:var(--blue-1);padding:1px 8px;border-radius:3px;font-family:Menlo,monospace;font-size:12px;font-weight:600}
+
+.dc-consensus{padding:16px 30px;background:linear-gradient(180deg,#F5F0FF 0%,#FFFEFF 100%);border-bottom:1px solid var(--border);font-size:13px;line-height:1.75;color:var(--gray-9)}
+.dc-consensus .lbl{font-size:11px;color:var(--purple-7);font-weight:700;letter-spacing:.08em;margin-bottom:6px;text-transform:uppercase}
+.dc-consensus b{color:var(--gray-10);font-weight:600}
+
+.dc-body{padding:24px 30px}
+
+/* WHO row */
+.dc-who{padding:14px 18px;background:linear-gradient(135deg,var(--blue-1),#fff);border-left:3px solid var(--blue-6);border-radius:0 8px 8px 0;margin-bottom:18px}
+.dc-who .lbl{font-size:11px;color:var(--blue-6);font-weight:700;letter-spacing:.08em;margin-bottom:5px;text-transform:uppercase}
+.dc-who .text{font-size:14px;color:var(--gray-9);line-height:1.7}
+.dc-who .text b{color:var(--gray-10)}
+
+/* 产品重点方向 · 核心新增 */
+.focus-area{margin:18px 0}
+.focus-area .fa-head{font-size:13px;color:var(--orange-7);font-weight:700;letter-spacing:.08em;margin-bottom:12px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.focus-area .fa-head::before{content:'▶';color:var(--orange-6);font-size:10px}
+.focus-list{display:grid;grid-template-columns:1fr;gap:12px}
+.focus-item{padding:16px 20px;background:linear-gradient(180deg,#FFFEF8,#fff);border:1px solid #F0DDA8;border-left:4px solid var(--orange-6);border-radius:8px}
+.focus-item .fi-head{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.focus-item .fi-num{font-size:12px;font-weight:700;color:var(--orange-7);font-family:Menlo,monospace;background:var(--orange-1);padding:2px 7px;border-radius:3px}
+.focus-item .fi-name{font-size:14.5px;font-weight:700;color:var(--gray-10);flex:1;line-height:1.4}
+.focus-item .fi-target{font-size:11px;color:var(--green-7);background:var(--green-1);padding:2px 8px;border-radius:3px;font-family:Menlo,monospace;font-weight:600}
+.focus-item .fi-desc{font-size:13px;color:var(--gray-7);line-height:1.8;margin-bottom:4px}
+.focus-item .fi-desc b{color:var(--gray-10)}
+.focus-item .fi-detail{font-size:12.5px;color:var(--gray-6);line-height:1.7;padding:6px 12px;background:var(--gray-1);border-radius:6px;margin-top:6px}
+.focus-item .fi-detail b{color:var(--gray-9)}
+
+/* Super Agent · 特殊形态 */
+.super-agent{margin:18px 0;padding:0;background:linear-gradient(135deg,#1E1B4B,var(--indigo-7));border-radius:12px;overflow:hidden;color:#fff;box-shadow:0 12px 32px rgba(79,70,229,0.25)}
+.super-agent .sa-head{padding:24px 28px 12px;border-bottom:1px solid rgba(255,255,255,0.15)}
+.super-agent .sa-tag{display:inline-block;font-size:10.5px;padding:3px 10px;background:rgba(255,255,255,0.18);color:#fff;border-radius:3px;font-weight:600;letter-spacing:.08em;font-family:Menlo,monospace;margin-bottom:8px}
+.super-agent .sa-title{font-size:22px;font-weight:700;color:#fff;line-height:1.3;letter-spacing:-0.005em}
+.super-agent .sa-subtitle{font-size:13.5px;color:rgba(255,255,255,0.75);margin-top:6px;line-height:1.65}
+.super-agent .sa-body{padding:22px 28px}
+.super-agent .sa-feature{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+.sa-feat-card{padding:14px 16px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;backdrop-filter:blur(6px)}
+.sa-feat-card .sf-name{font-size:13.5px;font-weight:700;color:#FFE58F;margin-bottom:6px}
+.sa-feat-card .sf-desc{font-size:12.5px;color:rgba(255,255,255,0.85);line-height:1.7}
+.sa-feat-card .sf-desc b{color:#fff}
+.super-agent .sa-compete{margin-top:14px;padding:12px 16px;background:rgba(255,255,255,0.08);border-left:3px solid #FFE58F;border-radius:0 6px 6px 0;font-size:12.5px;color:rgba(255,255,255,0.92);line-height:1.7}
+.super-agent .sa-compete b{color:#FFE58F}
+
+/* 不做+边界 */
+.dc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.dc-cell{padding:14px 16px;border-radius:8px;font-size:13px;line-height:1.75}
+.dc-cell.dont{background:linear-gradient(180deg,var(--red-1),#fff);border-left:3px solid var(--red-6)}
+.dc-cell.boundary{background:linear-gradient(180deg,var(--gray-1),#fff);border-left:3px solid var(--gray-6)}
+.dc-cell .ct{font-size:11px;font-weight:700;letter-spacing:.08em;margin-bottom:6px}
+.dc-cell.dont .ct{color:var(--red-7)}
+.dc-cell.boundary .ct{color:var(--gray-9)}
+.dc-cell ul{padding-left:18px}
+.dc-cell li{padding:2px 0;color:var(--gray-7)}
+.dc-cell li b{color:var(--gray-10)}
+
+.dc-revenue{margin-top:16px;padding:14px 18px;background:linear-gradient(135deg,var(--gold-1),#FFFEF8);border:1px solid #F0D88A;border-radius:8px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.dc-revenue .rev-lbl{font-size:11px;color:var(--gold-7);font-weight:700;letter-spacing:.08em;flex:0 0 100px}
+.dc-revenue .rev-num{font-size:15px;font-weight:700;color:var(--gray-10);font-family:Menlo,monospace;flex:1;min-width:240px}
+.dc-revenue .rev-desc{font-size:12.5px;color:var(--gray-7);flex:1.2;min-width:200px}
+
+/* 优先级矩阵 */
+.priority-matrix{margin:24px 0;padding:24px;background:linear-gradient(180deg,#F8FAFC,#fff);border:1px solid var(--border-strong);border-radius:12px}
+.pm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:12px}
+.pm-col{padding:18px;background:var(--gray-0);border:1px solid var(--border);border-radius:8px}
+.pm-col .pm-title{font-size:13px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.pm-col.attack .pm-title{color:var(--red-7)}
+.pm-col.defend .pm-title{color:var(--blue-7)}
+.pm-col.bench .pm-title{color:var(--gold-7)}
+.pm-col ul{padding-left:18px;font-size:13px;color:var(--gray-7);line-height:1.8}
+.pm-col ul li b{color:var(--gray-10)}
+
+/* Tables */
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px;background:var(--gray-0)}
+th{background:linear-gradient(180deg,#F8FAFC,var(--gray-1));font-weight:600;font-size:12.5px;color:var(--gray-9);padding:12px 13px;text-align:left;border-bottom:2px solid var(--border-strong)}
+td{padding:11px 13px;border-bottom:1px solid var(--border);color:var(--gray-7);vertical-align:top;line-height:1.7}
+td b{color:var(--gray-10);font-weight:600}
+tr:hover td{background:var(--gray-1)}
+
+/* Callouts */
+.callout{padding:16px 20px;margin:14px 0;border-radius:8px;font-size:13.5px;line-height:1.85}
+.callout.blue{background:var(--blue-1);border-left:3px solid var(--blue-6)}
+.callout.gold{background:var(--gold-1);border-left:3px solid var(--gold-6)}
+.callout.green{background:var(--green-1);border-left:3px solid var(--green-6)}
+.callout.red{background:var(--red-1);border-left:3px solid var(--red-6)}
+.callout.purple{background:var(--purple-1);border-left:3px solid var(--purple-6)}
+.callout .lbl{font-size:11px;font-weight:700;letter-spacing:.08em;margin-bottom:6px}
+.callout.blue .lbl{color:var(--blue-6)}
+.callout.gold .lbl{color:var(--gold-7)}
+.callout.green .lbl{color:var(--green-7)}
+.callout.red .lbl{color:var(--red-7)}
+.callout.purple .lbl{color:var(--purple-7)}
+.callout b{color:var(--gray-10)}
+
+/* Roadmap */
+.roadmap{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:22px 0}
+.rm-col{padding:24px 26px;border-radius:12px;border:1px solid var(--border-strong);background:var(--gray-0);box-shadow:var(--shadow)}
+.rm-col.v9{border-top:5px solid var(--orange-6)}
+.rm-col.v12{border-top:5px solid var(--blue-6)}
+.rm-col .rm-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.rm-col .rm-name{font-size:16px;font-weight:700;color:var(--gray-10)}
+.rm-col .rm-date{font-size:11.5px;color:var(--gray-6);background:var(--gray-1);padding:3px 10px;border-radius:3px;font-family:Menlo,monospace}
+.rm-item{padding:10px 0;border-bottom:1px dashed var(--border)}
+.rm-item:last-child{border-bottom:none}
+.rm-item .ri-name{font-size:13px;font-weight:600;color:var(--gray-10);margin-bottom:3px}
+.rm-item .ri-desc{font-size:12.5px;color:var(--gray-7);line-height:1.65}
+.rm-foot{margin-top:12px;padding:10px 14px;background:var(--blue-1);border-radius:6px;font-size:12.5px;color:var(--gray-9)}
+.rm-foot b{color:var(--gray-10);font-weight:700}
+
+/* Supplement */
+.supplement-mark{display:inline-block;padding:5px 14px;background:linear-gradient(135deg,var(--purple-6),var(--blue-6));color:#fff;font-size:11px;font-weight:700;letter-spacing:.1em;border-radius:14px;margin-bottom:14px}
+.suppl-card{margin:20px 0;padding:24px 28px;background:var(--gray-0);border:1px solid var(--border-strong);border-radius:12px;box-shadow:var(--shadow);border-left:5px solid var(--purple-6)}
+.suppl-card .sc-tag{display:inline-block;font-size:11px;padding:3px 10px;background:var(--purple-6);color:#fff;border-radius:3px;font-weight:600;letter-spacing:.05em;font-family:Menlo,monospace;margin-bottom:8px}
+.suppl-card .sc-title{font-size:18px;font-weight:700;color:var(--gray-10);margin-bottom:10px;line-height:1.4}
+.suppl-card .sc-desc{font-size:13.5px;color:var(--gray-7);line-height:1.8;margin-bottom:12px}
+.suppl-card .sc-desc b{color:var(--gray-10)}
+
+/* Final */
+.final{margin:48px 0 0;padding:38px 44px;background:linear-gradient(135deg,#0F2A5C,var(--blue-9));color:#fff;border-radius:14px;box-shadow:0 12px 32px rgba(0,93,217,0.25)}
+.final .lbl{font-size:11.5px;letter-spacing:.18em;color:rgba(255,255,255,0.65);font-weight:700;margin-bottom:18px;text-transform:uppercase}
+.final h3{color:#fff;font-size:20px;margin:18px 0 12px;font-weight:700;border:none;padding:0}
+.final h3:first-of-type{margin-top:0}
+.final p{color:rgba(255,255,255,0.92);font-size:14.5px;line-height:1.85;margin-bottom:10px}
+.final p b{color:#FFE58F;font-weight:700}
+
+footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--border);font-size:12px;color:var(--gray-6);text-align:center;line-height:1.85}
+footer code{background:var(--gray-1);padding:2px 8px;border-radius:3px;font-family:Menlo,monospace}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="left">AI 教学产品部 · 小雅二期立项汇报</div>
+  <div class="right">v1 · 2026-06 · 产品规划公开版 <span>v1 PUBLIC</span></div>
+</div>
+
+<!-- ============== HERO ============== -->
+<header class="hero">
+  <div class="eyebrow">XIAOYA PHASE-2 · 6 大方向 · 产品重点深化</div>
+  <h1>小雅二期立项 · 6 大方向 · 产品重点 + 边界 + 收益</h1>
+  <p class="subtitle">
+    本材料延续 <strong>前期产品方向共识会</strong>核心决策层的 <strong>6 大方向共识</strong>,
+    在共识之上,对每个方向做 <strong>"产品重点方向 / WHO / 范围内做什么 / 范围外不做什么 / 收益预测"</strong> 的深度细化。
+    重点深化:<strong>方向 ② 加入深大 1+1+N 招标 5 条启示</strong> · <strong>方向 ④ 加超级智能体 + 场景智能体流程串联(经纬双线)</strong> · <strong>方向 ④-A/B 加讯飞独家武器(K12 高数公式批改复用 + 清华 OpenMac 合作)</strong> · <strong>方向 ⑤ 加知识库主线 4 大方向</strong>。
+  </p>
+  <div class="hero-meta">
+    <span>承接 · 前期共识</span>
+    <span>深大 1+1+N 招标启示</span>
+    <span>超级智能体 + 场景串联</span>
+    <span>知识库主线 4 大方向(承接 6-26 产品规划同事规划)</span>
+    <span>📎 配套通俗附件</span>
+  </div>
+
+  <div class="ideal-bar">
+    <div class="ideal-card">
+      <div class="ideal-name">上得来</div>
+      <div class="ideal-desc">签约后 <b>2 个月内</b>平台上线,<b>老课老数据全搬过来</b>,敏感数据留校内</div>
+    </div>
+    <div class="ideal-card">
+      <div class="ideal-name">用得起来</div>
+      <div class="ideal-desc"><b>70%</b> 开课老师天天用 · <b>60%</b> 学生月月在用 · AI 出题批改答题率 <b>90%</b></div>
+    </div>
+    <div class="ideal-card">
+      <div class="ideal-name">省心</div>
+      <div class="ideal-desc">平台常年<b>不宕</b> · 知识库<b>越积累越准</b> · 学校自己维护</div>
+    </div>
+  </div>
+</header>
+
+<!-- ====================================================== -->
+<!-- 第一章 · 6 大方向 · 产品重点深化 -->
+<!-- ====================================================== -->
+<section>
+  <div class="sec-head">
+    <div class="num">01 · 6 大方向 · 产品重点 + 边界细化</div>
+    <h2>6 件当务之急 · 每个方向的产品重点是什么</h2>
+    <div class="sub">承接共识 6 方向命名与牵头分工,本次贡献 = 产品重点方向 + 边界 + 收益</div>
+  </div>
+
+  <div class="callout blue">
+    <div class="lbl">★ 核心差距(共识)</div>
+    <p>学校已能使用<b>签到 / 上课 / 考试</b>功能,但缺少 <b>AI 自适应学习、薄弱点诊断、个性化路径规划</b>的闭环,以及<b>教务督导等管理功能对接</b>。</p>
+  </div>
+
+  <!-- ============ 方向 ① 老数据迁移 ============ -->
+  <div class="direction-card">
+    <div class="dc-header">
+      <div class="dc-id">
+        <span class="dc-no">①</span>
+        <span class="dc-tag live">生死线</span>
+      </div>
+      <div class="dc-name">老数据迁移</div>
+      <div class="dc-owner">牵头 · <b>产品规划同事(端到端盯)</b> + 技术 <b>研发负责人</b></div>
+    </div>
+    <div class="dc-consensus">
+      <div class="lbl">★ 共识原文</div>
+      核心心结:学校不敢换平台,老数据成决策障碍 · 路径:迁移工具 / 人肉兜底 / 多平台标准共存 · 策略:先在<b>华师、武理工</b>等教务强势学校跑通形成方法论,再承诺"<b>买了就帮你迁</b>" · 现状:各家不配合
+    </div>
+    <div class="dc-body">
+      <div class="dc-who">
+        <div class="lbl">WHO · 为谁做</div>
+        <div class="text"><b>意向换平台的客户(华师 / 武理工等教务强势学校)</b> · 决策方 = 信息处长 · 付费方 = 学校</div>
+      </div>
+
+      <div class="focus-area">
+        <div class="fa-head">产品重点方向 · 5 项</div>
+        <div class="focus-list">
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">①-1</span>
+              <span class="fi-name">竞品适配引擎(多 Schema 兼容)</span>
+              <span class="fi-target">9 月 跑通 2 家</span>
+            </div>
+            <div class="fi-desc">不是"通用迁移工具",而是<b>针对超星/智慧树/雨课堂</b>分别做适配引擎,每个适配器封装"老平台 schema → 小雅 schema"的映射规则。</div>
+            <div class="fi-detail"><b>关键:</b>9 月先做超星(优先级最高,客户量最大)+ 智慧树两家;雨课堂等其他平台 12 月按需补</div>
+          </div>
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">①-2</span>
+              <span class="fi-name">智能内容映射(老课程 → 小雅章节结构)</span>
+              <span class="fi-target">9 月 80% 自动</span>
+            </div>
+            <div class="fi-desc"><b>AI 自动识别</b>老平台课程的章节结构 / 资源类型 / 题目类型 / 作业-成绩关联,映射到小雅章节模板。降低人工介入度。</div>
+            <div class="fi-detail"><b>关键:</b>对超星"任务点 + 资源"模型 ↔ 小雅"章节 + 资源 + 任务团子"模型;对智慧树"知到 App 资源" ↔ 小雅"备授课资源"</div>
+          </div>
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">①-3</span>
+              <span class="fi-name">迁移健康度仪表盘</span>
+              <span class="fi-target">9 月 上线</span>
+            </div>
+            <div class="fi-desc">学校 IT 处可视化看 <b>"迁了多少 / 成功多少 / 失败原因"</b> — 不是黑盒,是<b>白盒 + 可追溯</b>。失败项标技术不可达点,可手工处理。</div>
+            <div class="fi-detail"><b>关键:</b>对应共识"<u>承诺买了就帮你迁</u>",但同时控制预期 — 让学校相信我们"能迁多少不藏"</div>
+          </div>
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">①-4</span>
+              <span class="fi-name">多平台标准共存(老平台只读保活)</span>
+              <span class="fi-target">12 月</span>
+            </div>
+            <div class="fi-desc">迁移完成后,老平台数据保留<b>只读快照</b>,学校可查可下载,但所有新教学活动在小雅。降低换平台心理负担。</div>
+            <div class="fi-detail"><b>关键:</b>不强制学校一刀切,允许"小雅是新系统 + 超星老数据可查"的双轨过渡</div>
+          </div>
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">①-5</span>
+              <span class="fi-name">人肉兜底服务包(SOP 化交付)</span>
+              <span class="fi-target">9 月 出 SOP</span>
+            </div>
+            <div class="fi-desc">迁移工具搞不定的 20%,提供 <b>5-10 人天/校的标准化人工服务</b>(承诺手册写清楚)。出售前/中/后 SOP,新销售可复用。</div>
+            <div class="fi-detail"><b>关键:</b>共识里"<u>人肉兜底</u>"不是临时救火,是<u>SOP 化产品</u>,可被复制规模化</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dc-grid">
+        <div class="dc-cell dont">
+          <div class="ct">❌ 范围外不做什么</div>
+          <ul>
+            <li>不承诺 100% 迁移成功率(标技术不可达项)</li>
+            <li>不做实时同步(一次性切换)</li>
+            <li>不替代学校备份</li>
+            <li>不迁课程版权(版权学校自处)</li>
+            <li>不做"全部平台都能迁"(只做超星/智慧树/雨课堂三主流)</li>
+          </ul>
+        </div>
+        <div class="dc-cell boundary">
+          <div class="ct">↔ 跟其他方向边界</div>
+          <ul>
+            <li>跟 ② 校内融合:迁移是"一次性入场",融合是"持续协同"</li>
+            <li>跟 ④ 场景 AI:迁完了客户用什么 → 场景 AI 接</li>
+            <li>跟 ⑤ 院级方案:大客户院级方案常含迁移</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="dc-revenue">
+        <div class="rev-lbl">💰 营收</div>
+        <div class="rev-num">附加 客单价提升 / 一批换平台客户</div>
+        <div class="rev-desc">客单价↑10% + 直接戳超星"切换成本"痛点 + 帮销售从超星抢客户</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 方向 ② 校内系统融合 ============ -->
+  <div class="direction-card">
+    <div class="dc-header">
+      <div class="dc-id">
+        <span class="dc-no">②</span>
+        <span class="dc-tag hard">重要且难</span>
+      </div>
+      <div class="dc-name">校内系统融合</div>
+      <div class="dc-owner">牵头 · <b>产品规划同事</b> + <b>邱月</b>协助</div>
+    </div>
+    <div class="dc-consensus">
+      <div class="lbl">★ 共识原文 + 深大启示</div>
+      现状:超星等竞品已深度融合教务,不做就丢机会 · 打法:产品经理端到端牵头+强技术落地 · 节奏:<b>争取 9 月前打开口子,试用转正式付费</b><br>
+      <span style="color:var(--purple-7);font-weight:600;margin-top:6px;display:inline-block">★ 深大 1+1+N 招标(985 标杆项目) 5 条直接启示已融入本方向:</span> <b>GraphQL 数据中台</b>(从 SDK 升级)/ <b>零代码门户</b>(必演项)/ <b>数据中台独立 SKU</b>(985 独立预算)/ <b>二级等保底线</b>(否决项)/ <b>跨角色协作</b>(必演项)
+      <div style="margin-top:10px;padding:8px 12px;background:#FFF8E6;border-left:3px solid var(--gold-6);border-radius:4px;font-size:12.5px;color:var(--gray-9)">
+        📎 <b>配套通俗附件:</b>《<a href="附件_深大招标AI技术名词通俗解读.html" target="_blank" style="color:var(--gold-7);text-decoration:underline;font-weight:600">高校招标 AI 技术名词通俗解读 V1</a>》— 用客户能听懂的话解释 DAG / GraphQL / A2A / K8s+GPU / RBAC+JWT 等 8 个深大涉及的技术名词 · 给领导汇报时配合本材料使用
+      </div>
+    </div>
+    <div class="dc-body">
+      <div class="dc-who">
+        <div class="lbl">WHO · 为谁做</div>
+        <div class="text"><b>教务处长(决策)+ 信息中心(落地)+ 督导办(评价侧)</b> · 付费方 = 学校 · <b>985 高校大客户(主流 985 项目级)</b></div>
+      </div>
+
+      <!-- ⭐ 3 句话快速理解 -->
+      <div style="margin:18px 0;padding:20px 24px;background:linear-gradient(135deg,#FFFEF8,#FFF8E6);border:1px solid #F0D88A;border-left:5px solid var(--gold-6);border-radius:10px">
+        <div style="font-size:12px;color:var(--gold-7);font-weight:700;letter-spacing:.1em;margin-bottom:12px;text-transform:uppercase">★ 3 句话快速理解 · 校内系统融合做什么</div>
+        <div style="font-size:15px;line-height:1.85;color:var(--gray-9)">
+          <b>本质:让小雅成为学校教务生态的"一员",不被孤立。</b>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:14px">
+          <div style="padding:14px 16px;background:#fff;border:1px solid var(--border);border-left:3px solid var(--blue-6);border-radius:6px">
+            <div style="font-size:13px;font-weight:700;color:var(--blue-7);margin-bottom:6px">① 进得来</div>
+            <div style="font-size:12.5px;color:var(--gray-7);line-height:1.7">学校的人<b>一次登录就能用</b>所有小雅功能(SSO 一码通行)</div>
+          </div>
+          <div style="padding:14px 16px;background:#fff;border:1px solid var(--border);border-left:3px solid var(--green-6);border-radius:6px">
+            <div style="font-size:13px;font-weight:700;color:var(--green-7);margin-bottom:6px">② 数据通</div>
+            <div style="font-size:12.5px;color:var(--gray-7);line-height:1.7">学校已有数据<b>进得来</b>,小雅产生的数据<b>流得出</b>(教务/督导/考试 双向打通)</div>
+          </div>
+          <div style="padding:14px 16px;background:#fff;border:1px solid var(--border);border-left:3px solid var(--purple-6);border-radius:6px">
+            <div style="font-size:13px;font-weight:700;color:var(--purple-7);margin-bottom:6px">③ 像自家</div>
+            <div style="font-size:12.5px;color:var(--gray-7);line-height:1.7">学校 IT 能<b>自己装修门户</b>(零代码)+ <b>安全合规过关</b>(等保)</div>
+          </div>
+        </div>
+        <div style="margin-top:14px;font-size:13px;color:var(--gray-7);padding-top:12px;border-top:1px solid var(--border)">
+          <b style="color:var(--gray-10)">达成标准:</b>① + ② + ③ 三件事全做到 = 校内系统融合达成 · 学校不再把我们当"外挂工具",而是"教务生态一员"
+        </div>
+      </div>
+
+      <div class="focus-area">
+        <div class="fa-head">产品重点方向 · 按 3 组归并(共 8 项)</div>
+
+        <!-- 组 1 · 进得来(SSO 一码通行) -->
+        <div style="font-size:12px;color:var(--blue-7);font-weight:700;letter-spacing:.05em;margin:14px 0 8px;padding:6px 12px;background:var(--blue-1);border-radius:4px;display:inline-block">▎组 1 · 进得来</div>
+        <div class="focus-list">
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">②-3</span>
+              <span class="fi-name">统一身份 + 单点登录(SSO)</span>
+              <span class="fi-target">9 月 上线</span>
+            </div>
+            <div class="fi-desc">OAuth2 / CAS / 企业微信 / 微信小程序 / 钉钉,5 种主流身份系统标准接入。教师/学生<b>"一码通行"</b>。</div>
+            <div class="fi-detail"><b>关键:</b>对接 相关任务已规划。本次重点是"<u>一码通行</u>"的产品体感</div>
+          </div>
+        </div>
+
+        <!-- 组 2 · 数据通 -->
+        <div style="font-size:12px;color:var(--green-7);font-weight:700;letter-spacing:.05em;margin:18px 0 8px;padding:6px 12px;background:var(--green-1);border-radius:4px;display:inline-block">▎组 2 · 数据通(双向打通)</div>
+        <div class="focus-list">
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">②-1</span>
+              <span class="fi-name">教务数据中台(GraphQL 升级)⭐ 深大启示升级</span>
+              <span class="fi-target">9 月 出 1.0</span>
+            </div>
+            <div class="fi-desc">从 REST 接口<b>升级到 GraphQL 数据中台</b>,封装<b>排课/选课/成绩/学籍/教学计划</b>+ 灵活查询。各校适配只调配置不改代码。</div>
+            <div class="fi-detail"><b>关键:</b>对标超星"启明星"+ N 系统模式,深大招标明确"教务数据中台 GraphQL"是独立模块。<br><b>★ 深大启示:</b>从 SDK 升级到 GraphQL 是 985 招标基础门票,REST 接口已不满足要求</div>
+          </div>
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">②-2</span>
+              <span class="fi-name">督导评价数据双向回流</span>
+              <span class="fi-target">9 月 上线</span>
+            </div>
+            <div class="fi-desc"><b>督导评课数据回流到小雅</b> → 老师可看;<b>小雅课堂数据回流督导</b> → 督导可调用。形成"<u>评-反馈-改</u>"闭环。</div>
+            <div class="fi-detail"><b>关键:</b>对接 相关任务讯飞 AI 巡课/课堂评价已规划,本次重点是"<u>双向数据流</u>"打通</div>
+          </div>
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">②-4</span>
+              <span class="fi-name">考试 + 巡课 + 教学评价 三类讯飞核心系统集成</span>
+              <span class="fi-target">9 月 上线</span>
+            </div>
+            <div class="fi-desc">接入讯飞 <b>AI 考试 + AI 巡课 + AI 课堂教学评价</b> 三类核心系统 — <b>考试成绩纳入考核 / 巡课督导数据回流 / 课堂评价数据沉淀</b>。对应已签约客户 8-30 真订单。</div>
+            <div class="fi-detail"><b>关键:</b>对接 相关任务 讯飞 AI 考试 + 相关任务 AI 巡课 + 相关任务 AI 课堂教学评价。<b>本次重点是"<u>讯飞核心 AI 系统全集成</u>",形成完整教学闭环 — 考、督、评 一站打通</b></div>
+          </div>
+        </div>
+
+        <!-- 组 3 · 像自家(零代码 + 等保) -->
+        <div style="font-size:12px;color:var(--purple-7);font-weight:700;letter-spacing:.05em;margin:18px 0 8px;padding:6px 12px;background:var(--purple-1);border-radius:4px;display:inline-block">▎组 3 · 像自家(学校 IT 能自己用 + 安全合规过关)</div>
+        <div class="focus-list">
+          <div class="focus-item" style="border-left-color:var(--purple-6);background:linear-gradient(180deg,var(--purple-1),#fff)">
+            <div class="fi-head">
+              <span class="fi-num" style="background:var(--purple-1);color:var(--purple-7)">②-6 ⭐</span>
+              <span class="fi-name">零代码门户搭建(985 必演基础门票)</span>
+              <span class="fi-target">9 月 出 1.0</span>
+            </div>
+            <div class="fi-desc"><b>学校 IT 拖拽搭配自己的门户</b>,不需要找我们改代码。多角色门户(教师/学生/管理者/督导)+ 移动端适配 + 零代码组件库。</div>
+            <div class="fi-detail"><b>★ 深大启示:</b>5 项必演中"智慧门户(零代码组件 + 多角色 + SSO + 移动端)"是基础,缺这一项<b>评分至少损失 4 分</b>。985 高校招标必备项,小雅当前无</div>
+          </div>
+
+          <div class="focus-item" style="border-left-color:var(--red-6);background:linear-gradient(180deg,var(--red-1),#fff)">
+            <div class="fi-head">
+              <span class="fi-num" style="background:var(--red-1);color:var(--red-7)">②-8 ⭐</span>
+              <span class="fi-name">二级等保(必)+ 三级升级路径(底线)</span>
+              <span class="fi-target">9 月 必达</span>
+            </div>
+            <div class="fi-desc">二级等保<b>合规备案</b>+ 三级等保<b>30 天可升级路径</b>。这是 985 高校招标"<u>实质性条款</u>",<b>缺即无效投标</b>。</div>
+            <div class="fi-detail"><b>★ 深大启示:</b>"二级等保(必)+ 三级(30 天升)· 不可负偏离 · 缺即无效投标" — 这不是亮点是底线。本期必达</div>
+          </div>
+        </div>
+
+        <!-- 组 4 · 销售包装(可单独卖) -->
+        <div style="font-size:12px;color:var(--gold-7);font-weight:700;letter-spacing:.05em;margin:18px 0 8px;padding:6px 12px;background:var(--gold-1);border-radius:4px;display:inline-block">▎组 4 · 销售包装(把上述能力变成可卖的 SKU)</div>
+        <div class="focus-list">
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">②-5</span>
+              <span class="fi-name">融合方案产品化包装</span>
+              <span class="fi-target">9 月 出方案</span>
+            </div>
+            <div class="fi-desc">把上述 5 项能力 + AI 创新空间科研工具打通(相关任务)<b>打包成"教务生态融合方案"</b>,给销售单独 SKU 卖。</div>
+            <div class="fi-detail"><b>关键:</b>不是 7 个独立功能,是 1 个"<u>教务生态融合方案</u>"销售包,对标超星 N 系统组合</div>
+          </div>
+          <div class="focus-item" style="border-left-color:var(--purple-6);background:linear-gradient(180deg,var(--purple-1),#fff)">
+            <div class="fi-head">
+              <span class="fi-num" style="background:var(--purple-1);color:var(--purple-7)">②-7 ⭐</span>
+              <span class="fi-name">教务数据中台独立 SKU(商业模式新增)</span>
+              <span class="fi-target">12 月</span>
+            </div>
+            <div class="fi-desc">基于 ②-1 GraphQL 数据中台,做成<b>独立产品 SKU</b>对外卖。深大/广州大学/上海交大等 985 高校对"数据中台"<u>有独立预算</u>。</div>
+            <div class="fi-detail"><b>★ 深大启示:</b>"教务数据中台" 在深大招标里独立成模块。可学梦溪聚知模式"平台 / 基座 / 中台" 三段定价。<b>定价 院级方案中等档</b>,作为方向 ② 收入新增长点</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dc-grid">
+        <div class="dc-cell dont">
+          <div class="ct">❌ 范围外不做什么</div>
+          <ul>
+            <li><b>不替代教务系统本身</b>(我们补充不替代)</li>
+            <li>不接所有学校的所有教务(先抽 5 校做共性)</li>
+            <li>不做强耦合定制(标准化,定制成本失控就拒)</li>
+            <li>不承诺秒级实时同步(批量同步即可)</li>
+            <li>不替代第三方科研系统</li>
+          </ul>
+        </div>
+        <div class="dc-cell boundary">
+          <div class="ct">↔ 跟其他方向边界</div>
+          <ul>
+            <li>跟 ① 迁移:迁移完成后走融合,跟客户续费</li>
+            <li>跟 ④ 场景 AI:成绩/学情数据回流融合 → 推荐</li>
+            <li>跟 ⑤ 院级方案:院级方案常含融合需求</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="dc-revenue">
+        <div class="rev-lbl">💰 营收</div>
+        <div class="rev-num">Q4 中等档 / Q1-Q2 院级方案规模化 · 含数据中台独立 SKU</div>
+        <div class="rev-desc">混合部署交付 + 防流失 + 融合方案销售包 + <b style="color:var(--purple-7)">教务数据中台独立 SKU(深大启示)</b> + 985 大客户(985 标杆项目)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 方向 ③ 成效范例 ============ -->
+  <div class="direction-card">
+    <div class="dc-header">
+      <div class="dc-id">
+        <span class="dc-no">③</span>
+        <span class="dc-tag standard">锻造标杆</span>
+      </div>
+      <div class="dc-name">小雅 3.0 成效范例</div>
+      <div class="dc-owner">牵头 · <b>徐畅(成效)+ 徐璐(运营)+ 孙辉统筹</b></div>
+    </div>
+    <div class="dc-consensus">
+      <div class="lbl">★ 共识原文</div>
+      靠"<b>强服务+故事</b>"围绕<b>教学成果奖</b>串场景 · 需投专人专精,高度依赖学校规划与好老师 · 厂家作用:<b>提供露头机会 + 运营服务 + 教辅沉淀,不做硬承诺</b>
+    </div>
+    <div class="dc-body">
+      <div class="dc-who">
+        <div class="lbl">WHO · 为谁做</div>
+        <div class="text"><b>有教学成果奖申报需求的院校</b> · 决策方 = 院长/教学副校长 · 标杆客户 = 重点引领院校</div>
+      </div>
+
+      <div class="focus-area">
+        <div class="fa-head">产品重点方向 · 4 项</div>
+        <div class="focus-list">
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">③-1</span>
+              <span class="fi-name">"教学奖项 ↔ 平台功能" 映射库</span>
+              <span class="fi-target">9 月 出 10 个</span>
+            </div>
+            <div class="fi-desc">梳理 <b>"无水分奖项"</b>(国家级/省级金课/混合式教学创新/教学成果奖等),对应到平台具体功能/场景,做成<b>"奖项 → 申报材料 → 平台数据"</b>的对照库。</div>
+            <div class="fi-detail"><b>关键:</b>共识里"<u>露头机会</u>"具象化 — 不是"我们能帮你拿奖",是"<u>这些奖,我们的功能对得上,数据现成</u>"</div>
+          </div>
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">③-2</span>
+              <span class="fi-name">课程评审主页(金课申报刚需)</span>
+              <span class="fi-target">12 月 上线</span>
+            </div>
+            <div class="fi-desc"><b>类似超星"达成度报告"</b>,做成校级独立菜单的"课程评审主页"。展示课程目标 / 教学过程 / 学习成效 / 持续改进 4 大维度的可视化报告。</div>
+            <div class="fi-detail"><b>关键:</b>对标超星"课程达成度报告(校级)"+ 智慧树"课程评审 8 Tab",这是金课申报刚需,小雅当前缺</div>
+          </div>
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">③-3</span>
+              <span class="fi-name">标杆建设双盘(运营 + 教辅)</span>
+              <span class="fi-target">9 月 启动 1 个</span>
+            </div>
+            <div class="fi-desc"><b>运营盘:</b>1 个项目经理盯运营节奏 + 跟院校教学副院长直接对接 · <b>教辅盘:</b>工程中心 1 个教辅团队驻校 SOP 化建课。</div>
+            <div class="fi-detail"><b>关键:</b>共识里"<u>专人专精</u>"具象化 — 每个标杆配双盘,确保 ROI</div>
+          </div>
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">③-4</span>
+              <span class="fi-name">案例素材沉淀流水线</span>
+              <span class="fi-target">持续</span>
+            </div>
+            <div class="fi-desc">标杆建成后,自动产出 <b>PPT 案例 + 短视频故事 + 数据图表 + 客户证言</b> 4 类素材,给销售复用裂变。</div>
+            <div class="fi-detail"><b>关键:</b>标杆<b>"故事化输出"</b>形成可销售裂变的资产,不是一次性 PR</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dc-grid">
+        <div class="dc-cell dont">
+          <div class="ct">❌ 范围外不做什么</div>
+          <ul>
+            <li><b>不硬承诺成果奖</b>(共识明确:不做硬承诺)</li>
+            <li>不替代学校规划与好老师</li>
+            <li>不做短期速成式标杆(申报周期 1-2 年,管好预期)</li>
+            <li>不全员铺开(标杆要专人专精)</li>
+            <li>不接所有奖项申报(只接"无水分"金课/教学奖)</li>
+          </ul>
+        </div>
+        <div class="dc-cell boundary">
+          <div class="ct">↔ 跟其他方向边界</div>
+          <ul>
+            <li>跟 ④ 场景 AI:标杆素材来源于真实场景效果</li>
+            <li>跟 ⑤ 院级方案:大客户院级方案常含标杆建设</li>
+            <li>跟商业模式 C:成效服务包是标杆能力的销售化</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="dc-revenue">
+        <div class="rev-lbl">💰 营收</div>
+        <div class="rev-num">间接撑大单 · &gt;高量级阈值项目占 44% 合同额</div>
+        <div class="rev-desc">标杆故事可裂变 + 教学奖申报路径 → 高客单价 + 撑续费</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 方向 ④ 场景 AI 竞争力(超级智能体 + 3 场景) ============ -->
+  <div class="direction-card">
+    <div class="dc-header">
+      <div class="dc-id">
+        <span class="dc-no">④</span>
+        <span class="dc-tag most">原"本地化" · 最重要</span>
+      </div>
+      <div class="dc-name">场景 AI 竞争力打造</div>
+      <div class="dc-owner">牵头 · <b>AI 教学产品部</b>带队(<b>研发协作同事 / 研发协作同事</b>协助)</div>
+    </div>
+    <div class="dc-consensus">
+      <div class="lbl">★ 共识原文</div>
+      识别值得 AI 竞争力打造的场景,重点跟进迭代 · 约束:选技术成熟无大坑的场景,效果 ≥ 80% · <b>三个发力场景:建课 / 作业批改 / 个性化学习</b> · 批改是学校核心关注且有技术难度的场景
+    </div>
+    <div class="dc-body">
+      <div class="dc-who">
+        <div class="lbl">WHO · 为谁做</div>
+        <div class="text">
+          <b>建课:</b>一线开课教师(老教师为主,最缺时间) · <b>批改:</b>老师(批改累)+ 学生(等反馈) · <b>个性化:</b>学生(主)+ 教师(看学情)
+        </div>
+      </div>
+
+      <!-- ⭐ 超级智能体 · 统一入口形态(前置) -->
+      <div class="super-agent">
+        <div class="sa-head">
+          <div class="sa-tag">★ 统一入口形态 · 超级智能体</div>
+          <div class="sa-title">超级智能体 · 用一个对话框唤起所有高频操作 + 一句话创编智能体</div>
+          <div class="sa-subtitle">不是"再做一个智能体",是把<b style="color:#FFE58F">所有场景 + 30+ 已有 AI 应用 + 个性化能力</b>统一到一个对话入口,老师不再"选智能体",而是"<b style="color:#FFE58F">说话</b>"。</div>
+        </div>
+        <div class="sa-body">
+          <div class="sa-feature">
+            <div class="sa-feat-card">
+              <div class="sf-name">🎯 便捷唤起高频操作</div>
+              <div class="sf-desc">对话框 + 全局快捷键 → 老师说<b>"帮我备明天 SN1 那节课"</b> → 系统自动调用"AI 备课"场景 + 课程知识库 + 教材 → 5 秒内出可用方案</div>
+            </div>
+            <div class="sa-feat-card">
+              <div class="sf-name">⚡ 一句话创编智能体</div>
+              <div class="sf-desc">老师说<b>"我想要一个能批改我课程论文的智能体"</b> → 系统自动配置(图谱+知识库+评分量规+学科特性)→ 1 分钟内可用</div>
+            </div>
+            <div class="sa-feat-card">
+              <div class="sf-name">🔗 跨场景智能调度</div>
+              <div class="sf-desc">老师不区分"备课/助教/批改"入口,统一对话即可。系统根据意图自动调用对应场景能力 + 已有 30+ AI 应用</div>
+            </div>
+            <div class="sa-feat-card">
+              <div class="sf-name">📚 个人 AI 工作流沉淀</div>
+              <div class="sf-desc">老师常用的"<b>备课 → 出题 → 批改 → 学情看板</b>"4 步流程,系统自动学习并打包成<b>个人专属 Skill</b>,下次一句话触发</div>
+            </div>
+          </div>
+          <div class="sa-compete">
+            <b>★ 对标 + 错位:</b>对标超星"AI-First + 指令中心 6 条快捷指令"+ 智慧树"AI 助教 IM 形态 + 首页 Agent/MCP 双模式"。<br>
+            小雅错位 = <b>不是 PaaS 接管入口(超星)</b>,也<b>不是聊天 IM(智慧树)</b>,而是<b>"教师工作流智能调度 + 个人 Skill 沉淀"</b>。
+          </div>
+        </div>
+      </div>
+
+      <!-- ⭐ 场景智能体流程串联 · 纵向闭环(跟超级智能体平级) -->
+      <div class="super-agent" style="background:linear-gradient(135deg,#1A4D2E,var(--green-7))">
+        <div class="sa-head">
+          <div class="sa-tag" style="background:rgba(255,255,255,0.18)">★ 流程闭环形态 · 场景智能体流程串联</div>
+          <div class="sa-title">场景智能体流程串联 · 从"单点 AI"升级到"教学全链路闭环"</div>
+          <div class="sa-subtitle"><b style="color:#FFE58F">当前问题:</b>小雅智能化产品场景非常<u>单点</u> — 备课归备课,批改归批改,学情归学情,<u>互不连通</u>,老师每次切换都要"找入口"。<br><b style="color:#FFE58F">本期升级:</b>把场景智能体<b>纵向串成闭环</b> — 每个环节的输出<u>自动喂给下一环节的输入</u>,数据回流一气呵成。</div>
+        </div>
+        <div class="sa-body">
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0">
+            <div class="sa-feat-card" style="text-align:center">
+              <div class="sf-name">① 备课</div>
+              <div class="sf-desc"><b>AI 备课</b><br>→ 自动产出 PPT/题目/教学设计</div>
+            </div>
+            <div class="sa-feat-card" style="text-align:center">
+              <div class="sf-name">② 上课</div>
+              <div class="sf-desc"><b>AI 助教 + 课堂转写</b><br>→ 数字人答疑 + 课中诊断</div>
+            </div>
+            <div class="sa-feat-card" style="text-align:center">
+              <div class="sf-name">③ 作业</div>
+              <div class="sf-desc"><b>智能批改</b><br>→ 错题归因到知识点</div>
+            </div>
+            <div class="sa-feat-card" style="text-align:center">
+              <div class="sf-name">④ 学情</div>
+              <div class="sf-desc"><b>个性化推荐</b><br>→ 学习路径 + 看板</div>
+            </div>
+            <div class="sa-feat-card" style="text-align:center">
+              <div class="sf-name">⑤ 课后</div>
+              <div class="sf-desc"><b>名师范本 + 成长档案</b><br>→ 数据回流知识库</div>
+            </div>
+          </div>
+          <div style="padding:14px 16px;background:rgba(255,255,255,0.1);border-radius:8px;font-size:13px;line-height:1.75;color:rgba(255,255,255,0.92);margin-top:10px">
+            <b style="color:#FFE58F">★ 自动衔接的具体机制(本期重点):</b><br>
+            · <b>备课产出</b>(知识点 / 课件 / 题目)→ 自动注入<b>上课</b>的数字人脚本 + 课堂练习库<br>
+            · <b>上课转写</b>(讯飞)→ 自动沉淀进<b>名师范本库</b> + 课中卡顿点回流图谱<br>
+            · <b>作业批改</b>结果 → 自动更新<b>学生知识点掌握度</b>(图谱节点)<br>
+            · <b>学情数据</b> → 自动推荐<b>下次备课重点</b>(回到 ①,形成飞轮)<br>
+            · <b>下一轮</b>:本轮所有教学数据 → 下次备课的智能输入(自动闭环)
+          </div>
+          <div class="sa-compete" style="border-left-color:#FFE58F">
+            <b>★ 经纬关系:</b><br>
+            <b>超级智能体(经线)</b>= 横向 · 任意时刻一句话唤起任何场景 · <b>用户视角的调度入口</b><br>
+            <b>场景智能体串联(纬线)</b>= 纵向 · 完整教学闭环自动衔接 · <b>教学链路视角的流程闭环</b><br>
+            两者结合 = "<b style="color:#FFE58F">老师任意时刻一句话切入任意环节,系统知道前面发生了什么、下面要做什么</b>" — 这是超星(AI-First 接管)、智慧树(IM 聊天)<u>都没做透</u>的方向。
+          </div>
+        </div>
+      </div>
+
+      <div class="focus-area">
+        <div class="fa-head">产品重点方向 · 3 大场景 + 1 个壁垒级新增</div>
+
+        <!-- A · AI 建课 -->
+        <div class="focus-list">
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">④-A</span>
+              <span class="fi-name">AI 建课 · 让备课时间从 4 小时降到 30 分钟</span>
+              <span class="fi-target">9 月 5 校 / 12 月 10 校</span>
+            </div>
+            <div class="fi-desc">教师拖入教材 → 系统按章节+知识点自动切分 → 生成 <b>PPT 课件 + 音频讲解 + 嵌入式测试题 + 教学设计 + 知识点导航</b> → 教师 5 分钟审核可用。</div>
+            <div class="fi-detail">
+              <b>具体做法:</b>
+              ① 复用已有 相关任务 智能教学设计 + 相关任务 答案解析 + 相关任务 出题 + 相关任务 智能打标签 + 相关任务/390 任务团子<br>
+              ② 新增<b>"教材 → 课件"一键流水线</b>(对标智慧树 14 步流水线,我们做 5 步轻量版)<br>
+              ③ 跟图谱深度联动(自动匹配课程知识点,生成可点击的知识点导航)<br>
+              ④ 跟讯飞转写打通(录课直接生成课件,见 ④-D)<br>
+              <b style="color:var(--green-7)">⏩ 流程串联:</b> <b>上游</b>:接收 ⑤ 课后回流的学情数据(知道学生卡哪) · <b>下游</b>:产出注入 ④-B 上课数字人脚本 + ④-D 课中练习库
+            </div>
+            <div style="margin-top:10px;padding:12px 14px;background:linear-gradient(135deg,#FFF8E6,#FFFEF8);border-left:3px solid var(--gold-6);border-radius:0 6px 6px 0;font-size:12.5px;line-height:1.75;color:var(--gray-9)">
+              <b style="color:var(--gold-7)">🌟 产业合作亮点 · 清华 OpenMac:</b> 已<b>接入清华开源的 OpenMac 交互式课件生成能力</b>(对标行业最前沿的可交互课件标准)→ 后续可与<b>清华开展更深入合作</b>,把"AI 备课产物"从静态 PPT 升级为<b>可交互、可探索、可生成式</b>的现代课件形态。<br>
+              <b style="color:var(--gray-10)">价值:</b>对外讲故事有"<u>清华产学研合作</u>"背书 / 对客户讲技术有"<u>OpenMac 业界标杆</u>"参照 / 对小雅产品力是"<u>跟最强开源能力站在同一水平线</u>"。
+            </div>
+          </div>
+
+          <!-- B · AI 批改 -->
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">④-B</span>
+              <span class="fi-name">AI 批改 · 死磕场景,客观题 100% + 主观题 ≥85%</span>
+              <span class="fi-target">9 月 3 校试点 / 12 月 8 校</span>
+            </div>
+            <div class="fi-desc">客观题秒批 + 主观题智能批改+个性化评语 + 错题归因(知识点维度)+ 跟图谱掌握度联动。<b>"AI 初判 + 老师二审"</b>产品形态,给老师改的权力。</div>
+            <div class="fi-detail">
+              <b>具体做法:</b>
+              ① 复用已有 相关任务 智能批改 + 相关任务 自动批改 + 相关任务 自定义批改智能体 + 相关任务 四六级批改<br>
+              ② 新增<b>"准确率追踪 + 错例反馈"</b>机制(直接回应客户对知识库准确率的核心诉求)<br>
+              ③ 错题归因到知识点(联动 相关任务 图谱掌握度)<br>
+              ④ 主观题"AI 给分 + 评语模板 + 老师可改"形态<br>
+              <b>不做:</b>艺术类/绘画类批改(技术不成熟)<br>
+              <b style="color:var(--green-7)">⏩ 流程串联:</b> <b>上游</b>:接收 ④-A 备课题目作为评分依据 + 知识点标签 · <b>下游</b>:批改结果自动更新学生掌握度 → 喂 ④-C 个性化推荐
+            </div>
+            <div style="margin-top:10px;padding:14px 16px;background:linear-gradient(135deg,#FFF2F0,#FFFAFA);border:1px solid #FFCCC7;border-left:4px solid var(--red-6);border-radius:0 6px 6px 0;font-size:12.5px;line-height:1.75;color:var(--gray-9)">
+              <b style="color:var(--red-7)">🔥 讯飞独家差异化武器 · K12 高数公式识别批改复用到高校:</b><br>
+              讯飞在<b>基础教育 K12 高考/中考的数学公式识别 + 智能批改</b>上有<u>多年沉淀和绝对领先优势</u>(国内最强,行业第一)。这套能力可以<b>直接复用到高校的核心理工/经管类基础课</b>,形成超星 / 智慧树 <u>无法对标</u>的核心差异化武器。<br><br>
+
+              <b style="color:var(--gray-10)">可绝对发挥优势的高校学科(覆盖面广):</b>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">
+                <div style="padding:8px 10px;background:#fff;border:1px solid var(--border);border-radius:4px;font-size:12px">
+                  <b>理工科基础课</b><br>高等数学 / 线性代数 / 概率统计 / 大学物理 / 离散数学
+                </div>
+                <div style="padding:8px 10px;background:#fff;border:1px solid var(--border);border-radius:4px;font-size:12px">
+                  <b>工科专业课</b><br>电路 / 信号与系统 / 流体力学 / 热力学 / 结构力学
+                </div>
+                <div style="padding:8px 10px;background:#fff;border:1px solid var(--border);border-radius:4px;font-size:12px">
+                  <b>经管类</b><br>微观经济 / 宏观经济 / 计量经济 / 金融工程 / 运筹学
+                </div>
+              </div>
+
+              <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+                <b style="color:var(--gray-10)">战略价值:</b>① <u>覆盖面广</u> — 上述学科是几乎所有理工科 + 经管学院学生的必修;② <u>批改频次高</u> — 这些课程作业题 90% 是公式题,批改痛点最强;③ <u>讯飞 K12 优势直接复用</u> — 不重新研发,直接迁移积累;④ <u>真无竞品</u> — 超星/智慧树都没有 K12 数学批改的底层能力。<br>
+                <b style="color:var(--red-7)">对外口径:</b>"讯飞在 K12 高考数学公式识别和批改上是国内第一,这套能力直接复用到高校理工经管基础课,这是别人没法做的差异化。"
+              </div>
+            </div>
+          </div>
+
+          <!-- C · 个性化学习 -->
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">④-C</span>
+              <span class="fi-name">个性化学习路径 · 基于学生掌握度的智能推荐</span>
+              <span class="fi-target">9 月 2 校 / 12 月 5 校</span>
+            </div>
+            <div class="fi-desc">学生学情画像 → 基于图谱依赖关系的<b>智能路径推荐</b> → 难度自适应调整 → 教师可看学情看板。<b>"轻量化"</b>使用 — 不强制学生先测评。</div>
+            <div class="fi-detail">
+              <b>具体做法:</b>
+              ① 复用已有 相关任务/291/146/285 基于图谱的自适应学习(MOOC + SPOC 统一)<br>
+              ② 复用已有 相关任务 图谱节点掌握度 + 相关任务 AI 为我讲解<br>
+              ③ 新增<b>"推荐采纳率反馈机制"</b>(系统学习哪些推荐有效)<br>
+              ④ 新增<b>"教师学情看板可视化"</b>(教师能看到学生卡在哪)<br>
+              <b>不做:</b>完整 AI 一对一辅导智能体(放下一阶段)<br>
+              <b style="color:var(--green-7)">⏩ 流程串联:</b> <b>上游</b>:接收 ④-B 批改数据 + ④-D 课中转写卡顿点 · <b>下游</b>:学情数据回流 ④-A 备课(告诉老师下次重点讲哪)+ 教师成长档案
+            </div>
+          </div>
+
+          <!-- D · 课堂转写沉淀 -->
+          <div class="focus-item" style="border-left-color:var(--purple-6);background:linear-gradient(180deg,var(--purple-1),#fff)">
+            <div class="fi-head">
+              <span class="fi-num" style="background:var(--purple-1);color:var(--purple-7)">④-D ⭐</span>
+              <span class="fi-name">课堂转写沉淀 · 讯飞独家差异化武器</span>
+              <span class="fi-target">9 月 打样 / 12 月 5 校</span>
+            </div>
+            <div class="fi-desc"><b>讯飞转写</b>录课内容 → <b>学科大脑结构化</b>沉淀 → <b>名师范本</b>"<u>怎么讲怎么答</u>"可复用 → 青年教师对标分析。<b>这是讯飞独家,超星/智慧树都没有</b>。</div>
+            <div class="fi-detail">
+              <b>具体做法:</b>
+              ① 对接讯飞转写引擎(已有能力)<br>
+              ② 复用学科大脑能力做结构化(已有)<br>
+              ③ 新增<b>"名师范本提炼算法"</b>(从转写文本抽取教学风格/常用句式/答疑模式)<br>
+              ④ 新增<b>"教师对标分析"</b>(青年教师录课跟名师对比)<br>
+              <b>详见:</b>补充 A · AI 未来教师叙事(把 D 串入双飞轮故事)<br>
+              <b style="color:var(--green-7)">⏩ 流程串联:</b> <b>上游</b>:接收 ④-A 备课的教学设计作为对照基准 + 课中实时识别学生卡顿点 · <b>下游</b>:沉淀名师范本喂下次 ④-A 备课 + 卡顿点喂 ④-C 个性化推荐 + 成长档案
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dc-grid">
+        <div class="dc-cell dont">
+          <div class="ct">❌ 范围外不做什么</div>
+          <ul>
+            <li><b>不再做新的孤立 AI 智能体</b>(已 30+ 个够了)</li>
+            <li>不让老师"选智能体"(进入口就是场景)</li>
+            <li>不替代教师终审(AI 输出老师可改)</li>
+            <li>不做艺术/体育类批改</li>
+            <li>不做完整 AI 一对一辅导</li>
+            <li>不强制学生先测评再学</li>
+          </ul>
+        </div>
+        <div class="dc-cell boundary">
+          <div class="ct">↔ 跟其他方向边界</div>
+          <ul>
+            <li>跟 ⑤ 院级方案:复用 AI 基座 + 治理飞轮,不重复建</li>
+            <li>跟 ② 融合:成绩/学情数据回流到融合接口</li>
+            <li>跟 ③ 成效:场景效果是标杆故事的素材</li>
+            <li>跟超级智能体:经线(横向调度)+ 纬线(纵向串联)双线协同</li>
+            <li><b style="color:var(--green-7)">跨场景:</b>4 子产品(A/B/C/D)通过场景串联自动闭环,不再单点</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="dc-revenue">
+        <div class="rev-lbl">💰 营收</div>
+        <div class="rev-num">Q4 · 高量级 / Q1-Q2 · 院级方案规模化</div>
+        <div class="rev-desc">客单价 院级方案规模级(对标超星主流大单参考模型)· <b>主战场</b></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 方向 ⑤ 学科大模型院级方案 ============ -->
+  <div class="direction-card">
+    <div class="dc-header">
+      <div class="dc-id">
+        <span class="dc-no">⑤</span>
+        <span class="dc-tag ground">院级落地</span>
+      </div>
+      <div class="dc-name">学科大模型 · 院级解决方案</div>
+      <div class="dc-owner">牵头 · <b>产品规划同事</b>(主要精力在院级平台与底座能力)</div>
+    </div>
+    <div class="dc-consensus">
+      <div class="lbl">★ 共识原文</div>
+      <b>并入小雅院级解决方案</b>,用场景牵引支撑 · 通过<b>江南大学、辽宁石化</b>等定制项目反哺基线 · 关键:<b>强化项目沉淀标品机制,产品经理参与制定产品化标准</b>
+    </div>
+    <div class="dc-body">
+      <div class="dc-who">
+        <div class="lbl">WHO · 为谁做</div>
+        <div class="text"><b>学院院长 / 学科带头人(决策)+ 学校 IT(对接)</b> · 项目源 = 江南大学 / 辽宁石化 / 深大 1+1+N 等</div>
+      </div>
+
+      <div class="focus-area">
+        <div class="fa-head">产品重点方向 · 5 项</div>
+        <div class="focus-list">
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">⑤-1</span>
+              <span class="fi-name">院级方案 3 段式标品化</span>
+              <span class="fi-target">9 月 定义 / 12 月 标品</span>
+            </div>
+            <div class="fi-desc"><b>AI 基座 + 院级平台 + 定制智能体</b> 3 段式打包,对齐 近期学科大模型口径。各段定价 + 卖点 + 范围明确,销售可独立组合。</div>
+            <div class="fi-detail">
+              <b>关键:</b>共识里"<u>并入小雅院级</u>"具象化 — 不是 6 大产品平铺,而是<b>3 段式产品</b><br>
+              · AI 基座(知识库 + AI 能力)· 院级平台(限 IP 数的小雅 R2)· 定制智能体(项目级)
+            </div>
+          </div>
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">⑤-2</span>
+              <span class="fi-name">江南/辽石化反哺基线 5 件事</span>
+              <span class="fi-target">9 月 完成</span>
+            </div>
+            <div class="fi-desc">把 2 个真订单的<b>传输 / 解析 / 召回 / 治理 / 调效果</b> 5 件事沉淀到标品,后续项目复用。</div>
+            <div class="fi-detail">
+              <b>关键:</b>共识里"<u>项目反哺基线</u>"具象化 — 不是含糊"沉淀",是<b>5 件具体事</b><br>
+              · 传输(教材/课件入库 SOP)· 解析(PDF/PPT 切片自动化)· 召回(混合检索 + 重排)<br>
+              · 治理(望闻问切 + 套路库,见 ⑤-3)· 调效果(准确率追踪 + 套路触发)
+            </div>
+          </div>
+          <!-- ⭐ 知识库主线规划(承接产品规划同事 6-26 规划) -->
+          <div class="focus-item" style="border-left-color:var(--purple-6);background:linear-gradient(180deg,var(--purple-1),#fff)">
+            <div class="fi-head">
+              <span class="fi-num" style="background:var(--purple-1);color:var(--purple-7)">⑤-3 ⭐</span>
+              <span class="fi-name">知识库主线规划 · 4 大主要方向(承接 6-26 知识库规划)</span>
+              <span class="fi-target">9 月 主线打通 / 12 月 飞轮闭环</span>
+            </div>
+            <div class="fi-desc">把知识库从"<b>能建但不知道好不好用</b>"推进到"<b>可治理 · 可信 · 可沉淀复用</b>" — 4 大主要方向,壁垒级动作。</div>
+            <div class="fi-detail">
+              <b>主要方向 1 · 三级资产打通 + 跨产品共用</b><br>
+              · 个人库 ↔ 团队库 ↔ 课程库 三级双向引用回流(同一份资产多处可见)<br>
+              · 小雅平台 + 学科大模型<b>共用同一份知识库资产</b>(跨产品)<br>
+              · 治理权单独受控(避免回流后多方乱改)<br><br>
+
+              <b>主要方向 2 · 课程资源一键入库(消除空库)</b><br>
+              · 课程资源中心(已存)→ <b>一键解析为 RAG 知识库</b><br>
+              · 解决教师"<u>已经备课搞了那么多资源,做 AI 助学还要重传一遍</u>"的核心痛点<br>
+              · 这是"知识库有内容"最直接的入口<br><br>
+
+              <b>主要方向 3 · 治理双形态(诊断式 + 面板式)</b><br>
+              · <b>诊断智能体"开方"</b>(自然语言:望闻问切 4 步)+ <b>参数面板"执行"</b>(教研室可手动调)<br>
+              · 4 项降门槛:预览/应用分离 + 参数预设 + 真实试跑对比 + 预置问题<br>
+              · 直接回应客户视角质疑"<u>不能让用户一个个试参数</u>"<br><br>
+
+              <b>主要方向 4 · 双飞轮(结果飞轮 + 经验飞轮)</b><br>
+              · <b>结果飞轮:</b>学生提问 → 教师确认筛选 → FAQ 沉淀 → 回灌知识库(高优先级召回)<br>
+              · <b>经验飞轮:</b>治理动作留痕 → 数据基础 → 后续 Skill 化(本期只做留痕)<br>
+              · 治理 Skill 是<u>内部加密资产,不对客户暴露</u>,这是 3 年级别平台壁垒<br><br>
+
+              <b>★ 详见配套规划:</b><a href="../../../小雅平台知识库/产品规划/小雅平台知识库规划.docx" target="_blank" style="color:var(--purple-7);font-weight:600">《小雅平台知识库规划》(产品规划同事 · 2026-06-26)</a>
+            </div>
+          </div>
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">⑤-4</span>
+              <span class="fi-name">"项目 → 标品" 沉淀规则</span>
+              <span class="fi-target">节后 拉胡鑫定</span>
+            </div>
+            <div class="fi-desc">建立明确规则:<b>每个项目沉淀什么进标品 / 不沉淀什么 / 沉淀方式</b>。避免"一锤子买卖"。</div>
+            <div class="fi-detail">
+              <b>关键:</b>共识里"<u>强化项目沉淀标品机制</u>"具象化 — 节后拉胡鑫定规则,产品经理(产品负责人+产品规划同事)参与制定<br>
+              · 规则示例:学科语料模板入库 = 必沉淀;学校独有 UI 定制 = 不沉淀
+            </div>
+          </div>
+          <div class="focus-item">
+            <div class="fi-head">
+              <span class="fi-num">⑤-5</span>
+              <span class="fi-name">院级 AI 资产沉淀(校级共建)</span>
+              <span class="fi-target">12 月</span>
+            </div>
+            <div class="fi-desc"><b>校级 AI 资产沉淀</b>(基础库 8 类:知识库/智能体/数字人/题库/图谱/<u>量规</u>/文档/应用)跨课程跨学院复用。<b>"量规库"是竞品都没有的</b>。</div>
+            <div class="fi-detail">
+              <b>关键:</b>对外讲"<u>校级 AI 资产沉淀</u>"作为差异化亮点(vs 超星"课程级私有 AI")<br>
+              · 量规库 = 评分规则化,这是超星/智慧树都没有的小雅独有
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dc-grid">
+        <div class="dc-cell dont">
+          <div class="ct">❌ 范围外不做什么</div>
+          <ul>
+            <li>不卖单独"知识库 PaaS"(避免被误解为中间件)</li>
+            <li>不挖坑承诺没做的能力(产品线负责人反复强调)</li>
+            <li>不让用户手工选切片参数(PaaS 视角,坚决砍)</li>
+            <li>不做智能体广场放学科社会服务(归学科大模型门户)</li>
+            <li>治理 Skill 不开放给客户(壁垒资产)</li>
+          </ul>
+        </div>
+        <div class="dc-cell boundary">
+          <div class="ct">↔ 跟其他方向边界</div>
+          <ul>
+            <li>跟 ④ 场景 AI:AI 基座支撑场景,场景反哺基座</li>
+            <li>跟 ② 融合:院级方案常含融合需求</li>
+            <li>跟"学科大模型门户":社会服务智能体广场归门户</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="dc-revenue">
+        <div class="rev-lbl">💰 营收</div>
+        <div class="rev-num">Q4 · 院级方案中等规模 / Q1-Q2 · 院级方案规模化</div>
+        <div class="rev-desc">院级方案 院级方案规模级(江南/辽石化等真订单 + 治理飞轮撑续费率)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 方向 ⑥ 国平台对接 ============ -->
+  <div class="direction-card">
+    <div class="dc-header">
+      <div class="dc-id">
+        <span class="dc-no">⑥</span>
+        <span class="dc-tag last">放最后</span>
+      </div>
+      <div class="dc-name">国平台对接</div>
+      <div class="dc-owner">本阶段往后放</div>
+    </div>
+    <div class="dc-consensus">
+      <div class="lbl">★ 共识原文</div>
+      重要但当前不可控,<b>本阶段往后放</b>
+    </div>
+    <div class="dc-body" style="padding-top:14px;padding-bottom:14px">
+      <div class="dc-who">
+        <div class="lbl">建议</div>
+        <div class="text">本期不立项,<b>Q4 重评</b>。条件成熟再启动,不挤占当前资源。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================== -->
+<!-- 第二章 · 优先级矩阵 -->
+<!-- ====================================================== -->
+<section>
+  <div class="sec-head">
+    <div class="num">02 · 优先级矩阵 + 知识库策略</div>
+    <h2>6 大方向的战略性质 · 攻 / 守 / 沉</h2>
+    <div class="sub">承接共识"强攻教务处方向①② + 学科大模型院级方案⑤"</div>
+  </div>
+
+  <div class="priority-matrix">
+    <h3 style="margin-top:0">战略分层 · 投入决策依据</h3>
+    <div class="pm-grid">
+      <div class="pm-col attack">
+        <div class="pm-title">🔴 攻 · 撑下半年收入</div>
+        <ul>
+          <li><b>① 老数据迁移</b> — 帮销售开门</li>
+          <li><b>② 校内融合</b> — 抢系统融合阵地</li>
+          <li><b>④ 场景 AI 竞争力</b> — 主战场,撑大单</li>
+          <li><b>⑤ 院级方案</b> — 江南/辽石化真订单</li>
+        </ul>
+      </div>
+      <div class="pm-col defend">
+        <div class="pm-title">🔵 守 · 防客户流失</div>
+        <ul>
+          <li><b>① 老数据迁移</b> — 双重价值(攻+守)</li>
+          <li><b>② 校内融合</b> — 双重价值(攻+守)</li>
+        </ul>
+        <p style="margin-top:8px;font-size:12px;color:var(--gray-6)">①② 是攻守双面,共识里属于"强攻教务处方向"</p>
+      </div>
+      <div class="pm-col bench">
+        <div class="pm-title">🟡 沉 · 长线沉淀</div>
+        <ul>
+          <li><b>③ 成效范例</b> — 持续运营,慢见效</li>
+          <li><b>⑤ 学科大模型院级</b> — 项目沉淀标品(长线)</li>
+        </ul>
+        <p style="margin-top:8px;font-size:12px;color:var(--gray-6)">⑥ 国平台对接缓做</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>知识库建设与数据回流策略(共识)</h3>
+  <div class="callout green">
+    <div class="lbl">★ 共识原文</div>
+    <p>"把知识库做扎实 → 上层关联 skills、持续生成 → 数据回流赋能场景"</p>
+  </div>
+  <p>本次细化:这条策略落到产品形态上,核心是 <b>方向 ⑤-3 望闻问切式治理 + 治理飞轮</b> 机制 — 治理经验越积累越准,把"知识库越积累越准"的<u>"省心"理想</u>真正闭环。详见<b>补充 B</b>。</p>
+</section>
+
+<!-- ====================================================== -->
+<!-- 第三章 · 9 月 / 12 月路线 -->
+<!-- ====================================================== -->
+<section>
+  <div class="sec-head">
+    <div class="num">03 · 9 月 / 12 月版本路线 + 整体营收</div>
+    <h2>2 个版本节点 · 5 大方向落到节奏上</h2>
+    <div class="sub">9 月打样可演示 → 12 月扩盘可签单 · ⑥ 国平台对接缓做</div>
+  </div>
+
+  <div class="roadmap">
+    <div class="rm-col v9">
+      <div class="rm-head">
+        <div class="rm-name">M9 · 打样可演示</div>
+        <div class="rm-date">2026-09-30</div>
+      </div>
+      <div class="rm-item">
+        <div class="ri-name">① 老数据迁移 1.0</div>
+        <div class="ri-desc">超星+智慧树适配引擎 + 智能映射 80% + 健康度仪表盘 + 跑通 1-2 所</div>
+      </div>
+      <div class="rm-item">
+        <div class="ri-name">② 校内融合 1.0 ⭐ 深大启示</div>
+        <div class="ri-desc">GraphQL 数据中台 + 督导回流 + SSO + 考试接入 + <b>零代码门户</b> + <b>二级等保(必)</b> + 融合方案 1.0</div>
+      </div>
+      <div class="rm-item">
+        <div class="ri-name">③ 成效范例 起步</div>
+        <div class="ri-desc">10 个奖项↔功能映射 + 启动 1 个标杆</div>
+      </div>
+      <div class="rm-item">
+        <div class="ri-name">④ 场景 AI 1.0(打样)⭐ 单点 → 串联 + 讯飞独家</div>
+        <div class="ri-desc"><b>超级智能体雏形</b>(经)+ <b>场景串联 1.0</b>(纬)+ 4 子产品跑通 5 校 + <b>讯飞 K12 数学批改复用到高校理工经管基础课</b>(3 学科试点)+ <b>清华 OpenMac 接入打通</b></div>
+      </div>
+      <div class="rm-item">
+        <div class="ri-name">⑤ 院级方案 + 知识库主线 1.0</div>
+        <div class="ri-desc">3 段式定义 + 5 件事反哺 + <b>知识库主线打通</b>(三级资产 + 资源一键入库 + 治理双形态 + 双飞轮起步)</div>
+      </div>
+      <div class="rm-foot">
+        💰 <b>9 月版本撑 Q4 撑高量级签单</b>
+      </div>
+    </div>
+
+    <div class="rm-col v12">
+      <div class="rm-head">
+        <div class="rm-name">M12 · 扩盘可签单</div>
+        <div class="rm-date">2026-12-30</div>
+      </div>
+      <div class="rm-item">
+        <div class="ri-name">① 老数据迁移 2.0</div>
+        <div class="ri-desc">雨课堂等扩展 + 多平台共存 + SOP 化人肉兜底</div>
+      </div>
+      <div class="rm-item">
+        <div class="ri-name">② 校内融合 2.0 ⭐ 985 攻势</div>
+        <div class="ri-desc">5 校共性 + 签 ≥1 校 + 融合销售包 + <b>教务数据中台独立 SKU</b>(院级方案中等档)+ 三级等保升级 + 985 标杆攻势(深大级)</div>
+      </div>
+      <div class="rm-item">
+        <div class="ri-name">③ 成效范例 标杆</div>
+        <div class="ri-desc">Q4 出 2 个标杆 + 课程评审主页上线(金课刚需)</div>
+      </div>
+      <div class="rm-item">
+        <div class="ri-name">④ 场景 AI 2.0(扩盘)⭐ 全链路闭环 + 清华合作落地</div>
+        <div class="ri-desc"><b>超级智能体 + 一句话创编</b>(经)+ <b>场景串联 2.0</b>(纬)+ 双飞轮闭环 + 10 校落地 + <b>讯飞 K12 数学批改扩至 8-10 学科</b> + <b>清华 OpenMac 深度合作产学研落地</b></div>
+      </div>
+      <div class="rm-item">
+        <div class="ri-name">⑤ 院级方案 + 知识库飞轮 2.0</div>
+        <div class="ri-desc">签 若干客户 × 院级方案规模 + <b>双飞轮闭环</b>(结果飞轮 FAQ 回灌 + 经验飞轮治理 Skill 化加密)</div>
+      </div>
+      <div class="rm-foot">
+        💰 <b>12 月版本撑 Q1-Q2 撑院级方案大单</b>
+      </div>
+    </div>
+  </div>
+
+  <h3>整体营收预测 · 二期全周期</h3>
+  <table>
+    <thead>
+      <tr><th style="width:160px">节点</th><th>撑期</th><th>签单数</th><th>客单价</th><th>预计营收</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><b>9 月版本</b></td><td>Q4</td><td>一批客户</td><td>高量级客单价</td><td><b>Q4 高量级签单</b></td></tr>
+      <tr><td><b>12 月版本</b></td><td>Q1-Q2</td><td>多批客户</td><td>院级方案规模/校</td><td><b>Q1-Q2 院级方案规模化</b></td></tr>
+      <tr><td><b>985 标杆增量 ⭐</b></td><td>Q1-Q2</td><td>标杆客户</td><td>院级方案高量级</td><td><b>985 标杆增量</b><br><span style="font-size:11px;color:var(--purple-7)">985 标杆 1+1+N 项目</span></td></tr>
+      <tr style="background:var(--gold-1)"><td><b>二期全周期</b></td><td colspan="3" style="text-align:right;color:var(--gray-9)"><b>累计撑下半年签单</b></td><td><b style="color:var(--gold-7);font-size:15px">下半年规模化签单</b></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ====================================================== -->
+<!-- 第四章 · 补充建议 -->
+<!-- ====================================================== -->
+<section>
+  <div class="sec-head">
+    <div class="num">04 · 补充建议 · 共识之上的延伸</div>
+    <span class="supplement-mark">SUPPLEMENT · 延伸建议</span>
+    <h2>3 项延伸建议 · 给方向 ④⑤ 加叙事与壁垒</h2>
+    <div class="sub">基于竞品调研 + 管理层质疑的新洞察,作为延伸讨论素材</div>
+  </div>
+
+  <div class="callout purple">
+    <div class="lbl">★ 说明</div>
+    <p>本章是<b>对 6 方向共识的延伸建议</b>,不替代共识。如果决策层认可,可作为 ④⑤ 方向的内核升级;如果暂不采纳,共识 6 方向仍然成立。</p>
+  </div>
+
+  <!-- 补充 A · AI 未来教师 -->
+  <div class="suppl-card">
+    <div class="sc-tag">补充 A · 给方向 ④ 加产品故事</div>
+    <div class="sc-title">"AI 未来教师"高维叙事 — 把 3 场景 + 超级智能体 + 课堂转写串成 1 个完整产品故事</div>
+    <div class="sc-desc">
+      <b>背景:</b>共识方向 ④ 列出 3 个发力场景,加上本次新增的"超级智能体"和"课堂转写沉淀",<u>需要一个能让客户 / 客户 / 政策方都记住的整体叙事</u>。
+    </div>
+    <div class="sc-desc">
+      <b>建议:</b>在 3 场景 + 超级智能体 + 课堂转写之上,加 <b>"AI 未来教师"</b>整体叙事 —— "用 AI 把名师课堂沉淀成<b>教学数字分身</b>,通过<b>名师沉淀 + 青年成长双飞轮</b>培育未来教师队伍。"
+    </div>
+    <div class="sc-desc">
+      <b>核心价值链:</b>
+      <ul style="padding-left:22px;margin-top:6px">
+        <li>① <b>采集</b>(讯飞转写 + 备课资料) · ② <b>沉淀</b>(学科大脑结构化) · ③ <b>建范本</b>(数字分身)</li>
+        <li>④ <b>编排</b>(超级智能体 + XClaw) · ⑤ <b>服务</b>(课中/课后场景) · ⑥ <b>回流</b>(数据飞轮 + 成长档案)</li>
+      </ul>
+    </div>
+    <div class="sc-desc">
+      <b>价值:</b>① <u>政策强托底</u>(教育部 AI 助推教师队伍建设)② <u>讯飞独家</u>(转写全国第一)③ <u>资产长在学校搬不走</u>(数字分身粘性强)④ <u>撑 院级方案大单</u>
+    </div>
+  </div>
+
+  <!-- 补充 B · 治理飞轮 -->
+  <div class="suppl-card">
+    <div class="sc-tag">补充 B · 给方向 ⑤ 加平台壁垒</div>
+    <div class="sc-title">"治理飞轮"内核升级 — 让"知识库越积累越准"真正闭环</div>
+    <div class="sc-desc">
+      <b>背景:</b>共识方向 ⑤ "<u>知识库做扎实 → 上层关联 skills → 数据回流</u>",同时客户反复关注"<b>知识库到底干嘛 / 不能让用户一个个试参数</b>",PaaS 视角的根本问题需要回答。
+    </div>
+    <div class="sc-desc">
+      <b>建议:</b>"治理"从"<u>让用户调参数</u>" 改成 "<b>望闻问切式智能治理</b>" — 用户自然语言描述症状 → 系统调用 N 个套路 → 一键治理 → 反馈 → 套路库越来越多。
+    </div>
+    <table>
+      <thead><tr><th style="width:130px">维度</th><th>当前(PaaS 视角)</th><th>新形态(用户视角)</th></tr></thead>
+      <tbody>
+        <tr><td><b>使用方式</b></td><td>5 种切片模式让用户选</td><td>用户描述症状,系统调套路</td></tr>
+        <tr><td><b>治理沉淀</b></td><td>无</td><td>10 → 20 → 30 套路库,加密为 Skill</td></tr>
+        <tr><td><b>用户体感</b></td><td>"我又不懂技术"</td><td>"系统帮我治好了"</td></tr>
+        <tr><td><b>飞轮效应</b></td><td>无</td><td>用得越多套路越多 → 平台越强</td></tr>
+      </tbody>
+    </table>
+    <div class="sc-desc">
+      <b>价值:</b>① <u>真无竞品空间</u>(超星 / 智慧树都没做)② <u>3 年级别壁垒</u>(用户量越大套路越多)③ <u>直接回应客户视角质疑</u> ④ <u>治理 Skill 是内部加密资产,无价之宝</u>
+    </div>
+  </div>
+
+  <!-- 补充 C · 商业模式 -->
+  <div class="suppl-card">
+    <div class="sc-tag">补充 C · 给"上得来 / 用得起来"加商业模式</div>
+    <div class="sc-title">商业模式升级 — 不只是产品,卖法也要升级</div>
+    <div class="sc-desc">
+      <b>背景:</b>产品要走向规模化售卖不只是产品问题,<u>报价模型 + 服务模式</u>跟超星市场实况差距较大(需要对标主流竞品定价区间,优化客户层覆盖率)。
+    </div>
+    <table>
+      <thead>
+        <tr><th style="width:200px">动作</th><th style="width:180px">对标</th><th>具体做法</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><b>① 新增 中端入门款</b></td><td>主流主力价位区间</td><td>覆盖低预算客户层,从签单转化漏斗最前端切入</td></tr>
+        <tr><td><b>② 立"成效服务包"</b></td><td>超星贴身建课服务</td><td>SOP 化建课 + 真实案例打造 + 教学奖申报路径(不是软件是服务)</td></tr>
+        <tr><td><b>③ 开放灵活试用</b></td><td>超星"免费试用到买"</td><td>3 个月免费试用 + 销售一键开通,降低决策门槛</td></tr>
+        <tr><td><b>④ N 系统组合做大单</b></td><td>超星 院级方案规模模型</td><td>4 大产品 + 模块化组合,最高做到 院级方案高量级单</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ====================================================== -->
+<!-- 总结 -->
+<!-- ====================================================== -->
+<div class="final">
+  <div class="lbl">★ 二期立项 · 一页纸结论</div>
+
+  <h3>共识 · 6 大方向(延续 6-18)</h3>
+  <p>① 老数据迁移(生死线)· ② 校内系统融合(重要且难)· ③ 成效范例(锻造标杆)· <b>④ 场景 AI 竞争力(最重要)</b> · <b>⑤ 学科大模型院级(院级落地)</b> · ⑥ 国平台对接(放最后)</p>
+
+  <h3>本次贡献 · 产品重点 + 边界细化 + 关键升级</h3>
+  <p>每个方向明确 <b>4-8 项产品重点 + WHO + 范围内 + 范围外 + 边界 + 收益预测</b>。<br>
+  <b>★ 方向 ②</b> 加入<b>深大 1+1+N 招标 5 条启示</b>(GraphQL / 零代码门户 / 数据中台独立 SKU / 二级等保 / 跨角色协作)+ 配套<b>通俗附件</b><br>
+  <b>★ 方向 ④</b> 加 <b>"超级智能体(经) + 场景智能体流程串联(纬)" 经纬双线</b> — 从"单点 AI"升级到"教学全链路闭环"<br>
+  <b>★ 方向 ④-A/B</b> 加 <b>讯飞独家差异化武器</b>:K12 高数公式批改复用到高校理工经管基础课(④-B)+ 清华 OpenMac 交互式课件合作(④-A)<br>
+  <b>★ 方向 ⑤</b> 加 <b>知识库主线 4 大方向</b>(承接 6-26 产品规划同事规划):三级资产打通 + 资源一键入库 + 治理双形态 + 双飞轮</p>
+
+  <h3>版本路线</h3>
+  <p>9 月撑 Q4 <b>Q4 高量级签单</b> · 12 月撑 Q1-Q2 <b>Q1-Q2 院级方案规模化</b> · 985 标杆增量 <b>985 标杆增量</b> · 全周期 <b>下半年规模化签单</b></p>
+
+  <h3>延伸建议(共识之上)</h3>
+  <p><b>A</b> AI 未来教师叙事 · <b>B</b> 治理飞轮(给 ⑤ 加壁垒)· <b>C</b> 商业模式升级</p>
+
+  <p style="margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.2);font-size:16px"><b>★ 核心总结:</b>延续 前期共识的 6 大方向 + 加入<b>深大招标实战启示</b> + <b>"经纬双线"(超级智能体 + 场景串联)</b> + <b>知识库主线 4 大方向</b>,真正把"<b>单点 AI 升级到教学全链路</b>",让"<b>知识库越积累越准</b>"的省心理想<b>真正闭环</b>。</p>
+  <p style="margin-top:14px;padding:14px 18px;background:rgba(255,229,143,0.18);border-radius:8px;font-size:14px;color:#FFFEF8;line-height:1.75">📎 <b style="color:#FFE58F">配套附件:</b>《<a href="附件_深大招标AI技术名词通俗解读.html" target="_blank" style="color:#FFE58F;text-decoration:underline">高校招标 AI 技术名词通俗解读 V1</a>》— 用客户能听懂的话解释 DAG / GraphQL / A2A / K8s+GPU / RBAC+JWT 等 8 个技术名词,给领导汇报时配合使用。</p>
+</div>
+
+<!-- ====================================================== -->
+<!-- 附录 · 参考材料附件清单 -->
+<!-- ====================================================== -->
+<section style="border-top:2px solid var(--purple-6);background:linear-gradient(180deg,#FAFCFF,#fff);margin-top:36px;padding-top:48px">
+  <div class="sec-head">
+    <div class="num" style="color:var(--purple-7)">APPENDIX · 参考材料附件</div>
+    <h2>附录 · 今日汇报所用全部参考材料</h2>
+    <div class="sub">本次立项汇报材料的全部底料 · 按"共识基础 / 竞品调研 / 知识库规划 / 通俗解读" 4 类组织</div>
+  </div>
+
+  <div style="margin-bottom:20px;padding:16px 20px;background:linear-gradient(135deg,var(--purple-1),#FAFCFF);border-left:4px solid var(--purple-6);border-radius:8px">
+    <div style="font-size:11px;color:var(--purple-7);font-weight:700;letter-spacing:.08em;margin-bottom:6px;text-transform:uppercase">★ 使用说明</div>
+    <div style="font-size:13.5px;color:var(--gray-9);line-height:1.85">
+      所有附件已<b>本地化存档</b>在 <code style="background:var(--gray-1);padding:2px 8px;border-radius:3px;font-family:Menlo,monospace">附件_参考材料/</code> 子目录,跟本汇报材料同目录可直接打开。任何环节如领导追问"这条结论从哪来的",可直接打开对应附件溯源。
+    </div>
+  </div>
+
+  <!-- 共识基础 -->
+  <h3 style="color:var(--blue-7);border-bottom:1px solid var(--blue-2);padding-bottom:8px">📌 共识基础(本次立项的承接出发点)</h3>
+  <table>
+    <thead>
+      <tr><th style="width:60px">#</th><th style="width:280px">材料名</th><th>来源 · 用途</th><th style="width:120px">本地附件</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="center">01</td>
+        <td><b>小雅 3.0 下阶段方向会 · 6 方向共识</b></td>
+        <td>6-18 产品线负责人孙校教学顾问达成共识 · 本次立项 6 方向命名 + 牵头分工 + 三句话理想 的承接出发点</td>
+        <td><a href="附件_参考材料/01_6方向共识_小雅3.0下阶段方向会结论.html" target="_blank" style="color:var(--blue-6);font-weight:600">01_共识.html</a></td>
+      </tr>
+      <tr>
+        <td class="center">02</td>
+        <td><b>AI 未来教师 · 课堂场景规划</b></td>
+        <td>方向 ④ 场景 AI 的高维叙事来源 · "名师沉淀 + 青年成长"双飞轮设计 · 讯飞转写差异化武器</td>
+        <td><a href="附件_参考材料/02_AI未来教师_课堂场景规划.html" target="_blank" style="color:var(--blue-6);font-weight:600">02_未来教师.html</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 竞品调研 -->
+  <h3 style="color:var(--red-7);border-bottom:1px solid #FFCCC7;padding-bottom:8px;margin-top:28px">🔍 竞品调研(双边对照 + 市场侧)</h3>
+  <table>
+    <thead>
+      <tr><th style="width:60px">#</th><th style="width:280px">材料名</th><th>来源 · 用途</th><th style="width:120px">本地附件</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="center">03</td>
+        <td><b>超星 vs 小雅 · V2 双边对照</b></td>
+        <td>6-5 产品负责人 · 60+ 超星实采 + 162 小雅截图 · 8 大核心能力对照 · 超星护城河分析(2700 高校 / 13800 课 / 山东评审 58%)</td>
+        <td><a href="附件_参考材料/03_竞品调研_超星vs小雅_V2.html" target="_blank" style="color:var(--red-6);font-weight:600">03_超星对照.html</a></td>
+      </tr>
+      <tr>
+        <td class="center">04</td>
+        <td><b>智慧树 vs 小雅 · V10 双边对照</b></td>
+        <td>6-5 产品负责人 · 270+ 智慧树截图 · 24214 共享课 / AI 一键建课 14 步流水线 / 学生侧 3 类图谱</td>
+        <td><a href="附件_参考材料/04_竞品调研_智慧树vs小雅_V10.html" target="_blank" style="color:var(--red-6);font-weight:600">04_智慧树对照.html</a></td>
+      </tr>
+      <tr>
+        <td class="center">05</td>
+        <td><b>智慧树 AI 教学中心 · V9 深挖</b></td>
+        <td>6-5 产品负责人 · 智慧树最新 AI 形态深挖(AI 助教 IM 形态 + 课程评审 8 Tab)</td>
+        <td><a href="附件_参考材料/05_竞品调研_智慧树AI教学中心_V9.html" target="_blank" style="color:var(--red-6);font-weight:600">05_智慧树 AI.html</a></td>
+      </tr>
+      <tr>
+        <td class="center">06</td>
+        <td><b>深圳大学 1+1+N 招标启示分析 ⭐</b></td>
+        <td>6-16 产品负责人 · 基于主流 985 项目招标全文 325 页 · 提炼 5 条战略启示 · <b>方向 ② 校内融合的关键依据</b></td>
+        <td><a href="附件_参考材料/06_深圳大学1+1+N招标启示分析.html" target="_blank" style="color:var(--red-6);font-weight:600">06_深大启示.html</a></td>
+      </tr>
+      <tr>
+        <td class="center">07</td>
+        <td><b>市场侧 · AI 教学平台竞品分析报告</b></td>
+        <td>6.3 市场侧调研 · 讯飞/超星/智慧树 三家 30+ 维度横向对比 · 销售模式 + 报价区间</td>
+        <td><a href="附件_参考材料/07_市场侧_AI教学平台竞品分析报告.docx" target="_blank" style="color:var(--red-6);font-weight:600">07_市场分析.docx</a></td>
+      </tr>
+      <tr>
+        <td class="center">08</td>
+        <td><b>市场侧 · 超星核心业务及报价策略</b></td>
+        <td>市场侧调研 · 超星 18 项真实成交项目 · 报价区间 主流竞品价格区间 · 商业模式升级的依据</td>
+        <td><a href="附件_参考材料/08_市场侧_超星核心业务及报价策略分析.docx" target="_blank" style="color:var(--red-6);font-weight:600">08_超星策略.docx</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 知识库规划 -->
+  <h3 style="color:var(--purple-7);border-bottom:1px solid var(--purple-2);padding-bottom:8px;margin-top:28px">📚 知识库规划(方向 ⑤-3 主线来源)</h3>
+  <table>
+    <thead>
+      <tr><th style="width:60px">#</th><th style="width:280px">材料名</th><th>来源 · 用途</th><th style="width:120px">本地附件</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="center">09</td>
+        <td><b>小雅平台知识库规划(产品规划同事)⭐</b></td>
+        <td>6-26 产品规划同事 · 知识库三级资产模型 + 望闻问切治理 + 双飞轮(结果飞轮 + 经验飞轮)的完整方案</td>
+        <td><a href="附件_参考材料/09_小雅平台知识库规划_产品规划同事_6-26.docx" target="_blank" style="color:var(--purple-6);font-weight:600">09_知识库规划.docx</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 通俗解读 -->
+  <h3 style="color:var(--gold-7);border-bottom:1px solid #F0D88A;padding-bottom:8px;margin-top:28px">📎 通俗解读(给领导听懂用)</h3>
+  <table>
+    <thead>
+      <tr><th style="width:60px">#</th><th style="width:280px">材料名</th><th>来源 · 用途</th><th style="width:120px">本地附件</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="center">10</td>
+        <td><b>高校招标 AI 技术名词通俗解读 V1 ⭐</b></td>
+        <td>6-16 产品负责人 · DAG / GraphQL / A2A / K8s+GPU / RBAC+JWT 等 8 个深大涉及的技术名词,用客户听得懂的话讲</td>
+        <td><a href="附件_深大招标AI技术名词通俗解读.html" target="_blank" style="color:var(--gold-7);font-weight:600">10_通俗解读.html</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 附件包说明 -->
+  <div style="margin-top:30px;padding:18px 22px;background:linear-gradient(135deg,#0F2A5C,var(--blue-9));color:#fff;border-radius:10px">
+    <div style="font-size:11px;color:rgba(255,255,255,0.7);font-weight:700;letter-spacing:.1em;margin-bottom:10px;text-transform:uppercase">★ 完整材料包</div>
+    <div style="font-size:14.5px;line-height:1.85">
+      <b style="color:#FFE58F">本次立项汇报材料包 = 10 份材料</b>:1 份主材料(V7)+ 1 份通俗解读附件 + 8 份本地存档参考材料(附件_参考材料/ 子目录)。
+    </div>
+    <div style="margin-top:10px;font-size:13px;color:rgba(255,255,255,0.85);line-height:1.75">
+      📁 完整材料包路径:<code style="background:rgba(255,255,255,0.12);padding:2px 8px;border-radius:3px;font-family:Menlo,monospace">~/Desktop/ClaudeCode/项目管理/AI教学二阶段立项/汇报材料/</code>
+    </div>
+  </div>
+</section>
+
+<footer>
+  作者:AI 教学产品部 · 2026-06-26 · V7 · 讯飞数学批改复用 + 清华 OpenMac 合作版<br>
+  配套附件:<a href="附件_深大招标AI技术名词通俗解读.html" target="_blank" style="color:var(--blue-7)">附件_深大招标AI技术名词通俗解读.html</a><br>
+  承接共识:前期产品方向共识会 · 产品线负责人孙校教学顾问达成<br>
+  归档路径:<code>~/Desktop/ClaudeCode/项目管理/AI教学二阶段立项/汇报材料/</code><br>
+  本材料为产品规划公开版本 · 由 AI 教学产品部输出
+</footer>
+
+</body>
+</html>
