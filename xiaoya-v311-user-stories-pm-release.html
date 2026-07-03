@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<title>V3.1.1 用户故事整合方案 · PM 发布版 V10</title>
+<title>V3.1.1 用户故事整合方案 · PM 发布版 V11</title>
 <style>
 :root{
   --gray-0:#FFFFFF;--gray-1:#F2F5F7;--gray-2:#E6EBF0;--gray-3:#A9B0B8;
@@ -125,492 +125,233 @@ footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);font-
 </style>
 </head>
 <body>
-
-<div class="topbar">
-  <span style="font-weight:600">小雅 V3.1.1 / 用户故事整合方案 · PM 发布版</span>
-  <span>V10 · 婷婷 · 2026-06-12</span>
-</div>
-
+<div class="topbar"><span style="font-weight:600">小雅 V3.1.1 / 用户故事整合方案 · PM 发布版</span><span>V11 · 婷婷 · 2026-07-02</span></div>
 <header class="hero">
-  <div class="eyebrow">USER STORY INTEGRATION · V3.1.1 <span class="v">PM RELEASE V10</span></div>
-  <h1>V3.1.1 用户故事整合方案 · PM 工作分配</h1>
-  <p class="lead">V3.1.1 版本产品需求<strong>用户故事整合方案</strong>,按 7 Epic 框架组织 — <strong>20 个用户故事 · 45 个任务 · 6 位 PM</strong>。每个任务标注 TaskID,便于对照产品任务管理表追溯。</p>
+<div class="eyebrow">USER STORY INTEGRATION · V3.1.1 <span class="v">PM RELEASE V11</span></div>
+<h1>V3.1.1 用户故事整合方案 · PM 工作分配</h1>
+<p class="lead">V3.1.1 版本产品需求<strong>用户故事整合方案</strong>,按 8 Epic 框架组织 — <strong>20 个用户故事 · 54 个任务 · 6 位 PM</strong>。数据源:<em>3.0 产品任务管理 (7).xlsx · A01 表</em>,每个任务标注 TaskID 便于追溯。</p>
+<div class="version-note"><b>V11 数据刷新说明(基于 A01 表最新 (7) 版):</b><ol>
+<li>任务量 45 → <b>54</b>:新增 15 个任务、移除 6 个任务。</li>
+<li><b>新增故事 U25 混合部署交付</b>(Task170/579/583/584):响应本地化部署,内蒙古农业职院 / 黑财 8 月底交付。</li>
+<li><b>移除 U07 AI 问数深化、U09 教学数据报告</b>及 U06/U10 部分 P1 数据看板任务(Task424/464/465/467/469/537),E04 学情画像收敛为 U06 单故事。</li>
+<li>U11 更名"统一门户菜单更改 + 共享课程包复用",Task056 调整为门户入口 / AI 创新中心文案。</li>
+<li>Task600「智慧课程建设(备课)」故事名未规范,暂归 E01,<b>待确认归属</b>。</li>
+</ol></div>
 </header>
-
-<!-- ============ 1. 总览 ============ -->
 <section>
-  <div class="sec-head"><h2>1 · 总览(19 故事 / 44 任务 / 6 PM)</h2><span class="sec-num">OVERVIEW</span></div>
-
-  <div class="ov-grid">
-    <div class="ov-card"><div class="ov-num">20</div><div class="ov-lbl">USER STORIES</div><div class="ov-sub">用户故事数</div></div>
-    <div class="ov-card"><div class="ov-num">45</div><div class="ov-lbl">TASKS</div><div class="ov-sub">总任务数</div></div>
-    <div class="ov-card"><div class="ov-num">7</div><div class="ov-lbl">EPICS</div><div class="ov-sub">Epic 数(含 2 横切)</div></div>
-    <div class="ov-card"><div class="ov-num">6</div><div class="ov-lbl">PMs</div><div class="ov-sub">产品经理</div></div>
-  </div>
-
-  <h3>1.1 PM 任务量分布</h3>
-  <div class="pm-bar"><div class="pb-name">张能</div><div class="pb-track"><div class="pb-fill" style="width:100%"></div></div><div class="pb-num">16</div></div>
-  <div class="pm-bar"><div class="pb-name">杨晓丽</div><div class="pb-track"><div class="pb-fill w2" style="width:87.5%"></div></div><div class="pb-num">14</div></div>
-  <div class="pm-bar"><div class="pb-name">马鸣珂</div><div class="pb-track"><div class="pb-fill w3" style="width:56.3%"></div></div><div class="pb-num">9</div></div>
-  <div class="pm-bar"><div class="pb-name">邱月</div><div class="pb-track"><div class="pb-fill w4" style="width:18.8%"></div></div><div class="pb-num">3</div></div>
-  <div class="pm-bar"><div class="pb-name">徐彤彤</div><div class="pb-track"><div class="pb-fill w5" style="width:6.3%"></div></div><div class="pb-num">1</div></div>
-  <div class="pm-bar"><div class="pb-name">段婷婷</div><div class="pb-track"><div class="pb-fill w6" style="width:12.5%"></div></div><div class="pb-num">2</div></div>
-
-  <h3>1.2 Epic 总体负责人速查(8 Epic + 1 专题)</h3>
-  <table>
-    <thead><tr><th style="width:80px">Epic</th><th>名称</th><th style="width:130px">总体负责人</th><th>故事</th><th>任务</th><th>包含用户故事</th></tr></thead>
-    <tbody>
-      <tr><td><b>E01</b></td><td>课程建设</td><td><b>杨晓丽</b></td><td class="center">3</td><td class="center">7</td><td>U01 数字人 / U02 图谱深化 / U20 章节统一</td></tr>
-      <tr><td><b>E02</b></td><td>教学过程(教学活动管理)</td><td><b>邱月</b></td><td class="center">2</td><td class="center">5</td><td>U04 任务团子 / U11 校级 MOOC 数据 + 共享课程包复用作业测练题目</td></tr>
-      <tr><td><b>E03</b></td><td>课堂活动</td><td><b>张能</b></td><td class="center">1</td><td class="center">1</td><td>U03 课堂活动增强</td></tr>
-      <tr><td><b>E04</b></td><td>学情画像</td><td><b>杨晓丽</b></td><td class="center">3</td><td class="center">9</td><td>U06 课程画像 / U07 AI 问数 / U09 教学数据报告</td></tr>
-      <tr><td><b>E05</b></td><td>MOOC + SPOC 学习链路</td><td><b>马鸣珂</b></td><td class="center">1</td><td class="center">5</td><td>U10 MOOC + SPOC 学习链路</td></tr>
-      <tr><td><b>E06</b></td><td>MOOC 运行</td><td><b>杨晓丽</b></td><td class="center">1</td><td class="center">3</td><td>U21 MOOC 运行能力增强</td></tr>
-      <tr style="background:var(--gray-1)"><td><b>E07</b></td><td>平台底座与多端体验(横切)</td><td><b>张能</b></td><td class="center">7</td><td class="center">11</td><td>U13 多端 / U14 身份+教师待办 / U15 国际化 / U16 教务管理 / U22 平台迁移 / U23 稳定运行 / U24 安全审核</td></tr>
-      <tr style="background:var(--geekblue-1)"><td><b>E08</b></td><td>AI 基座(横切)</td><td><b>徐彤彤</b></td><td class="center">2</td><td class="center">4</td><td>U18 AI 应用治理统一 / U19 能力训练 Skill</td></tr>
-      <tr style="background:var(--gold-1)"><td><b>专题</b></td><td>智能体可用性底座</td><td><b>段婷婷 / 徐彤彤</b></td><td class="center">—</td><td class="center">跨版本</td><td>(专题待办,贯穿多个 Epic)</td></tr>
-    </tbody>
-  </table>
+<div class="sec-head"><h2>1 · 总览(20 故事 / 54 任务 / 6 PM)</h2><span class="sec-num">OVERVIEW</span></div>
+<div class="ov-grid">
+<div class="ov-card"><div class="ov-num">20</div><div class="ov-lbl">USER STORIES</div><div class="ov-sub">用户故事数</div></div>
+<div class="ov-card"><div class="ov-num">54</div><div class="ov-lbl">TASKS</div><div class="ov-sub">P0×34 / P1×17 / 未定×3</div></div>
+<div class="ov-card"><div class="ov-num">8</div><div class="ov-lbl">EPICS</div><div class="ov-sub">Epic 数(含 2 横切)</div></div>
+<div class="ov-card"><div class="ov-num">6</div><div class="ov-lbl">PMs</div><div class="ov-sub">产品经理</div></div>
+</div>
+<h3>1.1 PM 任务量分布</h3>
+<div class="pm-bar"><div class="pb-name">张能</div><div class="pb-track"><div class="pb-fill " style="width:100.0%"></div></div><div class="pb-num">18</div></div>
+<div class="pm-bar"><div class="pb-name">杨晓丽</div><div class="pb-track"><div class="pb-fill w2" style="width:88.9%"></div></div><div class="pb-num">16</div></div>
+<div class="pm-bar"><div class="pb-name">马鸣珂</div><div class="pb-track"><div class="pb-fill w3" style="width:44.4%"></div></div><div class="pb-num">8</div></div>
+<div class="pm-bar"><div class="pb-name">邱月</div><div class="pb-track"><div class="pb-fill w4" style="width:33.3%"></div></div><div class="pb-num">6</div></div>
+<div class="pm-bar"><div class="pb-name">段婷婷</div><div class="pb-track"><div class="pb-fill w5" style="width:16.7%"></div></div><div class="pb-num">3</div></div>
+<div class="pm-bar"><div class="pb-name">徐彤彤</div><div class="pb-track"><div class="pb-fill w6" style="width:16.7%"></div></div><div class="pb-num">3</div></div>
+<h3>1.2 Epic 总体负责人速查(8 Epic + 1 专题)</h3>
+<table><thead><tr><th style="width:80px">Epic</th><th>名称</th><th style="width:130px">总体负责人</th><th>故事</th><th>任务</th><th>包含用户故事</th></tr></thead><tbody>
+<tr><td><b>E01</b></td><td>课程建设</td><td><b>杨晓丽</b></td><td class="center">4</td><td class="center">11</td><td>U02 / U01 / U20 / 智慧课程建设(备课)</td></tr>
+<tr><td><b>E02</b></td><td>教学过程(教学活动管理)</td><td><b>邱月</b></td><td class="center">2</td><td class="center">5</td><td>U11 / U04</td></tr>
+<tr><td><b>E03</b></td><td>课堂活动</td><td><b>张能</b></td><td class="center">1</td><td class="center">3</td><td>U03</td></tr>
+<tr><td><b>E04</b></td><td>学情画像(数据洞察)</td><td><b>杨晓丽</b></td><td class="center">1</td><td class="center">4</td><td>U06</td></tr>
+<tr><td><b>E05</b></td><td>MOOC + SPOC 学习链路</td><td><b>马鸣珂</b></td><td class="center">1</td><td class="center">4</td><td>U10</td></tr>
+<tr><td><b>E06</b></td><td>MOOC 运行</td><td><b>杨晓丽</b></td><td class="center">1</td><td class="center">3</td><td>U21</td></tr>
+<tr style="background:var(--gray-1)"><td><b>E07</b></td><td>平台底座与多端体验(横切)</td><td><b>张能</b></td><td class="center">8</td><td class="center">18</td><td>U24 / U25 / U22 / U23 / U15 / U14 / U13 / U16</td></tr>
+<tr style="background:var(--geekblue-1)"><td><b>E08</b></td><td>AI 基座(智能化升级 · 横切)</td><td><b>徐彤彤</b></td><td class="center">2</td><td class="center">6</td><td>U18 / U19</td></tr>
+<tr style="background:var(--gold-1)"><td><b>专题</b></td><td>智能体可用性底座</td><td><b>段婷婷 / 徐彤彤</b></td><td class="center">—</td><td class="center">跨版本</td><td>(专题待办,贯穿多个 Epic)</td></tr>
+</tbody></table></section>
+<section><div class="sec-head"><h2>2 · 8 个 Epic 详细分配</h2><span class="sec-num">EPIC DETAIL</span></div>
+<div class="epic e1"><div class="epic-head"><span class="epic-tag">EPIC 01</span><span class="epic-name">课程建设</span><span class="epic-count">· 4 个用户故事 · 11 个任务</span><span class="epic-owner">Epic 总体负责人:<b>杨晓丽</b></span></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U02</span><span class="story-name">课程图谱和文本标签深化(节点级 AI 讲解 + 掌握度+自定义图谱)</span><span class="story-pm">故事第一责任人:<b>杨晓丽</b></span></div>
+<div class="story-desc">作为教师，我希望在个人图谱库中创建并管理我的图谱模板，并能复用到不同课程中，以便沉淀教学资产、避免在每门课程里重复构建相同图谱</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">个人服务</span>个人图谱库：支持教师在基础库的个人图谱库中创建、管理个人图谱，并支持复用到课程图谱中</div><span class="t-pm">杨晓丽</span><span class="t-no">Task069</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">图谱</span>支持基于任务完成情况的图谱节点计算（如知识点掌握度、能力达成情况等）</div><span class="t-pm">杨晓丽</span><span class="t-no">Task094</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">图谱</span>自定义图谱和自定义标签管理（自定义图谱后续需支撑小雅2.0图谱数据的迁移）</div><span class="t-pm">杨晓丽</span><span class="t-no">Task325</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">图谱</span>图谱节点：增加“AI为我讲解”功能，点击一键唤起智能问答弹窗，供师生使用</div><span class="t-pm">杨晓丽</span><span class="t-no">Task520</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">课程建设</span>资源智能打标签：支持根据资源内容自动匹配课程标签（视频/ppt支持分段打标签）</div><span class="t-pm">杨晓丽</span><span class="t-no">Task582</span></div>
+</div></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U01</span><span class="story-name">跨课程资产引用</span><span class="story-pm">故事第一责任人:<b>张能</b></span></div>
+<div class="story-desc">课程AI助学数字人</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">课程建设</span>支持教师接入数字人互动形象。（SPOC原功能，腾讯和讯飞智作）</div><span class="t-pm">张能</span><span class="t-no">Task141</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">SPOC课程管理</span>Part2 SPOC和MOOC 复用课程内容资源需求</div><span class="t-pm">张能</span><span class="t-no">Task601</span></div>
+</div></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U20</span><span class="story-name">MOOC和SPOC章节目录统一</span><span class="story-pm">故事第一责任人:<b>杨晓丽</b></span></div>
+<div class="story-desc">作为教师，我希望在章节中自由混排自适应练习/测验、外链、导图、教学设计等多种资源，并能从个人资源库直接选用，以便一站式组织出符合本课程节奏的教学内容</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">课程建设</span>SPOC备授课：教师端支持设置自适应练习/自适应测验、外链</div><span class="t-pm">杨晓丽</span><span class="t-no">Task580</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc">共享课程包：支持导图、教学设计；支持建设课程时从我的文档中选择资源</div><span class="t-pm">杨晓丽</span><span class="t-no">Task595</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc">课程资源包公开时新增增加活动类型支持（教学设计、导图）</div><span class="t-pm">杨晓丽</span><span class="t-no">Task596</span></div>
+</div></div>
+<div class="story"><div class="story-head">
+<span class="story-id">智慧课程建设(备课)</span><span class="story-name">智慧课程建设(备课)</span><span class="story-pm">故事第一责任人:<b>张能</b></span></div>
+<div class="story-desc">支持教师再视频播放器上一键截图并添加AI课件</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc">视频截图添加AI课件</div><span class="t-pm">张能</span><span class="t-no">Task600</span></div>
+</div></div>
+</div>
+<div class="epic e2"><div class="epic-head"><span class="epic-tag">EPIC 02</span><span class="epic-name">教学过程(教学活动管理)</span><span class="epic-count">· 2 个用户故事 · 5 个任务</span><span class="epic-owner">Epic 总体负责人:<b>邱月</b></span></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U11</span><span class="story-name">统一门户菜单更改 + 共享课程包复用作业测练题目</span><span class="story-pm">故事第一责任人:<b>张能</b></span></div>
+<div class="story-desc">统一门户去掉专业全景中心入口；统一门户的AI创新中心文案更改为：学科大模型；spoc和mooc课程详情页的AI创新中心文案更改为：学科大模型。</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">SPOC课程管理</span>平台导航入口及AI创新中心文案调整</div><span class="t-pm">张能</span><span class="t-no">Task056</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">共享课程包管理</span>SPOC生成共享课程包时支持作业测练、讨论、题目资源下沉（这个303是否加入没明确）；跨课程知识库流转机制</div><span class="t-pm">张能</span><span class="t-no">Task565</span></div>
+</div></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U04</span><span class="story-name">任务团子可用性升级</span><span class="story-pm">故事第一责任人:<b>邱月</b></span></div>
+<div class="story-desc">作为 课程教师
+  我希望 任务团子里的多个任务能一次性配置并发布，后续临时新增的资源也能复用已有配置快速发出去，
+  以便 摆脱&quot;逐个任务重复设置参数&quot;的繁琐操作，把精力放在教学设计和及时响应学生需求上。</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">课程任务</span>AI任务团子反复生成</div><span class="t-pm">邱月</span><span class="t-no">Task389</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">智能应用</span>AI任务团子生成资源</div><span class="t-pm">邱月</span><span class="t-no">Task390</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">学业评价</span>总评成绩接入任务团子</div><span class="t-pm">张能</span><span class="t-no">Task391</span></div>
+</div></div>
+</div>
+<div class="epic e3"><div class="epic-head"><span class="epic-tag">EPIC 03</span><span class="epic-name">课堂活动</span><span class="epic-count">· 1 个用户故事 · 3 个任务</span><span class="epic-owner">Epic 总体负责人:<b>张能</b></span></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U03</span><span class="story-name">课堂活动增强</span><span class="story-pm">故事第一责任人:<b>张能</b></span></div>
+<div class="story-desc">作为教师，我希望在课堂中发起提问互动，从而实时了解学生课堂的掌握情况。</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc">课堂提问（XY2.5-14477）</div><span class="t-pm">张能</span><span class="t-no">Task426</span></div>
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc">定位签到（XY2.5-14610）</div><span class="t-pm">张能</span><span class="t-no">Task449</span></div>
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">SPOC课程管理</span>课程里支持学生可以做助教（XY2.5-14828）</div><span class="t-pm">张能</span><span class="t-no">Task475</span></div>
+</div></div>
+</div>
+<div class="epic e4"><div class="epic-head"><span class="epic-tag">EPIC 04</span><span class="epic-name">学情画像(数据洞察)</span><span class="epic-count">· 1 个用户故事 · 4 个任务</span><span class="epic-owner">Epic 总体负责人:<b>杨晓丽</b></span></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U06</span><span class="story-name">课程画像 / 看板指标升级</span><span class="story-pm">故事第一责任人:<b>杨晓丽</b></span></div>
+<div class="story-desc">作为教学管理者，我希望用自然语言对话的方式查询课程运行、师生活动、考勤等数据，以便快速获得跨学院/跨时段的统计结果，无需依赖技术人员定制报表</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">教学管理</span>AI问数，对话式数据分析（小雅2.0）</div><span class="t-pm">杨晓丽</span><span class="t-no">Task116</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">教学管理</span>教师预警（XY2.5-14481-未上线-PRDready）：支持管理员设置教师预警配置方案、查看教师教学活力值列表</div><span class="t-pm">杨晓丽</span><span class="t-no">Task123</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">SPOC课程管理</span>课程内看板、画像：图谱等相关数据指标更新、新增任务团子数量统计</div><span class="t-pm">杨晓丽</span><span class="t-no">Task568</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">教学管理</span>管理空间：图谱等相关数据指标更新、新增任务团子数量统计</div><span class="t-pm">杨晓丽</span><span class="t-no">Task569</span></div>
+</div></div>
+</div>
+<div class="epic e5"><div class="epic-head"><span class="epic-tag">EPIC 05</span><span class="epic-name">MOOC + SPOC 学习链路</span><span class="epic-count">· 1 个用户故事 · 4 个任务</span><span class="epic-owner">Epic 总体负责人:<b>马鸣珂</b></span></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U10</span><span class="story-name"> MOOC + SPOC 学习链路</span><span class="story-pm">故事第一责任人:<b>马鸣珂</b></span></div>
+<div class="story-desc">MOOC 学生端(选课/学习/退课) </div>
+<div class="task-list">
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">个人服务</span>个人课程管理</div><span class="t-pm">张能</span><span class="t-no">Task070</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">自主学习</span>MOOC场景下作业支持引导式答题，教师端设置/学生端使用入口开放</div><span class="t-pm">马鸣珂</span><span class="t-no">Task522</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">自主学习</span>MOOC-SPOC学生端统一：学习中心</div><span class="t-pm">马鸣珂</span><span class="t-no">Task561</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">自主学习</span>MOOC-SPOC学生端统一：自适应活动</div><span class="t-pm">马鸣珂</span><span class="t-no">Task563</span></div>
+</div></div>
+</div>
+<div class="epic e5"><div class="epic-head"><span class="epic-tag">EPIC 06</span><span class="epic-name">MOOC 运行</span><span class="epic-count">· 1 个用户故事 · 3 个任务</span><span class="epic-owner">Epic 总体负责人:<b>杨晓丽</b></span></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U21</span><span class="story-name">MOOC运行能力增强</span><span class="story-pm">故事第一责任人:<b>杨晓丽</b></span></div>
+<div class="story-desc">作为教师，我希望MOOC课程发布后能看到MOOC课程的运行情况，以支持后续进行报奖、评审</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">MOOC课程运行管理</span>MOOC课程运行数据：展示MOOC教学数据统计、AI运行数据</div><span class="t-pm">杨晓丽</span><span class="t-no">Task317</span></div>
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">MOOC课程运行管理</span>MOOC分学期运行：同一个共享课程包，公开时可以分学期、分版本进行运行</div><span class="t-pm">杨晓丽</span><span class="t-no">Task421</span></div>
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">平台运营</span>跨校、跨平台的课程审核流程：教师选择公开到其他学校或平台的课程，支持其他学校或平台进行审核，完成流程闭环</div><span class="t-pm">杨晓丽</span><span class="t-no">Task570</span></div>
+</div></div>
+</div>
+<div class="epic e6"><div class="epic-head"><span class="epic-tag">EPIC 07</span><span class="epic-name">平台底座与多端体验(横切)</span><span class="epic-count">· 8 个用户故事 · 18 个任务</span><span class="epic-owner">Epic 总体负责人:<b>张能</b></span></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U24</span><span class="story-name">安全审查</span><span class="story-pm">故事第一责任人:<b>段婷婷</b></span></div>
+<div class="story-desc">安全审核部门要求对AIGC内容进行安全标识及注明用户隐私协议</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc">合规要求安全标识、服务备案、快修、举报入口等</div><span class="t-pm">段婷婷</span><span class="t-no">Task591</span></div>
+</div></div>
+<div class="story"><div class="story-head">
+<span class="story-id new">U25</span><span class="story-name">混合部署交付</span><span class="story-pm">故事第一责任人:<b>邱月</b></span></div>
+<div class="story-desc">响应学校对于本地化部署的需求，凸显产品售卖的核心竞争优势</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">部署架构</span>支持混合式部署，需在8月15日前确认混合部署的可行方案，包含本地化部署范围清单（内农职和黑财两个学校预计8月底交付，数据和应用必须支持本地化）</div><span class="t-pm">段婷婷</span><span class="t-no">Task170</span></div>
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc">接入讯飞AI考试</div><span class="t-pm">邱月</span><span class="t-no">Task579</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc">接入讯飞AI巡课评价，黑财/内蒙古农业职业学院预计8月30日需要交付</div><span class="t-pm">邱月</span><span class="t-no">Task583</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc">接入AI课堂教学评价，黑财/内蒙古农业职业学院预计8月30日需要交付</div><span class="t-pm">邱月</span><span class="t-no">Task584</span></div>
+</div></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U22</span><span class="story-name">新旧平台数据迁移，支持老用户升级</span><span class="story-pm">故事第一责任人:<b>杨晓丽</b></span></div>
+<div class="story-desc">作为教师，我希望直接复用平台内置的高质量课程（如人工智能通识课）及其教与学数据，以便快速开课、解决自身缺乏优质素材的问题</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">平台运营</span>支持从小雅2.0、智课2.0迁移课程内容、用户教与学数据，到小雅3.0平台（包括智课2.0已建设好的人工智能通识课等内容）
+注：广二师8 月底完成完整迁移并验证可用</div><span class="t-pm">杨晓丽</span><span class="t-no">Task189</span></div>
+</div></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U23</span><span class="story-name">保障平台稳定运行</span><span class="story-pm">故事第一责任人:<b>段婷婷</b></span></div>
+<div class="story-desc">小雅3.0上线后将开始前三单交付运行，需保障MOOC和SPOC稳定运行完整前三单验证</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">部署架构</span>SPOC与MOOC稳定高效运行，定义指标、完成压测</div><span class="t-pm">段婷婷</span><span class="t-no">Task253</span></div>
+</div></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U15</span><span class="story-name">平台运营配置与国际化能力增强</span><span class="story-pm">故事第一责任人:<b>马鸣珂</b></span></div>
+<div class="story-desc">作为 教师 / 学生 / 管理员，我希望在平台更多业务页面中按需切换语种，并保持菜单、页面文案和关键操作提示的语言一致；以便不同语言使用者能够顺畅完成教学、学习和管理操作，降低跨语种场景下的理解成本和使用门槛</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">多语言</span>实现平台多语种切换，支持中文、英文和俄文（小雅现有，优先复用，非830必须），并扩充东盟语言范围（广西大学客户需求支持泰语、越南语）</div><span class="t-pm">马鸣珂</span><span class="t-no">Task256</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">教务管理</span>专业全景管理-人培方案补全-全景图谱关联关系</div><span class="t-pm">马鸣珂</span><span class="t-no">Task585</span></div>
+</div></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U14</span><span class="story-name">用户身份体系 + 个人空间体验统一(含教师待办)</span><span class="story-pm">故事第一责任人:<b>张能</b></span></div>
+<div class="story-desc">教学空间增加教师待办</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">教学空间</span>教师空间增加教师待办</div><span class="t-pm">张能</span><span class="t-no">Task328</span></div>
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">个人服务</span>第三方登录和统一身份认证登录</div><span class="t-pm">张能</span><span class="t-no">Task401</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">智能应用</span>AI创新空间科研工具用户体系打通</div><span class="t-pm">马鸣珂</span><span class="t-no">Task500</span></div>
+<div class="task"><span class="t-prio np">未定</span><div class="t-desc">【宁夏大学交付承接】支持集成至学校的自有平台及第三方平台</div><span class="t-pm">张能</span><span class="t-no">Task604</span></div>
+<div class="task"><span class="t-prio np">未定</span><div class="t-desc">【宁夏大学交付承接】支持OAuth2.0授权登录与单点登录（SSO），支持接入第三方应用（如企业微信等）提供移动端免登录唤起</div><span class="t-pm">张能</span><span class="t-no">Task605</span></div>
+<div class="task"><span class="t-prio np">未定</span><div class="t-desc">【宁夏大学交付承接】支持接入第三方应用（如企业微信等）提供移动端免登录唤起</div><span class="t-pm">张能</span><span class="t-no">Task607</span></div>
+</div></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U13</span><span class="story-name">多端适配</span><span class="story-pm">故事第一责任人:<b>张能</b></span></div>
+<div class="story-desc">3.0 移动端上架</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc">3.0移动端平台上架（受限软著申请进度影响，优先级调整为P1）</div><span class="t-pm">张能</span><span class="t-no">Task371</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc">1、App下载跳转应用商店；2、消息推送 </div><span class="t-pm">张能</span><span class="t-no">Task560</span></div>
+</div></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U16</span><span class="story-name">教务管理深化</span><span class="story-pm">故事第一责任人:<b>张能</b></span></div>
+<div class="story-desc">教师可以把自主开课课程转为教务开课课程；管理员设置督导系统跳转到第三方督导</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc">教师自主开课的课程可变更为教务课程（XY2.5-14290）
+第三方督导跳转设置功能（XY2.5-14658）</div><span class="t-pm">张能</span><span class="t-no">Task496</span></div>
+</div></div>
+</div>
+<div class="epic e7"><div class="epic-head"><span class="epic-tag">EPIC 08</span><span class="epic-name">AI 基座(智能化升级 · 横切)</span><span class="epic-count">· 2 个用户故事 · 6 个任务</span><span class="epic-owner">Epic 总体负责人:<b>徐彤彤</b></span></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U18</span><span class="story-name">AI 应用体验与内容治理统一</span><span class="story-pm">故事第一责任人:<b>马鸣珂</b></span></div>
+<div class="story-desc">作为学生，我希望在学习场景中获得一致的 AI 助学入口与内容生成能力，以便 AI 能更稳定地嵌入课程学习流，同时降低多入口割裂带来的使用成本</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">智能应用</span>AI助学/智能体对话浮窗合并</div><span class="t-pm">马鸣珂</span><span class="t-no">Task521</span></div>
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">题库和组卷</span>AI应用的内容举报补全</div><span class="t-pm">邱月</span><span class="t-no">Task524</span></div>
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">智能应用</span>AI工作台优化</div><span class="t-pm">马鸣珂</span><span class="t-no">Task589</span></div>
+</div></div>
+<div class="story"><div class="story-head">
+<span class="story-id">U19</span><span class="story-name">能力训练Skill拓展</span><span class="story-pm">故事第一责任人:<b>徐彤彤</b></span></div>
+<div class="story-desc">为学生提供思维能力训练能力</div>
+<div class="task-list">
+<div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">AI基座</span>批判性思维能力训练Skill/创新性思维能力训练Skill（PM主要开发，研发配合上架）</div><span class="t-pm">徐彤彤</span><span class="t-no">Task551</span></div>
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">AI基座</span>开源skill筛选上线</div><span class="t-pm">徐彤彤</span><span class="t-no">Task594</span></div>
+<div class="task"><span class="t-prio p1">P1</span><div class="t-desc">skill配置化模块</div><span class="t-pm">徐彤彤</span><span class="t-no">Task606</span></div>
+</div></div>
+</div>
 </section>
-
-<!-- ============ EPIC 01 课程建设 ============ -->
-<section>
-  <div class="sec-head"><h2>2 · 8 个 Epic 详细分配</h2><span class="sec-num">EPIC DETAIL</span></div>
-
-  <div class="epic e1">
-    <div class="epic-head">
-      <span class="epic-tag">EPIC 01</span>
-      <span class="epic-name">课程建设</span>
-      <span class="epic-count">· 3 个用户故事 · 7 个任务</span>
-      <span class="epic-owner">Epic 总体负责人:<b>杨晓丽</b></span>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U01</span>
-        <span class="story-name">跨课程资产引用(数字人接入)</span>
-        <span class="story-pm">故事第一责任人:<b>张能</b></span>
-      </div>
-      <div class="story-desc">支持教师接入数字人互动形象,跨课程复用学科 AI 助学数字人资产</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">课程建设</span>支持教师接入数字人互动形象(SPOC 原功能,腾讯和讯飞智作)</div><span class="t-pm">张能</span><span class="t-no">Task141</span></div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U02</span>
-        <span class="story-name">课程图谱和文本标签深化(节点级 AI 讲解 + 掌握度 + 自定义图谱)</span>
-        <span class="story-pm">故事第一责任人:<b>杨晓丽</b></span>
-      </div>
-      <div class="story-desc">作为教师,我希望在个人图谱库中创建并管理我的图谱模板,并能复用到不同课程中,以便沉淀教学资产、避免在每门课程里重复构建相同图谱</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">图谱</span>支持基于任务完成情况的图谱节点计算(知识点掌握度、能力达成情况等)</div><span class="t-pm">杨晓丽</span><span class="t-no">Task094</span></div>
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">图谱</span>自定义图谱和自定义标签管理(自定义图谱支撑图谱数据的迁移)</div><span class="t-pm">杨晓丽</span><span class="t-no">Task325</span></div>
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">图谱</span>图谱节点:增加"AI 为我讲解"功能,点击一键唤起智能问答弹窗,供师生使用</div><span class="t-pm">杨晓丽</span><span class="t-no">Task520</span></div>
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">课程建设</span>资源智能打标签:支持根据资源内容自动匹配课程标签(视频/PPT 支持分段打标签)</div><span class="t-pm">杨晓丽</span><span class="t-no">Task582</span></div>
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">个人服务</span>个人图谱库:支持教师在基础库的个人图谱库中创建、管理个人图谱,并支持复用到课程图谱中</div><span class="t-pm">杨晓丽</span><span class="t-no">Task069</span></div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id new">U20</span>
-        <span class="story-name">MOOC 和 SPOC 章节目录统一</span>
-        <span class="story-pm">故事第一责任人:<b>杨晓丽</b></span>
-      </div>
-      <div class="story-desc">作为教师,我希望在章节中自由混排自适应练习/测验、外链、导图、教学设计等多种资源,并能从个人资源库直接选用,以便一站式组织出符合本课程节奏的教学内容</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">课程建设</span>章节混排:教师端 SPOC 支持自适应练习/自适应测验、外链;共享课程包支持导图、教学设计;支持建设课程</div><span class="t-pm">杨晓丽</span><span class="t-no">Task580</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- E02 -->
-  <div class="epic e2">
-    <div class="epic-head">
-      <span class="epic-tag">EPIC 02</span>
-      <span class="epic-name">教学过程(教学活动管理)</span>
-      <span class="epic-count">· 2 个用户故事 · 5 个任务</span>
-      <span class="epic-owner">Epic 总体负责人:<b>邱月</b></span>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U04</span>
-        <span class="story-name">任务团子智能化(可用性升级)</span>
-        <span class="story-pm">故事第一责任人:<b>邱月</b></span>
-      </div>
-      <div class="story-desc">作为课程教师,我希望任务团子里的多个任务能一次性配置并发布,后续临时新增的资源也能复用已有配置快速发出去,以便摆脱"逐个任务重复设置参数"的繁琐操作,把精力放在教学设计和及时响应学生需求上。</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">课程任务</span>AI 任务团子反复生成</div><span class="t-pm">邱月</span><span class="t-no">Task389</span></div>
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">智能应用</span>AI 任务团子生成资源</div><span class="t-pm">邱月</span><span class="t-no">Task390</span></div>
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">学业评价</span>总评成绩接入任务团子</div><span class="t-pm">张能</span><span class="t-no">Task391</span></div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U11</span>
-        <span class="story-name">校级 MOOC 数据 + 共享课程包复用作业测练题目</span>
-        <span class="story-pm">故事第一责任人:<b>张能</b></span>
-      </div>
-      <div class="story-desc">作为校级管理员,运营校级门户</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">SPOC 管理</span>支持校级门户接入校级 MOOC 课程真实接口</div><span class="t-pm">张能</span><span class="t-no">Task056</span></div>
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">共享课程包</span>SPOC 生成共享课程包时支持作业测练、讨论、题目资源下沉;跨课程知识库流转</div><span class="t-pm">张能</span><span class="t-no">Task565</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- E03 -->
-  <div class="epic e3">
-    <div class="epic-head">
-      <span class="epic-tag">EPIC 03</span>
-      <span class="epic-name">课堂活动</span>
-      <span class="epic-count">· 1 个用户故事 · 1 个任务</span>
-      <span class="epic-owner">Epic 总体负责人:<b>张能</b></span>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U03</span>
-        <span class="story-name">课堂活动增强(签到/提问/排行榜/学生助教)</span>
-        <span class="story-pm">故事第一责任人:<b>张能</b></span>
-      </div>
-      <div class="story-desc">课堂添加提问互动;教师安排查看排行榜;定位签到;学生作为助教,同时也保留学生角色</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc">课堂提问(XY2.5-14477)/ 定位签到(XY2.5-144610)/ 课程里支持学生可以做助教</div><span class="t-pm">张能</span><span class="t-no">Task426</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- E04 -->
-  <div class="epic e4">
-    <div class="epic-head">
-      <span class="epic-tag">EPIC 04</span>
-      <span class="epic-name">学情画像(数据洞察)</span>
-      <span class="epic-count">· 3 个用户故事 · 9 个任务</span>
-      <span class="epic-owner">Epic 总体负责人:<b>杨晓丽</b></span>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U06</span>
-        <span class="story-name">课程画像 / 看板指标升级(含教师预警)</span>
-        <span class="story-pm">故事第一责任人:<b>杨晓丽</b></span>
-      </div>
-      <div class="story-desc">作为教学管理者,我希望用自然语言对话的方式查询课程运行、师生活动、考勤等数据,以便快速获得跨学院/跨时段的统计结果,无需依赖技术人员定制报表</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">教学管理</span>AI 问数,对话式数据分析(小雅 2.0)</div><span class="t-pm">杨晓丽</span><span class="t-no">Task116</span></div>
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">教学管理</span>教师预警(XY2.5-14481):支持管理员设置教师预警配置方案、查看教师预警</div><span class="t-pm">杨晓丽</span><span class="t-no">Task123</span></div>
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">SPOC 管理</span>课程内看板、画像:图谱等相关数据指标更新、新增任务团子数量统计</div><span class="t-pm">杨晓丽</span><span class="t-no">Task568</span></div>
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">教学管理</span>管理空间:图谱等相关数据指标更新、新增任务团子数量统计</div><span class="t-pm">杨晓丽</span><span class="t-no">Task569</span></div>
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc">数据看板报告增加 AI 相关指标(XY2.5-14661);数据看板、画像新增"校外教师""校外学生"</div><span class="t-pm">张能</span><span class="t-no">Task464</span></div>
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc">管理端看板新增能力图谱/问题图谱/思政图谱相关统计数据(XY2.5-14701)</div><span class="t-pm">张能</span><span class="t-no">Task467</span></div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U07</span>
-        <span class="story-name">AI 问数对话式数据分析(深化)</span>
-        <span class="story-pm">故事第一责任人:<b>张能</b></span>
-      </div>
-      <div class="story-desc">AI 问数相关优化任务:添加图表切换、优化指标项</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc">对话式数据查询-图表切换(XY2.5-14660),优化数据评估指标,提供更有针对性的教学数据</div><span class="t-pm">张能</span><span class="t-no">Task465</span></div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U09</span>
-        <span class="story-name">教学数据报告(年报/学期报告/学情)</span>
-        <span class="story-pm">故事第一责任人:<b>张能</b></span>
-      </div>
-      <div class="story-desc">年报/学期报告以及下载学情报告/自定义成绩导出模板</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc">教师/学生年报/学期报告(XY2.5-14322);管理端数据报告下增加学期报告页面</div><span class="t-pm">张能</span><span class="t-no">Task424</span></div>
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc">数据看板数据支持切换教务开课和非教务开课(XY2.5-14771)</div><span class="t-pm">张能</span><span class="t-no">Task469</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- E05 -->
-  <div class="epic e5">
-    <div class="epic-head">
-      <span class="epic-tag">EPIC 05</span>
-      <span class="epic-name">MOOC + SPOC 学习链路</span>
-      <span class="epic-count">· 1 个用户故事 · 5 个任务</span>
-      <span class="epic-owner">Epic 总体负责人:<b>马鸣珂</b></span>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U10</span>
-        <span class="story-name">MOOC + SPOC 学习链路(学生端全链路)</span>
-        <span class="story-pm">故事第一责任人:<b>马鸣珂</b></span>
-      </div>
-      <div class="story-desc">MOOC 学生端(选课/学习/退课)· MOOC-SPOC 学生端统一</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">自主学习</span>MOOC 场景下作业支持引导式答题,教师端设置/学生端使用入口开放</div><span class="t-pm">马鸣珂</span><span class="t-no">Task522</span></div>
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">自主学习</span>MOOC-SPOC 学生端统一:学习中心</div><span class="t-pm">马鸣珂</span><span class="t-no">Task561</span></div>
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">自主学习</span>MOOC-SPOC 学生端统一:自适应活动</div><span class="t-pm">马鸣珂</span><span class="t-no">Task563</span></div>
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">个人服务</span>个人课程管理</div><span class="t-pm">张能</span><span class="t-no">Task070</span></div>
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">自主学习</span>MOOC 学生退课</div><span class="t-pm">马鸣珂</span><span class="t-no">Task537</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- E06 -->
-  <div class="epic e5">
-    <div class="epic-head">
-      <span class="epic-tag">EPIC 06</span>
-      <span class="epic-name">MOOC 运行</span>
-      <span class="epic-count">· 1 个用户故事 · 3 个任务</span>
-      <span class="epic-owner">Epic 总体负责人:<b>杨晓丽</b></span>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U21</span>
-        <span class="story-name">MOOC 运行能力增强</span>
-        <span class="story-pm">故事第一责任人:<b>杨晓丽</b></span>
-      </div>
-      <div class="story-desc">作为教师,我希望 MOOC 课程发布后能看到 MOOC 课程的运行情况,以支持后续进行报奖、评审</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">MOOC 运行</span>MOOC 课程运行数据:展示 MOOC 教学数据统计、AI 运行数据</div><span class="t-pm">杨晓丽</span><span class="t-no">Task317</span></div>
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">MOOC 运行</span>MOOC 分学期运行:同一个共享课程包,公开时可以分学期、分版本进行运行</div><span class="t-pm">杨晓丽</span><span class="t-no">Task421</span></div>
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">平台运营</span>跨校、跨平台的课程审核流程:教师选择公开到其他学校或平台的课程,支持其他学校或平台进行审核</div><span class="t-pm">杨晓丽</span><span class="t-no">Task570</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- E06 -->
-  <div class="epic e6">
-    <div class="epic-head">
-      <span class="epic-tag">EPIC 07</span>
-      <span class="epic-name">平台底座与多端体验(横切)</span>
-      <span class="epic-count">· 7 个用户故事 · 11 个任务</span>
-      <span class="epic-owner">Epic 总体负责人:<b>张能</b></span>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U13</span>
-        <span class="story-name">多端适配(3.0 移动端上架)</span>
-        <span class="story-pm">故事第一责任人:<b>张能</b></span>
-      </div>
-      <div class="story-desc">3.0 移动端上架</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc">3.0 移动端平台上架(受限软著申请进度影响,优先级调整为 P1)</div><span class="t-pm">张能</span><span class="t-no">Task371</span></div>
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc">1、App 下载跳转应用商店;2、消息推送</div><span class="t-pm">张能</span><span class="t-no">Task560</span></div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U14</span>
-        <span class="story-name">用户身份体系 + 个人空间体验统一(含教师待办)</span>
-        <span class="story-pm">故事第一责任人:<b>张能</b></span>
-      </div>
-      <div class="story-desc">用户体系三方登录 · 各产品用户体系打通 · 教学空间增加教师待办</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">智能应用</span>AI 创新空间科研工具用户体系打通</div><span class="t-pm">马鸣珂</span><span class="t-no">Task500</span></div>
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">个人服务</span>第三方登录和统一身份认证登录</div><span class="t-pm">张能</span><span class="t-no">Task401</span></div>
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">教学空间</span>教师空间增加教师待办</div><span class="t-pm">张能</span><span class="t-no">Task328</span></div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U15</span>
-        <span class="story-name">平台运营配置与国际化能力增强</span>
-        <span class="story-pm">故事第一责任人:<b>马鸣珂</b></span>
-      </div>
-      <div class="story-desc">作为教师/学生/管理员,我希望在平台更多业务页面中按需切换语种,并保持菜单、页面文案和关键操作提示的语言一致;以便不同语言使用者能够顺畅完成教学、学习和管理操作</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">多语言</span>实现平台多语种切换,支持中文和英文(小雅现有),扩充范围</div><span class="t-pm">马鸣珂</span><span class="t-no">Task256</span></div>
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">教务管理</span>专业全景管理-人培方案补全-全景图谱关联关系</div><span class="t-pm">马鸣珂</span><span class="t-no">Task585</span></div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U16</span>
-        <span class="story-name">教务管理深化(自主开课变更 + 督导跳转)</span>
-        <span class="story-pm">故事第一责任人:<b>张能</b></span>
-      </div>
-      <div class="story-desc">教师可以把自主开课课程转为教务开课课程;管理员设置督导系统跳转到第三方督导</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc">教师自主开课的课程可变更为教务课程(XY2.5-14290);第三方督导跳转设置功能</div><span class="t-pm">张能</span><span class="t-no">Task496</span></div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id new">U22</span>
-        <span class="story-name">新旧平台数据迁移,支持老用户升级</span>
-        <span class="story-pm">故事第一责任人:<b>杨晓丽</b></span>
-      </div>
-      <div class="story-desc">作为教师,我希望直接复用平台内置的高质量课程(如人工智能通识课)及其教与学数据,以便快速开课、解决自身缺乏优质素材的问题</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">平台运营</span>支持从小雅 2.0、智课 2.0 迁移课程内容、用户教与学数据到小雅 3.0 平台(包括智课 2.0 已建设好的内容)</div><span class="t-pm">杨晓丽</span><span class="t-no">Task189</span></div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id new">U23</span>
-        <span class="story-name">保障平台稳定运行(SPOC + MOOC 压测)</span>
-        <span class="story-pm">故事第一责任人:<b>段婷婷</b></span>
-      </div>
-      <div class="story-desc">小雅 3.0 上线后将开始前三单交付运行,需保障 MOOC 和 SPOC 稳定运行完整前三单验证</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">部署架构</span>SPOC 与 MOOC 稳定高效运行,定义指标、完成压测</div><span class="t-pm">段婷婷</span><span class="t-no">Task253</span></div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id new">U24</span>
-        <span class="story-name">安全审核</span>
-        <span class="story-pm">故事第一责任人:<b>段婷婷</b></span>
-      </div>
-      <div class="story-desc">安全审核部门要求对 AIGC 内容进行安全标识及注明用户隐私协议</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">合规安全</span>合规要求:安全标识、服务备案、快修、举报入口等</div><span class="t-pm">段婷婷</span><span class="t-no">Task591</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- E07 -->
-  <div class="epic e7">
-    <div class="epic-head">
-      <span class="epic-tag">EPIC 08</span>
-      <span class="epic-name">AI 基座(智能化升级 · 横切)</span>
-      <span class="epic-count">· 2 个用户故事 · 4 个任务</span>
-      <span class="epic-owner">Epic 总体负责人:<b>徐彤彤</b></span>
-    </div>
-
-    <div class="callout">
-      <div class="lbl">💡 E07 范围说明</div>
-      <p>AI 应用治理与内容治理是<strong>全局智能化升级需求</strong>,不只是学生学习层面 — 涉及所有 AI 应用入口的合并、统一举报、AI 工作台优化等横切能力。本 Epic 由 AI 基座负责人统筹,具体故事的第一责任人按业务场景分配。</p>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U18</span>
-        <span class="story-name">AI 应用治理与内容治理统一</span>
-        <span class="story-pm">故事第一责任人:<b>马鸣珂</b></span>
-      </div>
-      <div class="story-desc">作为学生 / 教师 / 管理员,我希望在所有学习场景中获得一致的 AI 助学入口与内容生成能力,以便 AI 能更稳定地嵌入业务流,同时降低多入口割裂带来的使用成本</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">智能应用</span>AI 助学/智能体对话浮窗合并</div><span class="t-pm">马鸣珂</span><span class="t-no">Task521</span></div>
-        <div class="task"><span class="t-prio p1">P1</span><div class="t-desc"><span class="t-mod">题库组卷</span>AI 应用的内容举报补全</div><span class="t-pm">邱月</span><span class="t-no">Task524</span></div>
-        <div class="task"><span class="t-prio np">未定</span><div class="t-desc"><span class="t-mod">智能应用</span>AI 工作台优化</div><span class="t-pm">马鸣珂</span><span class="t-no">Task589</span></div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-head">
-        <span class="story-id">U19</span>
-        <span class="story-name">能力训练 Skill 扩展(批判性 + 创新性思维)</span>
-        <span class="story-pm">故事第一责任人:<b>徐彤彤</b></span>
-      </div>
-      <div class="story-desc">基于 XClaw + 学科大脑构建批判性思维 / 创新性思维的能力训练 Skill,横切支撑学习与学业评价场景</div>
-      <div class="task-list">
-        <div class="task"><span class="t-prio p0">P0</span><div class="t-desc"><span class="t-mod">AI 基座</span>批判性思维能力训练 Skill / 创新性思维能力训练 Skill</div><span class="t-pm">徐彤彤</span><span class="t-no">Task551</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 3. 专题待办 ============ -->
-<section>
-  <div class="sec-head"><h2>3 · 专题待办</h2><span class="sec-num">SPECIAL TODO</span></div>
-
-  <div class="epic todo">
-    <div class="epic-head">
-      <span class="epic-tag">专题</span>
-      <span class="epic-name">智能体可用性底座方案</span>
-      <span class="epic-count">· 跨 Epic 横切 · 跨多个版本</span>
-      <span class="epic-owner">负责人:<b>段婷婷 / 徐彤彤</b></span>
-    </div>
-
-    <div class="callout todo">
-      <div class="lbl">专题说明</div>
-      <p>智能体可用性底座是 V3.1.1 → V3.1.X 持续推进的<strong>跨版本专题</strong>,贯穿 E02(教学过程)/ E04(学情画像)/ E05(MOOC + SPOC 学习链路)/ E08(AI 基座)。负责人 <b>段婷婷</b> 主导方案设计与跨团队协调,<b>徐彤彤</b> 负责 AI 基座侧落地。具体任务在产研评审中持续刷新。</p>
-    </div>
-  </div>
-</section>
-
-<!-- ============ 4. PM 责任清单 ============ -->
-<section>
-  <div class="sec-head"><h2>4 · 给各位 PM 的责任清单</h2><span class="sec-num">PM CHECKLIST</span></div>
-
-  <table>
-    <thead><tr><th style="width:120px">PM</th><th style="width:80px">任务数</th><th>故事 / Epic 责任</th></tr></thead>
-    <tbody>
-      <tr>
-        <td><b>杨晓丽</b></td>
-        <td class="center">14</td>
-        <td>
-          Epic 总体负责人:<b>E01 课程建设 + E04 学情画像 + E06 MOOC 运行</b><br>
-          故事第一责任人:U02 图谱深化 · U20 章节统一 · U06 课程画像 · U21 MOOC 运行 · U22 平台迁移
-        </td>
-      </tr>
-      <tr>
-        <td><b>张能</b></td>
-        <td class="center">16</td>
-        <td>
-          Epic 总体负责人:<b>E03 课堂活动 + E07 平台底座与多端体验</b><br>
-          故事第一责任人:U01 数字人 · U03 课堂活动 · U07 AI 问数 · U09 数据报告 · U11 校级 MOOC 数据 + 共享课包复用 · U13 多端 · U14 身份+待办 · U16 教务
-        </td>
-      </tr>
-      <tr>
-        <td><b>马鸣珂</b></td>
-        <td class="center">9</td>
-        <td>
-          Epic 总体负责人:<b>E05 MOOC + SPOC 学习链路</b><br>
-          故事第一责任人:U10 MOOC+SPOC 学习链路 · U15 国际化 · U18 AI 应用治理
-        </td>
-      </tr>
-      <tr>
-        <td><b>邱月</b></td>
-        <td class="center">3</td>
-        <td>
-          Epic 总体负责人:<b>E02 教学过程(教学活动管理)</b><br>
-          故事第一责任人:U04 任务团子智能化
-        </td>
-      </tr>
-      <tr>
-        <td><b>徐彤彤</b></td>
-        <td class="center">1</td>
-        <td>
-          Epic 总体负责人:<b>E08 AI 基座</b><br>
-          故事第一责任人:U19 能力训练 Skill<br>
-          专题协同:智能体可用性底座(与段婷婷)
-        </td>
-      </tr>
-      <tr style="background:var(--gold-1)">
-        <td><b>段婷婷</b></td>
-        <td class="center">2</td>
-        <td>
-          故事第一责任人:U23 SPOC+MOOC 压测稳定运行 · U24 安全审核<br>
-          专题主导:<b>智能体可用性底座方案</b>(跨版本)
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-</section>
-
-<footer>
-  作者:婷婷 · AI 教学产品部 · 2026-06-12<br>
-  小雅 V3.1.1 · 用户故事整合方案 · PM 工作分配
-</footer>
-
-</body>
-</html>
+<section><div class="sec-head"><h2>3 · 专题待办</h2><span class="sec-num">SPECIAL TODO</span></div>
+<div class="epic todo"><div class="epic-head"><span class="epic-tag">专题</span><span class="epic-name">智能体可用性底座方案</span><span class="epic-count">· 跨 Epic 横切 · 跨多个版本</span><span class="epic-owner">负责人:<b>段婷婷 / 徐彤彤</b></span></div>
+<div class="callout todo"><div class="lbl">专题说明</div><p>智能体可用性底座是 V3.1.1 → V3.1.X 持续推进的<strong>跨版本专题</strong>,贯穿 E02 / E04 / E05 / E08。负责人 <b>段婷婷</b> 主导方案设计与跨团队协调,<b>徐彤彤</b> 负责 AI 基座侧落地。具体任务在产研评审中持续刷新。</p></div></div></section>
+<section><div class="sec-head"><h2>4 · 给各位 PM 的责任清单</h2><span class="sec-num">PM CHECKLIST</span></div>
+<table><thead><tr><th style="width:120px">PM</th><th style="width:80px">任务数</th><th>故事 / Epic 责任</th></tr></thead><tbody>
+<tr><td><b>张能</b></td><td class="center">18</td><td>Epic 总体负责人:<b>E03 课堂活动 + E07 平台底座与多端体验(横切)</b><br>故事第一责任人:U11 统一门户菜单更改 + 共 · U01 跨课程资产引用 · U14 用户身份体系 + 个人空 · U13 多端适配 · U03 课堂活动增强 · U16 教务管理深化 · 智慧课程建设(备课) 智慧课程建设(备课)</td></tr>
+<tr><td><b>杨晓丽</b></td><td class="center">16</td><td>Epic 总体负责人:<b>E01 课程建设 + E04 学情画像(数据洞察) + E06 MOOC 运行</b><br>故事第一责任人:U02 课程图谱和文本标签深化( · U06 课程画像 / 看板指标升 · U22 新旧平台数据迁移，支持老 · U21 MOOC运行能力增强 · U20 MOOC和SPOC章节目</td></tr>
+<tr><td><b>马鸣珂</b></td><td class="center">8</td><td>Epic 总体负责人:<b>E05 MOOC + SPOC 学习链路</b><br>故事第一责任人:U10 U10: MOOC +  · U15 平台运营配置与国际化能力 · U18 U18:AI 应用体验与</td></tr>
+<tr><td><b>邱月</b></td><td class="center">6</td><td>Epic 总体负责人:<b>E02 教学过程(教学活动管理)</b><br>故事第一责任人:U25 混合部署交付 · U04 任务团子可用性升级</td></tr>
+<tr style="background:var(--gold-1)"><td><b>段婷婷</b></td><td class="center">3</td><td>故事第一责任人:U24 安全审查 · U23 保障平台稳定运行</td></tr>
+<tr><td><b>徐彤彤</b></td><td class="center">3</td><td>Epic 总体负责人:<b>E08 AI 基座(智能化升级 · 横切)</b><br>故事第一责任人:U19 能力训练Skill拓展</td></tr>
+</tbody></table></section>
+<footer>作者:婷婷 · AI 教学产品部 · 2026-07-02<br>小雅 V3.1.1 · 用户故事整合方案 · PM 工作分配 · 数据源 A01 表 (7) 版</footer>
+</body></html>
