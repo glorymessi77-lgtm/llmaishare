@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小雅 3.0 二期产研立项</title>
+<style>
+  :root{
+    --white:#FFFFFF; --bg:#F2F5F7; --card:#FFFFFF;
+    --ink:#12151A; --ink2:#4B535C; --ink3:#7B838C; --line:#E4E8EB;
+    --brand:#272C33; --brand-soft:#3D444D;
+    --blue:#0077FF; --blue-bg:#E6F6FF; --geek:#3658FF; --geek-bg:#F0F5FF;
+    --red:#F53B3B; --red-bg:#FFF2F0; --orange:#FC7819; --orange-bg:#FFF4E6;
+    --green:#158C68; --green-bg:#EBF7F1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",
+      "Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink); background:var(--bg); line-height:1.72; font-size:15px; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 24px 80px}
+  header{background:var(--brand); color:#fff; padding:52px 0 44px; margin-bottom:34px}
+  .header-inner{max-width:1080px; margin:0 auto; padding:0 24px}
+  .eyebrow{font-size:12.5px; letter-spacing:.28em; color:#9AA2AB; font-weight:600; text-transform:uppercase}
+  header h1{font-size:34px; font-weight:750; letter-spacing:-.01em; margin:12px 0 18px}
+  .lead-lines{display:flex; flex-direction:column; gap:10px; max-width:840px}
+  .lead-line{display:flex; gap:12px; align-items:baseline; font-size:14.5px; color:#D4D8DD; line-height:1.6}
+  .lead-tag{flex:none; font-weight:700; color:#fff; background:rgba(255,255,255,.12); border-radius:6px; padding:3px 11px; font-size:13px}
+  .fmt-note{margin-top:22px; font-size:13px; color:#9AA2AB; border-left:2px solid #4B535C; padding-left:14px; max-width:840px; line-height:1.6}
+  .rail{display:flex; align-items:center; gap:16px; margin:44px 0 22px}
+  .rail-num{flex:none; width:44px; height:44px; border-radius:11px; background:var(--brand); color:#fff; display:grid; place-items:center; font-size:19px; font-weight:750}
+  .rail h2{font-size:22px; font-weight:730; letter-spacing:-.01em}
+  .rail .sub{font-size:13px; color:var(--ink3); font-weight:500; margin-top:2px}
+  .rail-hint{margin:-8px 0 24px; font-size:13px; color:var(--ink3); background:var(--white); border:1px solid var(--line); border-radius:10px; padding:12px 16px; line-height:1.65}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px 24px; margin-bottom:16px; box-shadow:0 1px 2px rgba(18,21,26,.03)}
+  .card-head{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px}
+  .card-idx{flex:none; font-size:14px; font-weight:750; color:var(--ink3); width:26px; height:26px; border:1.5px solid var(--line); border-radius:8px; display:grid; place-items:center}
+  .card-title{font-size:17px; font-weight:720; letter-spacing:-.01em}
+  .badge{flex:none; font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:20px; letter-spacing:.02em}
+  .b-p0{background:var(--red-bg); color:var(--red)}
+  .b-p0o{background:var(--orange-bg); color:var(--orange)}
+  .b-p1{background:var(--blue-bg); color:var(--blue)}
+  .b-p2{background:var(--bg); color:var(--ink2)}
+  .b-hold{background:var(--orange-bg); color:var(--orange)}
+  .flow{display:flex; flex-direction:column; gap:11px}
+  .row{display:grid; grid-template-columns:88px 1fr; gap:14px; align-items:start}
+  .rk{flex:none; font-size:12.5px; font-weight:700; padding:3px 0 0}
+  .rv{font-size:14.5px; color:var(--ink2); line-height:1.68}
+  .rv b, .rv strong{color:var(--ink); font-weight:700}
+  .rk-tag{display:inline-block; padding:2px 9px; border-radius:6px; font-size:12px}
+  .now .rk-tag{background:#EDEFF1; color:var(--brand)}
+  .do .rk-tag{background:var(--blue-bg); color:var(--blue)}
+  .pain .rk-tag{background:var(--red-bg); color:var(--red)}
+  .val .rk-tag{background:var(--green-bg); color:var(--green)}
+  .overlap{margin-top:2px; font-size:13px; color:var(--ink3); background:var(--geek-bg); border-radius:8px; padding:9px 13px; line-height:1.6}
+  .overlap b{color:var(--geek)}
+  .converge{background:linear-gradient(180deg,#fff,#F7F9FB); border:1px solid var(--line); border-radius:14px; padding:24px 26px; margin-bottom:20px}
+  .converge .big{font-size:17px; font-weight:730; line-height:1.6; letter-spacing:-.01em}
+  .converge .big b{color:var(--blue)}
+  .converge p{font-size:14px; color:var(--ink2); margin-top:12px; line-height:1.7}
+  .converge .flowhint{margin-top:12px; font-size:13px; color:var(--ink3); border-top:1px dashed var(--line); padding-top:12px}
+  .prio{background:var(--brand); color:#fff; border-radius:14px; padding:20px 24px; margin-bottom:26px}
+  .prio .h{font-size:13px; letter-spacing:.06em; color:#9AA2AB; font-weight:700; margin-bottom:12px}
+  .prio ol{list-style:none; counter-reset:p; display:flex; flex-direction:column; gap:9px}
+  .prio li{counter-increment:p; display:flex; gap:12px; align-items:baseline; font-size:14.5px; color:#E4E8EB; line-height:1.55}
+  .prio li::before{content:counter(p); flex:none; width:22px; height:22px; border-radius:6px; background:rgba(255,255,255,.14); color:#fff; font-size:12px; font-weight:800; display:grid; place-items:center}
+  .prio li b{color:#8FC4FF}
+  .dir{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:24px 26px; margin-bottom:18px; box-shadow:0 1px 2px rgba(18,21,26,.03)}
+  .dir-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:6px}
+  .dir-tag{flex:none; font-size:12px; font-weight:800; color:#fff; background:var(--brand); border-radius:7px; padding:4px 11px; letter-spacing:.03em}
+  .dir-kind{flex:none; font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px}
+  .kind-base{background:var(--geek-bg); color:var(--geek)}
+  .kind-sol{background:var(--green-bg); color:var(--green)}
+  .dir-title{font-size:18px; font-weight:730}
+  .oneliner{background:var(--brand); color:#fff; border-radius:11px; padding:14px 18px; font-size:15px; line-height:1.62; margin:14px 0 16px}
+  .oneliner b{color:#8FC4FF; font-weight:700}
+  .sub-now{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:12px 0}
+  .sub-box{background:var(--bg); border-radius:10px; padding:13px 15px}
+  .sub-box .h{font-size:12.5px; font-weight:700; color:var(--ink); margin-bottom:5px; display:flex; align-items:center; gap:6px}
+  .sub-box .h::before{content:""; width:7px; height:7px; border-radius:2px; background:var(--brand)}
+  .sub-box.kb .h::before{background:var(--blue)}
+  .sub-box .t{font-size:13.5px; color:var(--ink2); line-height:1.62}
+  .sub-box b{color:var(--ink); font-weight:700}
+  .kbquote{margin-top:14px; background:#FAFBFC; border:1px dashed var(--line); border-radius:10px; padding:13px 16px; font-size:12.5px; color:var(--ink3); line-height:1.7}
+  .kbquote .qh{font-weight:700; color:var(--ink2)}
+  .kbcaps{margin-top:11px; padding-top:11px; border-top:1px dashed var(--line)}
+  .kbcaps .lbl{display:flex; align-items:center; gap:6px; font-size:12.5px; font-weight:700; color:var(--blue); margin-bottom:8px}
+  .kbcaps .lbl::before{content:""; width:7px; height:7px; border-radius:2px; background:var(--blue)}
+  .chip{display:inline-block; background:var(--blue-bg); color:var(--blue); border:1px solid #B7DEFF; border-radius:7px; padding:4px 11px; font-size:12.5px; font-weight:600; margin:0 6px 6px 0; line-height:1.45}
+  .rv .scene-lbl{font-weight:700; color:var(--ink)}
+  .cost{margin-top:12px; background:var(--orange-bg); border-radius:10px; padding:12px 15px; font-size:13px; color:#8A4B10; line-height:1.65}
+  .cost b{color:var(--orange)}
+  .future{margin-top:12px; font-size:12.5px; color:var(--ink3); border-top:1px dashed var(--line); padding-top:11px}
+  .future b{color:var(--ink2)}
+  .why{margin:0 0 14px; background:var(--geek-bg); border-left:3px solid var(--geek); border-radius:0 10px 10px 0; padding:12px 16px; font-size:13px; color:var(--ink2); line-height:1.72}
+  .why b{color:var(--geek)}
+  .clarify{margin-top:16px; background:var(--geek-bg); border-radius:11px; padding:15px 18px; font-size:13.5px; color:var(--ink2); line-height:1.7}
+  .clarify b{color:var(--geek)}
+  /* ---- 主线二总结 · 精致矩阵 ---- */
+  .tbl-title{font-size:14px; font-weight:700; color:var(--ink); margin:24px 0 4px; display:flex; align-items:center; gap:8px}
+  .tbl-title::before{content:""; width:4px; height:15px; border-radius:2px; background:var(--blue)}
+  .mtx-legend{display:flex; gap:16px; flex-wrap:wrap; margin:8px 2px 10px; font-size:12px; color:var(--ink3)}
+  .mtx-legend span{display:inline-flex; align-items:center; gap:6px}
+  .tblwrap{overflow-x:auto; border:1px solid var(--line); border-radius:14px; box-shadow:0 1px 3px rgba(18,21,26,.04)}
+  .mtx{width:100%; min-width:660px; border-collapse:separate; border-spacing:0; font-size:13px; background:#fff; border-radius:14px; overflow:hidden}
+  .mtx thead th{background:var(--brand); color:#fff; font-weight:600; padding:13px 12px; text-align:center; font-size:12.5px}
+  .mtx thead th:first-child{text-align:left; padding-left:18px}
+  .mtx thead th .dh{display:block; font-size:11px; color:#AEB4BB; font-weight:500; margin-top:2px}
+  .mtx td{padding:12px 12px; border-top:1px solid var(--line); text-align:center; vertical-align:middle}
+  .mtx td:first-child{text-align:left; padding-left:18px; font-weight:650; color:var(--ink); font-size:13px}
+  .mtx tbody tr:nth-child(even){background:#F7F9FB}
+  .mtx tbody tr:hover{background:#EEF3FA}
+  .dot{display:inline-block; width:15px; height:15px; border-radius:50%; vertical-align:-2px}
+  .dot-f{background:var(--brand)}
+  .dot-h{background:#fff; border:2px solid var(--ink3)}
+  .dot-half{background:linear-gradient(90deg,var(--brand) 0 50%,#fff 50% 100%); border:2px solid var(--ink3)}
+  .dash{color:#C7CDD3; font-weight:700}
+  .pill{display:inline-block; min-width:44px; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:700; line-height:1.3}
+  .pill-strong{background:var(--blue); color:#fff}
+  .pill-sup{background:var(--blue-bg); color:var(--blue); border:1px solid #B7DEFF}
+  .prb{display:inline-block; padding:2px 9px; border-radius:6px; font-size:11.5px; font-weight:800; color:#fff}
+  .prb.p0{background:var(--red)} .prb.p1{background:var(--blue)} .prb.p2{background:var(--ink3)} .prb.p3{background:#B4BAC1}
+  .basecell{text-align:left !important; font-weight:500 !important; color:var(--ink2) !important; font-size:12px}
+  .basecell .ic{font-weight:800; margin-right:3px}
+  .ic-mid{color:var(--orange)} .ic-gap{color:var(--red)}
+  .todo{margin-top:32px; background:#fff; border:1px solid var(--line); border-left:3px solid var(--orange); border-radius:10px; padding:16px 20px; font-size:13.5px; color:var(--ink2); line-height:1.85}
+  .todo .h{font-weight:700; color:var(--ink); margin-bottom:6px}
+  footer{margin-top:40px; padding-top:20px; border-top:1px solid var(--line); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:12.5px; color:var(--ink3)}
+  footer b{color:var(--ink2)}
+  @media (max-width:720px){ header h1{font-size:26px} .row{grid-template-columns:1fr; gap:2px} .sub-now{grid-template-columns:1fr} .rail h2{font-size:19px} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="eyebrow">iFLYTEK · 智慧教学平台</div>
+    <h1>小雅 3.0 二期产研立项</h1>
+    <div class="lead-lines">
+      <div class="lead-line"><span class="lead-tag">主线一 · 先补短板</span>
+        <span>围绕 3.0 已规划、830 前应上线而未完成的内容，按模块补齐；每项说清"现在做到什么程度、本期做什么、不做有什么影响"。</span></div>
+      <div class="lead-line"><span class="lead-tag">主线二 · 再定方向</span>
+        <span>战略收敛为四大方向：方向一是平台底座本身（超级智能体穿起全平台），方向二/三/四是解决方案，产品在基线产品上做好对方案的场景与竞争力支撑。</span></div>
+    </div>
+    <div class="fmt-note">统一叙事：现状（做到什么程度）→ 本期开发要点 → 解决痛点 → 用户价值；每个方向末尾点到"未来发力方向"，不展开。知识库能力在开发要点中重点体现。</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ 主线一 ============ -->
+  <div class="rail">
+    <div class="rail-num">一</div>
+    <div><h2>先补短板</h2><div class="sub">3.0 想做还未完成的 6 大模块（830 前收尾为目标）</div></div>
+  </div>
+  <div class="rail-hint">聚焦"已规划未上线 + 迁移未完成 + 客户共性"的补齐。凡能对下面四大解决方案形成竞争力的新特性，一律上移到主线二打造，本处只做平台自身短板补齐。</div>
+
+  <!-- ① 合规安全 -->
+  <div class="card">
+    <div class="card-head"><span class="card-idx">①</span><span class="card-title">合规安全</span><span class="badge b-p0">P0 · 致命 · 集团硬性</span></div>
+    <div class="flow">
+      <div class="row now"><div class="rk now"><span class="rk-tag">现状</span></div><div class="rv">集团已出台产品上架统一要求，当前内容安全审核、安全渗透、AI 标识等尚未按新规完成，<b>不达标即无法上架</b>。</div></div>
+      <div class="row do"><div class="rk do"><span class="rk-tag">开发要点</span></div><div class="rv">UGC/PGC 内容安全审核；人工安全渗透缺陷修复；AI 标识；满足集团上架统一要求。</div></div>
+      <div class="row pain"><div class="rk pain"><span class="rk-tag">解决痛点</span></div><div class="rv">这不是用户痛点，而是<b>平台无法合规上架</b>的硬性卡点。</div></div>
+      <div class="row val"><div class="rk val"><span class="rk-tag">用户价值</span></div><div class="rv">满足监管合规硬性要求，保障平台安全上线、用户内容与数据安全。</div></div>
+    </div>
+  </div>
+
+  <!-- ② 交付模式验证与本地化 -->
+  <div class="card">
+    <div class="card-head"><span class="card-idx">②</span><span class="card-title">交付模式验证与本地化部署</span><span class="badge b-p0o">P0 · 产线共性需求</span></div>
+    <div class="flow">
+      <div class="row now"><div class="rk now"><span class="rk-tag">现状</span></div><div class="rv">规模化交付所需的第三方教务系统对接、混合式本地化部署跑通验证，需产线推进 POC 验证（POC）。</div></div>
+      <div class="row do"><div class="rk do"><span class="rk-tag">开发要点</span></div><div class="rv">第三方教务系统对接、SSO / OAuth2.0 / 企业微信移动端免登录；混合式部署与本地化方案验证；小雅 2.0 及智课 2.0 数据迁移；多语言扩东盟语种（英语/泰语 / 越南语）。</div></div>
+      <div class="row pain"><div class="rk pain"><span class="rk-tag">解决痛点</span></div><div class="rv">不完成验证，未来面临规模化交付无法落地的问题。</div></div>
+      <div class="row val"><div class="rk val"><span class="rk-tag">用户价值</span></div><div class="rv">打通自有平台集成、数据本地化与合规能力，支撑平台规模化交付。</div></div>
+    </div>
+  </div>
+
+  <!-- ③ MOOC & SPOC -->
+  <div class="card">
+    <div class="card-head"><span class="card-idx">③</span><span class="card-title">MOOC &amp; SPOC 双场景统一（含数据特性补齐）</span><span class="badge b-p1">P1 · 核心补齐</span></div>
+    <div class="flow">
+      <div class="row now"><div class="rk now"><span class="rk-tag">现状</span></div><div class="rv">平台本就支持 MOOC / SPOC 两种课程类型。到 7月15日 已<b>基本实现功能层面一致性</b>，仍有部分资源类型、关键特性（如 SPOC 自适应练习）未对齐；MOOC 运行（学习数据统计、统一门户后台、分学期运行）、自定义图谱迁移、五类画像报告迁移等尚未完成。</div></div>
+      <div class="row do"><div class="rk do"><span class="rk-tag">开发要点</span></div><div class="rv"><b>围绕"教与学的流程统一、功能统一、数据统一"三个维度，从两个实际目的补齐：</b><br>① <b>关键特性两边对齐</b>：两种课程类型的资源类型互通复用、共享课程包作业/讨论/题目下沉、SPOC 自适应练习等特性对齐；<br>② <b>历史客户迁移不受损</b>：自定义图谱类型承接小雅 2.0 标签图谱、五类画像报告（教师/学生/课程/资源/院系）迁移、慕课运行数据统计与统一门户后台。</div></div>
+      <div class="row pain"><div class="rk pain"><span class="rk-tag">解决痛点</span></div><div class="rv">两种课程类型体验/资源不一致、历史客户迁移受损、教师重复建课、管理缺数据抓手。</div></div>
+      <div class="row val"><div class="rk val"><span class="rk-tag">用户价值</span></div><div class="rv">教师一次建课多场景复用、历史客户平滑迁移不丢数据、学生体验一致、管理有数据可用。</div></div>
+    </div>
+  </div>
+
+  <!-- ④ AI能力接入 -->
+  <div class="card">
+    <div class="card-head"><span class="card-idx">④</span><span class="card-title">AI 能力接入与智能化升级（平台自身体验补齐）</span><span class="badge b-p1">P1 · 体验补齐</span></div>
+    <div class="flow">
+      <div class="row now"><div class="rk now"><span class="rk-tag">现状</span></div><div class="rv">AI 工作台与 AI 助学多入口割裂（已评审重新划分）；部分原有产品的 AI 能力尚未复用（"AI 为我讲解"、视频截图生成课件等）；AI 问数待升级。（任务团子已归入方向二未来课堂·课前备课。）</div></div>
+      <div class="row do"><div class="rk do"><span class="rk-tag">开发要点</span></div><div class="rv">AI 工作台智能体分类优化、AI 助学入口合并与重新划分；复用原有产品 AI 能力；升级 AI 问数（对话式数据分析）；支撑 Skill 模块化配置。</div></div>
+      <div class="row pain"><div class="rk pain"><span class="rk-tag">解决痛点</span></div><div class="rv">AI 入口割裂、体验不一致、已有能力未复用——都是"平台自己的问题还没解决"这一类。</div></div>
+      <div class="row val"><div class="rk val"><span class="rk-tag">用户价值</span></div><div class="rv">AI 入口统一、体验一致，降低使用门槛。</div></div>
+    </div>
+    <div class="overlap"><b>边界：</b>更高阶、能随方案售卖的新特性——AI 建课（能力/问题图谱智能生成、资源智能打标签）、任务团子生成、附件批改等——一律上移到<b>方向二/三/四</b>打造，本处只做平台自身体验补齐。</div>
+  </div>
+
+  <!-- ⑤ 移动端 -->
+  <div class="card">
+    <div class="card-head"><span class="card-idx">⑤</span><span class="card-title">移动端</span><span class="badge b-p1">P1 · 正式上架</span></div>
+    <div class="flow">
+      <div class="row now"><div class="rk now"><span class="rk-tag">现状</span></div><div class="rv">安卓已上架应用商店；iOS 账号注销功能已完成、正在提交审核。目标是把小雅 2.0 移动端功能<b>迁移到 3.0</b>——因主体变更需以新主体重新上架。</div></div>
+      <div class="row do"><div class="rk do"><span class="rk-tag">开发要点</span></div><div class="rv">新主体重新上架与应用商店审核；研发适配（SPOC/慕课章节资源混排、自主注册与登录逻辑）；消息推送（依赖证书配置）；企业微信移动端免登唤起。</div></div>
+      <div class="row pain"><div class="rk pain"><span class="rk-tag">解决痛点</span></div><div class="rv">移动端功能未迁移齐、触达能力缺失。</div></div>
+      <div class="row val"><div class="rk val"><span class="rk-tag">用户价值</span></div><div class="rv">师生随时随地移动教学与学习，提升平台活跃与触达。</div></div>
+    </div>
+  </div>
+
+  <!-- ⑥ 教务与课程管理增强 -->
+  <div class="card">
+    <div class="card-head"><span class="card-idx">⑥</span><span class="card-title">教务与课程管理增强</span><span class="badge b-p1">P1 · 迁移完善</span></div>
+    <div class="flow">
+      <div class="row now"><div class="rk now"><span class="rk-tag">现状</span></div><div class="rv">多为<b>未迁移过来的功能完善，非新需求</b>：平台级跨校课程审核流程未做（当前仅本校）、教师自主开课转教务课程（承接 2.0）、课堂提问/定位签到（2.5 需求）、教师待办（承接 2.0 模块）、教师预警。</div></div>
+      <div class="row do"><div class="rk do"><span class="rk-tag">开发要点</span></div><div class="rv">跨校课程审核流程闭环（平台级）；教师自主开课转教务课程；课堂提问、定位签到、自定义标签管理；教师空间新增教师待办、教师预警。</div></div>
+      <div class="row pain"><div class="rk pain"><span class="rk-tag">解决痛点</span></div><div class="rv">教务管理不规范、功能未迁移齐、教师管理负担重。</div></div>
+      <div class="row val"><div class="rk val"><span class="rk-tag">用户价值</span></div><div class="rv">教务管理更规范高效、教学互动与考勤更便捷、减轻教师负担。</div></div>
+    </div>
+  </div>
+
+  <!-- ============ 主线二 ============ -->
+  <div class="rail">
+    <div class="rail-num">二</div>
+    <div><h2>再定方向</h2><div class="sub">四大方向：方向一为平台底座，方向二/三/四为解决方案</div></div>
+  </div>
+
+  <div class="converge">
+    <div class="big">战略收敛为四个方向：<b>智慧教学一体化平台（整体底座）</b> —— 支撑未来课堂、支撑未来学习中心、支撑学科大模型。</div>
+    <p><b>方向一不是解决方案，是平台本身</b>：把平台做好、用超级智能体把散落的场景与功能穿起来，是各方向的公共底座——凡能做到基线、各方向都能用的能力，都归方向一。<b>方向二/三/四是解决方案（产品）</b>：小雅在其中扮演核心角色，我们要想清楚每个方向做哪些场景与能力，让客户在讲到核心功能时"眼前一亮"、形成竞争力。方向即战略，定了不轻易调整；产品在产品力上为方案备好"粮草"。</p>
+    <div class="flowhint">每个方向写法：先说 <b style="color:var(--brand)">场景/智能体做什么</b>，再把 <b style="color:var(--blue)">知识库能力</b>在开发要点里重点体现（知识库贯穿四个方向）。</div>
+  </div>
+
+  <div class="prio">
+    <div class="h">本期（至 10 月）优先级共识</div>
+    <ol>
+      <li><b>知识库对各场景的支撑与打通</b>——本期核心，把每个场景用知识库支撑好、治理好。</li>
+      <li><b>超级智能体</b>——圈定有限范围：调度已有智能体开发平台能力 + 少量高频调度场景，先跑通。</li>
+      <li><b>多智能体课堂等前沿能力</b>——以解决方案 / 项目倒推，借鉴成熟架构（如清华），逐步推进、后置。</li>
+    </ol>
+  </div>
+
+  <!-- 方向1 -->
+  <div class="dir">
+    <div class="dir-head"><span class="dir-tag">方向 1</span><span class="dir-kind kind-base">平台底座</span><span class="dir-title">智慧教学一体化平台 · 超级智能体</span></div>
+    <div class="oneliner">为<b>教师、学生、管理者</b>提供一个"<b>超级智能体</b>"——以自然语言为入口，<b>理解用户意图</b>后一句话调度全平台（如 AI 助学 / AI 问数）、一句话生成智能体，把散落的平台拧成一个系统。</div>
+    <div class="sub-now">
+      <div class="sub-box"><div class="h">场景功能现状</div><div class="t">已有一个基础入口（超级智能体浮窗），但平台散落的智能体、星火自研智能体<b>尚未归集</b>，仍需单入口逐个找。</div></div>
+      <div class="sub-box kb"><div class="h">知识库现状</div><div class="t">已具备多类型知识库与统一/多库检索能力，但<b>跨产品、全场景的一致调用尚未打通</b>。</div></div>
+    </div>
+    <div class="flow">
+      <div class="row do"><div class="rk do"><span class="rk-tag">开发要点</span></div><div class="rv"><span style="display:inline-block;background:var(--blue-bg);color:var(--blue);font-size:12px;font-weight:700;padding:2px 9px;border-radius:6px;margin-bottom:8px">本期圈定有限范围先跑通</span><br>
+        <span class="scene-lbl">① 调度（本方向核心）：</span>一句话调度平台散落应用与页面（解决功能藏在三级路径）；调度小雅平台已有的智能体（PPT 生成、出题、批改等）——把成熟能力<b>包装成 API → 写成 Skill 注册 → 供检索调度</b>；统一对话式智能体（助教/助学）入口，按场景调度不同智能体；对话式问数。<br>
+        <span class="scene-lbl">② 生成智能体/工作流（理解意图 → 调度星辰智能体开发平台）：</span>由超级智能体<b>理解用户意图、下达指令，调度已成熟的星辰智能体开发平台的现成接口</b>——把对话式智能体（填角色/系统提示词）与 workflow 工作流智能体（拖拉拽编排）等已有能力<b>拼装</b>起来，实现"一句话生成智能体 / 技能 / 工作流"；其中<b>"一句话生成 workflow"星辰已有能力、我们尚待接入</b>（有可借鉴的可达路径）。生成物可发布到智能体广场给学生使用。<span style="color:var(--ink3)">（面向学科项目的一句话生成应用展开见方向 4；代码级应用生成暂不可行、仍在调研。）</span><br>
+        <span class="scene-lbl">③ 接口与差异化（与竞品不同）：</span>以 <b>MCP</b> 方式把小雅教学数据接口（学情、题库等操作）开放给自定义智能体，使其嵌入真实教学场景——需把平台能力<b>封装为 MCP 服务</b>（部分接口尚需新开发）；同时支持被外部平台以 MCP 调用。<br>
+        <span class="scene-lbl">④ 三级知识库共享与跨产品互通：</span>支持<b>个人 / 团队 / 院校三级知识库共享、资源互通</b>，小雅 / 学科大模型 / XClaw <b>跨产品互通引用</b>，解决用户权限与使用路径上的卡点（北京物资学院需求）；支持教师将个人知识库<b>发布为共享知识库并建立审核机制</b>。
+        <div class="kbcaps"><span class="lbl">知识库能力（重点）</span>
+          <span class="chip">权限与知识库组织（多类型库）</span>
+          <span class="chip">统一检索（多库/跨库）</span>
+          <span class="chip">数据回流与评测（平台级度量）</span>
+        </div>
+      </div></div>
+      <div class="row pain"><div class="rk pain"><span class="rk-tag">解决痛点</span></div><div class="rv">功能藏在三级路径、逐层找；自研能力散落各平台没盘活；平台"散"而不"通"。</div></div>
+      <div class="row val"><div class="rk val"><span class="rk-tag">用户价值</span></div><div class="rv">一个超级智能体把平台拧成系统——一句话调度全平台 + 生成智能体/应用 + 数据可用，支撑规模化交付与差异化竞争力。</div></div>
+    </div>
+    <div class="cost"><b>投入与代价（需拉通评估）：</b>"生成应用"依赖串联多个平台工具（智能体开发平台/星辰等），代码级生成暂不可行、仍在调研；连接器（MCP）需把平台封装成服务、部分接口尚需新开发，工作量大。对标参照——对外看支付宝/微信（传统入口 + 超级智能体入口并行），对内看星光教师超级助手（重兵投入、当前仅纳管工作流智能体 + 生成 H5 交互）。<b>本期圈定有限范围、按方案/项目推进，先讲清实现逻辑、成本与优先级。</b></div>
+    <div class="future"><b>未来发力：</b>逐步扩展调度场景、多智能体协同、AICoding 级生成。</div>
+    <div class="kbquote"><span class="qh">知识库要建什么：</span>课程知识库（教学班群组）并线〔P0，T610 在建可并入〕· 数据回流+评测〔P0〕· 统一库组织与调用口径 · 三级知识库共享与跨产品互通引用（含发布审核机制）。先把课程知识库统一并线 + 数据回流评测做成平台级底座。</div>
+  </div>
+
+  <!-- 方向2 -->
+  <div class="dir">
+    <div class="dir-head"><span class="dir-tag">方向 2</span><span class="dir-kind kind-sol">解决方案</span><span class="dir-title">未来课堂</span></div>
+    <div class="oneliner">上好一堂课的完整闭环——<b>课前备课 · 课中上课 · 课后批改 · 教学评价</b>，对齐产线"教学评管"方案，做成可对外宣、可交付。</div>
+    <div class="why"><b>为何落此方向：</b>未来课堂是"师-生-智三元互动"的育人主阵地，需重制课前-课中-课后完整路径。其中<b>作业批改是高校应用最频繁的 AI 刚需（应用次数超过其它智能应用总和），批改-订正-重交构成课后闭环</b>，故本期优先落"备课+批改"，课中互动后置。<br><b>为何建此知识库：</b>三元课堂要"实时核验、批改有依据"，不能凭空说话，必须挂<b>课程知识库溯源</b>——所以要一键建库 + 受控生成封装；不建则核验无凭、批改通用化、<b>人机协同落不了地</b>。</div>
+    <div class="sub-now">
+      <div class="sub-box"><div class="h">场景功能现状</div><div class="t">备课（生成课件 / AI 互动课堂已有）、批改（部分已有）；<b>课中三种教学模式已支持</b>——讲授+互动（选人/随堂练习/AI 助教即时评价）、项目式教学 PBL、教学活动设计闭环（导入-前测-协作-后测-总结）；但<b>课堂实录与切片沉淀尚未做</b>；教学评价（考试/督考巡课/课堂教学评价融合方案推进中）。</div></div>
+      <div class="sub-box kb"><div class="h">知识库现状</div><div class="t">批改与核验需挂课程库溯源，但<b>课程库多为空或未关联</b>；基座检索、受控生成、溯源、兜底已具备，卡在"一键建库/自动关联"。</div></div>
+    </div>
+    <div class="flow">
+      <div class="row do"><div class="rk do"><span class="rk-tag">开发要点</span></div><div class="rv"><span style="display:inline-block;background:var(--blue-bg);color:var(--blue);font-size:12px;font-weight:700;padding:2px 9px;border-radius:6px;margin-bottom:8px">本期先做备课/批改，课中互动次之</span><br>
+        <span class="scene-lbl">课前 · AI 建课备课：</span>依据知识库章节/课程目录内容做自动化备课，降低备授课工作量；老师手头资料<b>自动打标签</b>、<b>能力/问题图谱智能生成</b>；任务团子生成配套资源；在章节下直接新增 AI 互动课堂、生成课件（凡需 PPT 走 AI 互动课堂）。<br>
+        <span class="scene-lbl">课中 · 教学过程实录与资源沉淀：</span>授课过程声音 / 文字 / 课件 / 板书<b>无感实录</b> → 课堂实录 AI 标签化、关键帧绑定知识点；课堂实录 <b>AI 智能切片</b>（校正 / 知识点标注 / 审核 / 脉络梳理）→ 生成图文课堂纪要 + 思维导图、<b>1 堂课沉淀 N 个资源</b>，支持切片定位检索，持续沉淀优质课堂资源反哺知识库。<br>
+        <span class="scene-lbl">课后 · 作业自动批改：</span>支持图片、Word、文档<b>附件的自动批改（默认自动、复用现有批改引擎）</b>，依据课程知识库难度做受控批改与判分依据。<br>
+        <span class="scene-lbl">教学评价：</span>对齐产线"教学评管"方案（引用为依据），融合考试、督考巡课（复用资源中心直录播 + 巡课驾驶舱接入管理空间、督导流程沿用小雅现有）、课堂教学评价；与 VI 课堂行为分析融合。
+        <div class="kbcaps"><span class="lbl">知识库能力（重点）</span>
+          <span class="chip">检索召回（课程库检索）</span>
+          <span class="chip">受控生成 + 引用溯源</span>
+          <span class="chip">拒答兜底（课堂核验有据）</span>
+          <span class="chip">受控生成封装（批改判分依据）</span>
+        </div>
+      </div></div>
+      <div class="row pain"><div class="rk pain"><span class="rk-tag">解决痛点</span></div><div class="rv">课前中后割裂；批改通用化、不支持附件、无判分依据；课中缺特色；评价未闭环。</div></div>
+      <div class="row val"><div class="rk val"><span class="rk-tag">用户价值</span></div><div class="rv">课前中后 + 评价形成完整闭环、有据可依，构成差异化竞争力。</div></div>
+    </div>
+    <div class="future"><b>未来发力：</b>课堂辩论、角色扮演、圆桌讨论——智能体参与师生三元课堂（第一步可不挂知识库）；多智能体课堂为进阶：以方案倒推、借鉴成熟架构（如清华），或软硬结合（大屏分屏选多智能体、讨论记录回流学习空间），后置推进。</div>
+    <div class="kbquote"><span class="qh">知识库要建什么：</span>一键建库/自动治理〔P0〕· 课堂核验接入课程库〔P1〕· 课堂实录/微课资源库沉淀〔P1〕· 受控生成封装（批改依据）〔P2〕。</div>
+  </div>
+
+  <!-- 方向3 -->
+  <div class="dir">
+    <div class="dir-head"><span class="dir-tag">方向 3</span><span class="dir-kind kind-sol">解决方案</span><span class="dir-title">未来学习中心</span></div>
+    <div class="oneliner">让学生自己能学起来——<b>自主学习问答、解题辅助、按知识点学习和精准定位</b>。</div>
+    <div class="sub-now">
+      <div class="sub-box"><div class="h">场景功能现状</div><div class="t">学生自主学习相关场景，产品侧多为 prompt 工程，解题/讲解与本课程关联弱。</div></div>
+      <div class="sub-box kb"><div class="h">知识库现状</div><div class="t"><b>目前仅 AI 助学接了 1 个知识库问答，其余学习场景基本未接库</b>；基座双层检索、溯源已具备，缺图谱节点推荐、视频时间戳定位。</div></div>
+    </div>
+    <div class="flow">
+      <div class="row do"><div class="rk do"><span class="rk-tag">开发要点</span></div><div class="rv"><span style="display:inline-block;background:var(--green-bg);color:var(--green);font-size:12px;font-weight:700;padding:2px 9px;border-radius:6px;margin-bottom:8px">本期核心：把每个学习场景用知识库支撑好</span><br>
+        <span class="scene-lbl">场景：</span>自主学习问答（可跳讲解片段）、答题辅助（解题挂教材片段并溯源）、知识点学习（图谱节点推荐）、知识点精准定位（跳视频片段）。每个场景以知识库检索+溯源为底，逐个接入、逐个支撑好。
+        <div class="kbcaps"><span class="lbl">知识库能力（重点）</span>
+          <span class="chip">检索召回（个人库+课程库双层）</span>
+          <span class="chip">受控生成（AI 生成学习视频/内容）</span>
+          <span class="chip">引用溯源（附来源可跳转）</span>
+          <span class="chip">图谱节点级推荐</span>
+          <span class="chip">多模态视频片段级定位</span>
+        </div>
+      </div></div>
+      <div class="row pain"><div class="rk pain"><span class="rk-tag">解决痛点</span></div><div class="rv">答无依据/超纲/幻觉、视频定位不准、无法按知识点个性化推荐。</div></div>
+      <div class="row val"><div class="rk val"><span class="rk-tag">用户价值</span></div><div class="rv">学生"答有依据、能跳讲解片段、按知识点推荐"，真正学得起来。</div></div>
+    </div>
+    <div class="future"><b>未来发力：</b>专业全景中心闭环、个性化学习路径。</div>
+    <div class="kbquote"><span class="qh">知识库要建什么：</span>一键建库/自动治理〔P0〕· 图谱节点级推荐〔P1〕· 学生问答三合一接入〔P1〕· 视频时间戳定位〔P2〕。</div>
+  </div>
+
+  <!-- 方向4 -->
+  <div class="dir">
+    <div class="dir-head"><span class="dir-tag">方向 4</span><span class="dir-kind kind-sol">解决方案</span><span class="dir-title">学科大模型</span></div>
+    <div class="oneliner">让<b>学院的领导和老师，把自己的知识库建好、管好、用好</b>——基于学院既有数据，越用越准；并支持一句话生成智能体/应用。</div>
+    <div class="sub-now">
+      <div class="sub-box"><div class="h">场景功能现状</div><div class="t">具体到各学科的知识库目前基本未建、内容管理与优化能力弱；一句话生成智能体依托智能体开发平台。</div></div>
+      <div class="sub-box kb"><div class="h">知识库现状</div><div class="t">知识库数据解析、检索、召回、溯源能力已具备；但<b>缺少数据回流、RAG 评测闭环、一键治理</b>，缺少能直接让老师、学生、管理者用起来的<b>治理功能</b>。</div></div>
+    </div>
+    <div class="flow">
+      <div class="row do"><div class="rk do"><span class="rk-tag">开发要点</span></div><div class="rv">
+        <span class="scene-lbl">自动化建库（打通课程资源入库处理流程）：</span>教师扔资源进来，系统<b>自动判别资源类型</b>，可公开资源<b>自动解析建库</b>、按敏感度自动推荐建库 → 沉淀课程级知识库（解决"课程资源与知识库资源处理独立""试题等敏感资源不便入库"的问题）。<br>
+        <span class="scene-lbl">场景治理（一键治理）：</span>教师用自然语言提问题（"搜不到题"/"答非所问"/"说的不靠谱"）→ 系统<b>自动匹配治理策略 → 一键治理 → 教师测试采信 → 沉淀治理经验技能</b>。<br>
+        <span class="scene-lbl">数据回流：</span>教师采信后的优质问答对 → <b>回流知识库 → 知识库越用越准</b>。<br>
+        <span class="scene-lbl">一句话生成应用：</span>复用方向 1 超级智能体的<b>工作流编排/对话式智能体接入能力</b>——理解意图 → 调度成熟的智能体开发平台，实现一句话创建智能体/应用（几乎所有学科大模型项目都需要建智能体开发平台）。<br>
+        <span class="scene-lbl">组合：</span>科研助手（组合方案、驻研问答场景）；专业方向可随院级方案纳入。<br>
+        <span class="scene-lbl">基础版：</span>模型 + 学校已有知识库数据，解决基础专业性问题（低成本落地版本）。
+        <div class="kbcaps"><span class="lbl">知识库能力（重点）</span>
+          <span class="chip">知识图谱 · 能力图谱（OBE）</span>
+          <span class="chip">检索 + 强反幻觉 + 精确溯源</span>
+          <span class="chip">数据回流与评测（面向学科调优）</span>
+        </div>
+      </div></div>
+      <div class="row pain"><div class="rk pain"><span class="rk-tag">解决痛点</span></div><div class="rv">学科库为空、答不准、无法按学科持续迭代；收紧到"学院领导及教师可管可用"，避免"那么多学科怎么支撑得过来"的挑战。</div></div>
+      <div class="row val"><div class="rk val"><span class="rk-tag">用户价值</span></div><div class="rv">学院教师自主把学科知识库建起来、用起来、越用越准；基础版低成本落地。</div></div>
+    </div>
+    <div class="future"><b>未来发力：</b>更多学科纵深、制度库/科研文献库沉淀。</div>
+    <div class="kbquote"><span class="qh">知识库要建什么：</span>一键治理与自动化建库编排〔P0〕· 数据回流 + RAG 评测〔P0〕· 图谱扩展：能力图谱产品化〔P1〕· 科研文献库/制度库沉淀〔P3〕。</div>
+  </div>
+
+  <!-- ===== 主线二总结 ===== -->
+  <div class="rail" style="margin-top:38px">
+    <div class="rail-num" style="background:var(--blue)">▦</div>
+    <div><h2>主线二总结</h2><div class="sub">亮点场景 × 四大方向 · 落位与基座实绩</div></div>
+  </div>
+
+  <div class="tbl-title">智能体（场景）落位</div>
+  <div class="mtx-legend"><span><span class="dot dot-f"></span> 主打</span><span><span class="dot dot-h"></span> 参与</span><span><span class="dash">—</span> 不涉及</span></div>
+  <div class="tblwrap">
+    <table class="mtx">
+      <thead><tr><th>亮点场景</th><th>方向1<span class="dh">一体化平台</span></th><th>方向2<span class="dh">未来课堂</span></th><th>方向3<span class="dh">未来学习中心</span></th><th>方向4<span class="dh">学科大模型</span></th></tr></thead>
+      <tbody>
+        <tr><td>超级智能体（调度 / 生成）</td><td><span class="dot dot-f"></span></td><td><span class="dot dot-h"></span></td><td><span class="dot dot-h"></span></td><td><span class="dot dot-h"></span></td></tr>
+        <tr><td>AI 备课 · 建课（课前）</td><td><span class="dash">—</span></td><td><span class="dot dot-f"></span></td><td><span class="dot dot-h"></span></td><td><span class="dot dot-h"></span></td></tr>
+        <tr><td>智能上课（辩论 / 角色扮演 / 圆桌）</td><td><span class="dash">—</span></td><td><span class="dot dot-f"></span></td><td><span class="dash">—</span></td><td><span class="dash">—</span></td></tr>
+        <tr><td>作业自动批改（附件）</td><td><span class="dash">—</span></td><td><span class="dot dot-f"></span></td><td><span class="dash">—</span></td><td><span class="dot dot-h"></span></td></tr>
+        <tr><td>教学评价（考试 / 督考巡课 / 课堂评价）</td><td><span class="dash">—</span></td><td><span class="dot dot-f"></span></td><td><span class="dash">—</span></td><td><span class="dash">—</span></td></tr>
+        <tr><td>学生自主学习</td><td><span class="dot dot-h"></span></td><td><span class="dash">—</span></td><td><span class="dot dot-f"></span></td><td><span class="dash">—</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tbl-title">知识库能力落位（＝各方向"粮草"，含基座实绩）</div>
+  <div class="mtx-legend"><span><span class="pill pill-strong">强</span> 重点支撑</span><span><span class="pill pill-sup">支撑</span> 一般支撑</span><span><span class="dot dot-half"></span> 部分</span><span><span class="dash">—</span> 不涉及</span></div>
+  <div class="tblwrap">
+    <table class="mtx">
+      <thead><tr><th>AI / 知识库能力</th><th>优先级</th><th style="text-align:left">基座现状（实绩）</th><th>方向1</th><th>方向2</th><th>方向3</th><th>方向4</th></tr></thead>
+      <tbody>
+        <tr><td>① 资源自动治理 / 一键建库</td><td><span class="prb p0">P0</span></td><td class="basecell"><span class="ic ic-mid">◑</span>已能建块，卡在自动关联</td><td><span class="pill pill-sup">支撑</span></td><td><span class="pill pill-strong">强</span></td><td><span class="pill pill-strong">强</span></td><td><span class="pill pill-sup">支撑</span></td></tr>
+        <tr><td>② 数据回流 + RAG 评测闭环</td><td><span class="prb p0">P0</span></td><td class="basecell"><span class="ic ic-gap">○</span>缺口（有 vali 方案可承接）</td><td><span class="pill pill-strong">强</span></td><td><span class="pill pill-sup">支撑</span></td><td><span class="pill pill-sup">支撑</span></td><td><span class="pill pill-strong">强</span></td></tr>
+        <tr><td>③ 知识图谱扩展（能力 / 问题 / 跨图谱 / 推荐）</td><td><span class="prb p1">P1</span></td><td class="basecell"><span class="ic ic-mid">◑</span>引擎+OBE Schema 已具备，缺产品化入口</td><td><span class="dot dot-half"></span></td><td><span class="pill pill-sup">支撑</span></td><td><span class="pill pill-strong">强</span></td><td><span class="pill pill-strong">强</span></td></tr>
+        <tr><td>④ 视频时间戳级片段定位</td><td><span class="prb p2">P2</span></td><td class="basecell"><span class="ic ic-gap">○</span>有 ASR，缺时间戳切片</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="pill pill-strong">强</span></td><td><span class="dash">—</span></td></tr>
+        <tr><td>⑤ 受控生成封装（出题 / 批改 / 任务）</td><td><span class="prb p2">P2</span></td><td class="basecell"><span class="ic ic-mid">◑</span>具备检索+生成，缺应用层封装</td><td><span class="dash">—</span></td><td><span class="pill pill-strong">强</span></td><td><span class="pill pill-strong">强</span></td><td><span class="dot dot-half"></span></td></tr>
+        <tr><td>⑥ 科研库 / 制度库 资源沉淀</td><td><span class="prb p3">P3</span></td><td class="basecell"><span class="ic ic-gap">○</span>待建库（能力已就绪）</td><td><span class="pill pill-sup">支撑</span></td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="pill pill-strong">强</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="kbquote" style="margin-top:12px"><span class="qh">实绩澄清：</span>知识库主干"检索—图谱—生成—溯源—兜底"已建成，真正缺口集中在 4 处——①资源自动治理/一键建库、②数据回流+RAG 评测、③图谱扩展（能力/问题图谱产品化入口）、④视频时间戳定位；多数"痛点"是接入/配置问题而非从零建能力。</div>
+
+  <div class="clarify"><b>竞品对标（来源补充）：</b>评审关注"相对竞品我们要做什么"。部分重点建设项（如 AI 建课、附件自动批改、双场景关键特性等）为对标竞品（超星/智慧树）必须补齐或形成领先的能力，将在"需求来源"中标注竞品对标依据。</div>
+
+  <div class="todo">
+    <div class="h">待补 / 待内部确认（评审前）</div>
+    ① <b>专业全景中心归属</b>：市场有明确需求（校级教务处、华师、中科大），偏教学、可组合未来学习中心或学科大模型、亦可独立成方案（含岗位/本科定位/专业认证闭环）——单列成方向 / 归未来学习中心 / 归学科大模型，会后内部再定；<br>
+    ② <b>超级智能体实现代价与内外部对齐</b>：拉通星光教师超级助手参照 + 研发架构评审，讲清实现逻辑/成本/优先级；<br>
+    ③ <b>各场景知识库能力点</b>逐条校准、补充 XClaw 侧封装 API / 调度智能体开发平台等开发要点；<br>
+    ④ <b>MOOC-SPOC 迁移核心特性</b>由相关 PM 汇总（对齐核心特性做无损迁移）；<br>
+    ⑤ 各方向<b>一期/二期分期</b>与"未来发力"一句话补充；对齐产线"教学评管"方案后细化方向二评价部分。
+  </div>
+
+  <footer>
+    <span>小雅 3.0 二期产研立项 · 面向决策评审（基于 0714 产品组讨论结论）</span>
+    <span>V10 · 2026-07-14</span>
+  </footer>
+
+</div>
+</body>
+</html>
