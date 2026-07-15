@@ -254,8 +254,8 @@
     <div class="flow">
       <div class="row do"><div class="rk do"><span class="rk-tag">开发要点</span></div><div class="rv"><span style="display:inline-block;background:var(--blue-bg);color:var(--blue);font-size:12px;font-weight:700;padding:2px 9px;border-radius:6px;margin-bottom:8px">本期圈定有限范围先跑通</span><br>
         <span class="scene-lbl">① 调度（本方向核心）：</span>一句话调度平台散落应用与页面（解决功能藏在三级路径）；调度小雅平台已有的智能体（PPT 生成、出题、批改等）——把成熟能力<b>包装成 API → 写成 Skill 注册 → 供检索调度</b>；统一对话式智能体（助教/助学）入口，按场景调度不同智能体；对话式问数。<br>
-        <span class="scene-lbl">② 生成智能体/工作流（理解意图 → 调度星辰智能体开发平台）：</span>由超级智能体<b>理解用户意图、下达指令，调度已成熟的星辰智能体开发平台的现成接口</b>——把对话式智能体（填角色/系统提示词）与 workflow 工作流智能体（拖拉拽编排）等已有能力<b>拼装</b>起来，实现"一句话生成智能体 / 技能 / 工作流"；其中<b>"一句话生成 workflow"星辰已有能力、我们尚待接入</b>（有可借鉴的可达路径）。生成物可发布到智能体广场给学生使用。<span style="color:var(--ink3)">（面向学科项目的一句话生成应用展开见方向 4；代码级应用生成暂不可行、仍在调研。）</span><br>
-        <span class="scene-lbl">③ 接口与差异化（与竞品不同）：</span>以 <b>MCP</b> 方式把小雅教学数据接口（学情、题库等操作）开放给自定义智能体，使其嵌入真实教学场景——需把平台能力<b>封装为 MCP 服务</b>（部分接口尚需新开发）；同时支持被外部平台以 MCP 调用。<br>
+        <span class="scene-lbl">② 生成智能体/工作流（接入星辰 Agent 一句话创编）：</span>由超级智能体<b>理解用户意图、下达指令</b>，接入<b>星辰 Agent 平台的"一句话创编 workflow 型智能体"能力</b>（拼装平台已有的对话式 / workflow 智能体接口），实现一句话生成智能体 / 工作流；<b>本期不做代码级的智能体生成</b>。生成物可发布到智能体广场给学生使用。<span style="color:var(--ink3)">（面向学科项目的一句话生成应用展开见方向 4。）</span><br>
+        <span class="scene-lbl">③ 接口与差异化（与竞品不同）：</span>以 <b>MCP</b> 方式把小雅教学数据接口开放给自定义智能体，使其嵌入真实教学场景——把平台能力封装为 MCP 服务工作量大，故<b>本期先做少量学情接口的 MCP 试点</b>验证可行性；全量接口封装、被外部平台调用等移未来逐步推进。<br>
         <span class="scene-lbl">④ 三级知识库共享与跨产品互通：</span>支持<b>个人 / 团队 / 院校三级知识库共享、资源互通</b>，小雅 / 学科大模型 / XClaw <b>跨产品互通引用</b>，解决用户权限与使用路径上的卡点（北京物资学院需求）；支持教师将个人知识库<b>发布为共享知识库并建立审核机制</b>。
         <div class="kbcaps"><span class="lbl">知识库能力（重点）</span>
           <span class="chip">权限与知识库组织（多类型库）</span>
@@ -266,8 +266,8 @@
       <div class="row pain"><div class="rk pain"><span class="rk-tag">解决痛点</span></div><div class="rv">功能藏在三级路径、逐层找；自研能力散落各平台没盘活；平台"散"而不"通"。</div></div>
       <div class="row val"><div class="rk val"><span class="rk-tag">用户价值</span></div><div class="rv">一个超级智能体把平台拧成系统——一句话调度全平台 + 生成智能体/应用 + 数据可用，支撑规模化交付与差异化竞争力。</div></div>
     </div>
-    <div class="cost"><b>投入与代价（需拉通评估）：</b>"生成应用"依赖串联多个平台工具（智能体开发平台/星辰等），代码级生成暂不可行、仍在调研；连接器（MCP）需把平台封装成服务、部分接口尚需新开发，工作量大。对标参照——对外看支付宝/微信（传统入口 + 超级智能体入口并行），对内看星光教师超级助手（重兵投入、当前仅纳管工作流智能体 + 生成 H5 交互）。<b>本期圈定有限范围、按方案/项目推进，先讲清实现逻辑、成本与优先级。</b></div>
-    <div class="future"><b>未来发力：</b>逐步扩展调度场景、多智能体协同、AICoding 级生成。</div>
+    <div class="cost"><b>投入与代价（需拉通评估）：</b>本期"生成"收敛为<b>接入星辰 Agent 的一句话创编 workflow 型智能体（不做代码级生成）</b>；MCP 收敛为<b>少量学情接口试点</b>（全量封装工作量大、移未来）。对标参照——对外看支付宝/微信（传统入口 + 超级智能体入口并行），对内看星光教师超级助手（重兵投入、当前仅纳管工作流智能体 + 生成 H5 交互）。<b>本期圈定有限范围、按方案/项目推进，先讲清实现逻辑、成本与优先级。</b></div>
+    <div class="future"><b>未来发力：</b>代码级智能体生成；MCP 全量接口封装与外部平台调用；逐步扩展调度场景、多智能体协同、AICoding 级生成。</div>
     <div class="kbquote"><span class="qh">知识库要建什么：</span>课程知识库（教学班群组）并线〔P0，T610 在建可并入〕· 数据回流+评测〔P0〕· 统一库组织与调用口径 · 三级知识库共享与跨产品互通引用（含发布审核机制）。先把课程知识库统一并线 + 数据回流评测做成平台级底座。</div>
   </div>
 
@@ -275,15 +275,15 @@
   <div class="dir">
     <div class="dir-head"><span class="dir-tag">方向 2</span><span class="dir-kind kind-sol">解决方案</span><span class="dir-title">未来课堂</span></div>
     <div class="oneliner">上好一堂课的完整闭环——<b>课前备课 · 课中上课 · 课后批改 · 教学评价</b>，对齐产线"教学评管"方案，做成可对外宣、可交付。</div>
-    <div class="why"><b>为何落此方向：</b>未来课堂是"师-生-智三元互动"的育人主阵地，需重制课前-课中-课后完整路径。其中<b>作业批改是高校应用最频繁的 AI 刚需（应用次数超过其它智能应用总和），批改-订正-重交构成课后闭环</b>，故本期优先落"备课+批改"，课中互动后置。<br><b>为何建此知识库：</b>三元课堂要"实时核验、批改有依据"，不能凭空说话，必须挂<b>课程知识库溯源</b>——所以要一键建库 + 受控生成封装；不建则核验无凭、批改通用化、<b>人机协同落不了地</b>。</div>
+    <div class="why"><b>为何落此方向：</b>未来课堂是"师-生-智三元互动"的育人主阵地，需重制课前-课中-课后完整路径。其中<b>作业批改是高校应用最频繁的 AI 刚需（应用次数超过其它智能应用总和），批改-订正-重交构成课后闭环</b>，故本期优先落"备课+批改"这两个成熟刚需；课中多智能体课堂以<b>开源框架小步试点</b>，前沿能力不铺大摊子。<br><b>为何建此知识库：</b>三元课堂要"实时核验、批改有依据"，不能凭空说话，必须挂<b>课程知识库溯源</b>——所以要一键建库 + 受控生成封装；不建则核验无凭、批改通用化、<b>人机协同落不了地</b>。</div>
     <div class="sub-now">
-      <div class="sub-box"><div class="h">场景功能现状</div><div class="t">备课（生成课件 / AI 互动课堂已有）、批改（部分已有）；<b>课中三种教学模式已支持</b>——讲授+互动（选人/随堂练习/AI 助教即时评价）、项目式教学 PBL、教学活动设计闭环（导入-前测-协作-后测-总结）；但<b>课堂实录与切片沉淀尚未做</b>；教学评价（考试/督考巡课/课堂教学评价融合方案推进中）。</div></div>
+      <div class="sub-box"><div class="h">场景功能现状</div><div class="t">备课（生成课件 / AI 互动课堂已有）、批改（部分已有）；<b>课中三种教学模式已支持</b>——讲授+互动（选人/随堂练习/AI 助教即时评价）、项目式教学 PBL、教学活动设计闭环（导入-前测-协作-后测-总结）；但<b>课堂辩论/角色扮演/圆桌等多智能体课堂尚无自建基础，此前仅对接过清华的多智能体课堂，开源智能体框架待调研试点</b>；教学评价（考试/督考巡课/课堂教学评价融合方案推进中）。</div></div>
       <div class="sub-box kb"><div class="h">知识库现状</div><div class="t">批改与核验需挂课程库溯源，但<b>课程库多为空或未关联</b>；基座检索、受控生成、溯源、兜底已具备，卡在"一键建库/自动关联"。</div></div>
     </div>
     <div class="flow">
       <div class="row do"><div class="rk do"><span class="rk-tag">开发要点</span></div><div class="rv"><span style="display:inline-block;background:var(--blue-bg);color:var(--blue);font-size:12px;font-weight:700;padding:2px 9px;border-radius:6px;margin-bottom:8px">本期先做备课/批改，课中互动次之</span><br>
-        <span class="scene-lbl">课前 · AI 建课备课：</span>依据知识库章节/课程目录内容做自动化备课，降低备授课工作量；老师手头资料<b>自动打标签</b>、<b>能力/问题图谱智能生成</b>；任务团子生成配套资源；在章节下直接新增 AI 互动课堂、生成课件（凡需 PPT 走 AI 互动课堂）。<br>
-        <span class="scene-lbl">课中 · 教学过程实录与资源沉淀：</span>授课过程声音 / 文字 / 课件 / 板书<b>无感实录</b> → 课堂实录 AI 标签化、关键帧绑定知识点；课堂实录 <b>AI 智能切片</b>（校正 / 知识点标注 / 审核 / 脉络梳理）→ 生成图文课堂纪要 + 思维导图、<b>1 堂课沉淀 N 个资源</b>，支持切片定位检索，持续沉淀优质课堂资源反哺知识库。<br>
+        <span class="scene-lbl">课前 · AI 建课备课：</span>复用平台已有备课能力，依据知识库章节/课程目录做自动化备课；老师手头资料<b>自动打标签</b>；任务团子生成配套资源；章节下新增 AI 互动课堂（基础版）/ 生成课件。<br>
+        <span class="scene-lbl">课中 · 多智能体课堂（调研试点，收缩边界）：</span>课堂辩论、角色扮演、圆桌讨论等由智能体参与的三元互动，<b>此前仅对接过清华的多智能体课堂、尚无自建基础</b>；本期先<b>调研开源智能体框架并做小范围试点</b>验证可行性，不追求大而全，跑通再逐步扩展。<br>
         <span class="scene-lbl">课后 · 作业自动批改：</span>支持图片、Word、文档<b>附件的自动批改（默认自动、复用现有批改引擎）</b>，依据课程知识库难度做受控批改与判分依据。<br>
         <span class="scene-lbl">教学评价：</span>对齐产线"教学评管"方案（引用为依据），融合考试、督考巡课（复用资源中心直录播 + 巡课驾驶舱接入管理空间、督导流程沿用小雅现有）、课堂教学评价；与 VI 课堂行为分析融合。
         <div class="kbcaps"><span class="lbl">知识库能力（重点）</span>
@@ -293,11 +293,11 @@
           <span class="chip">受控生成封装（批改判分依据）</span>
         </div>
       </div></div>
-      <div class="row pain"><div class="rk pain"><span class="rk-tag">解决痛点</span></div><div class="rv">课前中后割裂；批改通用化、不支持附件、无判分依据；课中缺特色；评价未闭环。</div></div>
+      <div class="row pain"><div class="rk pain"><span class="rk-tag">解决痛点</span></div><div class="rv">课前中后割裂；批改通用化、不支持附件、无判分依据；课中三元互动缺协同、缺特色；评价未闭环。</div></div>
       <div class="row val"><div class="rk val"><span class="rk-tag">用户价值</span></div><div class="rv">课前中后 + 评价形成完整闭环、有据可依，构成差异化竞争力。</div></div>
     </div>
-    <div class="future"><b>未来发力：</b>课堂辩论、角色扮演、圆桌讨论——智能体参与师生三元课堂（第一步可不挂知识库）；多智能体课堂为进阶：以方案倒推、借鉴成熟架构（如清华），或软硬结合（大屏分屏选多智能体、讨论记录回流学习空间），后置推进。</div>
-    <div class="kbquote"><span class="qh">知识库要建什么：</span>一键建库/自动治理〔P0〕· 课堂核验接入课程库〔P1〕· 课堂实录/微课资源库沉淀〔P1〕· 受控生成封装（批改依据）〔P2〕。</div>
+    <div class="future"><b>未来发力：</b>多智能体课堂规模化/深度化（借鉴成熟架构如清华，或软硬结合——大屏分屏选多智能体、讨论记录回流学习空间）；<b>课堂教学实录 + AI 智能切片资源沉淀、进阶版 AI 互动课堂</b>等重投入能力，视试点效果与市场洞察再评估推进。</div>
+    <div class="kbquote"><span class="qh">知识库要建什么：</span>一键建库/自动治理〔P0〕· 课堂核验接入课程库〔P1〕· 受控生成封装（批改依据）〔P2〕。</div>
   </div>
 
   <!-- 方向3 -->
@@ -310,20 +310,20 @@
     </div>
     <div class="flow">
       <div class="row do"><div class="rk do"><span class="rk-tag">开发要点</span></div><div class="rv"><span style="display:inline-block;background:var(--green-bg);color:var(--green);font-size:12px;font-weight:700;padding:2px 9px;border-radius:6px;margin-bottom:8px">本期核心：把每个学习场景用知识库支撑好</span><br>
-        <span class="scene-lbl">场景：</span>自主学习问答（可跳讲解片段）、答题辅助（解题挂教材片段并溯源）、知识点学习（图谱节点推荐）、知识点精准定位（跳视频片段）。每个场景以知识库检索+溯源为底，逐个接入、逐个支撑好。
+        <span class="scene-lbl">场景：</span>自主学习问答、答题辅助（解题挂教材片段并溯源）、知识点学习（图谱节点推荐）、知识点视频定位（<b>本期基于视频语音识别 ASR 的文字做切片溯源、可定位到对应时间段；做不到画面识别与对齐——如部分 PPT 画面难以对齐，画面级切片移未来规划</b>）。每个场景以知识库检索+溯源为底，逐个接入、逐个支撑好。
         <div class="kbcaps"><span class="lbl">知识库能力（重点）</span>
           <span class="chip">检索召回（个人库+课程库双层）</span>
           <span class="chip">受控生成（AI 生成学习视频/内容）</span>
           <span class="chip">引用溯源（附来源可跳转）</span>
           <span class="chip">图谱节点级推荐</span>
-          <span class="chip">多模态视频片段级定位</span>
+          <span class="chip">多模态视频 ASR 文字切片溯源（画面级对齐移未来）</span>
         </div>
       </div></div>
       <div class="row pain"><div class="rk pain"><span class="rk-tag">解决痛点</span></div><div class="rv">答无依据/超纲/幻觉、视频定位不准、无法按知识点个性化推荐。</div></div>
       <div class="row val"><div class="rk val"><span class="rk-tag">用户价值</span></div><div class="rv">学生"答有依据、能跳讲解片段、按知识点推荐"，真正学得起来。</div></div>
     </div>
-    <div class="future"><b>未来发力：</b>专业全景中心闭环、个性化学习路径。</div>
-    <div class="kbquote"><span class="qh">知识库要建什么：</span>一键建库/自动治理〔P0〕· 图谱节点级推荐〔P1〕· 学生问答三合一接入〔P1〕· 视频时间戳定位〔P2〕。</div>
+    <div class="future"><b>未来发力：</b>视频画面级识别与对齐（PPT/板书画面切片）；专业全景中心闭环、个性化学习路径。</div>
+    <div class="kbquote"><span class="qh">知识库要建什么：</span>一键建库/自动治理〔P0〕· 图谱节点级推荐〔P1〕· 学生问答三合一接入〔P1〕· 视频 ASR 文字切片溯源〔P2〕（画面级对齐移未来）。</div>
   </div>
 
   <!-- 方向4 -->
@@ -339,7 +339,7 @@
         <span class="scene-lbl">自动化建库（打通课程资源入库处理流程）：</span>教师扔资源进来，系统<b>自动判别资源类型</b>，可公开资源<b>自动解析建库</b>、按敏感度自动推荐建库 → 沉淀课程级知识库（解决"课程资源与知识库资源处理独立""试题等敏感资源不便入库"的问题）。<br>
         <span class="scene-lbl">场景治理（一键治理）：</span>教师用自然语言提问题（"搜不到题"/"答非所问"/"说的不靠谱"）→ 系统<b>自动匹配治理策略 → 一键治理 → 教师测试采信 → 沉淀治理经验技能</b>。<br>
         <span class="scene-lbl">数据回流：</span>教师采信后的优质问答对 → <b>回流知识库 → 知识库越用越准</b>。<br>
-        <span class="scene-lbl">一句话生成应用：</span>复用方向 1 超级智能体的<b>工作流编排/对话式智能体接入能力</b>——理解意图 → 调度成熟的智能体开发平台，实现一句话创建智能体/应用（几乎所有学科大模型项目都需要建智能体开发平台）。<br>
+        <span class="scene-lbl">一句话生成智能体（探索，随方向 1 推进）：</span>复用方向 1 超级智能体<b>接入星辰 Agent 的一句话创编 workflow 型智能体</b>能力，面向学科项目实现一句话创建智能体（几乎所有学科大模型项目都需要建智能体开发平台）；本期以<b>建库/管库/治理为主，生成能力作探索</b>。<br>
         <span class="scene-lbl">组合：</span>科研助手（组合方案、驻研问答场景）；专业方向可随院级方案纳入。<br>
         <span class="scene-lbl">基础版：</span>模型 + 学校已有知识库数据，解决基础专业性问题（低成本落地版本）。
         <div class="kbcaps"><span class="lbl">知识库能力（重点）</span>
@@ -386,7 +386,7 @@
         <tr><td>① 资源自动治理 / 一键建库</td><td><span class="prb p0">P0</span></td><td class="basecell"><span class="ic ic-mid">◑</span>已能建块，卡在自动关联</td><td><span class="pill pill-sup">支撑</span></td><td><span class="pill pill-strong">强</span></td><td><span class="pill pill-strong">强</span></td><td><span class="pill pill-sup">支撑</span></td></tr>
         <tr><td>② 数据回流 + RAG 评测闭环</td><td><span class="prb p0">P0</span></td><td class="basecell"><span class="ic ic-gap">○</span>缺口（有 vali 方案可承接）</td><td><span class="pill pill-strong">强</span></td><td><span class="pill pill-sup">支撑</span></td><td><span class="pill pill-sup">支撑</span></td><td><span class="pill pill-strong">强</span></td></tr>
         <tr><td>③ 知识图谱扩展（能力 / 问题 / 跨图谱 / 推荐）</td><td><span class="prb p1">P1</span></td><td class="basecell"><span class="ic ic-mid">◑</span>引擎+OBE Schema 已具备，缺产品化入口</td><td><span class="dot dot-half"></span></td><td><span class="pill pill-sup">支撑</span></td><td><span class="pill pill-strong">强</span></td><td><span class="pill pill-strong">强</span></td></tr>
-        <tr><td>④ 视频时间戳级片段定位</td><td><span class="prb p2">P2</span></td><td class="basecell"><span class="ic ic-gap">○</span>有 ASR，缺时间戳切片</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="pill pill-strong">强</span></td><td><span class="dash">—</span></td></tr>
+        <tr><td>④ 视频 ASR 文字切片溯源（画面级移未来）</td><td><span class="prb p2">P2</span></td><td class="basecell"><span class="ic ic-mid">◑</span>ASR 文字切片本期可做，画面级对齐移未来</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="pill pill-strong">强</span></td><td><span class="dash">—</span></td></tr>
         <tr><td>⑤ 受控生成封装（出题 / 批改 / 任务）</td><td><span class="prb p2">P2</span></td><td class="basecell"><span class="ic ic-mid">◑</span>具备检索+生成，缺应用层封装</td><td><span class="dash">—</span></td><td><span class="pill pill-strong">强</span></td><td><span class="pill pill-strong">强</span></td><td><span class="dot dot-half"></span></td></tr>
         <tr><td>⑥ 科研库 / 制度库 资源沉淀</td><td><span class="prb p3">P3</span></td><td class="basecell"><span class="ic ic-gap">○</span>待建库（能力已就绪）</td><td><span class="pill pill-sup">支撑</span></td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="pill pill-strong">强</span></td></tr>
       </tbody>
@@ -407,7 +407,7 @@
 
   <footer>
     <span>小雅 3.0 二期产研立项 · 面向决策评审（基于 0714 产品组讨论结论）</span>
-    <span>V10 · 2026-07-14</span>
+    <span>V11 · 2026-07-14</span>
   </footer>
 
 </div>
